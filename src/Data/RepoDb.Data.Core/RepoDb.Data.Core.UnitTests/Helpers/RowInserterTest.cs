@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -122,5 +123,76 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         }
 
         #endregion
+
+        [TestMethod]
+        public void TestMergeUpdatesTheRowsByTheQualifiersWithoutTheQualifiersInTheSet()
+        {
+            // Setup
+            var connection = new FakeDbConnection();
+
+            // Act
+            var actual = RowInserter.Merge(connection, "Customer", Rows(2), new[] { new Field("Id") }, null, null, null, null);
+
+            // Assert
+            var updates = connection.Executions.Where(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal)).ToList();
+            Assert.AreEqual(2, actual);
+            Assert.AreEqual(2, updates.Count);
+            StringAssert.Contains(updates[0].CommandText, "UPDATE [Customer] SET [Name] = ");
+            StringAssert.Contains(updates[0].CommandText, "WHERE [Id] = ");
+            Assert.IsFalse(updates[0].CommandText.Contains("SET [Id]"));
+            Assert.AreEqual(2, updates[0].Parameters.Count);
+        }
+
+        [TestMethod]
+        public void TestMergeSetsTheQualifierToItselfIfEveryColumnIsAQualifier()
+        {
+            // Setup
+            var connection = new FakeDbConnection();
+            var rows = new List<object> { new Dictionary<string, object> { ["Id"] = 1 } };
+
+            // Act
+            RowInserter.Merge(connection, "Customer", rows, new[] { new Field("Id") }, null, null, null, null);
+
+            // Assert
+            StringAssert.Contains(connection.Executions.First(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal)).CommandText, "SET [Id] = ");
+        }
+
+        [TestMethod]
+        public void TestMergeWithoutRowsExecutesNothing()
+        {
+            // Setup
+            var connection = new FakeDbConnection();
+
+            // Act
+            var actual = RowInserter.Merge(connection, "Customer", new List<object>(), new[] { new Field("Id") }, null, null, null, null);
+
+            // Assert
+            Assert.AreEqual(0, actual);
+            Assert.AreEqual(0, connection.Executions.Count);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnMergeIfAQualifierIsNotAColumnOfTheRows()
+        {
+            // Setup
+            var connection = new FakeDbConnection();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => RowInserter.Merge(connection, "Customer", Rows(1), new[] { new Field("Birthday2") }, null, null, null, null));
+        }
+
+        [TestMethod]
+        public async Task TestMergeAsyncUpdatesTheRowsByTheQualifiers()
+        {
+            // Setup
+            var connection = new FakeDbConnection();
+
+            // Act
+            var actual = await RowInserter.MergeAsync(connection, "Customer", Rows(3), new[] { new Field("Id") }, null, null, null, null, CancellationToken.None);
+
+            // Assert
+            Assert.AreEqual(3, actual);
+            Assert.AreEqual(3, connection.Executions.Count(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal)));
+        }
     }
 }

@@ -57,6 +57,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="source">The reader of the file.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted at once.</param>
         /// <param name="bypassExistingRows">A value that indicates whether the rows are merged (with the primary key, or the identity, as the qualifiers) instead of inserted.</param>
+        /// <param name="qualifierNames">The names of the columns that identify the existing rows, or <c>null</c> to use the primary key (or the identity) of the table. Used only if the existing rows are bypassed.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept.</param>
         /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
@@ -71,6 +72,7 @@ namespace RepoDb.Data.Helpers
             IImportSource source,
             int bufferSize,
             bool bypassExistingRows,
+            IList<string> qualifierNames,
             LoadColumnMappingBehavior columnMappingBehavior,
             LoadIdentityBehavior identityBehavior,
             Action<LoadProgress> progressCallback,
@@ -82,7 +84,7 @@ namespace RepoDb.Data.Helpers
             Validate(connection, tableName, filename, bufferSize, columnMappingBehavior, identityBehavior);
             source.Validate();
             var map = CreateMap(connection, tableName, transaction, identityBehavior, source.ReadColumns());
-            var qualifiers = bypassExistingRows ? GetQualifiers(connection, tableName, map, transaction) : null;
+            var qualifiers = bypassExistingRows ? GetQualifiers(connection, tableName, map, qualifierNames, transaction) : null;
             var progress = new LoadProgress
             {
                 Start = DateTime.UtcNow,
@@ -125,6 +127,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="source">The reader of the file.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted at once.</param>
         /// <param name="bypassExistingRows">A value that indicates whether the rows are merged (with the primary key, or the identity, as the qualifiers) instead of inserted.</param>
+        /// <param name="qualifierNames">The names of the columns that identify the existing rows, or <c>null</c> to use the primary key (or the identity) of the table. Used only if the existing rows are bypassed.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept.</param>
         /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
@@ -140,6 +143,7 @@ namespace RepoDb.Data.Helpers
             IImportSource source,
             int bufferSize,
             bool bypassExistingRows,
+            IList<string> qualifierNames,
             LoadColumnMappingBehavior columnMappingBehavior,
             LoadIdentityBehavior identityBehavior,
             Action<LoadProgress> progressCallback,
@@ -152,7 +156,7 @@ namespace RepoDb.Data.Helpers
             Validate(connection, tableName, filename, bufferSize, columnMappingBehavior, identityBehavior);
             source.Validate();
             var map = CreateMap(connection, tableName, transaction, identityBehavior, await source.ReadColumnsAsync(cancellationToken).ConfigureAwait(false));
-            var qualifiers = bypassExistingRows ? GetQualifiers(connection, tableName, map, transaction) : null;
+            var qualifiers = bypassExistingRows ? GetQualifiers(connection, tableName, map, qualifierNames, transaction) : null;
             var progress = new LoadProgress
             {
                 Start = DateTime.UtcNow,
@@ -279,14 +283,13 @@ namespace RepoDb.Data.Helpers
         }
 
         /// <summary>
-        /// Checks whether the rows are loaded with the bulk insert, which is when the provider of the connection has one (the bulk merge is required if the existing rows are bypassed).
+        /// Checks whether the rows are loaded with the bulk insert, which is when the provider of the connection has one (the bulk merge if the existing rows are bypassed).
         /// </summary>
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="map">The map of the columns.</param>
         /// <param name="isAsync">A value that indicates whether the asynchronous bulk insert is searched.</param>
         /// <param name="bypassExistingRows">A value that indicates whether the bulk merge is used instead of the bulk insert.</param>
         /// <returns><c>true</c> if the rows are loaded with the bulk insert (or the bulk merge); otherwise, <c>false</c>.</returns>
-        /// <exception cref="InvalidOperationException">The existing rows are bypassed and the provider has no bulk merge.</exception>
         private static bool IsBulk(IDbConnection connection,
             ColumnMap map,
             bool isAsync,
@@ -295,31 +298,57 @@ namespace RepoDb.Data.Helpers
             using (var table = CreateTable(map))
             using (var reader = table.CreateDataReader())
             {
-                if (bypassExistingRows)
-                {
-                    BulkInsertInvoker.EnsureAvailable(connection, reader, isAsync, true);
-                    return true;
-                }
-                return BulkInsertInvoker.IsAvailable(connection, reader, isAsync);
+                return bypassExistingRows
+                    ? BulkInsertInvoker.IsMergeAvailable(connection, reader, isAsync)
+                    : BulkInsertInvoker.IsAvailable(connection, reader, isAsync);
             }
         }
 
         /// <summary>
-        /// Gets the qualifiers of the bulk merge: the primary key columns of the table, or its identity column if it has no primary key.
+        /// Gets the qualifiers of the merge: the columns that were given, or the primary key columns of the table (its identity column if it has no primary key).
         /// </summary>
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table.</param>
         /// <param name="map">The map of the columns.</param>
+        /// <param name="names">The names of the columns that were given, or <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The qualifiers.</returns>
-        /// <exception cref="InvalidOperationException">The table has no primary key and no identity column, or a qualifier is not a column that is loaded.</exception>
+        /// <exception cref="ArgumentException">A given qualifier is empty, or is not a column of the table.</exception>
+        /// <exception cref="InvalidOperationException">No qualifier was given and the table has no primary key and no identity column, or a qualifier is not a column that is loaded.</exception>
         private static IList<Field> GetQualifiers(IDbConnection connection,
             string tableName,
             ColumnMap map,
+            IList<string> names,
             IDbTransaction transaction)
         {
-            var qualifiers = RepoDb.Data.DbConnection.GetQualifiers(connection, tableName, null, transaction);
             var dbSetting = connection.GetDbSetting();
+            IList<Field> qualifiers;
+            if (names != null && names.Count > 0)
+            {
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                qualifiers = new List<Field>();
+                foreach (var name in names)
+                {
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        throw new ArgumentException("The qualifiers must not have an empty name.", "qualifiers");
+                    }
+                    var dbField = dbFields.GetByUnquotedName(name.AsUnquoted(true, dbSetting));
+                    if (dbField == null)
+                    {
+                        throw new ArgumentException($"The qualifier '{name}' is not a column of the table '{tableName}'.", "qualifiers");
+                    }
+                    var unquoted = dbField.Name.AsUnquoted(true, dbSetting);
+                    if (!qualifiers.Any(qualifier => string.Equals(qualifier.Name, unquoted, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        qualifiers.Add(new Field(unquoted));
+                    }
+                }
+            }
+            else
+            {
+                qualifiers = RepoDb.Data.DbConnection.GetQualifiers(connection, tableName, null, transaction);
+            }
             var loaded = new HashSet<string>(map.Fields.Select(field => field.Name.AsUnquoted(true, dbSetting)), StringComparer.OrdinalIgnoreCase);
             var missing = qualifiers.FirstOrDefault(qualifier => !loaded.Contains(qualifier.Name));
             if (missing != null)
@@ -422,7 +451,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="map">The map of the columns.</param>
         /// <param name="buffer">The buffered rows (cleared when they are inserted).</param>
         /// <param name="bulk">A value that indicates whether the rows are inserted with the bulk insert.</param>
-        /// <param name="qualifiers">The qualifiers of the bulk merge, or <c>null</c> to bulk insert the rows.</param>
+        /// <param name="qualifiers">The qualifiers of the merge, or <c>null</c> to insert the rows.</param>
         /// <param name="size">The number of rows of the buffer.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert.</param>
         /// <param name="identityBehavior">Defines whether the values of the identity columns are kept by the bulk insert.</param>
@@ -461,7 +490,9 @@ namespace RepoDb.Data.Helpers
             }
             else
             {
-                inserted = RowInserter.Insert(connection, tableName, ToRows(map, buffer), commandTimeout, traceKey, trace, transaction);
+                inserted = qualifiers != null
+                    ? RowInserter.Merge(connection, tableName, ToRows(map, buffer), qualifiers, commandTimeout, traceKey, trace, transaction)
+                    : RowInserter.Insert(connection, tableName, ToRows(map, buffer), commandTimeout, traceKey, trace, transaction);
             }
             Succeeded(buffer, inserted, progress, progressCallback);
         }
@@ -474,7 +505,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="map">The map of the columns.</param>
         /// <param name="buffer">The buffered rows (cleared when they are inserted).</param>
         /// <param name="bulk">A value that indicates whether the rows are inserted with the bulk insert.</param>
-        /// <param name="qualifiers">The qualifiers of the bulk merge, or <c>null</c> to bulk insert the rows.</param>
+        /// <param name="qualifiers">The qualifiers of the merge, or <c>null</c> to insert the rows.</param>
         /// <param name="size">The number of rows of the buffer.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert.</param>
         /// <param name="identityBehavior">Defines whether the values of the identity columns are kept by the bulk insert.</param>
@@ -516,7 +547,9 @@ namespace RepoDb.Data.Helpers
             }
             else
             {
-                inserted = await RowInserter.InsertAsync(connection, tableName, ToRows(map, buffer), commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+                inserted = qualifiers != null
+                    ? await RowInserter.MergeAsync(connection, tableName, ToRows(map, buffer), qualifiers, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false)
+                    : await RowInserter.InsertAsync(connection, tableName, ToRows(map, buffer), commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
             }
             Succeeded(buffer, inserted, progress, progressCallback);
         }

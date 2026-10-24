@@ -395,6 +395,144 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
         }
 
+        [TestMethod]
+        public void TestImportDataFromXmlWithQualifiersBulkMergesTheRowsWithTheQualifiers()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromXml("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Name" });
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMerge", call.Method);
+            CollectionAssert.AreEqual(new[] { "Name" }, call.Qualifiers);
+        }
+
+        [TestMethod]
+        public async Task TestImportDataFromXmlAsyncWithQualifiersBulkMergesTheRowsWithTheQualifiers()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            await FakeBulkDestination.Create().ImportDataFromXmlAsync("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Id", "Name" });
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMergeAsync", call.Method);
+            CollectionAssert.AreEqual(new[] { "Id", "Name" }, call.Qualifiers);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromXmlWithQualifiersMergesTheRowsOfATableWithoutPrimaryKeyAndIdentity()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            FakeBulkDestination.CreateKeyless().ImportDataFromXml("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Id" });
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Id" }, FakeBulkOperations.Calls.Single().Qualifiers);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromXmlWithQualifiersResolvesTheNamesOfTheColumnsWithoutTheCaseAndWithoutRepeatingThem()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromXml("Customer", path, bypassExistingRows: true, qualifiers: new[] { "name", "NAME", "[Name]" });
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Name" }, FakeBulkOperations.Calls.Single().Qualifiers);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromXmlIgnoresTheQualifiersIfTheExistingRowsAreNotBypassed()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromXml("Customer", path, qualifiers: new[] { "Name" });
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkInsert", call.Method);
+            Assert.IsNull(call.Qualifiers);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromXmlWithQualifiersIfAQualifierIsNotAColumnOfTheTable()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => FakeBulkDestination.Create().ImportDataFromXml("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Missing" }));
+            Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromXmlWithQualifiersIfAQualifierIsEmpty()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => FakeBulkDestination.Create().ImportDataFromXml("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Id", " " }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromXmlWithQualifiersIfAQualifierIsNotAColumnOfTheFile()
+        {
+            // Setup
+            var path = Write("<rows><row><Id>1</Id><Name>A</Name></row></rows>");
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromXml("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Birthday" }));
+        }
+
+        [TestMethod]
+        public void TestImportDataFromXmlWithBypassExistingRowsMergesTheRowsInBatchesIfTheProviderHasNoBulkMerge()
+        {
+            // Setup
+            var path = Write(Rows(3));
+            var destination = new FakeDbConnection();
+
+            // Act
+            var actual = destination.ImportDataFromXml("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Name" });
+
+            // Assert
+            var updates = destination.Executions.Where(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal)).ToList();
+            Assert.AreEqual(3, updates.Count);
+            StringAssert.Contains(updates[0].CommandText, "WHERE [Name] = ");
+            Assert.IsFalse(updates[0].CommandText.Contains("SET [Name]"));
+            Assert.AreEqual(0, destination.Executions.Count(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal)));
+            Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
+            Assert.AreEqual(3L, actual.TotalRowCount);
+        }
+
+        [TestMethod]
+        public async Task TestImportDataFromXmlAsyncWithBypassExistingRowsMergesTheRowsInBatchesIfTheProviderHasNoBulkMerge()
+        {
+            // Setup
+            var path = Write(Rows(3));
+            var destination = new FakeDbConnection();
+
+            // Act
+            await destination.ImportDataFromXmlAsync("Customer", path, bypassExistingRows: true);
+
+            // Assert
+            var update = destination.Executions.First(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal));
+            StringAssert.Contains(update.CommandText, "WHERE [Id] = ");
+            StringAssert.Contains(update.CommandText, "SET [Name] = ");
+        }
+
         #endregion
     }
 }

@@ -193,14 +193,143 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, identityBehavior: LoadIdentityBehavior.Ignore));
         }
 
+
         [TestMethod]
-        public void ThrowExceptionOnImportDataFromJsonWithBypassExistingRowsIfTheProviderHasNoBulkMerge()
+        public void TestImportDataFromJsonWithQualifiersBulkMergesTheRowsWithTheQualifiers()
         {
             // Setup
-            var path = Write(Rows(2));
+            var path = Write(Rows(3));
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Name" });
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMerge", call.Method);
+            CollectionAssert.AreEqual(new[] { "Name" }, call.Qualifiers);
+        }
+
+        [TestMethod]
+        public async Task TestImportDataFromJsonAsyncWithQualifiersBulkMergesTheRowsWithTheQualifiers()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            await FakeBulkDestination.Create().ImportDataFromJsonAsync("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Id", "Name" });
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMergeAsync", call.Method);
+            CollectionAssert.AreEqual(new[] { "Id", "Name" }, call.Qualifiers);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithQualifiersMergesTheRowsOfATableWithoutPrimaryKeyAndIdentity()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            FakeBulkDestination.CreateKeyless().ImportDataFromJson("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Id" });
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Id" }, FakeBulkOperations.Calls.Single().Qualifiers);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithQualifiersResolvesTheNamesOfTheColumnsWithoutTheCaseAndWithoutRepeatingThem()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, qualifiers: new[] { "name", "NAME", "[Name]" });
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Name" }, FakeBulkOperations.Calls.Single().Qualifiers);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonIgnoresTheQualifiersIfTheExistingRowsAreNotBypassed()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromJson("Customer", path, qualifiers: new[] { "Name" });
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkInsert", call.Method);
+            Assert.IsNull(call.Qualifiers);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromJsonWithQualifiersIfAQualifierIsNotAColumnOfTheTable()
+        {
+            // Setup
+            var path = Write(Rows(3));
 
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, bypassExistingRows: true));
+            Assert.Throws<ArgumentException>(() => FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Missing" }));
+            Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromJsonWithQualifiersIfAQualifierIsEmpty()
+        {
+            // Setup
+            var path = Write(Rows(3));
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Id", " " }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromJsonWithQualifiersIfAQualifierIsNotAColumnOfTheFile()
+        {
+            // Setup
+            var path = Write("[{\"Id\":1,\"Name\":\"A\"}]");
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Birthday" }));
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithBypassExistingRowsMergesTheRowsInBatchesIfTheProviderHasNoBulkMerge()
+        {
+            // Setup
+            var path = Write(Rows(3));
+            var destination = new FakeDbConnection();
+
+            // Act
+            var actual = destination.ImportDataFromJson("Customer", path, bypassExistingRows: true, qualifiers: new[] { "Name" });
+
+            // Assert
+            var updates = destination.Executions.Where(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal)).ToList();
+            Assert.AreEqual(3, updates.Count);
+            StringAssert.Contains(updates[0].CommandText, "WHERE [Name] = ");
+            Assert.IsFalse(updates[0].CommandText.Contains("SET [Name]"));
+            Assert.AreEqual(0, destination.Executions.Count(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal)));
+            Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
+            Assert.AreEqual(3L, actual.TotalRowCount);
+        }
+
+        [TestMethod]
+        public async Task TestImportDataFromJsonAsyncWithBypassExistingRowsMergesTheRowsInBatchesIfTheProviderHasNoBulkMerge()
+        {
+            // Setup
+            var path = Write(Rows(3));
+            var destination = new FakeDbConnection();
+
+            // Act
+            await destination.ImportDataFromJsonAsync("Customer", path, bypassExistingRows: true);
+
+            // Assert
+            var update = destination.Executions.First(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal));
+            StringAssert.Contains(update.CommandText, "WHERE [Id] = ");
+            StringAssert.Contains(update.CommandText, "SET [Name] = ");
         }
 
         #endregion

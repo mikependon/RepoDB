@@ -54,6 +54,18 @@ namespace RepoDb.Data.Helpers
             Find(connection, reader, isAsync, BulkInsertName) != null;
 
         /// <summary>
+        /// Checks whether the <c>BulkOperations</c> package of the provider of the connection has a bulk merge for the reader.
+        /// </summary>
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="reader">The reader of the rows to be merged.</param>
+        /// <param name="isAsync">A value that indicates whether the asynchronous method is searched.</param>
+        /// <returns><c>true</c> if the bulk merge is available; otherwise, <c>false</c>.</returns>
+        internal static bool IsMergeAvailable(IDbConnection connection,
+            IDataReader reader,
+            bool isAsync) =>
+            Find(connection, reader, isAsync, BulkMergeName) != null;
+
+        /// <summary>
         /// Ensures that the <c>BulkOperations</c> package of the provider of the connection has the bulk insert (or the bulk merge) for the reader.
         /// </summary>
         /// <param name="connection">The connection of the destination database.</param>

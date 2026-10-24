@@ -361,6 +361,49 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
 
         #endregion
 
+        #region Bypass Existing Rows
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithBypassExistingRowsUpdatesTheRowsThatExistAndInsertsTheOthers()
+        {
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.ExecuteOnTarget(@"INSERT INTO ""LoadItem"" (""Id"", ""Name"") VALUES (1, 'Old 1'), (2, 'Old 2'), (9, 'Old 9')");
+                var path = Array(4);
+
+                // Act
+                var actual = target.ImportDataFromJson("LoadItem", path, bypassExistingRows: true);
+
+                // Assert
+                Assert.AreEqual(4L, actual.TotalRowCount);
+                var rows = Rows();
+                CollectionAssert.AreEqual(new long[] { 1, 2, 3, 4, 9 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
+                CollectionAssert.AreEqual(new[] { "Name 1", "Name 2", "Name 3", "Name 4", "Old 9" }, rows.Select(r => (string)r["Name"]).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public async Task TestImportDataFromJsonAsyncWithBypassExistingRowsUpdatesTheRowsThatExistAndInsertsTheOthers()
+        {
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.ExecuteOnTarget(@"INSERT INTO ""LoadItem"" (""Id"", ""Name"") VALUES (1, 'Old 1'), (9, 'Old 9')");
+                var path = Array(3);
+
+                // Act
+                await target.ImportDataFromJsonAsync("LoadItem", path, bypassExistingRows: true, qualifiers: new[] { "Id" });
+
+                // Assert
+                var rows = Rows();
+                CollectionAssert.AreEqual(new long[] { 1, 2, 3, 9 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
+                CollectionAssert.AreEqual(new[] { "Name 1", "Name 2", "Name 3", "Old 9" }, rows.Select(r => (string)r["Name"]).ToArray());
+            }
+        }
+
+        #endregion
+
         #region Errors
 
         [TestMethod]
