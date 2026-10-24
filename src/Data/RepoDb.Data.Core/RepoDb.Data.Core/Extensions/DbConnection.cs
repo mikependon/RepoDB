@@ -565,7 +565,7 @@ namespace RepoDb.Data
         /// <param name="where">The filter of the rows to be copied, or <c>null</c>.</param>
         /// <param name="mappings">The column mappings, or <c>null</c> to read all the columns.</param>
         /// <returns>The statement and its parameters (<c>null</c> if there is no filter).</returns>
-        private static (string CommandText, object Param) CreateSelect(IDbConnection connection,
+        internal static (string CommandText, object Param) CreateSelect(IDbConnection connection,
             string sourceTable,
             QueryGroup where,
             IList<CopyColumnMapping> mappings)
@@ -859,7 +859,7 @@ namespace RepoDb.Data
         /// <param name="reader">The reader.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is <c>true</c> if there is another row; otherwise, <c>false</c>.</returns>
-        private static Task<bool> ReadAsync(IDataReader reader,
+        internal static Task<bool> ReadAsync(IDataReader reader,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();

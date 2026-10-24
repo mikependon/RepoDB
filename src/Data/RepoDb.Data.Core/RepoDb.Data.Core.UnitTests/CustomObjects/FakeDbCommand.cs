@@ -50,7 +50,11 @@ namespace RepoDb.Data.Core.UnitTests.CustomObjects
         public override object ExecuteScalar()
         {
             Record("Scalar");
-            return null;
+
+            // A count gives the number of rows of the connection (the filter is not evaluated)
+            return CommandText != null && CommandText.IndexOf("COUNT", System.StringComparison.OrdinalIgnoreCase) >= 0 && DbConnection is FakeDbConnection connection
+                ? (object)(long)connection.Data.Rows.Count
+                : null;
         }
 
         public override void Prepare()
