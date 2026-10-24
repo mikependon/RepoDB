@@ -18,6 +18,17 @@ namespace RepoDb.Schema.Core.UnitTests
         #region Methods
 
         [TestMethod]
+        public void TestSchemaTraceKeysCreateSchema()
+        {
+            // Act
+            var actual = SchemaTraceKeys.CreateSchema;
+            var expected = "CreateSchema";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
         public void TestSchemaTraceKeysResolveSchemaName()
         {
             // Act

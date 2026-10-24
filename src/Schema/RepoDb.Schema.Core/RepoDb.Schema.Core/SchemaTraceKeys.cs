@@ -26,6 +26,11 @@ namespace RepoDb.Schema
         public const string CopyTableSchemasTo = "CopyTableSchemasTo";
 
         /// <summary>
+        /// The trace key for the 'CreateSchema' operation.
+        /// </summary>
+        public const string CreateSchema = "CreateSchema";
+
+        /// <summary>
         /// The trace key used when the check constraints of a table are being read.
         /// </summary>
         public const string GetCheckConstraints = "GetCheckConstraints";

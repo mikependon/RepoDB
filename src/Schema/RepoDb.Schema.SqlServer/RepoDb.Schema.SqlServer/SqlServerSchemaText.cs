@@ -115,6 +115,15 @@ namespace RepoDb.Schema
         /// Reads the schemas of the database (the system schemas are not included).
         /// </summary>
         internal const string SchemasSql = @"SELECT s.name AS SchemaName FROM sys.schemas s WHERE s.name NOT IN ('sys', 'INFORMATION_SCHEMA', 'guest') AND s.schema_id < 16384 ORDER BY s.name";
+        /// <summary>
+        /// The statement that counts the schemas that have a name, which is the parameter (the placeholder <c>{0}</c> takes the name of the parameter with its prefix).
+        /// </summary>
+        internal const string SchemaExistsSql = "SELECT COUNT(*) FROM sys.schemas WHERE name = {0}";
+
+        /// <summary>
+        /// The statement that creates a schema (the placeholder <c>{0}</c> takes the quoted name of the schema).
+        /// </summary>
+        internal const string CreateSchemaSql = "CREATE SCHEMA {0}";
 
         #endregion
     }

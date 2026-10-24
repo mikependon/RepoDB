@@ -101,5 +101,14 @@ namespace RepoDb.Schema
         /// Reads the schemas of the database (the system schemas are not included).
         /// </summary>
         internal const string SchemasSql = @"SELECT SCHEMA_NAME AS SchemaName FROM SYS.SCHEMAS WHERE SCHEMA_NAME NOT LIKE '$_SYS%' ESCAPE '$' AND SCHEMA_NAME NOT IN ('SYS', 'PUBLIC') ORDER BY SCHEMA_NAME";
+        /// <summary>
+        /// The statement that counts the schemas that have a name, which is the parameter (the placeholder <c>{0}</c> takes the name of the parameter with its prefix).
+        /// </summary>
+        internal const string SchemaExistsSql = "SELECT COUNT(*) FROM SYS.SCHEMAS WHERE SCHEMA_NAME = {0}";
+
+        /// <summary>
+        /// The statement that creates a schema (the placeholder <c>{0}</c> takes the quoted name of the schema).
+        /// </summary>
+        internal const string CreateSchemaSql = "CREATE SCHEMA {0}";
     }
 }

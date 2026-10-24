@@ -15,6 +15,15 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
     {
         public override IsolationLevel IsolationLevel { get; }
 
+        public CustomDbTransaction()
+        {
+        }
+
+        public CustomDbTransaction(System.Data.Common.DbConnection connection)
+        {
+            DbConnection = connection;
+        }
+
         protected override System.Data.Common.DbConnection DbConnection { get; }
 
         public override void Commit()

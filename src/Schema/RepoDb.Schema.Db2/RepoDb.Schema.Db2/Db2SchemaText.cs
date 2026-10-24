@@ -103,5 +103,14 @@ namespace RepoDb.Schema
         /// Reads the schemas of the database (the system schemas are not included).
         /// </summary>
         internal const string SchemasSql = @"SELECT SCHEMANAME AS SchemaName FROM SYSCAT.SCHEMATA WHERE SCHEMANAME NOT LIKE 'SYS%' AND SCHEMANAME NOT IN ('NULLID', 'SQLJ', 'DB2GSE', 'IBM_RTMON') ORDER BY SCHEMANAME";
+        /// <summary>
+        /// The statement that counts the schemas that have a name, which is the parameter (the placeholder <c>{0}</c> takes the name of the parameter with its prefix).
+        /// </summary>
+        internal const string SchemaExistsSql = "SELECT COUNT(*) FROM SYSCAT.SCHEMATA WHERE SCHEMANAME = {0}";
+
+        /// <summary>
+        /// The statement that creates a schema (the placeholder <c>{0}</c> takes the quoted name of the schema).
+        /// </summary>
+        internal const string CreateSchemaSql = "CREATE SCHEMA {0}";
     }
 }

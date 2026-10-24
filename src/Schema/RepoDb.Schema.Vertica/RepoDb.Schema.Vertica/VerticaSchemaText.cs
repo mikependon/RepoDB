@@ -93,5 +93,14 @@ namespace RepoDb.Schema
         /// Reads the schemas of the database (the system schemas are not included).
         /// </summary>
         internal const string SchemasSql = @"SELECT schema_name AS SchemaName FROM v_catalog.schemata WHERE is_system_schema = false ORDER BY schema_name";
+        /// <summary>
+        /// The statement that counts the schemas that have a name, which is the parameter (the placeholder <c>{0}</c> takes the name of the parameter with its prefix).
+        /// </summary>
+        internal const string SchemaExistsSql = "SELECT COUNT(*) FROM v_catalog.schemata WHERE schema_name = {0}";
+
+        /// <summary>
+        /// The statement that creates a schema (the placeholder <c>{0}</c> takes the quoted name of the schema).
+        /// </summary>
+        internal const string CreateSchemaSql = "CREATE SCHEMA {0}";
     }
 }

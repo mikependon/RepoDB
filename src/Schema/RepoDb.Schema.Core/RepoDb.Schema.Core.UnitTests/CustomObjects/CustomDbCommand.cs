@@ -45,6 +45,7 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
 
         public override int ExecuteNonQuery()
         {
+            Record();
             (Connection as CustomDbConnection)?.ExecutedCommands.Add(CommandText);
             if ((Connection as CustomDbConnection)?.FailWhen?.Invoke(CommandText) == true)
             {
@@ -55,6 +56,7 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
 
         public override object ExecuteScalar()
         {
+            Record();
             var connection = Connection as CustomDbConnection;
             connection?.ExecutedScalars.Add(CommandText);
             return connection?.ScalarResult?.Invoke(CommandText);
@@ -67,6 +69,22 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
 
         public override void Prepare()
         {
+        }
+
+        private void Record()
+        {
+            var parameters = new System.Collections.Generic.Dictionary<string, object>();
+            foreach (DbParameter parameter in DbParameterCollection)
+            {
+                parameters[parameter.ParameterName] = parameter.Value;
+            }
+            (Connection as CustomDbConnection)?.Details.Add(new ExecutedCommand
+            {
+                CommandText = CommandText,
+                CommandTimeout = CommandTimeout,
+                Transaction = Transaction,
+                Parameters = parameters
+            });
         }
 
         protected override DbParameter CreateDbParameter()
