@@ -13,7 +13,7 @@ namespace RepoDb.Data.Models
     /// <summary>
     /// A class that holds the details of one side (the source or the target) of a table whose rows are copied.
     /// </summary>
-    public class CopyEndpoint
+    public class Endpoint
     {
         #region Properties
 

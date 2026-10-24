@@ -72,18 +72,18 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
             }
         }
 
-        private sealed class UpperCaseNameInterceptor : IDataInterceptor<CopyRow>
+        private sealed class UpperCaseNameInterceptor : IDataInterceptor<Row>
         {
-            public CopyRow Transform(CopyRow data)
+            public Row Transform(Row data)
             {
                 data["Name"] = ((string)data["Name"]).ToUpperInvariant();
                 return data;
             }
         }
 
-        private sealed class AddColumnInterceptor : IDataInterceptor<CopyRow>
+        private sealed class AddColumnInterceptor : IDataInterceptor<Row>
         {
-            public CopyRow Transform(CopyRow data) =>
+            public Row Transform(Row data) =>
                 data.Add("Label", typeof(string), "#" + data["Id"]);
         }
 
@@ -167,7 +167,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
             {
                 // Setup
                 var path = NewPath();
-                var mappings = new[] { new CopyColumnMapping("Name", "CountryName"), new CopyColumnMapping("Id", "Key") };
+                var mappings = new[] { new ColumnMapping("Name", "CountryName"), new ColumnMapping("Id", "Key") };
 
                 // Act
                 source.ExportDataAsJson("Country", path, mappings);
@@ -187,7 +187,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
             {
                 // Setup
                 var path = NewPath();
-                var interceptors = new List<IDataInterceptor<CopyRow>> { new UpperCaseNameInterceptor(), new AddColumnInterceptor() };
+                var interceptors = new List<IDataInterceptor<Row>> { new UpperCaseNameInterceptor(), new AddColumnInterceptor() };
 
                 // Act
                 source.ExportDataAsJson("Country", path, dataInterceptors: interceptors);

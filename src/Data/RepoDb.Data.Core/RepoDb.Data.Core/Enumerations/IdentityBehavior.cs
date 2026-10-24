@@ -13,7 +13,7 @@ namespace RepoDb.Data.Enumerations
     /// It is passed on to the bulk insert of the provider of the connection (i.e.: the <c>KeepIdentity</c> option of <c>SqlBulkCopyOptions</c>, or the <c>identityBehavior</c> argument of PostgreSQL),
     /// and it is honored by the batch insert as well.
     /// </summary>
-    public enum LoadIdentityBehavior : short
+    public enum IdentityBehavior : short
     {
         /// <summary>
         /// The values of the identity columns of the source are kept and used as they are, so the rows of the related tables keep referencing them. This is the default behavior. The database of the
@@ -24,7 +24,7 @@ namespace RepoDb.Data.Enumerations
         /// <summary>
         /// The values of the identity columns of the source are ignored (not inserted), and the database of the target table generates new ones. The generated values are not set back to anything:
         /// they can be read from the target table. When tables are copied, the rows of the related tables would no longer reference the rows that they referenced, so it can only be used with
-        /// <see cref="CopyRelationshipBehavior.TableOnly"/>.
+        /// <see cref="RelationshipBehavior.TableOnly"/>.
         /// </summary>
         Ignore
     }

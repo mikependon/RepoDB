@@ -37,9 +37,9 @@ namespace RepoDb.Data
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are exported from.</param>
         /// <param name="filename">The path of the JSON file. An existing file is replaced.</param>
-        /// <param name="mappings">The mappings of the columns of the table (the source) to the names of the properties of the file (the destination), as in <c>CopyDataTo</c> (see <see cref="CopyColumnMapping"/>). Only the mapped columns are selected and written. The default is <c>null</c>, which selects all the columns of the table.</param>
+        /// <param name="mappings">The mappings of the columns of the table (the source) to the names of the properties of the file (the destination), as in <c>CopyDataTo</c> (see <see cref="ColumnMapping"/>). Only the mapped columns are selected and written. The default is <c>null</c>, which selects all the columns of the table.</param>
         /// <param name="where">The filter of the rows to be exported, which also filters the rows that are counted. The default is <c>null</c>, which exports all the rows.</param>
-        /// <param name="dataInterceptors">The interceptors that every row goes through before it is written, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is written, with the columns that it has. The columns of the row are the ones that are selected (named by the <paramref name="mappings"/>, if there are any). The default is <c>null</c>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row goes through before it is written, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is written, with the columns that it has. The columns of the row are the ones that are selected (named by the <paramref name="mappings"/>, if there are any). The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="ExportProgress"/> after the rows are counted, after every row is written, and when the export has ended (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.ExportDataAsJson"/>.</param>
@@ -51,9 +51,9 @@ namespace RepoDb.Data
         public static ExportProgress ExportDataAsJson(this IDbConnection connection,
             string tableName,
             string filename,
-            IList<CopyColumnMapping> mappings = null,
+            IList<ColumnMapping> mappings = null,
             QueryGroup where = null,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<ExportProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.ExportDataAsJson,
@@ -72,9 +72,9 @@ namespace RepoDb.Data
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are exported from.</param>
         /// <param name="filename">The path of the JSON file. An existing file is replaced.</param>
-        /// <param name="mappings">The mappings of the columns of the table (the source) to the names of the properties of the file (the destination), as in <c>CopyDataTo</c> (see <see cref="CopyColumnMapping"/>). Only the mapped columns are selected and written. The default is <c>null</c>, which selects all the columns of the table.</param>
+        /// <param name="mappings">The mappings of the columns of the table (the source) to the names of the properties of the file (the destination), as in <c>CopyDataTo</c> (see <see cref="ColumnMapping"/>). Only the mapped columns are selected and written. The default is <c>null</c>, which selects all the columns of the table.</param>
         /// <param name="where">The filter of the rows to be exported, which also filters the rows that are counted. The default is <c>null</c>, which exports all the rows.</param>
-        /// <param name="dataInterceptors">The interceptors that every row goes through before it is written, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is written, with the columns that it has. The columns of the row are the ones that are selected (named by the <paramref name="mappings"/>, if there are any). The default is <c>null</c>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row goes through before it is written, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is written, with the columns that it has. The columns of the row are the ones that are selected (named by the <paramref name="mappings"/>, if there are any). The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="ExportProgress"/> after the rows are counted, after every row is written, and when the export has ended (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.ExportDataAsJson"/>.</param>
@@ -87,9 +87,9 @@ namespace RepoDb.Data
         public static Task<ExportProgress> ExportDataAsJsonAsync(this IDbConnection connection,
             string tableName,
             string filename,
-            IList<CopyColumnMapping> mappings = null,
+            IList<ColumnMapping> mappings = null,
             QueryGroup where = null,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<ExportProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.ExportDataAsJson,
@@ -104,14 +104,14 @@ namespace RepoDb.Data
         #region ExportDataAsJson (TEntity, Sync)
 
         /// <summary>
-        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a JSON file. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{CopyColumnMapping}, QueryGroup, IList{IDataInterceptor{CopyRow}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a JSON file. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="filename">The path of the JSON file. An existing file is replaced.</param>
-        /// <param name="mappings">The mappings of the columns of the table (the source) to the names of the properties of the file (the destination), as in <c>CopyDataTo</c> (see <see cref="CopyColumnMapping"/>). Only the mapped columns are selected and written. The default is <c>null</c>, which selects all the columns of the table.</param>
+        /// <param name="mappings">The mappings of the columns of the table (the source) to the names of the properties of the file (the destination), as in <c>CopyDataTo</c> (see <see cref="ColumnMapping"/>). Only the mapped columns are selected and written. The default is <c>null</c>, which selects all the columns of the table.</param>
         /// <param name="where">The expression used to filter the rows of the table to be exported, which also filters the rows that are counted. The default is <c>null</c>, which exports all the rows.</param>
-        /// <param name="dataInterceptors">The interceptors that every row goes through before it is written, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is written, with the columns that it has. The columns of the row are the ones that are selected (named by the <paramref name="mappings"/>, if there are any). The default is <c>null</c>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row goes through before it is written, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is written, with the columns that it has. The columns of the row are the ones that are selected (named by the <paramref name="mappings"/>, if there are any). The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="ExportProgress"/> after the rows are counted, after every row is written, and when the export has ended (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.ExportDataAsJson"/>.</param>
@@ -122,9 +122,9 @@ namespace RepoDb.Data
         /// <exception cref="InvalidOperationException">A data interceptor returned <c>null</c>.</exception>
         public static ExportProgress ExportDataAsJson<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string filename,
-            IList<CopyColumnMapping> mappings = null,
+            IList<ColumnMapping> mappings = null,
             Expression<Func<TEntity, bool>> where = null,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<ExportProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.ExportDataAsJson,
@@ -133,15 +133,15 @@ namespace RepoDb.Data
             connection.ExportDataAsJson(ClassMappedNameCache.Get<TEntity>(), filename, mappings, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace);
 
         /// <summary>
-        /// Exports the rows of a table into a JSON file, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{CopyColumnMapping}, QueryGroup, IList{IDataInterceptor{CopyRow}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of a table into a JSON file, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that the expression is of.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are exported from.</param>
         /// <param name="filename">The path of the JSON file. An existing file is replaced.</param>
-        /// <param name="mappings">The mappings of the columns of the table (the source) to the names of the properties of the file (the destination), as in <c>CopyDataTo</c> (see <see cref="CopyColumnMapping"/>). Only the mapped columns are selected and written. The default is <c>null</c>, which selects all the columns of the table.</param>
+        /// <param name="mappings">The mappings of the columns of the table (the source) to the names of the properties of the file (the destination), as in <c>CopyDataTo</c> (see <see cref="ColumnMapping"/>). Only the mapped columns are selected and written. The default is <c>null</c>, which selects all the columns of the table.</param>
         /// <param name="where">The expression used to filter the rows of the table to be exported, which also filters the rows that are counted. The default is <c>null</c>, which exports all the rows.</param>
-        /// <param name="dataInterceptors">The interceptors that every row goes through before it is written, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is written, with the columns that it has. The columns of the row are the ones that are selected (named by the <paramref name="mappings"/>, if there are any). The default is <c>null</c>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row goes through before it is written, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is written, with the columns that it has. The columns of the row are the ones that are selected (named by the <paramref name="mappings"/>, if there are any). The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="ExportProgress"/> after the rows are counted, after every row is written, and when the export has ended (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.ExportDataAsJson"/>.</param>
@@ -153,9 +153,9 @@ namespace RepoDb.Data
         public static ExportProgress ExportDataAsJson<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             string filename,
-            IList<CopyColumnMapping> mappings = null,
+            IList<ColumnMapping> mappings = null,
             Expression<Func<TEntity, bool>> where = null,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<ExportProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.ExportDataAsJson,
@@ -168,14 +168,14 @@ namespace RepoDb.Data
         #region ExportDataAsJson (TEntity, Async)
 
         /// <summary>
-        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a JSON file in an asynchronous way. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{CopyColumnMapping}, QueryGroup, IList{IDataInterceptor{CopyRow}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a JSON file in an asynchronous way. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="filename">The path of the JSON file. An existing file is replaced.</param>
-        /// <param name="mappings">The mappings of the columns of the table (the source) to the names of the properties of the file (the destination), as in <c>CopyDataTo</c> (see <see cref="CopyColumnMapping"/>). Only the mapped columns are selected and written. The default is <c>null</c>, which selects all the columns of the table.</param>
+        /// <param name="mappings">The mappings of the columns of the table (the source) to the names of the properties of the file (the destination), as in <c>CopyDataTo</c> (see <see cref="ColumnMapping"/>). Only the mapped columns are selected and written. The default is <c>null</c>, which selects all the columns of the table.</param>
         /// <param name="where">The expression used to filter the rows of the table to be exported, which also filters the rows that are counted. The default is <c>null</c>, which exports all the rows.</param>
-        /// <param name="dataInterceptors">The interceptors that every row goes through before it is written, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is written, with the columns that it has. The columns of the row are the ones that are selected (named by the <paramref name="mappings"/>, if there are any). The default is <c>null</c>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row goes through before it is written, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is written, with the columns that it has. The columns of the row are the ones that are selected (named by the <paramref name="mappings"/>, if there are any). The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="ExportProgress"/> after the rows are counted, after every row is written, and when the export has ended (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.ExportDataAsJson"/>.</param>
@@ -187,9 +187,9 @@ namespace RepoDb.Data
         /// <exception cref="InvalidOperationException">A data interceptor returned <c>null</c>.</exception>
         public static Task<ExportProgress> ExportDataAsJsonAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string filename,
-            IList<CopyColumnMapping> mappings = null,
+            IList<ColumnMapping> mappings = null,
             Expression<Func<TEntity, bool>> where = null,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<ExportProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.ExportDataAsJson,
@@ -199,15 +199,15 @@ namespace RepoDb.Data
             connection.ExportDataAsJsonAsync(ClassMappedNameCache.Get<TEntity>(), filename, mappings, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace, cancellationToken);
 
         /// <summary>
-        /// Exports the rows of a table into a JSON file in an asynchronous way, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{CopyColumnMapping}, QueryGroup, IList{IDataInterceptor{CopyRow}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of a table into a JSON file in an asynchronous way, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that the expression is of.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are exported from.</param>
         /// <param name="filename">The path of the JSON file. An existing file is replaced.</param>
-        /// <param name="mappings">The mappings of the columns of the table (the source) to the names of the properties of the file (the destination), as in <c>CopyDataTo</c> (see <see cref="CopyColumnMapping"/>). Only the mapped columns are selected and written. The default is <c>null</c>, which selects all the columns of the table.</param>
+        /// <param name="mappings">The mappings of the columns of the table (the source) to the names of the properties of the file (the destination), as in <c>CopyDataTo</c> (see <see cref="ColumnMapping"/>). Only the mapped columns are selected and written. The default is <c>null</c>, which selects all the columns of the table.</param>
         /// <param name="where">The expression used to filter the rows of the table to be exported, which also filters the rows that are counted. The default is <c>null</c>, which exports all the rows.</param>
-        /// <param name="dataInterceptors">The interceptors that every row goes through before it is written, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is written, with the columns that it has. The columns of the row are the ones that are selected (named by the <paramref name="mappings"/>, if there are any). The default is <c>null</c>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row goes through before it is written, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is written, with the columns that it has. The columns of the row are the ones that are selected (named by the <paramref name="mappings"/>, if there are any). The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="ExportProgress"/> after the rows are counted, after every row is written, and when the export has ended (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.ExportDataAsJson"/>.</param>
@@ -220,9 +220,9 @@ namespace RepoDb.Data
         public static Task<ExportProgress> ExportDataAsJsonAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string tableName,
             string filename,
-            IList<CopyColumnMapping> mappings = null,
+            IList<ColumnMapping> mappings = null,
             Expression<Func<TEntity, bool>> where = null,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<ExportProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.ExportDataAsJson,

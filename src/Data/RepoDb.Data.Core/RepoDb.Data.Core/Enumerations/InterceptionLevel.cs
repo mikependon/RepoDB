@@ -11,7 +11,7 @@ namespace RepoDb.Data.Enumerations
     /// <summary>
     /// An enumeration that is used to define the level at which the data is intercepted while being copied.
     /// </summary>
-    public enum CopyInterceptionLevel
+    public enum InterceptionLevel
     {
         /// <summary>
         /// Intercepts the data row by row. The data is streamed and not buffered, so this is the lowest in memory requirements.

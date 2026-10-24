@@ -43,7 +43,7 @@ namespace RepoDb.Data.Helpers
         /// Writes a row that the interceptors returned.
         /// </summary>
         /// <param name="row">The row.</param>
-        void WriteRow(CopyRow row);
+        void WriteRow(Row row);
 
         /// <summary>
         /// Ends the file.
@@ -82,7 +82,7 @@ namespace RepoDb.Data.Helpers
             string[] names) =>
             JsonRowWriter.WriteRow(_writer, record, names);
 
-        public void WriteRow(CopyRow row) =>
+        public void WriteRow(Row row) =>
             JsonRowWriter.WriteRow(_writer, row);
 
         public void End() =>
@@ -144,7 +144,7 @@ namespace RepoDb.Data.Helpers
             _writer.WriteEndElement();
         }
 
-        public void WriteRow(CopyRow row)
+        public void WriteRow(Row row)
         {
             _writer.WriteStartElement(RowName);
             for (var i = 0; i < row.Count; i++)
@@ -227,7 +227,7 @@ namespace RepoDb.Data.Helpers
             _writer.Write(LineBreak);
         }
 
-        public void WriteRow(CopyRow row)
+        public void WriteRow(Row row)
         {
             var names = new string[row.Count];
             for (var i = 0; i < names.Length; i++)

@@ -52,8 +52,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         private static List<XElement> Read(string path) =>
             XDocument.Load(path).Root.Elements("row").ToList();
 
-        private static IList<IDataInterceptor<CopyRow>> Interceptors(params Func<CopyRow, CopyRow>[] transforms) =>
-            transforms.Select(transform => (IDataInterceptor<CopyRow>)new FakeDataInterceptor(transform)).ToList();
+        private static IList<IDataInterceptor<Row>> Interceptors(params Func<Row, Row>[] transforms) =>
+            transforms.Select(transform => (IDataInterceptor<Row>)new FakeDataInterceptor(transform)).ToList();
 
         private static FakeDbConnection Source(int rows = 3) =>
             new FakeDbConnection { Data = FakeDbConnection.CreatePersons(rows) };
@@ -91,17 +91,17 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public void ThrowExceptionOnExportDataAsXmlIfAnInterceptorIsNull()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsXml("Person", NewPath(), dataInterceptors: new List<IDataInterceptor<CopyRow>> { null }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsXml("Person", NewPath(), dataInterceptors: new List<IDataInterceptor<Row>> { null }));
         }
 
         [TestMethod]
         public void ThrowExceptionOnExportDataAsXmlIfAMappingIsNotValid()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsXml("Person", NewPath(), new CopyColumnMapping[] { null }));
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsXml("Person", NewPath(), new[] { new CopyColumnMapping("Id", " ") }));
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsXml("Person", NewPath(), new[] { new CopyColumnMapping("Missing", "Id") }));
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsXml("Person", NewPath(), new[] { new CopyColumnMapping("Id", "Key"), new CopyColumnMapping("Name", "KEY") }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsXml("Person", NewPath(), new ColumnMapping[] { null }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsXml("Person", NewPath(), new[] { new ColumnMapping("Id", " ") }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsXml("Person", NewPath(), new[] { new ColumnMapping("Missing", "Id") }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsXml("Person", NewPath(), new[] { new ColumnMapping("Id", "Key"), new ColumnMapping("Name", "KEY") }));
         }
 
         #endregion
@@ -346,7 +346,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             source.Data.Columns["Name"].ColumnName = "Title";
 
             // Act
-            source.ExportDataAsXml("Person", path, new[] { new CopyColumnMapping("Id", "Key"), new CopyColumnMapping("Name", "Title") });
+            source.ExportDataAsXml("Person", path, new[] { new ColumnMapping("Id", "Key"), new ColumnMapping("Name", "Title") });
 
             // Assert
             StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "[Id] AS [Key], [Name] AS [Title]");

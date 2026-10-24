@@ -51,28 +51,28 @@ namespace RepoDb.Data.Helpers
         }
 
         /// <summary>
-        /// Runs the interceptors over the rows of the file: every row is given to them as a <see cref="CopyRow"/> with the columns of the table that it is loaded into (named by them, typed
+        /// Runs the interceptors over the rows of the file: every row is given to them as a <see cref="Row"/> with the columns of the table that it is loaded into (named by them, typed
         /// by them), then the row that the last interceptor returns is what is loaded. The columns of that row are the ones that are loaded (the ones that the table does not have are
         /// left out, and so are the identity columns if the database generates them), and they must be the same for every row.
         /// </summary>
         private sealed class Interception
         {
-            private readonly IList<IDataInterceptor<CopyRow>> _interceptors;
-            private readonly List<CopyColumn> _columns;
+            private readonly IList<IDataInterceptor<Row>> _interceptors;
+            private readonly List<Column> _columns;
             private readonly ColumnMap _source;
             private readonly Func<string, DbField> _find;
-            private readonly LoadIdentityBehavior _identityBehavior;
+            private readonly IdentityBehavior _identityBehavior;
             private readonly IList<Field> _qualifiers;
             private readonly string _tableName;
             private ColumnMap _map;
             private string[] _names;
             private int[] _ordinals;
 
-            public Interception(IList<IDataInterceptor<CopyRow>> interceptors,
+            public Interception(IList<IDataInterceptor<Row>> interceptors,
                 ColumnMap source,
                 Func<string, DbField> find,
                 Func<string, string> unquote,
-                LoadIdentityBehavior identityBehavior,
+                IdentityBehavior identityBehavior,
                 IList<Field> qualifiers,
                 string tableName)
             {
@@ -82,7 +82,7 @@ namespace RepoDb.Data.Helpers
                 _identityBehavior = identityBehavior;
                 _qualifiers = qualifiers;
                 _tableName = tableName;
-                _columns = source.Fields.Select(field => new CopyColumn(unquote(field.Name), field.Type)).ToList();
+                _columns = source.Fields.Select(field => new Column(unquote(field.Name), field.Type)).ToList();
             }
 
             /// <summary>
@@ -101,7 +101,7 @@ namespace RepoDb.Data.Helpers
             public object[] Apply(object[] values,
                 long rowNumber)
             {
-                var row = RowInterception.Apply(new CopyRow(_columns, values), _interceptors);
+                var row = RowInterception.Apply(new Row(_columns, values), _interceptors);
                 if (_names == null)
                 {
                     Shape(row);
@@ -125,14 +125,14 @@ namespace RepoDb.Data.Helpers
                 return result;
             }
 
-            private void Shape(CopyRow row)
+            private void Shape(Row row)
             {
                 var map = new ColumnMap();
                 var ordinals = new List<int>();
                 for (var i = 0; i < row.Count; i++)
                 {
                     var field = _find(row.Columns[i].Name);
-                    if (field == null || (_identityBehavior == LoadIdentityBehavior.Ignore && field.IsIdentity))
+                    if (field == null || (_identityBehavior == IdentityBehavior.Ignore && field.IsIdentity))
                     {
                         continue;
                     }
@@ -156,7 +156,7 @@ namespace RepoDb.Data.Helpers
                 _map = map;
             }
 
-            private bool IsShape(CopyRow row)
+            private bool IsShape(Row row)
             {
                 if (row.Count != _names.Length)
                 {
@@ -197,18 +197,18 @@ namespace RepoDb.Data.Helpers
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The progress of the load.</returns>
-        public static LoadProgress Run(IDbConnection connection,
+        public static ImportProgress Run(IDbConnection connection,
             string tableName,
             string filename,
             IImportSource source,
             int bufferSize,
             bool bypassExistingRows,
             IList<string> qualifierNames,
-            IList<CopyColumnMapping> mappings,
-            LoadColumnMappingBehavior columnMappingBehavior,
-            LoadIdentityBehavior identityBehavior,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors,
-            Action<LoadProgress> progressCallback,
+            IList<ColumnMapping> mappings,
+            ColumnMappingBehavior columnMappingBehavior,
+            IdentityBehavior identityBehavior,
+            IList<IDataInterceptor<Row>> dataInterceptors,
+            Action<ImportProgress> progressCallback,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
@@ -216,10 +216,10 @@ namespace RepoDb.Data.Helpers
         {
             Validate(connection, tableName, filename, bufferSize, columnMappingBehavior, identityBehavior);
             source.Validate();
-            var map = CreateMap(connection, tableName, transaction, dataInterceptors != null && dataInterceptors.Count > 0 ? LoadIdentityBehavior.KeepIdentity : identityBehavior, source.ReadColumns(), mappings, source.HasAllColumns);
+            var map = CreateMap(connection, tableName, transaction, dataInterceptors != null && dataInterceptors.Count > 0 ? IdentityBehavior.KeepIdentity : identityBehavior, source.ReadColumns(), mappings, source.HasAllColumns);
             var qualifiers = bypassExistingRows ? GetQualifiers(connection, tableName, map, qualifierNames, transaction) : null;
             var interception = CreateInterception(connection, tableName, transaction, identityBehavior, map, qualifiers, dataInterceptors);
-            var progress = new LoadProgress
+            var progress = new ImportProgress
             {
                 Start = DateTime.UtcNow,
                 TotalRowCount = source.CountRows()
@@ -273,18 +273,18 @@ namespace RepoDb.Data.Helpers
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the progress of the load.</returns>
-        public static async Task<LoadProgress> RunAsync(IDbConnection connection,
+        public static async Task<ImportProgress> RunAsync(IDbConnection connection,
             string tableName,
             string filename,
             IImportSource source,
             int bufferSize,
             bool bypassExistingRows,
             IList<string> qualifierNames,
-            IList<CopyColumnMapping> mappings,
-            LoadColumnMappingBehavior columnMappingBehavior,
-            LoadIdentityBehavior identityBehavior,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors,
-            Action<LoadProgress> progressCallback,
+            IList<ColumnMapping> mappings,
+            ColumnMappingBehavior columnMappingBehavior,
+            IdentityBehavior identityBehavior,
+            IList<IDataInterceptor<Row>> dataInterceptors,
+            Action<ImportProgress> progressCallback,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
@@ -293,10 +293,10 @@ namespace RepoDb.Data.Helpers
         {
             Validate(connection, tableName, filename, bufferSize, columnMappingBehavior, identityBehavior);
             source.Validate();
-            var map = CreateMap(connection, tableName, transaction, dataInterceptors != null && dataInterceptors.Count > 0 ? LoadIdentityBehavior.KeepIdentity : identityBehavior, await source.ReadColumnsAsync(cancellationToken).ConfigureAwait(false), mappings, source.HasAllColumns);
+            var map = CreateMap(connection, tableName, transaction, dataInterceptors != null && dataInterceptors.Count > 0 ? IdentityBehavior.KeepIdentity : identityBehavior, await source.ReadColumnsAsync(cancellationToken).ConfigureAwait(false), mappings, source.HasAllColumns);
             var qualifiers = bypassExistingRows ? GetQualifiers(connection, tableName, map, qualifierNames, transaction) : null;
             var interception = CreateInterception(connection, tableName, transaction, identityBehavior, map, qualifiers, dataInterceptors);
-            var progress = new LoadProgress
+            var progress = new ImportProgress
             {
                 Start = DateTime.UtcNow,
                 TotalRowCount = await source.CountRowsAsync(cancellationToken).ConfigureAwait(false)
@@ -350,8 +350,8 @@ namespace RepoDb.Data.Helpers
             string tableName,
             string filename,
             int bufferSize,
-            LoadColumnMappingBehavior columnMappingBehavior,
-            LoadIdentityBehavior identityBehavior)
+            ColumnMappingBehavior columnMappingBehavior,
+            IdentityBehavior identityBehavior)
         {
             if (connection == null)
             {
@@ -369,11 +369,11 @@ namespace RepoDb.Data.Helpers
             {
                 throw new ArgumentOutOfRangeException(nameof(bufferSize), "The buffer size must be at least 1.");
             }
-            if (!Enum.IsDefined(typeof(LoadColumnMappingBehavior), columnMappingBehavior))
+            if (!Enum.IsDefined(typeof(ColumnMappingBehavior), columnMappingBehavior))
             {
                 throw new ArgumentOutOfRangeException(nameof(columnMappingBehavior), "The column mapping behavior is not defined.");
             }
-            if (!Enum.IsDefined(typeof(LoadIdentityBehavior), identityBehavior))
+            if (!Enum.IsDefined(typeof(IdentityBehavior), identityBehavior))
             {
                 throw new ArgumentOutOfRangeException(nameof(identityBehavior), "The identity behavior is not defined.");
             }
@@ -399,9 +399,9 @@ namespace RepoDb.Data.Helpers
         private static ColumnMap CreateMap(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
-            LoadIdentityBehavior identityBehavior,
+            IdentityBehavior identityBehavior,
             IList<string> columns,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             bool hasAllColumns)
         {
             var dbSetting = connection.GetDbSetting();
@@ -434,7 +434,7 @@ namespace RepoDb.Data.Helpers
                     {
                         throw new ArgumentException($"The source column '{mapping.SourceColumn}' does not exist on the file.", "mappings");
                     }
-                    if (identityBehavior == LoadIdentityBehavior.Ignore && field.IsIdentity)
+                    if (identityBehavior == IdentityBehavior.Ignore && field.IsIdentity)
                     {
                         continue;
                     }
@@ -460,7 +460,7 @@ namespace RepoDb.Data.Helpers
                 var field = dbFields.GetByUnquotedName(column.AsUnquoted(true, dbSetting));
                 if (field == null ||
                     map.Index.ContainsKey(column) ||
-                    (identityBehavior == LoadIdentityBehavior.Ignore && field.IsIdentity))
+                    (identityBehavior == IdentityBehavior.Ignore && field.IsIdentity))
                 {
                     continue;
                 }
@@ -489,10 +489,10 @@ namespace RepoDb.Data.Helpers
         private static Interception CreateInterception(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
-            LoadIdentityBehavior identityBehavior,
+            IdentityBehavior identityBehavior,
             ColumnMap map,
             IList<Field> qualifiers,
-            IList<IDataInterceptor<CopyRow>> interceptors)
+            IList<IDataInterceptor<Row>> interceptors)
         {
             interceptors = RowInterception.Normalize(interceptors);
             if (interceptors == null)
@@ -686,14 +686,14 @@ namespace RepoDb.Data.Helpers
             bool bulk,
             IList<Field> qualifiers,
             int size,
-            LoadColumnMappingBehavior columnMappingBehavior,
-            LoadIdentityBehavior identityBehavior,
+            ColumnMappingBehavior columnMappingBehavior,
+            IdentityBehavior identityBehavior,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
             IDbTransaction transaction,
-            LoadProgress progress,
-            Action<LoadProgress> progressCallback)
+            ImportProgress progress,
+            Action<ImportProgress> progressCallback)
         {
             int inserted;
             if (bulk)
@@ -702,8 +702,8 @@ namespace RepoDb.Data.Helpers
                 using (var reader = table.CreateDataReader())
                 {
                     inserted = qualifiers != null
-                        ? BulkInsertInvoker.BulkMerge(connection, tableName, reader, qualifiers, size, columnMappingBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction)
-                        : BulkInsertInvoker.BulkInsert(connection, tableName, reader, size, columnMappingBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction);
+                        ? BulkInsertInvoker.BulkMerge(connection, tableName, reader, qualifiers, size, columnMappingBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction)
+                        : BulkInsertInvoker.BulkInsert(connection, tableName, reader, size, columnMappingBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction);
                 }
             }
             else
@@ -742,14 +742,14 @@ namespace RepoDb.Data.Helpers
             bool bulk,
             IList<Field> qualifiers,
             int size,
-            LoadColumnMappingBehavior columnMappingBehavior,
-            LoadIdentityBehavior identityBehavior,
+            ColumnMappingBehavior columnMappingBehavior,
+            IdentityBehavior identityBehavior,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
             IDbTransaction transaction,
-            LoadProgress progress,
-            Action<LoadProgress> progressCallback,
+            ImportProgress progress,
+            Action<ImportProgress> progressCallback,
             CancellationToken cancellationToken)
         {
             int inserted;
@@ -759,8 +759,8 @@ namespace RepoDb.Data.Helpers
                 using (var reader = table.CreateDataReader())
                 {
                     inserted = qualifiers != null
-                        ? await BulkInsertInvoker.BulkMergeAsync(connection, tableName, reader, qualifiers, size, columnMappingBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false)
-                        : await BulkInsertInvoker.BulkInsertAsync(connection, tableName, reader, size, columnMappingBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+                        ? await BulkInsertInvoker.BulkMergeAsync(connection, tableName, reader, qualifiers, size, columnMappingBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false)
+                        : await BulkInsertInvoker.BulkInsertAsync(connection, tableName, reader, size, columnMappingBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
                 }
             }
             else
@@ -781,8 +781,8 @@ namespace RepoDb.Data.Helpers
         /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
         private static void Succeeded(IList<object[]> buffer,
             int inserted,
-            LoadProgress progress,
-            Action<LoadProgress> progressCallback)
+            ImportProgress progress,
+            Action<ImportProgress> progressCallback)
         {
             buffer.Clear();
             progress.BatchNumber++;

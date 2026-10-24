@@ -327,7 +327,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
             {
                 // Setup
                 var path = Write("[" + string.Join(",", new[] { 1, 2, 3, 4, 1, 6 }.Select(Row)) + "]");
-                LoadProgress progress = null;
+                ImportProgress progress = null;
 
                 // Act/Assert
                 Assert.Throws<DuckDBException>(() => target.ImportDataFromJson("LoadItem", path, bufferSize: 2, progressCallback: p => progress = p));
@@ -506,7 +506,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write("[" + string.Join(",", new[] { 10, 20, 30 }.Select(Row)) + "]");
 
                 // Act
-                target.ImportDataFromJson("LoadItem", path, identityBehavior: LoadIdentityBehavior.KeepIdentity);
+                target.ImportDataFromJson("LoadItem", path, identityBehavior: IdentityBehavior.KeepIdentity);
 
                 // Assert
                 CollectionAssert.AreEqual(new long[] { 10, 20, 30 }, Rows().Select(r => Convert.ToInt64(r["Id"])).ToArray());
@@ -522,7 +522,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Array(3);
 
                 // Act
-                var actual = target.ImportDataFromJson("LoadItem", path, columnMappingBehavior: LoadColumnMappingBehavior.StrictBypass);
+                var actual = target.ImportDataFromJson("LoadItem", path, columnMappingBehavior: ColumnMappingBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3L, actual.LoadedRowCount);

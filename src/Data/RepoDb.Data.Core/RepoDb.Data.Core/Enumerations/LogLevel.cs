@@ -11,7 +11,7 @@ namespace RepoDb.Data.Enumerations
     /// <summary>
     /// An enumeration that is used to define the level (the kind) of a log of the copy operation.
     /// </summary>
-    public enum CopyLogLevel : short
+    public enum LogLevel : short
     {
         /// <summary>
         /// An information about the copy operation.

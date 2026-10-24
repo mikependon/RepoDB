@@ -330,7 +330,7 @@ namespace RepoDb.Data.Oracle.IntegrationTests
                 // Assert
                 Assert.AreEqual(4, Helper.TargetCount("\"Currency\""));
                 Assert.AreEqual("UNUSABLE", Helper.TargetIndexStatus("UQ_Currency_Name"));
-                Assert.IsTrue(progress.Logs.Any(log => log.Level == CopyLogLevel.Info && log.Text.Contains("bulk insert", StringComparison.Ordinal)));
+                Assert.IsTrue(progress.Logs.Any(log => log.Level == LogLevel.Info && log.Text.Contains("bulk insert", StringComparison.Ordinal)));
                 Assert.IsTrue(progress.Logs.All(log => log.DatabaseType == target.GetType()));
             }
         }

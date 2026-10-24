@@ -13,24 +13,24 @@ using RepoDb.Data.Enumerations;
 namespace RepoDb.Data.Core.UnitTests.Enumerations
 {
     [TestClass]
-    public class CopyInterceptionLevelTest
+    public class InterceptionLevelTest
     {
         [TestMethod]
-        public void TestCopyInterceptionLevelDefaultValue()
+        public void TestInterceptionLevelDefaultValue()
         {
             // Act
-            var actual = default(CopyInterceptionLevel);
-            var expected = CopyInterceptionLevel.Row;
+            var actual = default(InterceptionLevel);
+            var expected = InterceptionLevel.Row;
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestCopyInterceptionLevelValues()
+        public void TestInterceptionLevelValues()
         {
             // Act
-            var actual = Enum.GetNames(typeof(CopyInterceptionLevel));
+            var actual = Enum.GetNames(typeof(InterceptionLevel));
             var expected = new[] { "Row", "Table", "RowAndTable" };
 
             // Assert

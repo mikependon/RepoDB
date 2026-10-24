@@ -43,7 +43,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             string.Join(string.Empty, Enumerable.Range(1, count).Select(i => "<row><Id>" + i + "</Id><Name>Name " + i + "</Name><Birthday>2026-01-02T03:04:05Z</Birthday></row>")) +
             "</rows>";
 
-        private static Action<LoadProgress> Snapshot(List<(int Batch, long Loaded, long Total)> seen) =>
+        private static Action<ImportProgress> Snapshot(List<(int Batch, long Loaded, long Total)> seen) =>
             p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount));
 
         private static IEnumerable<FakeExecution> Inserts(FakeDbConnection connection) =>
@@ -571,7 +571,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Setup
             var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
             var destination = new FakeDbConnection();
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Title", "Name") };
 
             // Act
             var actual = destination.ImportDataFromXml("Customer", path, mappings: mappings);
@@ -588,7 +588,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Setup
             var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
             var destination = new FakeDbConnection();
-            var mappings = new[] { new CopyColumnMapping("title", "name"), new CopyColumnMapping("CODE", "ID") };
+            var mappings = new[] { new ColumnMapping("title", "name"), new ColumnMapping("CODE", "ID") };
 
             // Act
             await destination.ImportDataFromXmlAsync("Customer", path, mappings: mappings);
@@ -606,7 +606,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            destination.ImportDataFromXml("Customer", path, mappings: new[] { new CopyColumnMapping("Code", "Id") });
+            destination.ImportDataFromXml("Customer", path, mappings: new[] { new ColumnMapping("Code", "Id") });
 
             // Assert
             var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
@@ -619,7 +619,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Setup
             var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
             var destination = new FakeDbConnection();
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Code", "Name") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Code", "Name") };
 
             // Act
             destination.ImportDataFromXml("Customer", path, mappings: mappings);
@@ -637,7 +637,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            destination.ImportDataFromXml("Customer", path, mappings: new List<CopyColumnMapping>());
+            destination.ImportDataFromXml("Customer", path, mappings: new List<ColumnMapping>());
 
             // Assert
             var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
@@ -651,7 +651,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, mappings: new[] { new CopyColumnMapping("Code", "Missing") }));
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, mappings: new[] { new ColumnMapping("Code", "Missing") }));
         }
 
         [TestMethod]
@@ -659,7 +659,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "id") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Title", "id") };
 
             // Act/Assert
             Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, mappings: mappings));
@@ -672,7 +672,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, mappings: new CopyColumnMapping[] { null }));
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, mappings: new ColumnMapping[] { null }));
         }
 
         [TestMethod]
@@ -682,7 +682,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, mappings: new[] { new CopyColumnMapping(" ", "Id") }));
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, mappings: new[] { new ColumnMapping(" ", "Id") }));
         }
 
         [TestMethod]
@@ -691,7 +691,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Setup
             var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
             var destination = new FakeDbConnection();
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Missing", "Name") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Missing", "Name") };
 
             // Act
             var actual = destination.ImportDataFromXml("Customer", path, mappings: mappings);
@@ -705,7 +705,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Title", "Name") };
 
             // Act
             FakeBulkDestination.Create().ImportDataFromXml("Customer", path, bypassExistingRows: true, mappings: mappings);
@@ -724,7 +724,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
 
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromXml("Customer", path, bypassExistingRows: true, mappings: new[] { new CopyColumnMapping("Title", "Name") }));
+            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromXml("Customer", path, bypassExistingRows: true, mappings: new[] { new ColumnMapping("Title", "Name") }));
             Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
         }
 
@@ -733,10 +733,10 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Title", "Name") };
 
             // Act
-            FakeBulkDestination.Create().ImportDataFromXml("Customer", path, mappings: mappings, identityBehavior: LoadIdentityBehavior.Ignore);
+            FakeBulkDestination.Create().ImportDataFromXml("Customer", path, mappings: mappings, identityBehavior: IdentityBehavior.Ignore);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Name" }, FakeBulkOperations.LastColumns);
@@ -744,8 +744,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
         #region Data Interceptors
 
-        private static IList<IDataInterceptor<CopyRow>> Interceptors(params Func<CopyRow, CopyRow>[] transforms) =>
-            transforms.Select(transform => (IDataInterceptor<CopyRow>)new FakeDataInterceptor(transform)).ToList();
+        private static IList<IDataInterceptor<Row>> Interceptors(params Func<Row, Row>[] transforms) =>
+            transforms.Select(transform => (IDataInterceptor<Row>)new FakeDataInterceptor(transform)).ToList();
 
         private static List<object> InsertedValues(FakeDbConnection connection) =>
             connection.Executions.Where(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal)).SelectMany(e => e.Parameters.Values).ToList();
@@ -805,7 +805,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("<rows><row><Code>7</Code><Title>Seven</Title></row></rows>");
             var names = new List<string>();
             var interceptors = Interceptors(row => { names.AddRange(row.Columns.Select(c => c.Name)); return row; });
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Title", "Name") };
 
             // Act
             new FakeDbConnection().ImportDataFromXml("Customer", path, mappings, dataInterceptors: interceptors);
@@ -866,7 +866,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var interceptors = Interceptors(row => { row["Id"] = 500; return row; });
 
             // Act
-            FakeBulkDestination.Create().ImportDataFromXml("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore, dataInterceptors: interceptors);
+            FakeBulkDestination.Create().ImportDataFromXml("Customer", path, identityBehavior: IdentityBehavior.Ignore, dataInterceptors: interceptors);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Name", "Birthday" }, FakeBulkOperations.LastColumns);
@@ -917,7 +917,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(Rows(1));
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, dataInterceptors: new List<IDataInterceptor<CopyRow>> { null }));
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, dataInterceptors: new List<IDataInterceptor<Row>> { null }));
         }
 
         [TestMethod]
@@ -936,7 +936,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var path = Write(Rows(1));
-            var interceptors = Interceptors(row => new CopyRow(new[] { new CopyColumn("Unknown", typeof(int)) }, new object[] { 1 }));
+            var interceptors = Interceptors(row => new Row(new[] { new Column("Unknown", typeof(int)) }, new object[] { 1 }));
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, dataInterceptors: interceptors));
@@ -950,7 +950,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            destination.ImportDataFromXml("Customer", path, dataInterceptors: new List<IDataInterceptor<CopyRow>>());
+            destination.ImportDataFromXml("Customer", path, dataInterceptors: new List<IDataInterceptor<Row>>());
 
             // Assert
             CollectionAssert.AreEquivalent(new[] { "Name 1", "Name 2" }, InsertedValues(destination).OfType<string>().ToList());

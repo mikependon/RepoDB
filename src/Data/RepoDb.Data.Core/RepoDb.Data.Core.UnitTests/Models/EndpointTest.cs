@@ -8,18 +8,19 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Data.Models;
+using Endpoint = RepoDb.Data.Models.Endpoint;
 using RepoDb.Schema.Models;
 
 namespace RepoDb.Data.Core.UnitTests.Models
 {
     [TestClass]
-    public class CopyEndpointTest
+    public class EndpointTest
     {
         [TestMethod]
-        public void TestCopyEndpointDefaultValues()
+        public void TestEndpointDefaultValues()
         {
             // Act
-            var actual = new CopyEndpoint();
+            var actual = new Endpoint();
 
             // Assert
             Assert.IsNull(actual.Server);
@@ -30,13 +31,13 @@ namespace RepoDb.Data.Core.UnitTests.Models
         }
 
         [TestMethod]
-        public void TestCopyEndpointPropertiesCanBeSet()
+        public void TestEndpointPropertiesCanBeSet()
         {
             // Setup
             var table = new TableInfo("Person", "dbo", "Source");
 
             // Act
-            var actual = new CopyEndpoint
+            var actual = new Endpoint
             {
                 Server = "localhost",
                 Database = "Source",

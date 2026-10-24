@@ -67,7 +67,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -86,7 +86,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` CHAR(3) NOT NULL, `Name` VARCHAR(50) NOT NULL, `Extra` INT NULL, CONSTRAINT `PK_Currency` PRIMARY KEY (`Code`));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -106,7 +106,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` CHAR(3) NOT NULL, CONSTRAINT `PK_Currency` PRIMARY KEY (`Code`));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -140,7 +140,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip)).RowCount;
+                var actual = (await source.CopyDataToAsync("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -216,7 +216,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Throw));
                 Assert.IsFalse(Helper.TargetTableExists("Person"));
                 Assert.AreEqual(0, Helper.TargetCount("`Country`"));
             }
@@ -248,7 +248,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: TableExistsBehavior.Throw).RowCount;
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: RelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: TableExistsBehavior.Throw).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -369,11 +369,11 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents);
                 Helper.ExecuteOnTarget("INSERT INTO `Country` (`Id`, `Name`) VALUES (100, 'Atlantis');");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Drop).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Drop).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -435,10 +435,10 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                await source.CopyDataToAsync("Person", target, relationshipBehavior: RelationshipBehavior.Parents);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Drop)).RowCount;
+                var actual = (await source.CopyDataToAsync("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Drop)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -505,7 +505,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Assert.IsFalse(TargetIndexExists("`Person`", "IX_Person_Name"));
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -562,7 +562,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.CreateTargetTables("Country", "Person");
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: RelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -604,7 +604,7 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Align)).RowCount;
+                var actual = (await source.CopyDataToAsync("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Align)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);

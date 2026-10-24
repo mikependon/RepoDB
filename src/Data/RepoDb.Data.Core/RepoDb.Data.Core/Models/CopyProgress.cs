@@ -58,9 +58,9 @@ namespace RepoDb.Data.Models
         public IList<CopyProgressItem> Items { get; internal set; } = new List<CopyProgressItem>();
 
         /// <summary>
-        /// Gets the logs of the operation (see <see cref="CopyLog"/>), for all the tables.
+        /// Gets the logs of the operation (see <see cref="Log"/>), for all the tables.
         /// </summary>
-        public IList<CopyLog> Logs { get; internal set; } = new List<CopyLog>();
+        public IList<Log> Logs { get; internal set; } = new List<Log>();
 
         /// <summary>
         /// Gets the number of rows that were copied so far, for all the tables.

@@ -23,7 +23,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
 {
     /// <summary>
     /// Copies the rows of a table together with the rows of the tables that are related to it (the Country, Person, Pet and Toy tables
-    /// form a tree: each one references the previous one), as defined by the <see cref="CopyRelationshipBehavior"/>.
+    /// form a tree: each one references the previous one), as defined by the <see cref="RelationshipBehavior"/>.
     /// </summary>
     [TestClass]
     public class CopyDataToRelationshipTest
@@ -87,7 +87,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 source.CopyDataTo("Country", target);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.TableOnly).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.TableOnly).RowCount;
 
                 // Assert
                 Assert.AreEqual(6, actual);
@@ -108,7 +108,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.TableOnly);
+                source.CopyDataTo("Country", target, relationshipBehavior: RelationshipBehavior.TableOnly);
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "\"Country\"" }, Helper.TargetTables().ToArray());
@@ -129,7 +129,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -147,7 +147,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Toy", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
+                var actual = source.CopyDataTo("Toy", target, relationshipBehavior: RelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -165,7 +165,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: RelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -183,7 +183,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents);
 
                 // Assert
                 CollectionAssert.DoesNotContain(Helper.TargetTables(), "\"Pet\"");
@@ -202,7 +202,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
+                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: RelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -221,7 +221,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<SqliteException>(() => source.CopyDataTo("CycleA", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
+                Assert.Throws<SqliteException>(() => source.CopyDataTo("CycleA", target, relationshipBehavior: RelationshipBehavior.Parents));
             }
         }
 
@@ -235,7 +235,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Ledger", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
+                var actual = source.CopyDataTo("Ledger", target, relationshipBehavior: RelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(2 + 2, actual);
@@ -259,7 +259,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: RelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -278,7 +278,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 source.CopyDataTo("Country", target, tableExistenceBehavior: TableExistsBehavior.Throw);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(6 + 5 + 5, actual);
@@ -296,7 +296,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<SqliteException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children));
+                Assert.Throws<SqliteException>(() => source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Children));
                 Assert.AreEqual(0, Helper.TargetCount("\"Person\""));
             }
         }
@@ -312,7 +312,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 source.CopyDataTo("Country", target, tableExistenceBehavior: TableExistsBehavior.Throw);
 
                 // Act
-                source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Children);
 
                 // Assert
                 CollectionAssert.DoesNotContain(Helper.TargetTables(), "\"Currency\"");
@@ -330,7 +330,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
+                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: RelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -356,7 +356,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo(tableName, target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren).RowCount;
+                var actual = source.CopyDataTo(tableName, target, relationshipBehavior: RelationshipBehavior.ParentsAndChildren).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -374,7 +374,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+                source.CopyDataTo("Pet", target, relationshipBehavior: RelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 CollectionAssert.DoesNotContain(Helper.TargetTables(), "\"Currency\"");
@@ -393,7 +393,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren).RowCount;
+                var actual = source.CopyDataTo("Employee", target, relationshipBehavior: RelationshipBehavior.ParentsAndChildren).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -412,7 +412,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<SqliteException>(() => source.CopyDataTo("CycleB", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren));
+                Assert.Throws<SqliteException>(() => source.CopyDataTo("CycleB", target, relationshipBehavior: RelationshipBehavior.ParentsAndChildren));
             }
         }
 
@@ -430,7 +430,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: RelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -450,7 +450,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<SqliteException>(() => source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Name", "Japan")), relationshipBehavior: CopyRelationshipBehavior.Children));
+                Assert.Throws<SqliteException>(() => source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Name", "Japan")), relationshipBehavior: RelationshipBehavior.Children));
             }
         }
 
@@ -464,7 +464,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<SqliteException>(() => source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren));
+                Assert.Throws<SqliteException>(() => source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: RelationshipBehavior.ParentsAndChildren));
             }
         }
 
@@ -478,7 +478,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 1000)), relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
+                var actual = source.CopyDataTo("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 1000)), relationshipBehavior: RelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -497,7 +497,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo<Entities.Person>(target, p => p.CountryId == 2, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
+                var actual = source.CopyDataTo<Entities.Person>(target, p => p.CountryId == 2, relationshipBehavior: RelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -517,10 +517,10 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents);
 
                 // Act/Assert
-                Assert.Throws<SqliteException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
+                Assert.Throws<SqliteException>(() => source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents));
                 Assert.AreEqual(3, Helper.TargetCount("\"Country\""));
                 Assert.AreEqual(6, Helper.TargetCount("\"Person\""));
             }
@@ -538,7 +538,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Id\", \"Name\") VALUES (100, 'Atlantis');");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -562,7 +562,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                foreach (var behavior in new[] { CopyRelationshipBehavior.Parents, CopyRelationshipBehavior.Children, CopyRelationshipBehavior.ParentsAndChildren })
+                foreach (var behavior in new[] { RelationshipBehavior.Parents, RelationshipBehavior.Children, RelationshipBehavior.ParentsAndChildren })
                 {
                     Assert.Throws<ArgumentException>(() => source.CopyDataTo("Pet", "PetCopy", target, relationshipBehavior: behavior));
                 }
@@ -577,7 +577,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
             using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<MissingMappingException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
+                Assert.Throws<MissingMappingException>(() => source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents));
                 Assert.AreEqual(0, Helper.TargetTables().Count);
             }
         }
@@ -596,7 +596,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Toy", target, relationshipBehavior: CopyRelationshipBehavior.Parents)).RowCount;
+                var actual = (await source.CopyDataToAsync("Toy", target, relationshipBehavior: RelationshipBehavior.Parents)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -614,7 +614,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children)).RowCount;
+                var actual = (await source.CopyDataToAsync("Country", target, relationshipBehavior: RelationshipBehavior.Children)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -632,7 +632,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren)).RowCount;
+                var actual = (await source.CopyDataToAsync("Pet", target, relationshipBehavior: RelationshipBehavior.ParentsAndChildren)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -650,7 +650,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents)).RowCount;
+                var actual = (await source.CopyDataToAsync("Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: RelationshipBehavior.Parents)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -668,7 +668,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<SqliteException>(() => source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Children));
+                await Assert.ThrowsAsync<SqliteException>(() => source.CopyDataToAsync("Person", target, relationshipBehavior: RelationshipBehavior.Children));
             }
         }
 
@@ -682,7 +682,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<ArgumentException>(() => source.CopyDataToAsync("Pet", "PetCopy", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
+                await Assert.ThrowsAsync<ArgumentException>(() => source.CopyDataToAsync("Pet", "PetCopy", target, relationshipBehavior: RelationshipBehavior.Parents));
             }
         }
 
@@ -700,7 +700,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 Assert.AreEqual(4, actual.TableCount);
@@ -730,7 +730,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents);
 
                 // Assert
                 Assert.AreEqual(2, actual.TableCount);
@@ -750,7 +750,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children);
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: RelationshipBehavior.Children);
 
                 // Assert
                 Assert.AreEqual(4, actual.TableCount);
@@ -793,7 +793,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
 
                 // Act
                 var actual = source.CopyDataTo("Person", target,
-                    relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren,
+                    relationshipBehavior: RelationshipBehavior.ParentsAndChildren,
                     progressCallback: p => batches.Add(p.Current.Source.Table.Name));
 
                 // Assert
@@ -813,7 +813,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
 
                 // Act
                 var actual = await source.CopyDataToAsync("Person", target,
-                    relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren);
+                    relationshipBehavior: RelationshipBehavior.ParentsAndChildren);
 
                 // Assert
                 Assert.AreEqual(4, actual.TableCount);

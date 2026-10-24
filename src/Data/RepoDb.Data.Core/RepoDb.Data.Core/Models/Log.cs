@@ -14,7 +14,7 @@ namespace RepoDb.Data.Models
     /// <summary>
     /// A class that holds a log (an information, a warning, an error or a critical information) of a copy operation.
     /// </summary>
-    public class CopyLog
+    public class Log
     {
         #region Properties
 
@@ -26,7 +26,7 @@ namespace RepoDb.Data.Models
         /// <summary>
         /// Gets the level (the kind) of the log: information, warning, error or critical.
         /// </summary>
-        public CopyLogLevel Level { get; internal set; }
+        public LogLevel Level { get; internal set; }
 
         /// <summary>
         /// Gets the text of the log.

@@ -13,13 +13,13 @@ using RepoDb.Data.Models;
 namespace RepoDb.Data.Core.UnitTests.Models
 {
     [TestClass]
-    public class LoadProgressTest
+    public class ImportProgressTest
     {
         [TestMethod]
-        public void TestLoadProgressDefaultValues()
+        public void TestImportProgressDefaultValues()
         {
             // Act
-            var actual = new LoadProgress();
+            var actual = new ImportProgress();
 
             // Assert
             Assert.AreEqual(0, actual.BatchNumber);
@@ -29,13 +29,13 @@ namespace RepoDb.Data.Core.UnitTests.Models
         }
 
         [TestMethod]
-        public void TestLoadProgressPropertiesCanBeSet()
+        public void TestImportProgressPropertiesCanBeSet()
         {
             // Setup
             var start = new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc);
 
             // Act
-            var actual = new LoadProgress
+            var actual = new ImportProgress
             {
                 BatchNumber = 3,
                 LoadedRowCount = 1500,

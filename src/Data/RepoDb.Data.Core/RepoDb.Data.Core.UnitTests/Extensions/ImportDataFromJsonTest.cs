@@ -43,7 +43,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         private static string Rows(int count) =>
             "[" + string.Join(",", Enumerable.Range(1, count).Select(i => "{\"Id\":" + i + ",\"Name\":\"Name " + i + "\",\"Birthday\":\"2026-01-02T03:04:05Z\"}")) + "]";
 
-        private static Action<LoadProgress> Snapshot(List<(int Batch, long Loaded, long Total)> seen) =>
+        private static Action<ImportProgress> Snapshot(List<(int Batch, long Loaded, long Total)> seen) =>
             p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount));
 
         [TestInitialize]
@@ -191,7 +191,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(Rows(2));
 
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, identityBehavior: LoadIdentityBehavior.Ignore));
+            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, identityBehavior: IdentityBehavior.Ignore));
         }
 
 
@@ -340,7 +340,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Setup
             var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
             var destination = new FakeDbConnection();
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Title", "Name") };
 
             // Act
             var actual = destination.ImportDataFromJson("Customer", path, mappings: mappings);
@@ -357,7 +357,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Setup
             var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
             var destination = new FakeDbConnection();
-            var mappings = new[] { new CopyColumnMapping("title", "name"), new CopyColumnMapping("CODE", "ID") };
+            var mappings = new[] { new ColumnMapping("title", "name"), new ColumnMapping("CODE", "ID") };
 
             // Act
             await destination.ImportDataFromJsonAsync("Customer", path, mappings: mappings);
@@ -375,7 +375,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            destination.ImportDataFromJson("Customer", path, mappings: new[] { new CopyColumnMapping("Code", "Id") });
+            destination.ImportDataFromJson("Customer", path, mappings: new[] { new ColumnMapping("Code", "Id") });
 
             // Assert
             var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
@@ -388,7 +388,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Setup
             var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
             var destination = new FakeDbConnection();
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Code", "Name") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Code", "Name") };
 
             // Act
             destination.ImportDataFromJson("Customer", path, mappings: mappings);
@@ -406,7 +406,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            destination.ImportDataFromJson("Customer", path, mappings: new List<CopyColumnMapping>());
+            destination.ImportDataFromJson("Customer", path, mappings: new List<ColumnMapping>());
 
             // Assert
             var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
@@ -420,7 +420,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, mappings: new[] { new CopyColumnMapping("Code", "Missing") }));
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, mappings: new[] { new ColumnMapping("Code", "Missing") }));
         }
 
         [TestMethod]
@@ -428,7 +428,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "id") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Title", "id") };
 
             // Act/Assert
             Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, mappings: mappings));
@@ -441,7 +441,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, mappings: new CopyColumnMapping[] { null }));
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, mappings: new ColumnMapping[] { null }));
         }
 
         [TestMethod]
@@ -451,7 +451,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, mappings: new[] { new CopyColumnMapping(" ", "Id") }));
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, mappings: new[] { new ColumnMapping(" ", "Id") }));
         }
 
         [TestMethod]
@@ -460,7 +460,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Setup
             var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
             var destination = new FakeDbConnection();
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Missing", "Name") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Missing", "Name") };
 
             // Act
             var actual = destination.ImportDataFromJson("Customer", path, mappings: mappings);
@@ -474,7 +474,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Title", "Name") };
 
             // Act
             FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, mappings: mappings);
@@ -493,7 +493,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
 
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, mappings: new[] { new CopyColumnMapping("Title", "Name") }));
+            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, mappings: new[] { new ColumnMapping("Title", "Name") }));
             Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
         }
 
@@ -502,10 +502,10 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Title", "Name") };
 
             // Act
-            FakeBulkDestination.Create().ImportDataFromJson("Customer", path, mappings: mappings, identityBehavior: LoadIdentityBehavior.Ignore);
+            FakeBulkDestination.Create().ImportDataFromJson("Customer", path, mappings: mappings, identityBehavior: IdentityBehavior.Ignore);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Name" }, FakeBulkOperations.LastColumns);
@@ -514,8 +514,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
         #region Data Interceptors
 
-        private static IList<IDataInterceptor<CopyRow>> Interceptors(params Func<CopyRow, CopyRow>[] transforms) =>
-            transforms.Select(transform => (IDataInterceptor<CopyRow>)new FakeDataInterceptor(transform)).ToList();
+        private static IList<IDataInterceptor<Row>> Interceptors(params Func<Row, Row>[] transforms) =>
+            transforms.Select(transform => (IDataInterceptor<Row>)new FakeDataInterceptor(transform)).ToList();
 
         private static List<object> InsertedValues(FakeDbConnection connection) =>
             connection.Executions.Where(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal)).SelectMany(e => e.Parameters.Values).ToList();
@@ -575,7 +575,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("[{\"Code\":7,\"Title\":\"Seven\"}]");
             var names = new List<string>();
             var interceptors = Interceptors(row => { names.AddRange(row.Columns.Select(c => c.Name)); return row; });
-            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+            var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Title", "Name") };
 
             // Act
             new FakeDbConnection().ImportDataFromJson("Customer", path, mappings, dataInterceptors: interceptors);
@@ -636,7 +636,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var interceptors = Interceptors(row => { row["Id"] = 500; return row; });
 
             // Act
-            FakeBulkDestination.Create().ImportDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore, dataInterceptors: interceptors);
+            FakeBulkDestination.Create().ImportDataFromJson("Customer", path, identityBehavior: IdentityBehavior.Ignore, dataInterceptors: interceptors);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Name", "Birthday" }, FakeBulkOperations.LastColumns);
@@ -687,7 +687,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(Rows(1));
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, dataInterceptors: new List<IDataInterceptor<CopyRow>> { null }));
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, dataInterceptors: new List<IDataInterceptor<Row>> { null }));
         }
 
         [TestMethod]
@@ -706,7 +706,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var path = Write(Rows(1));
-            var interceptors = Interceptors(row => new CopyRow(new[] { new CopyColumn("Unknown", typeof(int)) }, new object[] { 1 }));
+            var interceptors = Interceptors(row => new Row(new[] { new Column("Unknown", typeof(int)) }, new object[] { 1 }));
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, dataInterceptors: interceptors));
@@ -720,7 +720,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            destination.ImportDataFromJson("Customer", path, dataInterceptors: new List<IDataInterceptor<CopyRow>>());
+            destination.ImportDataFromJson("Customer", path, dataInterceptors: new List<IDataInterceptor<Row>>());
 
             // Assert
             CollectionAssert.AreEquivalent(new[] { "Name 1", "Name 2" }, InsertedValues(destination).OfType<string>().ToList());
@@ -856,7 +856,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var path = Write(Rows(3));
-            var seen = new List<LoadProgress>();
+            var seen = new List<ImportProgress>();
 
             // Act
             var actual = new FakeDbConnection().ImportDataFromJson("Customer", path, bufferSize: 1, progressCallback: seen.Add);
@@ -1150,7 +1150,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var path = Write(Rows(6));
-            var seen = new List<LoadProgress>();
+            var seen = new List<ImportProgress>();
             var destination = new FakeDbConnection();
             var calls = 0;
 
@@ -1283,7 +1283,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("[]");
 
             // Act/Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, columnMappingBehavior: (LoadColumnMappingBehavior)99));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, columnMappingBehavior: (ColumnMappingBehavior)99));
         }
 
         [TestMethod]
@@ -1293,7 +1293,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("[]");
 
             // Act/Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, identityBehavior: (LoadIdentityBehavior)99));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, identityBehavior: (IdentityBehavior)99));
         }
 
         [TestMethod]
@@ -1303,7 +1303,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("[]");
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => new FakeDbConnection().ImportDataFromJsonAsync("Customer", path, identityBehavior: (LoadIdentityBehavior)99));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => new FakeDbConnection().ImportDataFromJsonAsync("Customer", path, identityBehavior: (IdentityBehavior)99));
         }
 
         [TestMethod]
@@ -1330,7 +1330,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            destination.ImportDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
+            destination.ImportDataFromJson("Customer", path, identityBehavior: IdentityBehavior.Ignore);
 
             // Assert
             var execution = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
@@ -1346,7 +1346,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            await destination.ImportDataFromJsonAsync("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
+            await destination.ImportDataFromJsonAsync("Customer", path, identityBehavior: IdentityBehavior.Ignore);
 
             // Assert
             var execution = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
@@ -1360,7 +1360,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write("[{\"Id\":1}]");
 
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore));
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, identityBehavior: IdentityBehavior.Ignore));
         }
 
         [TestMethod]
@@ -1383,7 +1383,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(Rows(3));
 
             // Act
-            new FakeBulkOptionsDbConnection().ImportDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
+            new FakeBulkOptionsDbConnection().ImportDataFromJson("Customer", path, identityBehavior: IdentityBehavior.Ignore);
 
             // Assert
             Assert.AreEqual(FakeBulkCopyOptions.Default, FakeBulkOperations.Calls.Single().Options);
@@ -1409,7 +1409,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(Rows(3));
 
             // Act
-            new FakeBulkIdentityBehaviorDbConnection().ImportDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
+            new FakeBulkIdentityBehaviorDbConnection().ImportDataFromJson("Customer", path, identityBehavior: IdentityBehavior.Ignore);
 
             // Assert
             Assert.IsNull(FakeBulkOperations.Calls.Single().IdentityBehavior);
@@ -1430,10 +1430,10 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [DataTestMethod]
-        [DataRow(LoadColumnMappingBehavior.Automatic, "Automatic")]
-        [DataRow(LoadColumnMappingBehavior.Strict, "Strict")]
-        [DataRow(LoadColumnMappingBehavior.StrictBypass, "StrictBypass")]
-        public void TestImportDataFromJsonPassesTheColumnMappingBehaviorToTheBulkInsert(LoadColumnMappingBehavior behavior,
+        [DataRow(ColumnMappingBehavior.Automatic, "Automatic")]
+        [DataRow(ColumnMappingBehavior.Strict, "Strict")]
+        [DataRow(ColumnMappingBehavior.StrictBypass, "StrictBypass")]
+        public void TestImportDataFromJsonPassesTheColumnMappingBehaviorToTheBulkInsert(ColumnMappingBehavior behavior,
             string expected)
         {
             // Setup
@@ -1453,7 +1453,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(Rows(3));
 
             // Act
-            await new FakeBulkSettingDbConnection().ImportDataFromJsonAsync("Customer", path, columnMappingBehavior: LoadColumnMappingBehavior.StrictBypass);
+            await new FakeBulkSettingDbConnection().ImportDataFromJsonAsync("Customer", path, columnMappingBehavior: ColumnMappingBehavior.StrictBypass);
 
             // Assert
             Assert.AreEqual("StrictBypass", FakeBulkOperations.Calls.Single().ColumnMappingsBehavior);
@@ -1467,7 +1467,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = destination.ImportDataFromJson("Customer", path, columnMappingBehavior: LoadColumnMappingBehavior.Strict);
+            var actual = destination.ImportDataFromJson("Customer", path, columnMappingBehavior: ColumnMappingBehavior.Strict);
 
             // Assert
             Assert.AreEqual(2L, actual.LoadedRowCount);

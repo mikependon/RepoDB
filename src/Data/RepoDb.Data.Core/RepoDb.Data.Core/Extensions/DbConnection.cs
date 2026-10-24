@@ -23,6 +23,8 @@ using RepoDb.Interfaces;
 using RepoDb.Schema;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
+using ColumnMapping = RepoDb.Data.Models.ColumnMapping;
+using Endpoint = RepoDb.Data.Models.Endpoint;
 
 namespace RepoDb.Data
 {
@@ -56,12 +58,12 @@ namespace RepoDb.Data
             string targetTable,
             string targetSchema,
             QueryGroup where,
-            CopyRelationshipBehavior relationshipBehavior,
+            RelationshipBehavior relationshipBehavior,
             TableExistsBehavior tableExistenceBehavior,
             int? commandTimeout,
             ITrace trace,
             IDbTransaction transaction,
-            IList<CopyColumnMapping> mappings = null)
+            IList<ColumnMapping> mappings = null)
         {
             var requested = new List<(string, string, QueryGroup)> { (sourceTable, targetTable, where) };
             if (!IsSchemaRequested(relationshipBehavior, tableExistenceBehavior, targetSchema))
@@ -96,7 +98,7 @@ namespace RepoDb.Data
                     trace: trace,
                     transaction: transaction);
             }
-            if (relationshipBehavior == CopyRelationshipBehavior.TableOnly)
+            if (relationshipBehavior == RelationshipBehavior.TableOnly)
             {
                 return new List<(string, string, QueryGroup)> { (sourceTable, GetName(destinationConnection, results.Single()), where) };
             }
@@ -128,13 +130,13 @@ namespace RepoDb.Data
             string targetTable,
             string targetSchema,
             QueryGroup where,
-            CopyRelationshipBehavior relationshipBehavior,
+            RelationshipBehavior relationshipBehavior,
             TableExistsBehavior tableExistenceBehavior,
             int? commandTimeout,
             ITrace trace,
             IDbTransaction transaction,
             CancellationToken cancellationToken,
-            IList<CopyColumnMapping> mappings = null)
+            IList<ColumnMapping> mappings = null)
         {
             var requested = new List<(string, string, QueryGroup)> { (sourceTable, targetTable, where) };
             if (!IsSchemaRequested(relationshipBehavior, tableExistenceBehavior, targetSchema))
@@ -171,7 +173,7 @@ namespace RepoDb.Data
                     transaction: transaction,
                     cancellationToken: cancellationToken).ConfigureAwait(false);
             }
-            if (relationshipBehavior == CopyRelationshipBehavior.TableOnly)
+            if (relationshipBehavior == RelationshipBehavior.TableOnly)
             {
                 return new List<(string, string, QueryGroup)> { (sourceTable, GetName(destinationConnection, results.Single()), where) };
             }
@@ -268,16 +270,16 @@ namespace RepoDb.Data
 
         /// <summary>
         /// Checks whether the schema of the tables is to be copied before their rows: the default behaviors
-        /// (<see cref="CopyRelationshipBehavior.TableOnly"/> and <see cref="TableExistsBehavior.Skip"/>) without a target schema do not copy it.
+        /// (<see cref="RelationshipBehavior.TableOnly"/> and <see cref="TableExistsBehavior.Skip"/>) without a target schema do not copy it.
         /// </summary>
         /// <param name="relationshipBehavior">The behavior that defines which related tables are copied.</param>
         /// <param name="tableExistenceBehavior">The behavior that defines what happens to the tables that already exist.</param>
         /// <param name="targetSchema">The schema of the target table, or <c>null</c>.</param>
         /// <returns><c>true</c> if the schema has to be copied; otherwise, <c>false</c>.</returns>
-        internal static bool IsSchemaRequested(CopyRelationshipBehavior relationshipBehavior,
+        internal static bool IsSchemaRequested(RelationshipBehavior relationshipBehavior,
             TableExistsBehavior tableExistenceBehavior,
             string targetSchema) =>
-            relationshipBehavior != CopyRelationshipBehavior.TableOnly ||
+            relationshipBehavior != RelationshipBehavior.TableOnly ||
             tableExistenceBehavior != TableExistsBehavior.Skip ||
             !string.IsNullOrWhiteSpace(targetSchema);
 
@@ -286,17 +288,17 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="relationshipBehavior">The behavior of the copy of the data.</param>
         /// <returns>The behavior of the copy of the schema.</returns>
-        internal static RelatedTableBehavior ToSchemaBehavior(CopyRelationshipBehavior relationshipBehavior)
+        internal static RelatedTableBehavior ToSchemaBehavior(RelationshipBehavior relationshipBehavior)
         {
             switch (relationshipBehavior)
             {
-                case CopyRelationshipBehavior.TableOnly:
+                case RelationshipBehavior.TableOnly:
                     return RelatedTableBehavior.TableOnly;
-                case CopyRelationshipBehavior.Parents:
+                case RelationshipBehavior.Parents:
                     return RelatedTableBehavior.Parents;
-                case CopyRelationshipBehavior.Children:
+                case RelationshipBehavior.Children:
                     return RelatedTableBehavior.Children;
-                case CopyRelationshipBehavior.ParentsAndChildren:
+                case RelationshipBehavior.ParentsAndChildren:
                     return RelatedTableBehavior.ParentsAndChildren;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(relationshipBehavior));
@@ -334,10 +336,10 @@ namespace RepoDb.Data
             int bufferSize,
             bool bypassExistingRows,
             IList<string> qualifierNames,
-            LoadColumnMappingBehavior columnMappingsBehavior,
-            LoadIdentityBehavior identityBehavior,
-            IList<CopyColumnMapping> mappings,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors,
+            ColumnMappingBehavior columnMappingsBehavior,
+            IdentityBehavior identityBehavior,
+            IList<ColumnMapping> mappings,
+            IList<IDataInterceptor<Row>> dataInterceptors,
             CopyProgress options,
             Action<CopyProgress> progressCallback,
             int? commandTimeout,
@@ -365,8 +367,8 @@ namespace RepoDb.Data
                         using (var batchReader = buffer.CreateReader())
                         {
                             copied = bypassExistingRows
-                                ? BulkInsertInvoker.BulkMerge(destinationConnection, targetTable, batchReader, qualifiers, bufferSize, columnMappingsBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction)
-                                : BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, batchReader, bufferSize, columnMappingsBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction);
+                                ? BulkInsertInvoker.BulkMerge(destinationConnection, targetTable, batchReader, qualifiers, bufferSize, columnMappingsBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction)
+                                : BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, batchReader, bufferSize, columnMappingsBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction);
                         }
                         total += copied;
                         buffer.Clear();
@@ -437,10 +439,10 @@ namespace RepoDb.Data
             int bufferSize,
             bool bypassExistingRows,
             IList<string> qualifierNames,
-            LoadColumnMappingBehavior columnMappingsBehavior,
-            LoadIdentityBehavior identityBehavior,
-            IList<CopyColumnMapping> mappings,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors,
+            ColumnMappingBehavior columnMappingsBehavior,
+            IdentityBehavior identityBehavior,
+            IList<ColumnMapping> mappings,
+            IList<IDataInterceptor<Row>> dataInterceptors,
             CopyProgress options,
             Action<CopyProgress> progressCallback,
             int? commandTimeout,
@@ -469,8 +471,8 @@ namespace RepoDb.Data
                         using (var batchReader = buffer.CreateReader())
                         {
                             copied = bypassExistingRows
-                                ? await BulkInsertInvoker.BulkMergeAsync(destinationConnection, targetTable, batchReader, qualifiers, bufferSize, columnMappingsBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false)
-                                : await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, batchReader, bufferSize, columnMappingsBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
+                                ? await BulkInsertInvoker.BulkMergeAsync(destinationConnection, targetTable, batchReader, qualifiers, bufferSize, columnMappingsBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false)
+                                : await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, batchReader, bufferSize, columnMappingsBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
                         }
                         total += copied;
                         buffer.Clear();
@@ -543,7 +545,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="mappings">The column mappings of the copy of the data.</param>
         /// <returns>The mappings of the schema copy (<c>null</c> if there are no mappings, which creates all the columns). A source column that is mapped more than once is created with its first destination column.</returns>
-        private static IList<ColumnMapping> ToSchemaMappings(IList<CopyColumnMapping> mappings)
+        private static IList<RepoDb.Schema.Models.ColumnMapping> ToSchemaMappings(IList<ColumnMapping> mappings)
         {
             if (mappings == null || mappings.Count == 0)
             {
@@ -552,7 +554,7 @@ namespace RepoDb.Data
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             return mappings
                 .Where(mapping => seen.Add(mapping.SourceColumn))
-                .Select(mapping => new ColumnMapping(mapping.SourceColumn, mapping.DestinationColumn))
+                .Select(mapping => new RepoDb.Schema.Models.ColumnMapping(mapping.SourceColumn, mapping.DestinationColumn))
                 .ToList();
         }
 
@@ -568,7 +570,7 @@ namespace RepoDb.Data
         internal static (string CommandText, object Param) CreateSelect(IDbConnection connection,
             string sourceTable,
             QueryGroup where,
-            IList<CopyColumnMapping> mappings)
+            IList<ColumnMapping> mappings)
         {
             var statementBuilder = StatementBuilderMapper.Get(connection) ?? throw new InvalidOperationException($"No statement builder is mapped to the connection '{connection.GetType().FullName}'.");
             var hasMappings = mappings?.Count > 0;
@@ -593,7 +595,7 @@ namespace RepoDb.Data
         /// <returns>The statement.</returns>
         private static string Alias(IDbConnection connection,
             string commandText,
-            IList<CopyColumnMapping> mappings)
+            IList<ColumnMapping> mappings)
         {
             const string select = "SELECT ";
             const string from = " FROM ";
@@ -621,7 +623,7 @@ namespace RepoDb.Data
             IDbConnection destinationConnection,
             string sourceTable,
             string targetTable,
-            IList<CopyColumnMapping> mappings)
+            IList<ColumnMapping> mappings)
         {
             if (mappings == null || mappings.Count == 0)
             {
@@ -779,8 +781,8 @@ namespace RepoDb.Data
         /// <returns>The row, as an object that has a property for each column.</returns>
         private static object ToRow(IDataRecord record,
             ISet<string> excludedColumns,
-            IList<IDataInterceptor<CopyRow>> interceptors,
-            List<CopyColumn> columns)
+            IList<IDataInterceptor<Row>> interceptors,
+            List<Column> columns)
         {
             var row = new System.Dynamic.ExpandoObject() as IDictionary<string, object>;
             if (interceptors != null)
@@ -839,10 +841,10 @@ namespace RepoDb.Data
         /// <returns>The names of the columns (without the case), or <c>null</c> if all the columns are copied.</returns>
         private static ISet<string> GetIdentityColumns(IDbConnection destinationConnection,
             string targetTable,
-            LoadIdentityBehavior identityBehavior,
+            IdentityBehavior identityBehavior,
             IDbTransaction transaction)
         {
-            if (identityBehavior != LoadIdentityBehavior.Ignore)
+            if (identityBehavior != IdentityBehavior.Ignore)
             {
                 return null;
             }
@@ -909,9 +911,9 @@ namespace RepoDb.Data
         /// <param name="connection">The connection of the database that the table belongs to.</param>
         /// <param name="table">The name of the table.</param>
         /// <returns>The details of the table.</returns>
-        private static CopyEndpoint CreateEndpoint(IDbConnection connection,
+        private static Endpoint CreateEndpoint(IDbConnection connection,
             string table) =>
-            new CopyEndpoint
+            new Endpoint
             {
                 Server = (connection as System.Data.Common.DbConnection)?.DataSource,
                 Database = connection.Database,
@@ -1006,11 +1008,11 @@ namespace RepoDb.Data
             IDbConnection destinationConnection,
             string targetSchema,
             int bufferSize,
-            CopyRelationshipBehavior relationshipBehavior,
+            RelationshipBehavior relationshipBehavior,
             TableExistsBehavior tableExistenceBehavior,
-            LoadColumnMappingBehavior columnMappingsBehavior,
-            LoadIdentityBehavior identityBehavior,
-            IList<CopyColumnMapping> mappings)
+            ColumnMappingBehavior columnMappingsBehavior,
+            IdentityBehavior identityBehavior,
+            IList<ColumnMapping> mappings)
         {
             if (connection == null)
             {
@@ -1032,15 +1034,15 @@ namespace RepoDb.Data
             {
                 throw new ArgumentOutOfRangeException(nameof(bufferSize), "The buffer size must be greater than zero.");
             }
-            if (!Enum.IsDefined(typeof(LoadColumnMappingBehavior), columnMappingsBehavior))
+            if (!Enum.IsDefined(typeof(ColumnMappingBehavior), columnMappingsBehavior))
             {
                 throw new ArgumentOutOfRangeException(nameof(columnMappingsBehavior), "The column mappings behavior is not defined.");
             }
-            if (!Enum.IsDefined(typeof(LoadIdentityBehavior), identityBehavior))
+            if (!Enum.IsDefined(typeof(IdentityBehavior), identityBehavior))
             {
                 throw new ArgumentOutOfRangeException(nameof(identityBehavior), "The identity behavior is not defined.");
             }
-            if (identityBehavior == LoadIdentityBehavior.Ignore && relationshipBehavior != CopyRelationshipBehavior.TableOnly)
+            if (identityBehavior == IdentityBehavior.Ignore && relationshipBehavior != RelationshipBehavior.TableOnly)
             {
                 throw new ArgumentException("The identity values can only be generated again when only the table is copied, as the rows of the related tables would no longer reference the rows that they referenced.", nameof(identityBehavior));
             }

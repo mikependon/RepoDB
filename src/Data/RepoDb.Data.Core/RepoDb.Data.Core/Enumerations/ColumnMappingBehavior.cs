@@ -13,7 +13,7 @@ namespace RepoDb.Data.Enumerations
     /// inserted with the bulk insert of the provider of the connection. It is passed on to the equivalent enumeration of the provider (i.e.: <c>SqlServerBulkColumnMappingsBehavior</c>), which has the same values.
     /// It is ignored when the provider has no bulk insert, as the rows are then inserted in batches by the columns that both the source and the table have.
     /// </summary>
-    public enum LoadColumnMappingBehavior : short
+    public enum ColumnMappingBehavior : short
     {
         /// <summary>
         /// Only the columns that exist on both the source and the target table (matched by name) are loaded. All the other columns are ignored on both sides, and the order of the columns

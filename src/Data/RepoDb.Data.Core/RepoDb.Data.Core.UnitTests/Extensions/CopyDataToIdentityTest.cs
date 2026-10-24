@@ -45,7 +45,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                source.CopyDataTo("Person", "Customer", new FakeDbConnection(), identityBehavior: (LoadIdentityBehavior)99));
+                source.CopyDataTo("Person", "Customer", new FakeDbConnection(), identityBehavior: (IdentityBehavior)99));
         }
 
         [TestMethod]
@@ -56,7 +56,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Act/Assert
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-                source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), identityBehavior: (LoadIdentityBehavior)99));
+                source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), identityBehavior: (IdentityBehavior)99));
         }
 
         [TestMethod]
@@ -67,7 +67,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                source.CopyDataTo("Person", "Person", new FakeDbConnection(), relationshipBehavior: CopyRelationshipBehavior.Parents, identityBehavior: LoadIdentityBehavior.Ignore));
+                source.CopyDataTo("Person", "Person", new FakeDbConnection(), relationshipBehavior: RelationshipBehavior.Parents, identityBehavior: IdentityBehavior.Ignore));
         }
 
         [TestMethod]
@@ -75,11 +75,11 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var source = new FakeDbConnection();
-            var mappings = new[] { new CopyColumnMapping("Id", "Id") };
+            var mappings = new[] { new ColumnMapping("Id", "Id") };
 
             // Act/Assert
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                source.CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings, identityBehavior: (LoadIdentityBehavior)99));
+                source.CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings, identityBehavior: (IdentityBehavior)99));
         }
 
         #endregion
@@ -107,7 +107,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(3) };
 
             // Act
-            source.CopyDataTo("Person", "Customer", new FakeBulkOptionsDbConnection(), identityBehavior: LoadIdentityBehavior.Ignore);
+            source.CopyDataTo("Person", "Customer", new FakeBulkOptionsDbConnection(), identityBehavior: IdentityBehavior.Ignore);
 
             // Assert
             Assert.AreEqual(FakeBulkCopyOptions.Default, FakeBulkOperations.Calls.Single().Options);
@@ -121,7 +121,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(3) };
 
             // Act
-            await source.CopyDataToAsync("Person", "Customer", new FakeBulkIdentityBehaviorDbConnection(), identityBehavior: LoadIdentityBehavior.Ignore);
+            await source.CopyDataToAsync("Person", "Customer", new FakeBulkIdentityBehaviorDbConnection(), identityBehavior: IdentityBehavior.Ignore);
 
             // Assert
             Assert.IsNull(FakeBulkOperations.Calls.Single().IdentityBehavior);
@@ -169,7 +169,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            source.CopyDataTo("Person", "Customer", destination, identityBehavior: LoadIdentityBehavior.Ignore);
+            source.CopyDataTo("Person", "Customer", destination, identityBehavior: IdentityBehavior.Ignore);
 
             // Assert
             var executions = destination.Executions.Where(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal)).ToList();

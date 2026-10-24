@@ -132,7 +132,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<PostgresException>(() => source.CopyDataTo("Person", "Sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
+                Assert.Throws<PostgresException>(() => source.CopyDataTo("Person", "Sales.Person", target, relationshipBehavior: RelationshipBehavior.Parents));
             }
         }
 
@@ -146,7 +146,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<PostgresException>(() => source.CopyDataTo("Country", "Sales.Country", target, relationshipBehavior: CopyRelationshipBehavior.Children));
+                Assert.Throws<PostgresException>(() => source.CopyDataTo("Country", "Sales.Country", target, relationshipBehavior: RelationshipBehavior.Children));
             }
         }
 
@@ -160,7 +160,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<PostgresException>(() => source.CopyDataTo("Person", "Sales.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents));
+                Assert.Throws<PostgresException>(() => source.CopyDataTo("Person", "Sales.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: RelationshipBehavior.Parents));
             }
         }
 
@@ -265,7 +265,7 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<PostgresException>(() => source.CopyDataToAsync("Person", "Sales.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents));
+                await Assert.ThrowsAsync<PostgresException>(() => source.CopyDataToAsync("Person", "Sales.Person", target, relationshipBehavior: RelationshipBehavior.Parents));
             }
         }
 

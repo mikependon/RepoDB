@@ -144,7 +144,7 @@ namespace RepoDb.Data.Vertica.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", "REPODB_DATA_TGT_SALES.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
+                var actual = source.CopyDataTo("Person", "REPODB_DATA_TGT_SALES.Person", target, relationshipBehavior: RelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -165,7 +165,7 @@ namespace RepoDb.Data.Vertica.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", "REPODB_DATA_TGT_SALES.Country", target, relationshipBehavior: CopyRelationshipBehavior.Children).RowCount;
+                var actual = source.CopyDataTo("Country", "REPODB_DATA_TGT_SALES.Country", target, relationshipBehavior: RelationshipBehavior.Children).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -184,7 +184,7 @@ namespace RepoDb.Data.Vertica.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", "REPODB_DATA_TGT_SALES.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
+                var actual = source.CopyDataTo("Person", "REPODB_DATA_TGT_SALES.Person", target, where: new QueryGroup(new QueryField("Age", Operation.GreaterThan, 40)), relationshipBehavior: RelationshipBehavior.Parents).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 2, actual);
@@ -289,7 +289,7 @@ namespace RepoDb.Data.Vertica.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Person", "REPODB_DATA_TGT_SALES.Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents)).RowCount;
+                var actual = (await source.CopyDataToAsync("Person", "REPODB_DATA_TGT_SALES.Person", target, relationshipBehavior: RelationshipBehavior.Parents)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);

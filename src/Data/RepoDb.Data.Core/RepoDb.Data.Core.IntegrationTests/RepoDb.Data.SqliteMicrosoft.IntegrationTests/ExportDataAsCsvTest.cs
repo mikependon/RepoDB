@@ -76,9 +76,9 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
             return Lines(path).Skip(1).Select(line => line.Split(',')[position]).ToArray();
         }
 
-        private sealed class UpperCaseNameInterceptor : IDataInterceptor<CopyRow>
+        private sealed class UpperCaseNameInterceptor : IDataInterceptor<Row>
         {
-            public CopyRow Transform(CopyRow data)
+            public Row Transform(Row data)
             {
                 data["Name"] = ((string)data["Name"]).ToUpperInvariant();
                 return data;
@@ -159,7 +159,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
             {
                 // Setup
                 var path = NewPath();
-                var mappings = new[] { new CopyColumnMapping("Name", "CountryName"), new CopyColumnMapping("Id", "Key") };
+                var mappings = new[] { new ColumnMapping("Name", "CountryName"), new ColumnMapping("Id", "Key") };
 
                 // Act
                 source.ExportDataAsCsv("Country", path, mappings);
@@ -180,7 +180,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
                 var path = NewPath();
 
                 // Act
-                source.ExportDataAsCsv("Country", path, dataInterceptors: new List<IDataInterceptor<CopyRow>> { new UpperCaseNameInterceptor() });
+                source.ExportDataAsCsv("Country", path, dataInterceptors: new List<IDataInterceptor<Row>> { new UpperCaseNameInterceptor() });
 
                 // Assert
                 var expected = Helper.SourceRows("\"Country\"", "\"Id\"");

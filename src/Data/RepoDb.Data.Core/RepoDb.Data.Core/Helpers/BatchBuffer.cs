@@ -20,7 +20,7 @@ namespace RepoDb.Data.Helpers
     /// <summary>
     /// Buffers the rows of a data reader in memory, a batch at a time: it counts the rows that it reads until the number of rows reaches the batch size, then it gives the batch as a
     /// data reader, so the bulk insert of the provider can send it right away. The buffer is cleared before the next batch is read, so only one batch is in memory at any time.
-    /// If there are interceptors, every row is read as a <see cref="CopyRow"/> and goes through them (see <see cref="RowInterception"/>) before it is buffered: the columns of the
+    /// If there are interceptors, every row is read as a <see cref="Row"/> and goes through them (see <see cref="RowInterception"/>) before it is buffered: the columns of the
     /// batch are the columns of the row that the last interceptor returns (the excluded ones left out), which are the same for every row.
     /// </summary>
     internal sealed class BatchBuffer : IDisposable
@@ -34,8 +34,8 @@ namespace RepoDb.Data.Helpers
         private readonly object[] _values;
         private readonly object[] _row;
         private readonly ISet<string> _excludedColumns;
-        private readonly IList<IDataInterceptor<CopyRow>> _interceptors;
-        private readonly List<CopyColumn> _columns;
+        private readonly IList<IDataInterceptor<Row>> _interceptors;
+        private readonly List<Column> _columns;
         private string[] _shape;
 
         #endregion
@@ -55,7 +55,7 @@ namespace RepoDb.Data.Helpers
         public BatchBuffer(IDataReader source,
             int batchSize,
             ISet<string> excludedColumns = null,
-            IList<IDataInterceptor<CopyRow>> interceptors = null)
+            IList<IDataInterceptor<Row>> interceptors = null)
         {
             if (source == null)
             {
@@ -242,7 +242,7 @@ namespace RepoDb.Data.Helpers
         /// </summary>
         /// <param name="row">The row.</param>
         /// <param name="included">The positions of the columns of the row that are buffered.</param>
-        private void Reshape(CopyRow row,
+        private void Reshape(Row row,
             List<int> included)
         {
             var table = new DataTable();
@@ -262,7 +262,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="row">The row.</param>
         /// <param name="included">The positions of the columns of the row that are buffered.</param>
         /// <returns><c>true</c> if the columns are the same, in the same order; otherwise, <c>false</c>.</returns>
-        private bool IsShape(CopyRow row,
+        private bool IsShape(Row row,
             List<int> included)
         {
             if (included.Count != _shape.Length)

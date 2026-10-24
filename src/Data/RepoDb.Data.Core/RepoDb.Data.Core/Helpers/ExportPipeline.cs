@@ -57,9 +57,9 @@ namespace RepoDb.Data.Helpers
         public static ExportProgress Run(IDbConnection connection,
             string tableName,
             string filename,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             QueryGroup where,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors,
+            IList<IDataInterceptor<Row>> dataInterceptors,
             Action<ExportProgress> progressCallback,
             int? commandTimeout,
             string traceKey,
@@ -129,9 +129,9 @@ namespace RepoDb.Data.Helpers
         public static async Task<ExportProgress> RunAsync(IDbConnection connection,
             string tableName,
             string filename,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             QueryGroup where,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors,
+            IList<IDataInterceptor<Row>> dataInterceptors,
             Action<ExportProgress> progressCallback,
             int? commandTimeout,
             string traceKey,
@@ -199,7 +199,7 @@ namespace RepoDb.Data.Helpers
         internal static void Validate(IDbConnection connection,
             string tableName,
             string filename,
-            IList<CopyColumnMapping> mappings)
+            IList<ColumnMapping> mappings)
         {
             if (connection == null)
             {
@@ -267,8 +267,8 @@ namespace RepoDb.Data.Helpers
         private static void WriteRow(IExportWriter writer,
             IDataRecord reader,
             string[] names,
-            List<CopyColumn> columns,
-            IList<IDataInterceptor<CopyRow>> interceptors)
+            List<Column> columns,
+            IList<IDataInterceptor<Row>> interceptors)
         {
             if (interceptors == null)
             {

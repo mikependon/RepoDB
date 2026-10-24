@@ -58,7 +58,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="writer">The writer.</param>
         /// <param name="row">The row.</param>
         public static void WriteRow(Utf8JsonWriter writer,
-            CopyRow row)
+            Row row)
         {
             writer.WriteStartObject();
             for (var i = 0; i < row.Count; i++)

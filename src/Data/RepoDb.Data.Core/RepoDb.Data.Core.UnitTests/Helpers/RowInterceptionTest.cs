@@ -22,8 +22,8 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
     {
         #region Helpers
 
-        private static CopyRow Row() =>
-            new CopyRow(new[] { new CopyColumn("Value", typeof(string)) }, new object[] { "x" });
+        private static Row Row() =>
+            new Row(new[] { new Column("Value", typeof(string)) }, new object[] { "x" });
 
         #endregion
 
@@ -34,14 +34,14 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         {
             // Act/Assert
             Assert.IsNull(RowInterception.Normalize(null));
-            Assert.IsNull(RowInterception.Normalize(new List<IDataInterceptor<CopyRow>>()));
+            Assert.IsNull(RowInterception.Normalize(new List<IDataInterceptor<Row>>()));
         }
 
         [TestMethod]
         public void TestNormalizeGivesTheInterceptors()
         {
             // Setup
-            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => row) };
+            var interceptors = new List<IDataInterceptor<Row>> { new FakeDataInterceptor(row => row) };
 
             // Act
             var actual = RowInterception.Normalize(interceptors);
@@ -54,7 +54,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void ThrowExceptionOnNormalizeIfAnInterceptorIsNull()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => RowInterception.Normalize(new List<IDataInterceptor<CopyRow>> { null }));
+            Assert.Throws<ArgumentException>(() => RowInterception.Normalize(new List<IDataInterceptor<Row>> { null }));
         }
 
         #endregion
@@ -94,10 +94,10 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         {
             // Setup
             var order = new List<string>();
-            var interceptors = new List<IDataInterceptor<CopyRow>>
+            var interceptors = new List<IDataInterceptor<Row>>
             {
                 new FakeDataInterceptor(row => { order.Add("first:" + row["Value"]); row["Value"] = row["Value"] + "1"; return row; }),
-                new FakeDataInterceptor(row => { order.Add("second:" + row["Value"]); return new CopyRow(row.Columns, new object[] { row["Value"] + "2" }); }),
+                new FakeDataInterceptor(row => { order.Add("second:" + row["Value"]); return new Row(row.Columns, new object[] { row["Value"] + "2" }); }),
                 new FakeDataInterceptor(row => { order.Add("third:" + row["Value"]); row["Value"] = row["Value"] + "3"; return row; })
             };
 
@@ -113,7 +113,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void ThrowExceptionOnApplyIfAnInterceptorReturnsNull()
         {
             // Setup
-            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => row), new FakeDataInterceptor(row => null) };
+            var interceptors = new List<IDataInterceptor<Row>> { new FakeDataInterceptor(row => row), new FakeDataInterceptor(row => null) };
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() => RowInterception.Apply(Row(), interceptors));

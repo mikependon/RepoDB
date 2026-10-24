@@ -61,7 +61,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
             var first = new CopyProgressItem();
             var second = new CopyProgressItem();
             first.Batches.Add(new CopyBatch());
-            first.Logs.Add(new CopyLog());
+            first.Logs.Add(new Log());
 
             // Assert
             Assert.AreEqual(0, second.Batches.Count);

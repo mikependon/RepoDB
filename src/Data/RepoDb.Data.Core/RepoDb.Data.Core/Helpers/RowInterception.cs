@@ -15,7 +15,7 @@ using RepoDb.Data.Models;
 namespace RepoDb.Data.Helpers
 {
     /// <summary>
-    /// Runs the interceptors of the copy over a row of the source: the row is read as a <see cref="CopyRow"/>, then every interceptor is called in the order that they were given,
+    /// Runs the interceptors of the copy over a row of the source: the row is read as a <see cref="Row"/>, then every interceptor is called in the order that they were given,
     /// and each one receives what the previous one returned. What the last one returns is the row that is copied.
     /// </summary>
     internal static class RowInterception
@@ -28,7 +28,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="interceptors">The interceptors, or <c>null</c>.</param>
         /// <returns>The interceptors, or <c>null</c> if there are none.</returns>
         /// <exception cref="ArgumentException">An interceptor is <c>null</c>.</exception>
-        public static IList<IDataInterceptor<CopyRow>> Normalize(IList<IDataInterceptor<CopyRow>> interceptors)
+        public static IList<IDataInterceptor<Row>> Normalize(IList<IDataInterceptor<Row>> interceptors)
         {
             if (interceptors == null || interceptors.Count == 0)
             {
@@ -49,24 +49,24 @@ namespace RepoDb.Data.Helpers
         /// </summary>
         /// <param name="record">The reader (or the record) that has the rows.</param>
         /// <returns>The columns.</returns>
-        public static List<CopyColumn> GetColumns(IDataRecord record)
+        public static List<Column> GetColumns(IDataRecord record)
         {
-            var columns = new List<CopyColumn>(record.FieldCount);
+            var columns = new List<Column>(record.FieldCount);
             for (var i = 0; i < record.FieldCount; i++)
             {
-                columns.Add(new CopyColumn(record.GetName(i), record.GetFieldType(i)));
+                columns.Add(new Column(record.GetName(i), record.GetFieldType(i)));
             }
             return columns;
         }
 
         /// <summary>
-        /// Reads the current row of the reader as a <see cref="CopyRow"/> (a database null is a <c>null</c> value).
+        /// Reads the current row of the reader as a <see cref="Row"/> (a database null is a <c>null</c> value).
         /// </summary>
         /// <param name="record">The reader (or the record) that is on the row.</param>
         /// <param name="columns">The columns of the reader (see <see cref="GetColumns"/>).</param>
         /// <returns>The row.</returns>
-        public static CopyRow Read(IDataRecord record,
-            List<CopyColumn> columns)
+        public static Row Read(IDataRecord record,
+            List<Column> columns)
         {
             var values = new object[columns.Count];
             record.GetValues(values);
@@ -77,7 +77,7 @@ namespace RepoDb.Data.Helpers
                     values[i] = null;
                 }
             }
-            return new CopyRow(columns, values);
+            return new Row(columns, values);
         }
 
         /// <summary>
@@ -87,8 +87,8 @@ namespace RepoDb.Data.Helpers
         /// <param name="interceptors">The interceptors.</param>
         /// <returns>The row that the last interceptor returned.</returns>
         /// <exception cref="InvalidOperationException">An interceptor returned <c>null</c>.</exception>
-        public static CopyRow Apply(CopyRow row,
-            IList<IDataInterceptor<CopyRow>> interceptors)
+        public static Row Apply(Row row,
+            IList<IDataInterceptor<Row>> interceptors)
         {
             for (var i = 0; i < interceptors.Count; i++)
             {

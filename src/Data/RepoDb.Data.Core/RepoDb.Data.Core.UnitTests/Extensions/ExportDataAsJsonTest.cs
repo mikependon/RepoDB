@@ -56,8 +56,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             }
         }
 
-        private static IList<IDataInterceptor<CopyRow>> Interceptors(params Func<CopyRow, CopyRow>[] transforms) =>
-            transforms.Select(transform => (IDataInterceptor<CopyRow>)new FakeDataInterceptor(transform)).ToList();
+        private static IList<IDataInterceptor<Row>> Interceptors(params Func<Row, Row>[] transforms) =>
+            transforms.Select(transform => (IDataInterceptor<Row>)new FakeDataInterceptor(transform)).ToList();
 
         private static FakeDbConnection Source(int rows = 3) =>
             new FakeDbConnection { Data = FakeDbConnection.CreatePersons(rows) };
@@ -104,21 +104,21 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public void ThrowExceptionOnExportDataAsJsonIfAnInterceptorIsNull()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsJson("Person", NewPath(), dataInterceptors: new List<IDataInterceptor<CopyRow>> { null }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsJson("Person", NewPath(), dataInterceptors: new List<IDataInterceptor<Row>> { null }));
         }
 
         [TestMethod]
         public void ThrowExceptionOnExportDataAsJsonIfAMappingIsNull()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsJson("Person", NewPath(), new CopyColumnMapping[] { null }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsJson("Person", NewPath(), new ColumnMapping[] { null }));
         }
 
         [TestMethod]
         public void ThrowExceptionOnExportDataAsJsonIfAMappingHasAnEmptyName()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsJson("Person", NewPath(), new[] { new CopyColumnMapping("Id", " ") }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsJson("Person", NewPath(), new[] { new ColumnMapping("Id", " ") }));
         }
 
         [TestMethod]
@@ -128,7 +128,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = NewPath();
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsJson("Person", path, new[] { new CopyColumnMapping("Missing", "Id") }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsJson("Person", path, new[] { new ColumnMapping("Missing", "Id") }));
             Assert.IsFalse(File.Exists(path));
         }
 
@@ -136,7 +136,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public void ThrowExceptionOnExportDataAsJsonIfADestinationIsMappedMoreThanOnce()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsJson("Person", NewPath(), new[] { new CopyColumnMapping("Id", "Key"), new CopyColumnMapping("Name", "key") }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsJson("Person", NewPath(), new[] { new ColumnMapping("Id", "Key"), new ColumnMapping("Name", "key") }));
         }
 
         #endregion
@@ -394,7 +394,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var source = Source();
-            var mappings = new[] { new CopyColumnMapping("Id", "Key"), new CopyColumnMapping("Name", "Title") };
+            var mappings = new[] { new ColumnMapping("Id", "Key"), new ColumnMapping("Name", "Title") };
 
             // Act
             source.ExportDataAsJson("Person", NewPath(), mappings);
@@ -456,7 +456,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var path = NewPath();
-            var mappings = new[] { new CopyColumnMapping("Id", "Key"), new CopyColumnMapping("Name", "Title") };
+            var mappings = new[] { new ColumnMapping("Id", "Key"), new ColumnMapping("Name", "Title") };
             var source = Source();
             source.Data.Columns["Id"].ColumnName = "Key";
             source.Data.Columns["Name"].ColumnName = "Title";
@@ -541,7 +541,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             source.Data.Columns["Id"].ColumnName = "Key";
 
             // Act
-            source.ExportDataAsJson("Person", NewPath(), new[] { new CopyColumnMapping("Id", "Key") }, dataInterceptors: Interceptors(row => { names.AddRange(row.Columns.Select(c => c.Name)); return row; }));
+            source.ExportDataAsJson("Person", NewPath(), new[] { new ColumnMapping("Id", "Key") }, dataInterceptors: Interceptors(row => { names.AddRange(row.Columns.Select(c => c.Name)); return row; }));
 
             // Assert
             CollectionAssert.Contains(names, "Key");
@@ -687,7 +687,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = NewPath();
             var source = Source();
             var seen = new List<long>();
-            var mappings = new[] { new CopyColumnMapping("Name", "Title") };
+            var mappings = new[] { new ColumnMapping("Name", "Title") };
             source.Data.Columns["Name"].ColumnName = "Title";
 
             // Act

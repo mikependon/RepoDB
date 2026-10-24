@@ -13,16 +13,16 @@ namespace RepoDb.Data.Models
     /// <summary>
     /// A class that represents a column (name and type) of the data being copied.
     /// </summary>
-    public class CopyColumn
+    public class Column
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of <see cref="CopyColumn"/> class.
+        /// Creates a new instance of <see cref="Column"/> class.
         /// </summary>
         /// <param name="name">The name of the column.</param>
         /// <param name="type">The type of the column.</param>
-        public CopyColumn(string name,
+        public Column(string name,
             Type type)
         {
             Name = name;

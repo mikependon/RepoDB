@@ -35,36 +35,36 @@ namespace RepoDb.Data
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
         /// <param name="filename">The path of the XML file.</param>
-        /// <param name="mappings">The mappings of the columns of the file (the source) to the columns of the table (the destination), as in <c>CopyDataTo</c> (see <see cref="CopyColumnMapping"/>). Only the mapped columns are loaded, and a column of the file can be mapped to more than one column of the table. The default is <c>null</c>, which loads the columns of the file that have the same name as a column of the table.</param>
+        /// <param name="mappings">The mappings of the columns of the file (the source) to the columns of the table (the destination), as in <c>CopyDataTo</c> (see <see cref="ColumnMapping"/>). Only the mapped columns are loaded, and a column of the file can be mapped to more than one column of the table. The default is <c>null</c>, which loads the columns of the file that have the same name as a column of the table.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted at once with the bulk insert. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the table as the qualifiers (its identity column if it has no primary key), which must be columns of the file. An <see cref="InvalidOperationException"/> is thrown if the table has neither. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the table that the file has. The default is <c>null</c>, which uses the primary key columns of the table (its identity column if it has no primary key).</param>
-        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the file goes through before it is loaded, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is loaded. The row has the columns of the table that the file is loaded into (after the <c>mappings</c>), with their types, and every row must end with the same columns. The columns that the table does not have are left out, and so is an identity column that is not to be kept (after the interceptors have seen it). The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
+        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the file goes through before it is loaded, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is loaded. The row has the columns of the table that the file is loaded into (after the <c>mappings</c>), with their types, and every row must end with the same columns. The columns that the table does not have are left out, and so is an identity column that is not to be kept (after the interceptors have seen it). The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="ImportProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.ImportDataFromXml"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used. The default is <c>null</c>.</param>
-        /// <returns>The <see cref="LoadProgress"/> of the load, which is the same instance that the callback receives.</returns>
+        /// <returns>The <see cref="ImportProgress"/> of the load, which is the same instance that the callback receives.</returns>
         /// <exception cref="ArgumentNullException">The connection, the table name or the file name is <c>null</c> (or white space).</exception>
         /// <exception cref="ArgumentOutOfRangeException">The buffer size is less than 1, or a behavior is not defined.</exception>
         /// <exception cref="ArgumentException">A data interceptor is <c>null</c>, or a qualifier is empty, or is not a column of the table, or a mapping is not valid (its destination column is not a column of the table or is mapped more than once, or its source column is not a column of the file).</exception>
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         /// <exception cref="FormatException">The file is not valid XML, or a value cannot be converted into the type of its column.</exception>
         /// <exception cref="InvalidOperationException">No column of the file matches a column of the table, or the existing rows are bypassed and the table has no qualifiers (a primary key or an identity column) among the columns of the file.</exception>
-        public static LoadProgress ImportDataFromXml(this IDbConnection connection,
+        public static ImportProgress ImportDataFromXml(this IDbConnection connection,
             string tableName,
             string filename,
-            IList<CopyColumnMapping> mappings = null,
+            IList<ColumnMapping> mappings = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            LoadColumnMappingBehavior columnMappingBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
-            Action<LoadProgress> progressCallback = null,
+            ColumnMappingBehavior columnMappingBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
+            Action<ImportProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.ImportDataFromXml,
             ITrace trace = null,
@@ -83,37 +83,37 @@ namespace RepoDb.Data
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
         /// <param name="filename">The path of the XML file.</param>
-        /// <param name="mappings">The mappings of the columns of the file (the source) to the columns of the table (the destination), as in <c>CopyDataTo</c> (see <see cref="CopyColumnMapping"/>). Only the mapped columns are loaded, and a column of the file can be mapped to more than one column of the table. The default is <c>null</c>, which loads the columns of the file that have the same name as a column of the table.</param>
+        /// <param name="mappings">The mappings of the columns of the file (the source) to the columns of the table (the destination), as in <c>CopyDataTo</c> (see <see cref="ColumnMapping"/>). Only the mapped columns are loaded, and a column of the file can be mapped to more than one column of the table. The default is <c>null</c>, which loads the columns of the file that have the same name as a column of the table.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted at once with the bulk insert. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the table as the qualifiers (its identity column if it has no primary key), which must be columns of the file. An <see cref="InvalidOperationException"/> is thrown if the table has neither. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the table that the file has. The default is <c>null</c>, which uses the primary key columns of the table (its identity column if it has no primary key).</param>
-        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the file goes through before it is loaded, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is loaded. The row has the columns of the table that the file is loaded into (after the <c>mappings</c>), with their types, and every row must end with the same columns. The columns that the table does not have are left out, and so is an identity column that is not to be kept (after the interceptors have seen it). The default is <c>null</c>.</param>
-        /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
+        /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the file goes through before it is loaded, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is loaded. The row has the columns of the table that the file is loaded into (after the <c>mappings</c>), with their types, and every row must end with the same columns. The columns that the table does not have are left out, and so is an identity column that is not to be kept (after the interceptors have seen it). The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="ImportProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.ImportDataFromXml"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="LoadProgress"/> of the load, which is the same instance that the callback receives.</returns>
+        /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="ImportProgress"/> of the load, which is the same instance that the callback receives.</returns>
         /// <exception cref="ArgumentNullException">The connection, the table name or the file name is <c>null</c> (or white space).</exception>
         /// <exception cref="ArgumentOutOfRangeException">The buffer size is less than 1, or a behavior is not defined.</exception>
         /// <exception cref="ArgumentException">A data interceptor is <c>null</c>, or a qualifier is empty, or is not a column of the table, or a mapping is not valid (its destination column is not a column of the table or is mapped more than once, or its source column is not a column of the file).</exception>
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         /// <exception cref="FormatException">The file is not valid XML, or a value cannot be converted into the type of its column.</exception>
         /// <exception cref="InvalidOperationException">No column of the file matches a column of the table, or the existing rows are bypassed and the table has no qualifiers (a primary key or an identity column) among the columns of the file.</exception>
-        public static Task<LoadProgress> ImportDataFromXmlAsync(this IDbConnection connection,
+        public static Task<ImportProgress> ImportDataFromXmlAsync(this IDbConnection connection,
             string tableName,
             string filename,
-            IList<CopyColumnMapping> mappings = null,
+            IList<ColumnMapping> mappings = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            LoadColumnMappingBehavior columnMappingBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
-            Action<LoadProgress> progressCallback = null,
+            ColumnMappingBehavior columnMappingBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
+            Action<ImportProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.ImportDataFromXml,
             ITrace trace = null,

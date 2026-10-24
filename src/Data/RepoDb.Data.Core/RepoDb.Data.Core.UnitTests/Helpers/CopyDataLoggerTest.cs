@@ -27,13 +27,13 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
             var progress = new CopyProgress { Current = item };
 
             // Act
-            CopyDataLogger.Add(progress, new FakeDbConnection(), CopyLogLevel.Warning, "Text");
+            CopyDataLogger.Add(progress, new FakeDbConnection(), LogLevel.Warning, "Text");
 
             // Assert
             Assert.AreEqual(1, progress.Logs.Count);
             Assert.AreEqual(1, item.Logs.Count);
             Assert.AreSame(progress.Logs[0], item.Logs[0]);
-            Assert.AreEqual(CopyLogLevel.Warning, item.Logs[0].Level);
+            Assert.AreEqual(LogLevel.Warning, item.Logs[0].Level);
             Assert.AreEqual("Text", item.Logs[0].Text);
             Assert.AreEqual(typeof(FakeDbConnection), item.Logs[0].DatabaseType);
         }
@@ -45,7 +45,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
             var progress = new CopyProgress();
 
             // Act
-            CopyDataLogger.Add(progress, new FakeDbConnection(), CopyLogLevel.Info, "Text");
+            CopyDataLogger.Add(progress, new FakeDbConnection(), LogLevel.Info, "Text");
 
             // Assert
             Assert.AreEqual(1, progress.Logs.Count);
@@ -55,7 +55,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestAddDoesNothingIfThereIsNoProgress()
         {
             // Act/Assert
-            CopyDataLogger.Add(null, new FakeDbConnection(), CopyLogLevel.Info, "Text");
+            CopyDataLogger.Add(null, new FakeDbConnection(), LogLevel.Info, "Text");
         }
 
         #endregion
@@ -74,7 +74,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
             // Assert
             Assert.IsNull(actual);
             Assert.AreEqual(1, progress.Logs.Count);
-            Assert.AreEqual(CopyLogLevel.Info, progress.Logs[0].Level);
+            Assert.AreEqual(LogLevel.Info, progress.Logs[0].Level);
         }
 
         [TestMethod]
@@ -104,7 +104,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
             // Assert
             Assert.AreEqual(3L, actual);
             Assert.AreEqual(2, progress.Logs.Count);
-            Assert.AreEqual(CopyLogLevel.Warning, progress.Logs[1].Level);
+            Assert.AreEqual(LogLevel.Warning, progress.Logs[1].Level);
             StringAssert.Contains(progress.Logs[1].Text, "3 of 10", System.StringComparison.Ordinal);
             Assert.AreEqual(2, item.Logs.Count);
         }

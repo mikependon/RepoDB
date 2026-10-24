@@ -34,9 +34,9 @@ namespace RepoDb.Data.Models
         public DateTime EndTime { get; internal set; }
 
         /// <summary>
-        /// Gets the logs of the copy of the table (see <see cref="CopyLog"/>).
+        /// Gets the logs of the copy of the table (see <see cref="Log"/>).
         /// </summary>
-        public IList<CopyLog> Logs { get; internal set; } = new List<CopyLog>();
+        public IList<Log> Logs { get; internal set; } = new List<Log>();
 
         /// <summary>
         /// Gets or sets the time (in UTC) when the next batch starts: the end of the progress callback of the previous batch, so the time that the callback takes
@@ -58,7 +58,7 @@ namespace RepoDb.Data.Models
         /// <summary>
         /// Gets the details of the source table.
         /// </summary>
-        public CopyEndpoint Source { get; internal set; } = new CopyEndpoint();
+        public Endpoint Source { get; internal set; } = new Endpoint();
 
         /// <summary>
         /// Gets the time (in UTC) when the copy of the table has started.
@@ -68,7 +68,7 @@ namespace RepoDb.Data.Models
         /// <summary>
         /// Gets the details of the target table, which is the table that the rows of the <see cref="Source"/> were copied into.
         /// </summary>
-        public CopyEndpoint Target { get; internal set; } = new CopyEndpoint();
+        public Endpoint Target { get; internal set; } = new Endpoint();
 
         #endregion
     }

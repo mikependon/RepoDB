@@ -305,7 +305,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestFillBuffersTheRowsThatTheInterceptorsGive()
         {
             // Setup
-            var interceptors = new List<IDataInterceptor<CopyRow>>
+            var interceptors = new List<IDataInterceptor<Row>>
             {
                 new FakeDataInterceptor(row => { row["Id"] = (int)row["Id"] * 10; return row; }),
                 new FakeDataInterceptor(row => { row["Id"] = (int)row["Id"] + 1; return row; })
@@ -327,7 +327,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestFillBuffersTheColumnsThatTheInterceptorsAddOrRemove()
         {
             // Setup
-            var interceptors = new List<IDataInterceptor<CopyRow>>
+            var interceptors = new List<IDataInterceptor<Row>>
             {
                 new FakeDataInterceptor(row => row.Add("Extra", typeof(string), "e" + row["Id"])),
                 new FakeDataInterceptor(row => { row.Remove("Name"); return row; })
@@ -353,7 +353,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestFillKeepsTheNullValuesThatTheInterceptorsGiveAsDbNull()
         {
             // Setup
-            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => { row["Name"] = null; return row; }) };
+            var interceptors = new List<IDataInterceptor<Row>> { new FakeDataInterceptor(row => { row["Name"] = null; return row; }) };
             using (var buffer = new BatchBuffer(CreateSource(1), 10, null, interceptors))
             {
                 // Act
@@ -372,7 +372,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestFillLeavesTheExcludedColumnsOutOfTheRowsThatTheInterceptorsGive()
         {
             // Setup
-            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => row.Add("Extra", typeof(int), 5)) };
+            var interceptors = new List<IDataInterceptor<Row>> { new FakeDataInterceptor(row => row.Add("Extra", typeof(int), 5)) };
             using (var buffer = new BatchBuffer(CreateSource(2), 10, new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "id", "extra" }, interceptors))
             {
                 // Act
@@ -391,7 +391,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         {
             // Setup
             var interceptor = new FakeDataInterceptor(row => row);
-            using (var buffer = new BatchBuffer(CreateSource(5), 2, null, new List<IDataInterceptor<CopyRow>> { interceptor }))
+            using (var buffer = new BatchBuffer(CreateSource(5), 2, null, new List<IDataInterceptor<Row>> { interceptor }))
             {
                 // Act
                 while (buffer.Fill())
@@ -407,7 +407,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public async Task TestFillAsyncBuffersTheRowsThatTheInterceptorsGive()
         {
             // Setup
-            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => { row["Id"] = (int)row["Id"] + 100; return row; }) };
+            var interceptors = new List<IDataInterceptor<Row>> { new FakeDataInterceptor(row => { row["Id"] = (int)row["Id"] + 100; return row; }) };
             using (var buffer = new BatchBuffer(CreateSource(2), 10, null, interceptors))
             {
                 // Act
@@ -425,7 +425,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void TestCreateReaderOfABufferWithInterceptorsHasTheColumnsOfTheSourceIfNoRowIsBuffered()
         {
             // Setup
-            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => row.Add("Extra", typeof(int), 1)) };
+            var interceptors = new List<IDataInterceptor<Row>> { new FakeDataInterceptor(row => row.Add("Extra", typeof(int), 1)) };
             using (var buffer = new BatchBuffer(CreateSource(0), 10, null, interceptors))
             {
                 // Act
@@ -443,7 +443,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void ThrowExceptionOnFillIfAnInterceptorGivesAnotherShapeToAnotherRow()
         {
             // Setup
-            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => (int)row["Id"] == 2 ? row.Add("Extra", typeof(int), 1) : row) };
+            var interceptors = new List<IDataInterceptor<Row>> { new FakeDataInterceptor(row => (int)row["Id"] == 2 ? row.Add("Extra", typeof(int), 1) : row) };
             using (var buffer = new BatchBuffer(CreateSource(3), 10, null, interceptors))
             {
                 // Act/Assert
@@ -455,7 +455,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void ThrowExceptionOnFillIfAnInterceptorReturnsNull()
         {
             // Setup
-            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => null) };
+            var interceptors = new List<IDataInterceptor<Row>> { new FakeDataInterceptor(row => null) };
             using (var buffer = new BatchBuffer(CreateSource(1), 10, null, interceptors))
             {
                 // Act/Assert
@@ -467,7 +467,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void ThrowExceptionOnFillIfAValueDoesNotFitTheTypeOfItsColumn()
         {
             // Setup
-            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => { row["Id"] = "not a number"; return row; }) };
+            var interceptors = new List<IDataInterceptor<Row>> { new FakeDataInterceptor(row => { row["Id"] = "not a number"; return row; }) };
             using (var buffer = new BatchBuffer(CreateSource(1), 10, null, interceptors))
             {
                 // Act/Assert
@@ -479,7 +479,7 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
         public void ThrowExceptionOnBatchBufferIfAnInterceptorIsNull()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new BatchBuffer(CreateSource(1), 10, null, new List<IDataInterceptor<CopyRow>> { null }));
+            Assert.Throws<ArgumentException>(() => new BatchBuffer(CreateSource(1), 10, null, new List<IDataInterceptor<Row>> { null }));
         }
 
         #endregion

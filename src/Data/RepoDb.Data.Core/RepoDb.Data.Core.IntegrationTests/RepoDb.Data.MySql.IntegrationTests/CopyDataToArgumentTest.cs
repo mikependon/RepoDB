@@ -331,7 +331,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
 
                 // Assert (the row of Euro is skipped, since the name is unique)
                 Assert.AreEqual(3, Helper.TargetCount("`Currency`"));
-                Assert.IsTrue(progress.Logs.Any(log => log.Level == CopyLogLevel.Warning && log.Text.Contains("1 of 3 row(s) were skipped", StringComparison.Ordinal)));
+                Assert.IsTrue(progress.Logs.Any(log => log.Level == LogLevel.Warning && log.Text.Contains("1 of 3 row(s) were skipped", StringComparison.Ordinal)));
                 Assert.IsTrue(progress.Logs.All(log => log.DatabaseType == target.GetType()));
             }
         }

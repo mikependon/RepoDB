@@ -32,14 +32,14 @@ namespace RepoDb.Data.Helpers
         /// <param name="text">The text of the log.</param>
         public static void Add(CopyProgress progress,
             IDbConnection destinationConnection,
-            CopyLogLevel level,
+            LogLevel level,
             string text)
         {
             if (progress == null)
             {
                 return;
             }
-            var log = new CopyLog
+            var log = new Log
             {
                 DatabaseType = destinationConnection.GetType(),
                 Level = level,
@@ -111,7 +111,7 @@ namespace RepoDb.Data.Helpers
             long? before,
             long? after)
         {
-            Add(progress, destinationConnection, CopyLogLevel.Info, $"{inserted} row(s) were sent to the table '{table}' by the bulk insert.");
+            Add(progress, destinationConnection, LogLevel.Info, $"{inserted} row(s) were sent to the table '{table}' by the bulk insert.");
             if (!before.HasValue || !after.HasValue)
             {
                 return null;
@@ -121,7 +121,7 @@ namespace RepoDb.Data.Helpers
             {
                 return 0;
             }
-            Add(progress, destinationConnection, CopyLogLevel.Warning,
+            Add(progress, destinationConnection, LogLevel.Warning,
                 $"{inserted - loaded} of {inserted} row(s) were skipped by the database provider in the table '{table}' (a key, a unique or a foreign key constraint was violated). The rows that reference the skipped rows are skipped too.");
             return inserted - loaded;
         }
@@ -137,7 +137,7 @@ namespace RepoDb.Data.Helpers
             IDbConnection destinationConnection,
             string table,
             int merged) =>
-            Add(progress, destinationConnection, CopyLogLevel.Info, $"{merged} row(s) were merged into the table '{table}' by the bulk merge.");
+            Add(progress, destinationConnection, LogLevel.Info, $"{merged} row(s) were merged into the table '{table}' by the bulk merge.");
 
         #endregion
     }

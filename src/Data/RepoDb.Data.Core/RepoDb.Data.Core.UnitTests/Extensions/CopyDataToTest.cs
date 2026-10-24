@@ -19,6 +19,7 @@ using RepoDb.Data.Core.UnitTests.Fake.BulkOperations;
 using RepoDb.Data.Enumerations;
 using RepoDb.Data.Interfaces;
 using RepoDb.Data.Models;
+using ColumnMapping = RepoDb.Data.Models.ColumnMapping;
 using RepoDb.DbSettings;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
@@ -36,11 +37,11 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         private static IDbConnection GetConnection() =>
             new Mock<IDbConnection>().Object;
 
-        private static readonly CopyRelationshipBehavior[] RelationshipBehaviors =
+        private static readonly RelationshipBehavior[] RelationshipBehaviors =
         {
-            CopyRelationshipBehavior.Parents,
-            CopyRelationshipBehavior.Children,
-            CopyRelationshipBehavior.ParentsAndChildren
+            RelationshipBehavior.Parents,
+            RelationshipBehavior.Children,
+            RelationshipBehavior.ParentsAndChildren
         };
 
         private static readonly TableExistsBehavior[] ExistsBehaviors =
@@ -486,7 +487,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), new[] { new CopyColumnMapping("Id", "Id"), new CopyColumnMapping("Name", "Name") }, bypassExistingRows: true);
+            source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), new[] { new ColumnMapping("Id", "Id"), new ColumnMapping("Name", "Name") }, bypassExistingRows: true);
 
             // Assert
             Assert.AreEqual("BulkMerge", FakeBulkOperations.Calls.Single().Method);
@@ -550,7 +551,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             FakeBulkOperations.Reset();
-            var mappings = new[] { new CopyColumnMapping("Id", "Id"), new CopyColumnMapping("Name", "Name") };
+            var mappings = new[] { new ColumnMapping("Id", "Id"), new ColumnMapping("Name", "Name") };
 
             // Act
             new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mappings, bypassExistingRows: true, qualifiers: new[] { "Name" });
@@ -673,9 +674,9 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeBulkSettingDbConnection();
 
             // Act
-            new FakeDbConnection().CopyDataTo("Person", destination, columnMappingsBehavior: LoadColumnMappingBehavior.Strict);
-            new FakeDbConnection().CopyDataTo("Person", "Customer", destination, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass);
-            new FakeDbConnection().CopyDataTo<Person>(destination, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic);
+            new FakeDbConnection().CopyDataTo("Person", destination, columnMappingsBehavior: ColumnMappingBehavior.Strict);
+            new FakeDbConnection().CopyDataTo("Person", "Customer", destination, columnMappingsBehavior: ColumnMappingBehavior.StrictBypass);
+            new FakeDbConnection().CopyDataTo<Person>(destination, columnMappingsBehavior: ColumnMappingBehavior.Automatic);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Strict", "StrictBypass", "Automatic" }, FakeBulkOperations.Calls.Select(c => c.ColumnMappingsBehavior).ToArray());
@@ -689,8 +690,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeBulkSettingDbConnection());
 
             // Act
-            new FakeDbConnection().CopyDataTo("Person", name, columnMappingsBehavior: LoadColumnMappingBehavior.Strict);
-            new FakeDbConnection().CopyDataTo<Person>("Customer", name, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass);
+            new FakeDbConnection().CopyDataTo("Person", name, columnMappingsBehavior: ColumnMappingBehavior.Strict);
+            new FakeDbConnection().CopyDataTo<Person>("Customer", name, columnMappingsBehavior: ColumnMappingBehavior.StrictBypass);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Strict", "StrictBypass" }, FakeBulkOperations.Calls.Select(c => c.ColumnMappingsBehavior).ToArray());
@@ -703,7 +704,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = new FakeDbConnection().CopyDataTo("Person", "Customer", destination, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
+            var actual = new FakeDbConnection().CopyDataTo("Person", "Customer", destination, columnMappingsBehavior: ColumnMappingBehavior.Strict).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -714,14 +715,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public void ThrowExceptionOnCopyDataToIfTheColumnMappingsBehaviorIsNotDefined()
         {
             // Act/Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => GetConnection().CopyDataTo("Person", "Person", GetConnection(), columnMappingsBehavior: (LoadColumnMappingBehavior)99));
+            Assert.Throws<ArgumentOutOfRangeException>(() => GetConnection().CopyDataTo("Person", "Person", GetConnection(), columnMappingsBehavior: (ColumnMappingBehavior)99));
         }
 
         [TestMethod]
         public void ThrowExceptionOnCopyDataToIfTheColumnMappingsBehaviorIsNotTheDefaultAndTheSettingOfTheBulkInsertHasNoBehavior()
         {
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().CopyDataTo("Person", new FakeBulkDbConnection(), columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass));
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().CopyDataTo("Person", new FakeBulkDbConnection(), columnMappingsBehavior: ColumnMappingBehavior.StrictBypass));
         }
 
         [TestMethod]
@@ -771,7 +772,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            var actual = new FakeDbConnection().CopyDataTo("Person", "Person", destination, relationshipBehavior: CopyRelationshipBehavior.Parents).RowCount;
+            var actual = new FakeDbConnection().CopyDataTo("Person", "Person", destination, relationshipBehavior: RelationshipBehavior.Parents).RowCount;
 
             // Assert
             Assert.AreEqual(6, actual);
@@ -790,9 +791,9 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeBulkSettingDbConnection();
 
             // Act
-            await new FakeDbConnection().CopyDataToAsync("Person", destination, columnMappingsBehavior: LoadColumnMappingBehavior.Strict);
-            await new FakeDbConnection().CopyDataToAsync("Person", "Customer", destination, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass);
-            await new FakeDbConnection().CopyDataToAsync<Person>(destination, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic);
+            await new FakeDbConnection().CopyDataToAsync("Person", destination, columnMappingsBehavior: ColumnMappingBehavior.Strict);
+            await new FakeDbConnection().CopyDataToAsync("Person", "Customer", destination, columnMappingsBehavior: ColumnMappingBehavior.StrictBypass);
+            await new FakeDbConnection().CopyDataToAsync<Person>(destination, columnMappingsBehavior: ColumnMappingBehavior.Automatic);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Strict", "StrictBypass", "Automatic" }, FakeBulkOperations.Calls.Select(c => c.ColumnMappingsBehavior).ToArray());
@@ -806,8 +807,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeBulkSettingDbConnection());
 
             // Act
-            await new FakeDbConnection().CopyDataToAsync("Person", name, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass);
-            await new FakeDbConnection().CopyDataToAsync<Person>("Customer", name, columnMappingsBehavior: LoadColumnMappingBehavior.Strict);
+            await new FakeDbConnection().CopyDataToAsync("Person", name, columnMappingsBehavior: ColumnMappingBehavior.StrictBypass);
+            await new FakeDbConnection().CopyDataToAsync<Person>("Customer", name, columnMappingsBehavior: ColumnMappingBehavior.Strict);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "StrictBypass", "Strict" }, FakeBulkOperations.Calls.Select(c => c.ColumnMappingsBehavior).ToArray());
@@ -817,7 +818,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public async Task ThrowExceptionOnCopyDataToAsyncIfTheColumnMappingsBehaviorIsNotDefined()
         {
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => GetConnection().CopyDataToAsync("Person", "Person", GetConnection(), columnMappingsBehavior: (LoadColumnMappingBehavior)99));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => GetConnection().CopyDataToAsync("Person", "Person", GetConnection(), columnMappingsBehavior: (ColumnMappingBehavior)99));
         }
 
         [TestMethod]
@@ -1035,7 +1036,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            var actual = (await new FakeDbConnection().CopyDataToAsync("Person", "Person", destination, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren)).RowCount;
+            var actual = (await new FakeDbConnection().CopyDataToAsync("Person", "Person", destination, relationshipBehavior: RelationshipBehavior.ParentsAndChildren)).RowCount;
 
             // Assert
             Assert.AreEqual(6, actual);
@@ -1065,7 +1066,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var source = new FakeDbConnection();
-            var mappings = new[] { new CopyColumnMapping("Id", "Id"), new CopyColumnMapping("Name", "Birthday") };
+            var mappings = new[] { new ColumnMapping("Id", "Id"), new ColumnMapping("Name", "Birthday") };
 
             // Act
             source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mappings: mappings);
@@ -1081,7 +1082,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Setup
             var source = new FakeDbConnection();
-            var mappings = new[] { new CopyColumnMapping("Name", "Birthday") };
+            var mappings = new[] { new ColumnMapping("Name", "Birthday") };
 
             // Act
             await source.CopyDataToAsync("Person", "Customer", FakeBulkDestination.Create(), mappings: mappings);
@@ -1098,7 +1099,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Act
             source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mappings: null);
-            source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mappings: new List<CopyColumnMapping>());
+            source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mappings: new List<ColumnMapping>());
 
             // Assert
             Assert.IsTrue(source.Executions.All(e => !e.CommandText.Contains(" AS ")));
@@ -1110,7 +1111,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new CopyColumnMapping[] { null }));
+                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new ColumnMapping[] { null }));
         }
 
         [TestMethod]
@@ -1118,9 +1119,9 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyColumnMapping(" ", "Id") }));
+                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new ColumnMapping(" ", "Id") }));
             Assert.Throws<ArgumentException>(() =>
-                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyColumnMapping("Id", null) }));
+                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new ColumnMapping("Id", null) }));
         }
 
         [TestMethod]
@@ -1128,7 +1129,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyColumnMapping("Id", "Name"), new CopyColumnMapping("Name", "name") }));
+                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new ColumnMapping("Id", "Name"), new ColumnMapping("Name", "name") }));
         }
 
         [TestMethod]
@@ -1136,7 +1137,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             var ex = Assert.Throws<ArgumentException>(() =>
-                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyColumnMapping("Missing", "Id") }));
+                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new ColumnMapping("Missing", "Id") }));
             StringAssert.Contains(ex.Message, "Missing");
         }
 
@@ -1145,7 +1146,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             var ex = Assert.Throws<ArgumentException>(() =>
-                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyColumnMapping("Id", "Missing") }));
+                new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeDbConnection(), mappings: new[] { new ColumnMapping("Id", "Missing") }));
             StringAssert.Contains(ex.Message, "Missing");
         }
 
@@ -1154,7 +1155,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             await Assert.ThrowsAsync<ArgumentException>(() =>
-                new FakeDbConnection().CopyDataToAsync("Person", "Customer", new FakeDbConnection(), mappings: new[] { new CopyColumnMapping("Missing", "Id") }));
+                new FakeDbConnection().CopyDataToAsync("Person", "Customer", new FakeDbConnection(), mappings: new[] { new ColumnMapping("Missing", "Id") }));
         }
 
         [TestMethod]
@@ -1165,7 +1166,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(FakeBulkDestination.Create());
 
             // Act
-            var actual = source.CopyDataTo<Person>("Customer", name, new[] { new CopyColumnMapping("Name", "Birthday") }).RowCount;
+            var actual = source.CopyDataTo<Person>("Customer", name, new[] { new ColumnMapping("Name", "Birthday") }).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -1179,7 +1180,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection();
 
             // Act
-            var actual = source.CopyDataTo<Person>(FakeBulkDestination.Create(), new[] { new CopyColumnMapping("Name", "Birthday") }).RowCount;
+            var actual = source.CopyDataTo<Person>(FakeBulkDestination.Create(), new[] { new ColumnMapping("Name", "Birthday") }).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -1194,7 +1195,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(FakeBulkDestination.Create());
 
             // Act
-            source.CopyDataTo("Person", name, new[] { new CopyColumnMapping("Name", "Birthday") });
+            source.CopyDataTo("Person", name, new[] { new ColumnMapping("Name", "Birthday") });
 
             // Assert
             StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
@@ -1207,7 +1208,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection();
 
             // Act
-            source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), new[] { new CopyColumnMapping("Name", "Birthday") }, Filter());
+            source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), new[] { new ColumnMapping("Name", "Birthday") }, Filter());
 
             // Assert
             StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
@@ -1222,7 +1223,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(FakeBulkDestination.Create());
 
             // Act
-            var actual = (await source.CopyDataToAsync<Person>("Customer", name, new[] { new CopyColumnMapping("Name", "Birthday") })).RowCount;
+            var actual = (await source.CopyDataToAsync<Person>("Customer", name, new[] { new ColumnMapping("Name", "Birthday") })).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -1236,7 +1237,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection();
 
             // Act
-            var actual = (await source.CopyDataToAsync<Person>(FakeBulkDestination.Create(), new[] { new CopyColumnMapping("Name", "Birthday") })).RowCount;
+            var actual = (await source.CopyDataToAsync<Person>(FakeBulkDestination.Create(), new[] { new ColumnMapping("Name", "Birthday") })).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -1251,7 +1252,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(FakeBulkDestination.Create());
 
             // Act
-            await source.CopyDataToAsync("Person", name, new[] { new CopyColumnMapping("Name", "Birthday") });
+            await source.CopyDataToAsync("Person", name, new[] { new ColumnMapping("Name", "Birthday") });
 
             // Assert
             StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
@@ -1265,15 +1266,15 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                new FakeDbConnection().CopyDataTo<Person>("Customer", name, new[] { new CopyColumnMapping("Missing", "Id") }));
+                new FakeDbConnection().CopyDataTo<Person>("Customer", name, new[] { new ColumnMapping("Missing", "Id") }));
         }
 
         #endregion
 
         #region Data Interceptors
 
-        private static IList<IDataInterceptor<CopyRow>> Interceptors(params Func<CopyRow, CopyRow>[] transforms) =>
-            transforms.Select(transform => (IDataInterceptor<CopyRow>)new FakeDataInterceptor(transform)).ToList();
+        private static IList<IDataInterceptor<Row>> Interceptors(params Func<Row, Row>[] transforms) =>
+            transforms.Select(transform => (IDataInterceptor<Row>)new FakeDataInterceptor(transform)).ToList();
 
         [TestMethod]
         public void TestCopyDataToCopiesTheRowsThatTheInterceptorsGiveInOrder()
@@ -1327,7 +1328,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Setup
             var names = new List<string>();
             var interceptors = Interceptors(row => { names.AddRange(row.Columns.Select(c => c.Name)); return row; });
-            var mappings = new[] { new CopyColumnMapping("Id", "Id"), new CopyColumnMapping("Name", "Birthday") };
+            var mappings = new[] { new ColumnMapping("Id", "Id"), new ColumnMapping("Name", "Birthday") };
 
             // Act
             new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mappings, dataInterceptors: interceptors);
@@ -1345,7 +1346,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), identityBehavior: LoadIdentityBehavior.Ignore, dataInterceptors: interceptors);
+            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), identityBehavior: IdentityBehavior.Ignore, dataInterceptors: interceptors);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Name", "Birthday" }, FakeBulkOperations.LastColumns);
@@ -1393,7 +1394,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public void ThrowExceptionOnCopyDataToIfAnInterceptorIsNull()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), dataInterceptors: new List<IDataInterceptor<CopyRow>> { null }));
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), dataInterceptors: new List<IDataInterceptor<Row>> { null }));
         }
 
         [TestMethod]
@@ -1403,7 +1404,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            new FakeDbConnection().CopyDataTo("Person", "Customer", destination, dataInterceptors: new List<IDataInterceptor<CopyRow>>());
+            new FakeDbConnection().CopyDataTo("Person", "Customer", destination, dataInterceptors: new List<IDataInterceptor<Row>>());
 
             // Assert
             var values = destination.Executions.Where(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal)).SelectMany(e => e.Parameters.Values).OfType<string>().ToList();

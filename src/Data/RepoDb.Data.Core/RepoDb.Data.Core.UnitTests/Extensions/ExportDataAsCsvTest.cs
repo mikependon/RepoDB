@@ -48,8 +48,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         private string NewPath() =>
             Path.Combine(_directory, Guid.NewGuid().ToString("N") + ".csv");
 
-        private static IList<IDataInterceptor<CopyRow>> Interceptors(params Func<CopyRow, CopyRow>[] transforms) =>
-            transforms.Select(transform => (IDataInterceptor<CopyRow>)new FakeDataInterceptor(transform)).ToList();
+        private static IList<IDataInterceptor<Row>> Interceptors(params Func<Row, Row>[] transforms) =>
+            transforms.Select(transform => (IDataInterceptor<Row>)new FakeDataInterceptor(transform)).ToList();
 
         private static FakeDbConnection Source(int rows = 3) =>
             new FakeDbConnection { Data = FakeDbConnection.CreatePersons(rows) };
@@ -124,16 +124,16 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public void ThrowExceptionOnExportDataAsCsvIfAnInterceptorIsNull()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsCsv("Person", NewPath(), dataInterceptors: new List<IDataInterceptor<CopyRow>> { null }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsCsv("Person", NewPath(), dataInterceptors: new List<IDataInterceptor<Row>> { null }));
         }
 
         [TestMethod]
         public void ThrowExceptionOnExportDataAsCsvIfAMappingIsNotValid()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsCsv("Person", NewPath(), new CopyColumnMapping[] { null }));
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsCsv("Person", NewPath(), new[] { new CopyColumnMapping("Missing", "Id") }));
-            Assert.Throws<ArgumentException>(() => Source().ExportDataAsCsv("Person", NewPath(), new[] { new CopyColumnMapping("Id", "Key"), new CopyColumnMapping("Name", "key") }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsCsv("Person", NewPath(), new ColumnMapping[] { null }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsCsv("Person", NewPath(), new[] { new ColumnMapping("Missing", "Id") }));
+            Assert.Throws<ArgumentException>(() => Source().ExportDataAsCsv("Person", NewPath(), new[] { new ColumnMapping("Id", "Key"), new ColumnMapping("Name", "key") }));
         }
 
         #endregion
@@ -364,7 +364,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             source.Data.Columns["Name"].ColumnName = "Title";
 
             // Act
-            source.ExportDataAsCsv("Person", path, new[] { new CopyColumnMapping("Id", "Key"), new CopyColumnMapping("Name", "Title") });
+            source.ExportDataAsCsv("Person", path, new[] { new ColumnMapping("Id", "Key"), new ColumnMapping("Name", "Title") });
 
             // Assert
             StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "[Id] AS [Key], [Name] AS [Title]");

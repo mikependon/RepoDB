@@ -15,11 +15,11 @@ namespace RepoDb.Data.Core.UnitTests.CustomObjects
     /// <summary>
     /// An interceptor of the copy whose transformation is given as a function.
     /// </summary>
-    public class FakeDataInterceptor : IDataInterceptor<CopyRow>
+    public class FakeDataInterceptor : IDataInterceptor<Row>
     {
-        private readonly Func<CopyRow, CopyRow> _transform;
+        private readonly Func<Row, Row> _transform;
 
-        public FakeDataInterceptor(Func<CopyRow, CopyRow> transform)
+        public FakeDataInterceptor(Func<Row, Row> transform)
         {
             _transform = transform;
         }
@@ -29,7 +29,7 @@ namespace RepoDb.Data.Core.UnitTests.CustomObjects
         /// </summary>
         public int Calls { get; private set; }
 
-        public CopyRow Transform(CopyRow data)
+        public Row Transform(Row data)
         {
             Calls++;
             return _transform(data);

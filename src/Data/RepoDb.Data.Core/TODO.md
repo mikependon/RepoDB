@@ -17,7 +17,7 @@ Suggested additions, sorted alphabetically. The ones to build first are `SyncTo`
 | `Compare` / `Diff` | Verification | Reports the rows that are missing, extra or different between two tables. |
 | `CreateTableFrom` | Schema | Creates the destination table from the source table's schema before copying, so the table no longer has to exist first. |
 | `DetectSchemaDrift` | Schema | Compares column definitions between two databases or environments. |
-| `Mask` / `Anonymize` | Data quality | Hides sensitive columns while copying. Can be built as an `IDataInterceptor<CopyRow>`. |
+| `Mask` / `Anonymize` | Data quality | Hides sensitive columns while copying. Can be built as an `IDataInterceptor<Row>`. |
 | `Partition` | Workflow | Copies in parallel slices, for example by key range. |
 | `Profile` | Data quality | Reports per-column null counts, distinct counts, minimum and maximum values, and the most frequent values. |
 | `Reconcile` | Verification | Compares row counts and checksums as a cheap alternative to a full `Compare`. |

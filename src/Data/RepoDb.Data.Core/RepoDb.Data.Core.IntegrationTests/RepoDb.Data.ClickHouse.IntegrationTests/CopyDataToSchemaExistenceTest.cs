@@ -69,7 +69,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` String, `Name` String, `Extra` Nullable(Int32)) ENGINE = MergeTree ORDER BY (`Code`)");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -89,7 +89,7 @@ namespace RepoDb.Data.ClickHouse.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE `Currency` (`Code` String) ENGINE = MergeTree ORDER BY (`Code`)");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);

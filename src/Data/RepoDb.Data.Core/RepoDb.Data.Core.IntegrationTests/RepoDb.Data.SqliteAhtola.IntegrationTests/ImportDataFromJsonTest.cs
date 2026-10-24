@@ -328,7 +328,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
             {
                 // Setup
                 var path = Write("[" + string.Join(",", new[] { 1, 2, 3, 4, 1, 6 }.Select(Row)) + "]");
-                LoadProgress progress = null;
+                ImportProgress progress = null;
 
                 // Act/Assert
                 Assert.Throws<SqliteException>(() => target.ImportDataFromJson("LoadItem", path, bufferSize: 2, progressCallback: p => progress = p));
@@ -414,7 +414,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
             {
                 // Setup
                 var path = Write("[{\"Code\":5,\"Title\":\"Five\",\"Cost\":5.5,\"Id\":99,\"Name\":\"Ignored\"},{\"Code\":6,\"Title\":\"Six\",\"Cost\":6.5}]");
-                var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name"), new CopyColumnMapping("Cost", "Amount") };
+                var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Title", "Name"), new ColumnMapping("Cost", "Amount") };
 
                 // Act
                 var actual = target.ImportDataFromJson("LoadItem", path, mappings: mappings);
@@ -436,7 +436,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 // Setup
                 Helper.ExecuteOnTarget(@"INSERT INTO ""LoadItem"" (""Id"", ""Name"") VALUES (5, 'Old 5')");
                 var path = Write("[{\"Code\":5,\"Title\":\"Five\"},{\"Code\":6,\"Title\":\"Six\"}]");
-                var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+                var mappings = new[] { new ColumnMapping("Code", "Id"), new ColumnMapping("Title", "Name") };
 
                 // Act
                 await target.ImportDataFromJsonAsync("LoadItem", path, bypassExistingRows: true, mappings: mappings);
@@ -452,18 +452,18 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
 
         #region Data Interceptors
 
-        private sealed class DoubleAmountInterceptor : IDataInterceptor<CopyRow>
+        private sealed class DoubleAmountInterceptor : IDataInterceptor<Row>
         {
-            public CopyRow Transform(CopyRow data)
+            public Row Transform(Row data)
             {
                 data["Amount"] = (decimal)data["Amount"] * 2;
                 return data;
             }
         }
 
-        private sealed class RenameInterceptor : IDataInterceptor<CopyRow>
+        private sealed class RenameInterceptor : IDataInterceptor<Row>
         {
-            public CopyRow Transform(CopyRow data)
+            public Row Transform(Row data)
             {
                 data["Name"] = "Item " + data["Id"] + ": " + data["Name"];
                 return data;
@@ -477,7 +477,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
             {
                 // Setup
                 var path = Array(3);
-                var interceptors = new List<IDataInterceptor<CopyRow>> { new DoubleAmountInterceptor(), new RenameInterceptor() };
+                var interceptors = new List<IDataInterceptor<Row>> { new DoubleAmountInterceptor(), new RenameInterceptor() };
 
                 // Act
                 var actual = target.ImportDataFromJson("LoadItem", path, dataInterceptors: interceptors);
@@ -498,7 +498,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 // Setup
                 Helper.ExecuteOnTarget(@"INSERT INTO ""LoadItem"" (""Id"", ""Name"") VALUES (1, 'Old 1')");
                 var path = Array(2);
-                var interceptors = new List<IDataInterceptor<CopyRow>> { new RenameInterceptor() };
+                var interceptors = new List<IDataInterceptor<Row>> { new RenameInterceptor() };
 
                 // Act
                 await target.ImportDataFromJsonAsync("LoadItem", path, bypassExistingRows: true, dataInterceptors: interceptors);
@@ -657,7 +657,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 var path = Write("[" + string.Join(",", new[] { 10, 20, 30 }.Select(Row)) + "]");
 
                 // Act
-                target.ImportDataFromJson("LoadItem", path, identityBehavior: LoadIdentityBehavior.KeepIdentity);
+                target.ImportDataFromJson("LoadItem", path, identityBehavior: IdentityBehavior.KeepIdentity);
 
                 // Assert
                 CollectionAssert.AreEqual(new long[] { 10, 20, 30 }, Rows().Select(r => Convert.ToInt64(r["Id"])).ToArray());
@@ -673,7 +673,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 var path = Array(3);
 
                 // Act
-                var actual = target.ImportDataFromJson("LoadItem", path, columnMappingBehavior: LoadColumnMappingBehavior.StrictBypass);
+                var actual = target.ImportDataFromJson("LoadItem", path, columnMappingBehavior: ColumnMappingBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3L, actual.LoadedRowCount);
@@ -690,7 +690,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 var path = Write("[" + string.Join(",", new[] { 10, 20, 30 }.Select(Row)) + "]");
 
                 // Act
-                var actual = target.ImportDataFromJson("LoadItem", path, identityBehavior: LoadIdentityBehavior.Ignore);
+                var actual = target.ImportDataFromJson("LoadItem", path, identityBehavior: IdentityBehavior.Ignore);
 
                 // Assert
                 Assert.AreEqual(3L, actual.LoadedRowCount);

@@ -68,7 +68,7 @@ namespace RepoDb.Data.EnterpriseDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -87,7 +87,7 @@ namespace RepoDb.Data.EnterpriseDb.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"Currency\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, \"Extra\" INT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -107,7 +107,7 @@ namespace RepoDb.Data.EnterpriseDb.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"Currency\" (\"Code\" CHAR(3) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
+                var actual = source.CopyDataTo("Currency", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -141,7 +141,7 @@ namespace RepoDb.Data.EnterpriseDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip)).RowCount;
+                var actual = (await source.CopyDataToAsync("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Skip)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -217,7 +217,7 @@ namespace RepoDb.Data.EnterpriseDb.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Throw));
                 Assert.IsFalse(Helper.TargetTableExists("Person"));
                 Assert.AreEqual(0, Helper.TargetCount("\"public\".\"Country\""));
             }
@@ -249,7 +249,7 @@ namespace RepoDb.Data.EnterpriseDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: TableExistsBehavior.Throw).RowCount;
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: RelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: TableExistsBehavior.Throw).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -370,11 +370,11 @@ namespace RepoDb.Data.EnterpriseDb.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents);
                 Helper.ExecuteOnTarget("INSERT INTO \"public\".\"Country\" (\"Id\", \"Name\") VALUES (100, 'Atlantis');");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Drop).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Drop).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -436,10 +436,10 @@ namespace RepoDb.Data.EnterpriseDb.IntegrationTests
             {
                 // Setup
                 Helper.MapSchemaReader(source);
-                await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents);
+                await source.CopyDataToAsync("Person", target, relationshipBehavior: RelationshipBehavior.Parents);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Drop)).RowCount;
+                var actual = (await source.CopyDataToAsync("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Drop)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -506,7 +506,7 @@ namespace RepoDb.Data.EnterpriseDb.IntegrationTests
                 Assert.IsFalse(TargetIndexExists("\"public\".\"Person\"", "IX_Person_Name"));
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -563,7 +563,7 @@ namespace RepoDb.Data.EnterpriseDb.IntegrationTests
                 Helper.CreateTargetTables("Country", "Person");
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: RelationshipBehavior.ParentsAndChildren, tableExistenceBehavior: TableExistsBehavior.Align).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -605,7 +605,7 @@ namespace RepoDb.Data.EnterpriseDb.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Align)).RowCount;
+                var actual = (await source.CopyDataToAsync("Person", target, relationshipBehavior: RelationshipBehavior.Parents, tableExistenceBehavior: TableExistsBehavior.Align)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);

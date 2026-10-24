@@ -13,13 +13,13 @@ using RepoDb.Data.Models;
 namespace RepoDb.Data.Core.UnitTests.Models
 {
     [TestClass]
-    public class CopyColumnTest
+    public class ColumnTest
     {
         [TestMethod]
         public void TestCopyDataColumnConstructorSetsTheNameAndTheType()
         {
             // Act
-            var actual = new CopyColumn("Id", typeof(int));
+            var actual = new Column("Id", typeof(int));
 
             // Assert
             Assert.AreEqual("Id", actual.Name);
@@ -30,7 +30,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
         public void TestCopyDataColumnConstructorAcceptsANullNameAndANullType()
         {
             // Act
-            var actual = new CopyColumn(null, null);
+            var actual = new Column(null, null);
 
             // Assert
             Assert.IsNull(actual.Name);
@@ -41,7 +41,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
         public void TestCopyDataColumnKeepsTheTypeOfTheColumn()
         {
             // Act
-            var actual = new CopyColumn("Birthday", typeof(DateTime?));
+            var actual = new Column("Birthday", typeof(DateTime?));
 
             // Assert
             Assert.AreEqual(typeof(DateTime?), actual.Type);

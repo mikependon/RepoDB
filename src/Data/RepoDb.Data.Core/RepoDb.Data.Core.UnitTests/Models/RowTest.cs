@@ -14,13 +14,13 @@ using RepoDb.Data.Models;
 namespace RepoDb.Data.Core.UnitTests.Models
 {
     [TestClass]
-    public class CopyRowTest
+    public class RowTest
     {
         #region Helpers
 
-        private static CopyRow Create() =>
-            new CopyRow(
-                new[] { new CopyColumn("Id", typeof(int)), new CopyColumn("Name", typeof(string)) },
+        private static Row Create() =>
+            new Row(
+                new[] { new Column("Id", typeof(int)), new Column("Name", typeof(string)) },
                 new object[] { 1, "Michael" });
 
         #endregion
@@ -43,7 +43,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
         public void TestCopyRowConstructorAcceptsARowWithoutColumns()
         {
             // Act
-            var actual = new CopyRow(new CopyColumn[0], new object[0]);
+            var actual = new Row(new Column[0], new object[0]);
 
             // Assert
             Assert.AreEqual(0, actual.Count);
@@ -53,28 +53,28 @@ namespace RepoDb.Data.Core.UnitTests.Models
         public void ThrowExceptionOnCopyRowConstructorIfTheColumnsAreNull()
         {
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => new CopyRow((IEnumerable<CopyColumn>)null, new object[0]));
+            Assert.Throws<ArgumentNullException>(() => new Row((IEnumerable<Column>)null, new object[0]));
         }
 
         [TestMethod]
         public void ThrowExceptionOnCopyRowConstructorIfTheValuesAreNull()
         {
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => new CopyRow(new CopyColumn[0], null));
+            Assert.Throws<ArgumentNullException>(() => new Row(new Column[0], null));
         }
 
         [TestMethod]
         public void ThrowExceptionOnCopyRowConstructorIfAColumnIsNull()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new CopyRow(new CopyColumn[] { null }, new object[] { 1 }));
+            Assert.Throws<ArgumentException>(() => new Row(new Column[] { null }, new object[] { 1 }));
         }
 
         [TestMethod]
         public void ThrowExceptionOnCopyRowConstructorIfTheNumberOfValuesIsNotTheNumberOfColumns()
         {
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new CopyRow(new[] { new CopyColumn("Id", typeof(int)) }, new object[] { 1, 2 }));
+            Assert.Throws<ArgumentException>(() => new Row(new[] { new Column("Id", typeof(int)) }, new object[] { 1, 2 }));
         }
 
         #endregion
@@ -161,7 +161,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
             var row = Create();
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => row.Add(new CopyColumn("NAME", typeof(string)), "x"));
+            Assert.Throws<ArgumentException>(() => row.Add(new Column("NAME", typeof(string)), "x"));
         }
 
         [TestMethod]
@@ -208,9 +208,9 @@ namespace RepoDb.Data.Core.UnitTests.Models
         public void TestCopyRowThatSharesTheColumnsDoesNotChangeTheOtherRowsWhenItAddsOrRemovesAColumn()
         {
             // Setup
-            var columns = new List<CopyColumn> { new CopyColumn("Id", typeof(int)), new CopyColumn("Name", typeof(string)) };
-            var first = new CopyRow(columns, new object[] { 1, "a" });
-            var second = new CopyRow(columns, new object[] { 2, "b" });
+            var columns = new List<Column> { new Column("Id", typeof(int)), new Column("Name", typeof(string)) };
+            var first = new Row(columns, new object[] { 1, "a" });
+            var second = new Row(columns, new object[] { 2, "b" });
 
             // Act
             first.Add("Extra", typeof(int), 9);

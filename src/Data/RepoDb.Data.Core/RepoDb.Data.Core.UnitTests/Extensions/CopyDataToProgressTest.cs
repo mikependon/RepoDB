@@ -313,7 +313,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var item = actual.Items.Single();
             Assert.IsTrue(item.Logs.Count >= 1);
             StringAssert.Contains(item.Logs[0].Text, "Customer", StringComparison.Ordinal);
-            Assert.AreEqual(CopyLogLevel.Info, item.Logs[0].Level);
+            Assert.AreEqual(LogLevel.Info, item.Logs[0].Level);
             Assert.AreEqual(item.Logs.Count, actual.Logs.Count);
             for (var i = 0; i < item.Logs.Count; i++)
             {
@@ -334,8 +334,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 1000, false, null, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, null, options, null, null, null, null, null);
-            DataDbConnection.CopyRows(source, destination, "Pet", "Animal", null, 1000, false, null, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, null, options, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 1000, false, null, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null, null, options, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Pet", "Animal", null, 1000, false, null, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null, null, options, null, null, null, null, null);
 
             // Assert
             Assert.AreEqual(2, options.Items.Count);
@@ -358,8 +358,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 1000, false, null, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, null, options, null, null, null, null, null);
-            DataDbConnection.CopyRows(source, destination, "Pet", "Animal", null, 1000, false, null, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, null, options, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 1000, false, null, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null, null, options, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Pet", "Animal", null, 1000, false, null, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null, null, options, null, null, null, null, null);
 
             // Assert
             Assert.IsTrue(options.Items[0].Logs.All(l => l.Text.Contains("Customer")));
@@ -376,8 +376,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
 
             // Act
-            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 1000, false, null, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, null, options, null, null, null, null, null, CancellationToken.None);
-            await DataDbConnection.CopyRowsAsync(source, destination, "Pet", "Animal", null, 1000, false, null, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, null, options, null, null, null, null, null, CancellationToken.None);
+            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 1000, false, null, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null, null, options, null, null, null, null, null, CancellationToken.None);
+            await DataDbConnection.CopyRowsAsync(source, destination, "Pet", "Animal", null, 1000, false, null, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null, null, options, null, null, null, null, null, CancellationToken.None);
 
             // Assert
             Assert.AreEqual(2, options.Items.Count);

@@ -12,13 +12,13 @@ using RepoDb.Data.Models;
 namespace RepoDb.Data.Core.UnitTests.Models
 {
     [TestClass]
-    public class CopyColumnMappingTest
+    public class ColumnMappingTest
     {
         [TestMethod]
         public void TestCopyDataColumnMappingConstructorSetsTheSourceAndTheDestinationColumns()
         {
             // Act
-            var actual = new CopyColumnMapping("Name", "FullName");
+            var actual = new ColumnMapping("Name", "FullName");
 
             // Assert
             Assert.AreEqual("Name", actual.SourceColumn);
@@ -29,7 +29,7 @@ namespace RepoDb.Data.Core.UnitTests.Models
         public void TestCopyDataColumnMappingConstructorAcceptsNullColumns()
         {
             // Act
-            var actual = new CopyColumnMapping(null, null);
+            var actual = new ColumnMapping(null, null);
 
             // Assert
             Assert.IsNull(actual.SourceColumn);

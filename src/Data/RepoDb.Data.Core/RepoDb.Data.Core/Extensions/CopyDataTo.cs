@@ -22,6 +22,7 @@ using RepoDb.Interfaces;
 using RepoDb.Schema;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
+using ColumnMapping = RepoDb.Data.Models.ColumnMapping;
 using static RepoDb.Data.DbConnection;
 
 namespace RepoDb.Data
@@ -45,11 +46,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -62,11 +63,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -86,11 +87,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -104,11 +105,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -127,11 +128,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -145,11 +146,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -168,11 +169,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -187,11 +188,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -213,11 +214,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -230,11 +231,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -254,11 +255,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -272,11 +273,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -295,11 +296,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -313,11 +314,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -336,11 +337,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -355,11 +356,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -393,11 +394,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -411,11 +412,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -436,11 +437,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -455,11 +456,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -479,11 +480,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -498,11 +499,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -522,11 +523,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -542,11 +543,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -569,11 +570,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -587,11 +588,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -612,11 +613,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -631,11 +632,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -655,11 +656,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -674,11 +675,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -698,11 +699,11 @@ namespace RepoDb.Data
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="columnMappingsBehavior">Defines how the source columns are aligned with the target columns by the bulk insert of the provider (ignored if it has none). The default is <see cref="ColumnMappingBehavior.Automatic"/>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -718,11 +719,11 @@ namespace RepoDb.Data
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadColumnMappingBehavior columnMappingsBehavior = LoadColumnMappingBehavior.Automatic,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            ColumnMappingBehavior columnMappingsBehavior = ColumnMappingBehavior.Automatic,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -753,15 +754,15 @@ namespace RepoDb.Data
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -770,15 +771,15 @@ namespace RepoDb.Data
         /// <returns>The <see cref="CopyProgress"/> of the operation: its totals and the tables that were copied (see <see cref="CopyProgress.Items"/>).</returns>
         public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -794,15 +795,15 @@ namespace RepoDb.Data
         /// <param name="connection">The source connection.</param>
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -812,15 +813,15 @@ namespace RepoDb.Data
         public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             string destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -835,15 +836,15 @@ namespace RepoDb.Data
         /// <param name="connection">The source connection.</param>
         /// <param name="tableName">The name of the source table.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -853,15 +854,15 @@ namespace RepoDb.Data
         public static CopyProgress CopyDataTo(this IDbConnection connection,
             string tableName,
             string destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             QueryGroup where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -876,15 +877,15 @@ namespace RepoDb.Data
         /// <param name="sourceTable">The name of the source table.</param>
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -895,15 +896,15 @@ namespace RepoDb.Data
             string sourceTable,
             string targetTable,
             string destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             QueryGroup where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -921,15 +922,15 @@ namespace RepoDb.Data
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The destination connection.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -938,15 +939,15 @@ namespace RepoDb.Data
         /// <returns>The <see cref="CopyProgress"/> of the operation: its totals and the tables that were copied (see <see cref="CopyProgress.Items"/>).</returns>
         public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -962,15 +963,15 @@ namespace RepoDb.Data
         /// <param name="connection">The source connection.</param>
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The destination connection.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -980,15 +981,15 @@ namespace RepoDb.Data
         public static CopyProgress CopyDataTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             IDbConnection destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -1003,15 +1004,15 @@ namespace RepoDb.Data
         /// <param name="connection">The source connection.</param>
         /// <param name="tableName">The name of the source table.</param>
         /// <param name="destinationConnection">The destination connection.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -1021,15 +1022,15 @@ namespace RepoDb.Data
         public static CopyProgress CopyDataTo(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             QueryGroup where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -1044,15 +1045,15 @@ namespace RepoDb.Data
         /// <param name="sourceTable">The name of the source table.</param>
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The destination connection.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -1063,15 +1064,15 @@ namespace RepoDb.Data
             string sourceTable,
             string targetTable,
             IDbConnection destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             QueryGroup where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -1079,13 +1080,13 @@ namespace RepoDb.Data
             IDbTransaction transaction = null)
         {
             var targetSchema = GetTargetSchema(destinationConnection, targetTable);
-            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, bufferSize, relationshipBehavior, tableExistenceBehavior, LoadColumnMappingBehavior.Automatic, identityBehavior, mappings);
+            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, bufferSize, relationshipBehavior, tableExistenceBehavior, ColumnMappingBehavior.Automatic, identityBehavior, mappings);
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
             var tables = GetTables(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, mappings);
             options.TableCount = tables.Count;
             foreach (var (source, target, filter) in tables)
             {
-                CopyRows(connection, destinationConnection, source, target, filter, bufferSize, bypassExistingRows, qualifiers, LoadColumnMappingBehavior.Automatic, identityBehavior, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, dataInterceptors, options, progressCallback, commandTimeout, traceKey, trace, transaction);
+                CopyRows(connection, destinationConnection, source, target, filter, bufferSize, bypassExistingRows, qualifiers, ColumnMappingBehavior.Automatic, identityBehavior, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, dataInterceptors, options, progressCallback, commandTimeout, traceKey, trace, transaction);
             }
             options.EndTime = DateTime.UtcNow;
             return options;
@@ -1101,15 +1102,15 @@ namespace RepoDb.Data
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -1119,15 +1120,15 @@ namespace RepoDb.Data
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
         public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -1144,15 +1145,15 @@ namespace RepoDb.Data
         /// <param name="connection">The source connection.</param>
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -1163,15 +1164,15 @@ namespace RepoDb.Data
         public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             string destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -1187,15 +1188,15 @@ namespace RepoDb.Data
         /// <param name="connection">The source connection.</param>
         /// <param name="tableName">The name of the source table.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -1206,15 +1207,15 @@ namespace RepoDb.Data
         public static Task<CopyProgress> CopyDataToAsync(this IDbConnection connection,
             string tableName,
             string destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             QueryGroup where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -1230,15 +1231,15 @@ namespace RepoDb.Data
         /// <param name="sourceTable">The name of the source table.</param>
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -1250,15 +1251,15 @@ namespace RepoDb.Data
             string sourceTable,
             string targetTable,
             string destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             QueryGroup where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -1277,15 +1278,15 @@ namespace RepoDb.Data
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The destination connection.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -1295,15 +1296,15 @@ namespace RepoDb.Data
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyProgress"/> of the operation: its totals, and the tables that were copied (see <see cref="CopyProgress.Items"/>), each one with its source and its target table, its batches and its logs.</returns>
         public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -1320,15 +1321,15 @@ namespace RepoDb.Data
         /// <param name="connection">The source connection.</param>
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The destination connection.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -1339,15 +1340,15 @@ namespace RepoDb.Data
         public static Task<CopyProgress> CopyDataToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             string targetTable,
             IDbConnection destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             Expression<Func<TEntity, bool>> where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -1363,15 +1364,15 @@ namespace RepoDb.Data
         /// <param name="connection">The source connection.</param>
         /// <param name="tableName">The name of the source table.</param>
         /// <param name="destinationConnection">The destination connection.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -1382,15 +1383,15 @@ namespace RepoDb.Data
         public static Task<CopyProgress> CopyDataToAsync(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             QueryGroup where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -1406,15 +1407,15 @@ namespace RepoDb.Data
         /// <param name="sourceTable">The name of the source table.</param>
         /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
         /// <param name="destinationConnection">The destination connection.</param>
-        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="CopyColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the target table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
-        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="CopyRelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="CopyRelationshipBehavior.TableOnly"/>.</param>
+        /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table, parents first. The <paramref name="where"/> filter applies to the requested table only. Anything other than <see cref="RelationshipBehavior.TableOnly"/> requires the source and the target tables to have the same name. The default is <see cref="RelationshipBehavior.TableOnly"/>.</param>
         /// <param name="tableExistenceBehavior">Defines what happens to the existing tables of the destination database before the rows are copied, as in <see cref="CopyTableSchemaTo"/>. The default is <see cref="TableExistsBehavior.Skip"/>. <b>WARNING:</b> <see cref="TableExistsBehavior.Drop"/> permanently deletes the existing tables and their data.</param>
-        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="CopyRelationshipBehavior.TableOnly"/>). The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
-        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
@@ -1426,15 +1427,15 @@ namespace RepoDb.Data
             string sourceTable,
             string targetTable,
             IDbConnection destinationConnection,
-            IList<CopyColumnMapping> mappings,
+            IList<ColumnMapping> mappings,
             QueryGroup where = null,
             int bufferSize = 10000,
             bool bypassExistingRows = false,
             IList<string> qualifiers = null,
-            CopyRelationshipBehavior relationshipBehavior = CopyRelationshipBehavior.TableOnly,
+            RelationshipBehavior relationshipBehavior = RelationshipBehavior.TableOnly,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
-            LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
-            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
+            IdentityBehavior identityBehavior = IdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<Row>> dataInterceptors = null,
             Action<CopyProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.CopyDataTo,
@@ -1443,13 +1444,13 @@ namespace RepoDb.Data
             CancellationToken cancellationToken = default)
         {
             var targetSchema = GetTargetSchema(destinationConnection, targetTable);
-            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, bufferSize, relationshipBehavior, tableExistenceBehavior, LoadColumnMappingBehavior.Automatic, identityBehavior, mappings);
+            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, bufferSize, relationshipBehavior, tableExistenceBehavior, ColumnMappingBehavior.Automatic, identityBehavior, mappings);
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
             var tables = await GetTablesAsync(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, cancellationToken, mappings).ConfigureAwait(false);
             options.TableCount = tables.Count;
             foreach (var (source, target, filter) in tables)
             {
-                await CopyRowsAsync(connection, destinationConnection, source, target, filter, bufferSize, bypassExistingRows, qualifiers, LoadColumnMappingBehavior.Automatic, identityBehavior, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, dataInterceptors, options, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+                await CopyRowsAsync(connection, destinationConnection, source, target, filter, bufferSize, bypassExistingRows, qualifiers, ColumnMappingBehavior.Automatic, identityBehavior, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, dataInterceptors, options, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
             }
             options.EndTime = DateTime.UtcNow;
             return options;

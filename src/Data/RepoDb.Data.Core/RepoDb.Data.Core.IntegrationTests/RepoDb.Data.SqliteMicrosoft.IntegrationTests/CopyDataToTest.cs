@@ -106,18 +106,18 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
             }
         }
 
-        private sealed class UpperCaseNameInterceptor : IDataInterceptor<CopyRow>
+        private sealed class UpperCaseNameInterceptor : IDataInterceptor<Row>
         {
-            public CopyRow Transform(CopyRow data)
+            public Row Transform(Row data)
             {
                 data["Name"] = ((string)data["Name"]).ToUpperInvariant();
                 return data;
             }
         }
 
-        private sealed class SuffixNameInterceptor : IDataInterceptor<CopyRow>
+        private sealed class SuffixNameInterceptor : IDataInterceptor<Row>
         {
-            public CopyRow Transform(CopyRow data)
+            public Row Transform(Row data)
             {
                 data["Name"] = data["Name"] + "!";
                 return data;
@@ -132,7 +132,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
             {
                 // Setup
                 Helper.CreateTargetTables("Country");
-                var interceptors = new List<IDataInterceptor<CopyRow>> { new UpperCaseNameInterceptor(), new SuffixNameInterceptor() };
+                var interceptors = new List<IDataInterceptor<Row>> { new UpperCaseNameInterceptor(), new SuffixNameInterceptor() };
 
                 // Act
                 var actual = source.CopyDataTo("Country", target, dataInterceptors: interceptors);
@@ -156,7 +156,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Name\") VALUES ('Other')");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, identityBehavior: LoadIdentityBehavior.Ignore);
+                var actual = source.CopyDataTo("Country", target, identityBehavior: IdentityBehavior.Ignore);
 
                 // Assert
                 Assert.AreEqual(3, actual.RowCount);
@@ -176,7 +176,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                source.CopyDataTo("Country", target, identityBehavior: LoadIdentityBehavior.KeepIdentity);
+                source.CopyDataTo("Country", target, identityBehavior: IdentityBehavior.KeepIdentity);
 
                 // Assert
                 var rows = Helper.TargetRows("\"Country\"", "\"Id\"");
@@ -192,7 +192,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
             using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<ArgumentException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, identityBehavior: LoadIdentityBehavior.Ignore));
+                Assert.Throws<ArgumentException>(() => source.CopyDataTo("Person", target, relationshipBehavior: RelationshipBehavior.Parents, identityBehavior: IdentityBehavior.Ignore));
             }
         }
 
