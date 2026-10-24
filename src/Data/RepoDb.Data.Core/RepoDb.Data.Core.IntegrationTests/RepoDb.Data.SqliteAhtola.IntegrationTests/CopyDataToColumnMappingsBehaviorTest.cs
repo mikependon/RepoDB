@@ -18,7 +18,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
 {
     /// <summary>
     /// Copies the rows with the column mappings behavior. SQLite has no bulk operations, so the rows are inserted in batches (the <c>InsertAll</c> of the library),
-    /// and only the <see cref="CopyColumnMappingsBehavior.Automatic"/> behavior is available.
+    /// and only the <see cref="LoadColumnMappingBehavior.Automatic"/> behavior is available.
     /// </summary>
     [TestClass]
     public class CopyDataToColumnMappingsBehaviorTest
@@ -67,7 +67,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"))");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -85,7 +85,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -103,7 +103,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -125,7 +125,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Currency\" (\"Code\" CHAR(3) NOT NULL, CONSTRAINT \"PK_Currency\" PRIMARY KEY (\"Code\"))");
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic)).RowCount;
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -143,7 +143,7 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 Helper.CreateTargetTables("Currency");
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict)).RowCount;
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);

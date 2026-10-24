@@ -9,21 +9,22 @@
 namespace RepoDb.Data.Enumerations
 {
     /// <summary>
-    /// An enumeration that is used to define the behavior of the identity (and auto-increment) columns when the rows of a JSON file are loaded into a table. It is passed on to the
-    /// bulk insert of the provider of the connection (i.e.: the <c>KeepIdentity</c> option of <c>SqlBulkCopyOptions</c>, or the <c>identityBehavior</c> argument of PostgreSQL), and it is
-    /// honored by the batch insert as well.
+    /// An enumeration that is used to define the behavior of the identity (and auto-increment) columns of the target table when the rows are loaded from a JSON file, or copied from a source table.
+    /// It is passed on to the bulk insert of the provider of the connection (i.e.: the <c>KeepIdentity</c> option of <c>SqlBulkCopyOptions</c>, or the <c>identityBehavior</c> argument of PostgreSQL),
+    /// and it is honored by the batch insert as well.
     /// </summary>
     public enum LoadIdentityBehavior : short
     {
         /// <summary>
-        /// The values of the identity columns that the file has are kept and used as they are. This is the default behavior. The database must allow explicit values for the
-        /// identity columns (i.e.: SQL Server, and PostgreSQL <c>GENERATED ALWAYS</c> columns, may not).
+        /// The values of the identity columns of the source are kept and used as they are, so the rows of the related tables keep referencing them. This is the default behavior. The database of the
+        /// target table must allow explicit values for the identity columns (i.e.: SQL Server, and PostgreSQL <c>GENERATED ALWAYS</c> columns, may not).
         /// </summary>
         KeepIdentity,
 
         /// <summary>
-        /// The values of the identity columns that the file has are ignored, and the database generates new ones. As the rows come from a file (there are no entities), the generated
-        /// values are not set back to anything: they can be read from the table.
+        /// The values of the identity columns of the source are ignored (not inserted), and the database of the target table generates new ones. The generated values are not set back to anything:
+        /// they can be read from the target table. When tables are copied, the rows of the related tables would no longer reference the rows that they referenced, so it can only be used with
+        /// <see cref="CopyRelationshipBehavior.TableOnly"/>.
         /// </summary>
         Ignore
     }

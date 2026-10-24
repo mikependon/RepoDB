@@ -328,8 +328,8 @@ namespace RepoDb.Data
             string targetTable,
             QueryGroup where,
             int bufferSize,
-            CopyColumnMappingsBehavior columnMappingsBehavior,
-            CopyIdentityBehavior identityBehavior,
+            LoadColumnMappingBehavior columnMappingsBehavior,
+            LoadIdentityBehavior identityBehavior,
             IList<CopyColumnMapping> mappings,
             CopyProgress options,
             Action<CopyProgress> progressCallback,
@@ -354,7 +354,7 @@ namespace RepoDb.Data
                         int inserted;
                         using (var batchReader = buffer.CreateReader())
                         {
-                            inserted = BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, batchReader, bufferSize, columnMappingsBehavior, identityBehavior == CopyIdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction);
+                            inserted = BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, batchReader, bufferSize, columnMappingsBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction);
                         }
                         total += inserted;
                         buffer.Clear();
@@ -416,8 +416,8 @@ namespace RepoDb.Data
             string targetTable,
             QueryGroup where,
             int bufferSize,
-            CopyColumnMappingsBehavior columnMappingsBehavior,
-            CopyIdentityBehavior identityBehavior,
+            LoadColumnMappingBehavior columnMappingsBehavior,
+            LoadIdentityBehavior identityBehavior,
             IList<CopyColumnMapping> mappings,
             CopyProgress options,
             Action<CopyProgress> progressCallback,
@@ -443,7 +443,7 @@ namespace RepoDb.Data
                         int inserted;
                         using (var batchReader = buffer.CreateReader())
                         {
-                            inserted = await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, batchReader, bufferSize, columnMappingsBehavior, identityBehavior == CopyIdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
+                            inserted = await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, batchReader, bufferSize, columnMappingsBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
                         }
                         total += inserted;
                         buffer.Clear();
@@ -674,10 +674,10 @@ namespace RepoDb.Data
         /// <returns>The names of the columns (without the case), or <c>null</c> if all the columns are copied.</returns>
         private static ISet<string> GetIdentityColumns(IDbConnection destinationConnection,
             string targetTable,
-            CopyIdentityBehavior identityBehavior,
+            LoadIdentityBehavior identityBehavior,
             IDbTransaction transaction)
         {
-            if (identityBehavior != CopyIdentityBehavior.Ignore)
+            if (identityBehavior != LoadIdentityBehavior.Ignore)
             {
                 return null;
             }
@@ -843,8 +843,8 @@ namespace RepoDb.Data
             int bufferSize,
             CopyRelationshipBehavior relationshipBehavior,
             TableExistsBehavior tableExistenceBehavior,
-            CopyColumnMappingsBehavior columnMappingsBehavior,
-            CopyIdentityBehavior identityBehavior,
+            LoadColumnMappingBehavior columnMappingsBehavior,
+            LoadIdentityBehavior identityBehavior,
             IList<CopyColumnMapping> mappings)
         {
             if (connection == null)
@@ -867,15 +867,15 @@ namespace RepoDb.Data
             {
                 throw new ArgumentOutOfRangeException(nameof(bufferSize), "The buffer size must be greater than zero.");
             }
-            if (!Enum.IsDefined(typeof(CopyColumnMappingsBehavior), columnMappingsBehavior))
+            if (!Enum.IsDefined(typeof(LoadColumnMappingBehavior), columnMappingsBehavior))
             {
                 throw new ArgumentOutOfRangeException(nameof(columnMappingsBehavior), "The column mappings behavior is not defined.");
             }
-            if (!Enum.IsDefined(typeof(CopyIdentityBehavior), identityBehavior))
+            if (!Enum.IsDefined(typeof(LoadIdentityBehavior), identityBehavior))
             {
                 throw new ArgumentOutOfRangeException(nameof(identityBehavior), "The identity behavior is not defined.");
             }
-            if (identityBehavior == CopyIdentityBehavior.Ignore && relationshipBehavior != CopyRelationshipBehavior.TableOnly)
+            if (identityBehavior == LoadIdentityBehavior.Ignore && relationshipBehavior != CopyRelationshipBehavior.TableOnly)
             {
                 throw new ArgumentException("The identity values can only be generated again when only the table is copied, as the rows of the related tables would no longer reference the rows that they referenced.", nameof(identityBehavior));
             }

@@ -25,7 +25,7 @@ using RepoDb.Schema.Enumerations;
 namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
 {
     /// <summary>
-    /// Copies the rows with the three <see cref="CopyColumnMappingsBehavior"/>, which are passed on to the <see cref="AuroraDbBulkColumnMappingsBehavior"/>
+    /// Copies the rows with the three <see cref="LoadColumnMappingBehavior"/>, which are passed on to the <see cref="AuroraDbBulkColumnMappingsBehavior"/>
     /// of the bulk insert: how the columns of the source table are aligned with the columns of the target table.
     /// </summary>
     [TestClass]
@@ -71,7 +71,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
         public void TestCopyTableSchemaColumnMappingsBehaviorHasTheSameNamesAndValuesAsThePostgreSqlBulkColumnMappingsBehavior()
         {
             // Act
-            var actual = Enum.GetValues(typeof(CopyColumnMappingsBehavior)).Cast<CopyColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
+            var actual = Enum.GetValues(typeof(LoadColumnMappingBehavior)).Cast<LoadColumnMappingBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
             var expected = Enum.GetValues(typeof(AuroraDbBulkColumnMappingsBehavior)).Cast<AuroraDbBulkColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
 
             // Assert
@@ -94,7 +94,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -130,7 +130,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -148,7 +148,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -166,7 +166,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -188,7 +188,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic)).RowCount;
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -214,7 +214,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -232,7 +232,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var exception = Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
 
                 // Assert
                 Assert.AreEqual(AuroraDbBulkColumnMappingsBehavior.Strict, exception.Behavior);
@@ -251,7 +251,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var exception = Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "Extra" }, exception.DestinationColumnsNotInSource.ToArray());
@@ -269,7 +269,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var exception = Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
 
                 // Assert
                 Assert.IsTrue(exception.IsOrderMismatch);
@@ -287,7 +287,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(AuroraDbBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
@@ -304,7 +304,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
 
                 // Assert
                 Assert.AreEqual(AuroraDbBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
@@ -319,11 +319,11 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
             {
                 // Setup
                 Helper.ExecuteOnTarget(MissingColumn);
-                Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Country", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -340,7 +340,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)), columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(2, actual);
@@ -358,7 +358,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -377,7 +377,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -396,7 +396,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"Country\" (\"Id\" INT NOT NULL, \"Name\" varchar(100) NOT NULL, \"Extra\" INT NULL, CONSTRAINT \"PK_Country\" PRIMARY KEY (\"Id\"));");
 
                 // Act/Assert
-                Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
                 Assert.AreEqual(0, Helper.TargetCount("\"public\".\"Country\""));
             }
         }
@@ -411,7 +411,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act/Assert
-                Assert.Throws<PostgresException>(() => source.CopyDataTo("Currency", "Sales.Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                Assert.Throws<PostgresException>(() => source.CopyDataTo("Currency", "Sales.Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
             }
         }
 
@@ -425,7 +425,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")), columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(1, actual);
@@ -443,7 +443,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo<Currency>(target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo<Currency>(target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -462,7 +462,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 ConnectionManager.Register(name, target);
 
                 // Act/Assert
-                Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
                 AssertNotCopied();
             }
         }
@@ -481,7 +481,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict)).RowCount;
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -499,7 +499,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<AuroraDbBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                await Assert.ThrowsAsync<AuroraDbBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
                 AssertNotCopied();
                 Assert.AreEqual(AuroraDbBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
             }
@@ -515,7 +515,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<AuroraDbBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                await Assert.ThrowsAsync<AuroraDbBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
                 AssertNotCopied();
             }
         }
@@ -530,7 +530,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict)).RowCount;
+                var actual = (await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: LoadColumnMappingBehavior.Strict)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -555,7 +555,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -573,7 +573,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -591,7 +591,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -609,7 +609,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumnWithDefault);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -627,7 +627,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var exception = Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass));
+                var exception = Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass));
 
                 // Assert
                 Assert.AreEqual(AuroraDbBulkColumnMappingsBehavior.StrictBypass, exception.Behavior);
@@ -646,7 +646,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass));
+                Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass));
 
                 // Assert
                 Assert.AreEqual(AuroraDbBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
@@ -663,7 +663,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -681,7 +681,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"Country\" (\"Id\" INT NOT NULL, \"Name\" varchar(100) NOT NULL, \"Extra\" INT NULL, CONSTRAINT \"PK_Country\" PRIMARY KEY (\"Id\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -703,7 +703,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumnWithDefault);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass)).RowCount;
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -721,7 +721,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<AuroraDbBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass));
+                await Assert.ThrowsAsync<AuroraDbBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass));
                 AssertNotCopied();
             }
         }
@@ -736,7 +736,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass)).RowCount;
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -760,7 +760,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act/Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: (CopyColumnMappingsBehavior)99));
+                Assert.Throws<ArgumentOutOfRangeException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: (LoadColumnMappingBehavior)99));
                 AssertNotCopied();
             }
         }
@@ -772,7 +772,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: (CopyColumnMappingsBehavior)99));
+                await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: (LoadColumnMappingBehavior)99));
             }
         }
 
@@ -787,7 +787,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
 
                 // Assert
                 StringAssert.Contains(exception.Message, "BulkColumnMappingsBehavior");
@@ -806,7 +806,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -824,7 +824,7 @@ namespace RepoDb.Data.AuroraDbPostgreSql.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);

@@ -492,9 +492,9 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeBulkSettingDbConnection();
 
             // Act
-            new FakeDbConnection().CopyDataTo("Person", destination, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
-            new FakeDbConnection().CopyDataTo("Person", "Customer", destination, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
-            new FakeDbConnection().CopyDataTo<Person>(destination, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+            new FakeDbConnection().CopyDataTo("Person", destination, columnMappingsBehavior: LoadColumnMappingBehavior.Strict);
+            new FakeDbConnection().CopyDataTo("Person", "Customer", destination, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass);
+            new FakeDbConnection().CopyDataTo<Person>(destination, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Strict", "StrictBypass", "Automatic" }, FakeBulkOperations.Calls.Select(c => c.ColumnMappingsBehavior).ToArray());
@@ -508,8 +508,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeBulkSettingDbConnection());
 
             // Act
-            new FakeDbConnection().CopyDataTo("Person", name, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
-            new FakeDbConnection().CopyDataTo<Person>("Customer", name, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
+            new FakeDbConnection().CopyDataTo("Person", name, columnMappingsBehavior: LoadColumnMappingBehavior.Strict);
+            new FakeDbConnection().CopyDataTo<Person>("Customer", name, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Strict", "StrictBypass" }, FakeBulkOperations.Calls.Select(c => c.ColumnMappingsBehavior).ToArray());
@@ -522,7 +522,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = new FakeDbConnection().CopyDataTo("Person", "Customer", destination, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+            var actual = new FakeDbConnection().CopyDataTo("Person", "Customer", destination, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -533,14 +533,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public void ThrowExceptionOnCopyDataToIfTheColumnMappingsBehaviorIsNotDefined()
         {
             // Act/Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => GetConnection().CopyDataTo("Person", "Person", GetConnection(), columnMappingsBehavior: (CopyColumnMappingsBehavior)99));
+            Assert.Throws<ArgumentOutOfRangeException>(() => GetConnection().CopyDataTo("Person", "Person", GetConnection(), columnMappingsBehavior: (LoadColumnMappingBehavior)99));
         }
 
         [TestMethod]
         public void ThrowExceptionOnCopyDataToIfTheColumnMappingsBehaviorIsNotTheDefaultAndTheSettingOfTheBulkInsertHasNoBehavior()
         {
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().CopyDataTo("Person", new FakeBulkDbConnection(), columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass));
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().CopyDataTo("Person", new FakeBulkDbConnection(), columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass));
         }
 
         [TestMethod]
@@ -609,9 +609,9 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeBulkSettingDbConnection();
 
             // Act
-            await new FakeDbConnection().CopyDataToAsync("Person", destination, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
-            await new FakeDbConnection().CopyDataToAsync("Person", "Customer", destination, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
-            await new FakeDbConnection().CopyDataToAsync<Person>(destination, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic);
+            await new FakeDbConnection().CopyDataToAsync("Person", destination, columnMappingsBehavior: LoadColumnMappingBehavior.Strict);
+            await new FakeDbConnection().CopyDataToAsync("Person", "Customer", destination, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass);
+            await new FakeDbConnection().CopyDataToAsync<Person>(destination, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Strict", "StrictBypass", "Automatic" }, FakeBulkOperations.Calls.Select(c => c.ColumnMappingsBehavior).ToArray());
@@ -625,8 +625,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var name = Register(new FakeBulkSettingDbConnection());
 
             // Act
-            await new FakeDbConnection().CopyDataToAsync("Person", name, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass);
-            await new FakeDbConnection().CopyDataToAsync<Person>("Customer", name, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+            await new FakeDbConnection().CopyDataToAsync("Person", name, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass);
+            await new FakeDbConnection().CopyDataToAsync<Person>("Customer", name, columnMappingsBehavior: LoadColumnMappingBehavior.Strict);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "StrictBypass", "Strict" }, FakeBulkOperations.Calls.Select(c => c.ColumnMappingsBehavior).ToArray());
@@ -636,7 +636,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         public async Task ThrowExceptionOnCopyDataToAsyncIfTheColumnMappingsBehaviorIsNotDefined()
         {
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => GetConnection().CopyDataToAsync("Person", "Person", GetConnection(), columnMappingsBehavior: (CopyColumnMappingsBehavior)99));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => GetConnection().CopyDataToAsync("Person", "Person", GetConnection(), columnMappingsBehavior: (LoadColumnMappingBehavior)99));
         }
 
         [TestMethod]

@@ -141,7 +141,7 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Applies the column mappings behavior to the bulk insert for as long as the scope lives. The bulk operations package of a provider reads the behavior
         /// from the setting of the connection (the <c>BulkColumnMappingsBehavior</c> property of its <c>&lt;Provider&gt;BulkOperationsDbSetting</c>, of the enumeration
-        /// <c>&lt;Provider&gt;BulkColumnMappingsBehavior</c> that has the same names and values as <see cref="CopyColumnMappingsBehavior"/>), so the behavior is set on the
+        /// <c>&lt;Provider&gt;BulkColumnMappingsBehavior</c> that has the same names and values as <see cref="LoadColumnMappingBehavior"/>), so the behavior is set on the
         /// setting and then set back. The setting is shared by every connection of the same type, so the bulk inserts of the setting take turns while the behavior is applied.
         /// </summary>
         private sealed class ColumnMappingsScope : IDisposable
@@ -230,7 +230,7 @@ namespace RepoDb.Data.Helpers
                 var property = setting?.GetType().GetProperty(ColumnMappingsBehaviorProperty, BindingFlags.Public | BindingFlags.Instance);
                 if (property == null || !property.CanRead || !property.CanWrite || !property.PropertyType.IsEnum)
                 {
-                    if (string.Equals(behavior.ToString(), nameof(CopyColumnMappingsBehavior.Automatic), StringComparison.Ordinal))
+                    if (string.Equals(behavior.ToString(), nameof(LoadColumnMappingBehavior.Automatic), StringComparison.Ordinal))
                     {
                         return new ColumnMappingsScope(null, null, null);
                     }

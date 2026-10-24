@@ -74,7 +74,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Name\") VALUES ('Other')");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, identityBehavior: CopyIdentityBehavior.Ignore);
+                var actual = source.CopyDataTo("Country", target, identityBehavior: LoadIdentityBehavior.Ignore);
 
                 // Assert
                 Assert.AreEqual(3, actual.RowCount);
@@ -94,7 +94,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                source.CopyDataTo("Country", target, identityBehavior: CopyIdentityBehavior.KeepIdentity);
+                source.CopyDataTo("Country", target, identityBehavior: LoadIdentityBehavior.KeepIdentity);
 
                 // Assert
                 var rows = Helper.TargetRows("\"Country\"", "\"Id\"");
@@ -110,7 +110,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
             using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<ArgumentException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, identityBehavior: CopyIdentityBehavior.Ignore));
+                Assert.Throws<ArgumentException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, identityBehavior: LoadIdentityBehavior.Ignore));
             }
         }
 

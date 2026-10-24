@@ -24,7 +24,7 @@ using RepoDb.Schema.Enumerations;
 namespace RepoDb.Data.SapHana.IntegrationTests
 {
     /// <summary>
-    /// Copies the rows with the three <see cref="CopyColumnMappingsBehavior"/>, which are passed on to the <see cref="SapHanaBulkColumnMappingsBehavior"/>
+    /// Copies the rows with the three <see cref="LoadColumnMappingBehavior"/>, which are passed on to the <see cref="SapHanaBulkColumnMappingsBehavior"/>
     /// of the bulk insert: how the columns of the source table are aligned with the columns of the target table.
     /// </summary>
     [TestClass]
@@ -70,7 +70,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
         public void TestCopyTableSchemaColumnMappingsBehaviorHasTheSameNamesAndValuesAsTheSapHanaBulkColumnMappingsBehavior()
         {
             // Act
-            var actual = Enum.GetValues(typeof(CopyColumnMappingsBehavior)).Cast<CopyColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
+            var actual = Enum.GetValues(typeof(LoadColumnMappingBehavior)).Cast<LoadColumnMappingBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
             var expected = Enum.GetValues(typeof(SapHanaBulkColumnMappingsBehavior)).Cast<SapHanaBulkColumnMappingsBehavior>().Select(v => (v.ToString(), (short)v)).ToArray();
 
             // Assert
@@ -93,7 +93,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -129,7 +129,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -147,7 +147,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -165,7 +165,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -187,7 +187,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic)).RowCount;
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -213,7 +213,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -231,7 +231,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var exception = Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
 
                 // Assert
                 Assert.AreEqual(SapHanaBulkColumnMappingsBehavior.Strict, exception.Behavior);
@@ -250,7 +250,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var exception = Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "Extra" }, exception.DestinationColumnsNotInSource.ToArray());
@@ -268,7 +268,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var exception = Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
 
                 // Assert
                 Assert.IsTrue(exception.IsOrderMismatch);
@@ -286,7 +286,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict);
+                source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict);
 
                 // Assert
                 Assert.AreEqual(SapHanaBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
@@ -303,7 +303,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
 
                 // Assert
                 Assert.AreEqual(SapHanaBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
@@ -318,11 +318,11 @@ namespace RepoDb.Data.SapHana.IntegrationTests
             {
                 // Setup
                 Helper.ExecuteOnTarget(MissingColumn);
-                Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Country", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -339,7 +339,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.CreateTargetTables("Country");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Country", target, where: new QueryGroup(new QueryField("Id", Operation.GreaterThan, 1)), columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(2, actual);
@@ -357,7 +357,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -376,7 +376,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Pet", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -395,7 +395,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Country\" (\"Id\" INTEGER NOT NULL, \"Name\" NVARCHAR(100) NOT NULL, \"Extra\" INTEGER NULL, CONSTRAINT \"PK_Country\" PRIMARY KEY (\"Id\"));");
 
                 // Act/Assert
-                Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
                 Assert.AreEqual(0, Helper.TargetCount("\"Country\""));
             }
         }
@@ -410,7 +410,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Currency", "REPODB_DATA_TGT_SALES.Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -428,7 +428,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")), columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo("Currency", target, where: new QueryGroup(new QueryField("Code", "EUR")), columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(1, actual);
@@ -446,7 +446,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo<Currency>(target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict).RowCount;
+                var actual = source.CopyDataTo<Currency>(target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -465,7 +465,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 ConnectionManager.Register(name, target);
 
                 // Act/Assert
-                Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
                 AssertNotCopied();
             }
         }
@@ -484,7 +484,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict)).RowCount;
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -502,7 +502,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<SapHanaBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                await Assert.ThrowsAsync<SapHanaBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
                 AssertNotCopied();
                 Assert.AreEqual(SapHanaBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
             }
@@ -518,7 +518,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<SapHanaBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                await Assert.ThrowsAsync<SapHanaBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
                 AssertNotCopied();
             }
         }
@@ -533,7 +533,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict)).RowCount;
+                var actual = (await source.CopyDataToAsync("Country", target, relationshipBehavior: CopyRelationshipBehavior.ParentsAndChildren, columnMappingsBehavior: LoadColumnMappingBehavior.Strict)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -558,7 +558,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -576,7 +576,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -594,7 +594,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -612,7 +612,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumnWithDefault);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -630,7 +630,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var exception = Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass));
+                var exception = Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass));
 
                 // Assert
                 Assert.AreEqual(SapHanaBulkColumnMappingsBehavior.StrictBypass, exception.Behavior);
@@ -649,7 +649,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass));
+                Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass));
 
                 // Assert
                 Assert.AreEqual(SapHanaBulkColumnMappingsBehavior.Automatic, CurrentBehavior(target));
@@ -666,7 +666,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.MapSchemaReader(source);
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Country", target, relationshipBehavior: CopyRelationshipBehavior.Children, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6 + 5 + 5, actual);
@@ -684,7 +684,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget("CREATE TABLE \"Country\" (\"Id\" INTEGER NOT NULL, \"Name\" NVARCHAR(100) NOT NULL, \"Extra\" INTEGER NULL, CONSTRAINT \"PK_Country\" PRIMARY KEY (\"Id\"));");
 
                 // Act
-                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass).RowCount;
+                var actual = source.CopyDataTo("Person", target, relationshipBehavior: CopyRelationshipBehavior.Parents, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass).RowCount;
 
                 // Assert
                 Assert.AreEqual(3 + 6, actual);
@@ -706,7 +706,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(ExtraColumnWithDefault);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass)).RowCount;
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -724,7 +724,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act/Assert
-                await Assert.ThrowsAsync<SapHanaBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass));
+                await Assert.ThrowsAsync<SapHanaBulkColumnMappingsException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass));
                 AssertNotCopied();
             }
         }
@@ -739,7 +739,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(ReorderedColumns);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.StrictBypass)).RowCount;
+                var actual = (await source.CopyDataToAsync("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.StrictBypass)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -763,7 +763,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act/Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: (CopyColumnMappingsBehavior)99));
+                Assert.Throws<ArgumentOutOfRangeException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: (LoadColumnMappingBehavior)99));
                 AssertNotCopied();
             }
         }
@@ -775,7 +775,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
             using (var target = new HanaConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: (CopyColumnMappingsBehavior)99));
+                await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => source.CopyDataToAsync("Currency", target, columnMappingsBehavior: (LoadColumnMappingBehavior)99));
             }
         }
 
@@ -790,7 +790,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Strict));
+                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Strict));
 
                 // Assert
                 StringAssert.Contains(exception.Message, "BulkColumnMappingsBehavior");
@@ -809,7 +809,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(SameColumns);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -827,7 +827,7 @@ namespace RepoDb.Data.SapHana.IntegrationTests
                 Helper.ExecuteOnTarget(MissingColumn);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: CopyColumnMappingsBehavior.Automatic).RowCount;
+                var actual = source.CopyDataTo("Currency", target, columnMappingsBehavior: LoadColumnMappingBehavior.Automatic).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
