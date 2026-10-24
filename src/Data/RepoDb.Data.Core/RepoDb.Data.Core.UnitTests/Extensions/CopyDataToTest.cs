@@ -17,6 +17,7 @@ using Moq;
 using RepoDb.Data.Core.UnitTests.CustomObjects;
 using RepoDb.Data.Core.UnitTests.Fake.BulkOperations;
 using RepoDb.Data.Enumerations;
+using RepoDb.Data.Interfaces;
 using RepoDb.Data.Models;
 using RepoDb.DbSettings;
 using RepoDb.Enumerations;
@@ -1269,5 +1270,146 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
         #endregion
 
+        #region Data Interceptors
+
+        private static IList<IDataInterceptor<CopyRow>> Interceptors(params Func<CopyRow, CopyRow>[] transforms) =>
+            transforms.Select(transform => (IDataInterceptor<CopyRow>)new FakeDataInterceptor(transform)).ToList();
+
+        [TestMethod]
+        public void TestCopyDataToCopiesTheRowsThatTheInterceptorsGiveInOrder()
+        {
+            // Setup
+            var destination = new FakeDbConnection();
+            var interceptors = Interceptors(
+                row => { row["Name"] = ((string)row["Name"]).ToUpperInvariant(); return row; },
+                row => { row["Name"] = row["Name"] + "!"; return row; });
+
+            // Act
+            new FakeDbConnection().CopyDataTo("Person", "Customer", destination, dataInterceptors: interceptors);
+
+            // Assert
+            var values = destination.Executions.Where(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal)).SelectMany(e => e.Parameters.Values).OfType<string>().ToList();
+            CollectionAssert.AreEquivalent(new[] { "NAME 1!", "NAME 2!", "NAME 3!" }, values);
+        }
+
+        [TestMethod]
+        public async Task TestCopyDataToAsyncCopiesTheRowsThatTheInterceptorsGive()
+        {
+            // Setup
+            var destination = new FakeDbConnection();
+            var interceptors = Interceptors(row => { row["Name"] = "Changed"; return row; });
+
+            // Act
+            await new FakeDbConnection().CopyDataToAsync("Person", "Customer", destination, dataInterceptors: interceptors);
+
+            // Assert
+            var values = destination.Executions.Where(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal)).SelectMany(e => e.Parameters.Values).OfType<string>().ToList();
+            CollectionAssert.AreEqual(new[] { "Changed", "Changed", "Changed" }, values);
+        }
+
+        [TestMethod]
+        public void TestCopyDataToBulkInsertsTheColumnsThatTheInterceptorsGive()
+        {
+            // Setup
+            var interceptors = Interceptors(row => row.Add("Extra", typeof(string), "e"), row => { row.Remove("Birthday"); return row; });
+            FakeBulkOperations.Reset();
+
+            // Act
+            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), dataInterceptors: interceptors);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Id", "Name", "Extra" }, FakeBulkOperations.LastColumns);
+        }
+
+        [TestMethod]
+        public void TestCopyDataToGivesTheInterceptorsTheColumnsOfTheMappings()
+        {
+            // Setup
+            var names = new List<string>();
+            var interceptors = Interceptors(row => { names.AddRange(row.Columns.Select(c => c.Name)); return row; });
+            var mappings = new[] { new CopyColumnMapping("Id", "Id"), new CopyColumnMapping("Name", "Birthday") };
+
+            // Act
+            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mappings, dataInterceptors: interceptors);
+
+            // Assert
+            Assert.IsTrue(names.Count > 0);
+            Assert.IsTrue(names.All(name => name == "Id" || name == "Name" || name == "Birthday"));
+        }
+
+        [TestMethod]
+        public void TestCopyDataToLeavesTheIdentityColumnOutAfterTheInterceptors()
+        {
+            // Setup
+            var interceptors = Interceptors(row => { row["Id"] = 500; return row; });
+            FakeBulkOperations.Reset();
+
+            // Act
+            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), identityBehavior: LoadIdentityBehavior.Ignore, dataInterceptors: interceptors);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Name", "Birthday" }, FakeBulkOperations.LastColumns);
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithInterceptorsAndBypassExistingRowsBulkMergesTheRowsWithTheQualifiers()
+        {
+            // Setup
+            var interceptors = Interceptors(row => { row["Name"] = "Changed"; return row; });
+            FakeBulkOperations.Reset();
+
+            // Act
+            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bypassExistingRows: true, dataInterceptors: interceptors);
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMerge", call.Method);
+            CollectionAssert.AreEqual(new[] { "Id" }, call.Qualifiers);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToWithBypassExistingRowsIfAnInterceptorRemovesAQualifier()
+        {
+            // Setup
+            var interceptors = Interceptors(row => { row.Remove("Id"); return row; });
+            FakeBulkOperations.Reset();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bypassExistingRows: true, dataInterceptors: interceptors));
+            Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToIfAnInterceptorReturnsNull()
+        {
+            // Setup
+            var interceptors = Interceptors(row => null);
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), dataInterceptors: interceptors));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToIfAnInterceptorIsNull()
+        {
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), dataInterceptors: new List<IDataInterceptor<CopyRow>> { null }));
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithoutInterceptorsCopiesTheRowsAsTheyAre()
+        {
+            // Setup
+            var destination = new FakeDbConnection();
+
+            // Act
+            new FakeDbConnection().CopyDataTo("Person", "Customer", destination, dataInterceptors: new List<IDataInterceptor<CopyRow>>());
+
+            // Assert
+            var values = destination.Executions.Where(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal)).SelectMany(e => e.Parameters.Values).OfType<string>().ToList();
+            CollectionAssert.AreEquivalent(new[] { "Name 1", "Name 2", "Name 3" }, values);
+        }
+
+        #endregion
     }
 }

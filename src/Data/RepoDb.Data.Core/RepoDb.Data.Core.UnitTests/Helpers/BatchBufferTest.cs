@@ -13,7 +13,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Data.Core.UnitTests.CustomObjects;
 using RepoDb.Data.Helpers;
+using RepoDb.Data.Interfaces;
+using RepoDb.Data.Models;
 
 namespace RepoDb.Data.Core.UnitTests.Helpers
 {
@@ -282,6 +285,201 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
                 // Assert
                 Assert.AreEqual(0, buffer.Count);
             }
+        }
+
+        #endregion
+
+        #region Interceptors
+
+        private static List<string> ColumnNames(IDataReader reader)
+        {
+            var names = new List<string>();
+            for (var i = 0; i < reader.FieldCount; i++)
+            {
+                names.Add(reader.GetName(i));
+            }
+            return names;
+        }
+
+        [TestMethod]
+        public void TestFillBuffersTheRowsThatTheInterceptorsGive()
+        {
+            // Setup
+            var interceptors = new List<IDataInterceptor<CopyRow>>
+            {
+                new FakeDataInterceptor(row => { row["Id"] = (int)row["Id"] * 10; return row; }),
+                new FakeDataInterceptor(row => { row["Id"] = (int)row["Id"] + 1; return row; })
+            };
+            using (var buffer = new BatchBuffer(CreateSource(3), 10, null, interceptors))
+            {
+                // Act
+                buffer.Fill();
+
+                // Assert
+                using (var reader = buffer.CreateReader())
+                {
+                    CollectionAssert.AreEqual(new[] { 11, 21, 31 }, Ids(reader));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestFillBuffersTheColumnsThatTheInterceptorsAddOrRemove()
+        {
+            // Setup
+            var interceptors = new List<IDataInterceptor<CopyRow>>
+            {
+                new FakeDataInterceptor(row => row.Add("Extra", typeof(string), "e" + row["Id"])),
+                new FakeDataInterceptor(row => { row.Remove("Name"); return row; })
+            };
+            using (var buffer = new BatchBuffer(CreateSource(2), 10, null, interceptors))
+            {
+                // Act
+                buffer.Fill();
+
+                // Assert
+                Assert.IsTrue(buffer.HasColumn("extra"));
+                Assert.IsFalse(buffer.HasColumn("Name"));
+                using (var reader = buffer.CreateReader())
+                {
+                    CollectionAssert.AreEqual(new[] { "Id", "Extra" }, ColumnNames(reader));
+                    reader.Read();
+                    Assert.AreEqual("e1", reader.GetString(1));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestFillKeepsTheNullValuesThatTheInterceptorsGiveAsDbNull()
+        {
+            // Setup
+            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => { row["Name"] = null; return row; }) };
+            using (var buffer = new BatchBuffer(CreateSource(1), 10, null, interceptors))
+            {
+                // Act
+                buffer.Fill();
+
+                // Assert
+                using (var reader = buffer.CreateReader())
+                {
+                    reader.Read();
+                    Assert.IsTrue(reader.IsDBNull(1));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestFillLeavesTheExcludedColumnsOutOfTheRowsThatTheInterceptorsGive()
+        {
+            // Setup
+            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => row.Add("Extra", typeof(int), 5)) };
+            using (var buffer = new BatchBuffer(CreateSource(2), 10, new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "id", "extra" }, interceptors))
+            {
+                // Act
+                buffer.Fill();
+
+                // Assert
+                using (var reader = buffer.CreateReader())
+                {
+                    CollectionAssert.AreEqual(new[] { "Name" }, ColumnNames(reader));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestFillCallsTheInterceptorsOncePerRow()
+        {
+            // Setup
+            var interceptor = new FakeDataInterceptor(row => row);
+            using (var buffer = new BatchBuffer(CreateSource(5), 2, null, new List<IDataInterceptor<CopyRow>> { interceptor }))
+            {
+                // Act
+                while (buffer.Fill())
+                {
+                }
+
+                // Assert
+                Assert.AreEqual(5, interceptor.Calls);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestFillAsyncBuffersTheRowsThatTheInterceptorsGive()
+        {
+            // Setup
+            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => { row["Id"] = (int)row["Id"] + 100; return row; }) };
+            using (var buffer = new BatchBuffer(CreateSource(2), 10, null, interceptors))
+            {
+                // Act
+                await buffer.FillAsync();
+
+                // Assert
+                using (var reader = buffer.CreateReader())
+                {
+                    CollectionAssert.AreEqual(new[] { 101, 102 }, Ids(reader));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestCreateReaderOfABufferWithInterceptorsHasTheColumnsOfTheSourceIfNoRowIsBuffered()
+        {
+            // Setup
+            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => row.Add("Extra", typeof(int), 1)) };
+            using (var buffer = new BatchBuffer(CreateSource(0), 10, null, interceptors))
+            {
+                // Act
+                buffer.Fill();
+
+                // Assert
+                using (var reader = buffer.CreateReader())
+                {
+                    CollectionAssert.AreEqual(new[] { "Id", "Name" }, ColumnNames(reader));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnFillIfAnInterceptorGivesAnotherShapeToAnotherRow()
+        {
+            // Setup
+            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => (int)row["Id"] == 2 ? row.Add("Extra", typeof(int), 1) : row) };
+            using (var buffer = new BatchBuffer(CreateSource(3), 10, null, interceptors))
+            {
+                // Act/Assert
+                Assert.Throws<InvalidOperationException>(() => buffer.Fill());
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnFillIfAnInterceptorReturnsNull()
+        {
+            // Setup
+            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => null) };
+            using (var buffer = new BatchBuffer(CreateSource(1), 10, null, interceptors))
+            {
+                // Act/Assert
+                Assert.Throws<InvalidOperationException>(() => buffer.Fill());
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnFillIfAValueDoesNotFitTheTypeOfItsColumn()
+        {
+            // Setup
+            var interceptors = new List<IDataInterceptor<CopyRow>> { new FakeDataInterceptor(row => { row["Id"] = "not a number"; return row; }) };
+            using (var buffer = new BatchBuffer(CreateSource(1), 10, null, interceptors))
+            {
+                // Act/Assert
+                Assert.Throws<InvalidOperationException>(() => buffer.Fill());
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnBatchBufferIfAnInterceptorIsNull()
+        {
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new BatchBuffer(CreateSource(1), 10, null, new List<IDataInterceptor<CopyRow>> { null }));
         }
 
         #endregion

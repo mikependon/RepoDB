@@ -7,6 +7,8 @@
 #endregion
 
 using RepoDb.Data.Enumerations;
+using RepoDb.Data.Models;
+using RepoDb.Data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,6 +103,45 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
                 var rows = Helper.TargetRows("\"Country\"", "\"Id\"");
                 CollectionAssert.AreEqual(new long[] { 1, 2, 3 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
                 CollectionAssert.AreEqual(new[] { "Philippines", "Japan", "Germany" }, rows.Select(r => (string)r["Name"]).ToArray());
+            }
+        }
+
+        private sealed class UpperCaseNameInterceptor : IDataInterceptor<CopyRow>
+        {
+            public CopyRow Transform(CopyRow data)
+            {
+                data["Name"] = ((string)data["Name"]).ToUpperInvariant();
+                return data;
+            }
+        }
+
+        private sealed class SuffixNameInterceptor : IDataInterceptor<CopyRow>
+        {
+            public CopyRow Transform(CopyRow data)
+            {
+                data["Name"] = data["Name"] + "!";
+                return data;
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToCopiesTheRowsThatTheInterceptorsGiveInTheOrderTheyArePassed()
+        {
+            using (var source = new SqliteConnection(Database.ConnectionStringForSource))
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.CreateTargetTables("Country");
+                var interceptors = new List<IDataInterceptor<CopyRow>> { new UpperCaseNameInterceptor(), new SuffixNameInterceptor() };
+
+                // Act
+                var actual = source.CopyDataTo("Country", target, dataInterceptors: interceptors);
+
+                // Assert
+                Assert.AreEqual(3, actual.RowCount);
+                var rows = Helper.TargetRows("\"Country\"", "\"Id\"");
+                CollectionAssert.AreEqual(new[] { "PHILIPPINES!", "JAPAN!", "GERMANY!" }, rows.Select(r => (string)r["Name"]).ToArray());
+                CollectionAssert.AreEqual(new long[] { 1, 2, 3 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
             }
         }
 
