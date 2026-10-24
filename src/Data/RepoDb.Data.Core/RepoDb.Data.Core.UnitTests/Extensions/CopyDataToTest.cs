@@ -501,6 +501,115 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
+        public void TestCopyDataToWithQualifiersBulkMergesTheRowsWithTheQualifiers()
+        {
+            // Setup
+            FakeBulkOperations.Reset();
+
+            // Act
+            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bypassExistingRows: true, qualifiers: new[] { "Name" });
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMerge", call.Method);
+            CollectionAssert.AreEqual(new[] { "Name" }, call.Qualifiers);
+        }
+
+        [TestMethod]
+        public async Task TestCopyDataToAsyncWithQualifiersBulkMergesTheRowsWithTheQualifiers()
+        {
+            // Setup
+            FakeBulkOperations.Reset();
+
+            // Act
+            await new FakeDbConnection().CopyDataToAsync("Person", "Customer", FakeBulkDestination.Create(), bypassExistingRows: true, qualifiers: new[] { "Id", "Name" });
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMergeAsync", call.Method);
+            CollectionAssert.AreEqual(new[] { "Id", "Name" }, call.Qualifiers);
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithQualifiersToARegisteredConnectionBulkMergesTheRowsWithTheQualifiers()
+        {
+            // Setup
+            var name = Register(FakeBulkDestination.CreateKeyless());
+            FakeBulkOperations.Reset();
+
+            // Act
+            new FakeDbConnection().CopyDataTo("Person", name, bypassExistingRows: true, qualifiers: new[] { "Id" });
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Id" }, FakeBulkOperations.Calls.Single().Qualifiers);
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithMappingsAndQualifiersBulkMergesTheRowsWithTheQualifiers()
+        {
+            // Setup
+            FakeBulkOperations.Reset();
+            var mappings = new[] { new CopyColumnMapping("Id", "Id"), new CopyColumnMapping("Name", "Name") };
+
+            // Act
+            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mappings, bypassExistingRows: true, qualifiers: new[] { "Name" });
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Name" }, FakeBulkOperations.Calls.Single().Qualifiers);
+        }
+
+        [TestMethod]
+        public void TestCopyDataToIgnoresTheQualifiersIfTheExistingRowsAreNotBypassed()
+        {
+            // Setup
+            FakeBulkOperations.Reset();
+
+            // Act
+            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), qualifiers: new[] { "Name" });
+
+            // Assert
+            Assert.AreEqual("BulkInsert", FakeBulkOperations.Calls.Single().Method);
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithBypassExistingRowsMergesTheRowsOneByOneIfTheProviderHasNoBulkMerge()
+        {
+            // Setup
+            var destination = new FakeDbConnection();
+
+            // Act
+            var actual = new FakeDbConnection().CopyDataTo("Person", "Customer", destination, bypassExistingRows: true, qualifiers: new[] { "Name" }).RowCount;
+
+            // Assert
+            var updates = destination.Executions.Where(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal)).ToList();
+            Assert.AreEqual(3, actual);
+            Assert.AreEqual(3, updates.Count);
+            StringAssert.Contains(updates[0].CommandText, "WHERE [Name] = ");
+        }
+
+        [TestMethod]
+        public async Task TestCopyDataToAsyncWithBypassExistingRowsMergesTheRowsOneByOneIfTheProviderHasNoBulkMerge()
+        {
+            // Setup
+            var destination = new FakeDbConnection();
+
+            // Act
+            await new FakeDbConnection().CopyDataToAsync("Person", "Customer", destination, bypassExistingRows: true);
+
+            // Assert
+            var update = destination.Executions.First(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal));
+            StringAssert.Contains(update.CommandText, "WHERE [Id] = ");
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnCopyDataToWithQualifiersIfAQualifierIsNotAColumnOfTheTargetTable()
+        {
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() =>
+                new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bypassExistingRows: true, qualifiers: new[] { "Missing" }));
+        }
+
+        [TestMethod]
         public void TestCopyDataToSetsTheTablesAndTheDatabasesOfTheProgress()
         {
             // Setup

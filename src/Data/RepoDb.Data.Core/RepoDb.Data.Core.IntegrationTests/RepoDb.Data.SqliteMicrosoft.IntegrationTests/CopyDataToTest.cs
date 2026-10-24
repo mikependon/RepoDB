@@ -64,6 +64,47 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
         }
 
         [TestMethod]
+        public void TestCopyDataToWithBypassExistingRowsUpdatesTheRowsThatExistAndInsertsTheOthers()
+        {
+            using (var source = new SqliteConnection(Database.ConnectionStringForSource))
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.CreateTargetTables("Country");
+                Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Id\", \"Name\") VALUES (2, 'Old Japan'), (9, 'Other')");
+
+                // Act
+                var actual = source.CopyDataTo("Country", target, bypassExistingRows: true);
+
+                // Assert
+                Assert.AreEqual(3, actual.RowCount);
+                var rows = Helper.TargetRows("\"Country\"", "\"Id\"");
+                CollectionAssert.AreEqual(new long[] { 1, 2, 3, 9 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
+                CollectionAssert.AreEqual(new[] { "Philippines", "Japan", "Germany", "Other" }, rows.Select(r => (string)r["Name"]).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void TestCopyDataToWithQualifiersUpdatesTheRowsThatHaveTheQualifiers()
+        {
+            using (var source = new SqliteConnection(Database.ConnectionStringForSource))
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.CreateTargetTables("Country");
+                Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Id\", \"Name\") VALUES (7, 'Japan')");
+
+                // Act
+                source.CopyDataTo("Country", target, bypassExistingRows: true, qualifiers: new[] { "Name" });
+
+                // Assert
+                var rows = Helper.TargetRows("\"Country\"", "\"Id\"");
+                CollectionAssert.AreEqual(new long[] { 1, 2, 3 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
+                CollectionAssert.AreEqual(new[] { "Philippines", "Japan", "Germany" }, rows.Select(r => (string)r["Name"]).ToArray());
+            }
+        }
+
+        [TestMethod]
         public void TestCopyDataToGeneratesTheIdentityValuesIfItIsNotToKeepThem()
         {
             using (var source = new SqliteConnection(Database.ConnectionStringForSource))

@@ -66,26 +66,6 @@ namespace RepoDb.Data.Helpers
             Find(connection, reader, isAsync, BulkMergeName) != null;
 
         /// <summary>
-        /// Ensures that the <c>BulkOperations</c> package of the provider of the connection has the bulk insert (or the bulk merge) for the reader.
-        /// </summary>
-        /// <param name="connection">The connection of the destination database.</param>
-        /// <param name="reader">The reader of the rows to be copied.</param>
-        /// <param name="isAsync">A value that indicates whether the asynchronous method is searched.</param>
-        /// <param name="merge">A value that indicates whether the bulk merge is searched instead of the bulk insert.</param>
-        /// <exception cref="InvalidOperationException">The bulk method is not available.</exception>
-        internal static void EnsureAvailable(IDbConnection connection,
-            IDataReader reader,
-            bool isAsync,
-            bool merge)
-        {
-            var name = merge ? BulkMergeName : BulkInsertName;
-            if (Find(connection, reader, isAsync, name) == null)
-            {
-                throw CreateMissingException(connection, name);
-            }
-        }
-
-        /// <summary>
         /// Bulk inserts the rows of the reader into the table.
         /// </summary>
         /// <param name="connection">The connection of the destination database.</param>

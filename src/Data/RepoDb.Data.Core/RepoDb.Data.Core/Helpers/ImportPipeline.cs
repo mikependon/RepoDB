@@ -400,33 +400,7 @@ namespace RepoDb.Data.Helpers
             IDbTransaction transaction)
         {
             var dbSetting = connection.GetDbSetting();
-            IList<Field> qualifiers;
-            if (names != null && names.Count > 0)
-            {
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                qualifiers = new List<Field>();
-                foreach (var name in names)
-                {
-                    if (string.IsNullOrWhiteSpace(name))
-                    {
-                        throw new ArgumentException("The qualifiers must not have an empty name.", "qualifiers");
-                    }
-                    var dbField = dbFields.GetByUnquotedName(name.AsUnquoted(true, dbSetting));
-                    if (dbField == null)
-                    {
-                        throw new ArgumentException($"The qualifier '{name}' is not a column of the table '{tableName}'.", "qualifiers");
-                    }
-                    var unquoted = dbField.Name.AsUnquoted(true, dbSetting);
-                    if (!qualifiers.Any(qualifier => string.Equals(qualifier.Name, unquoted, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        qualifiers.Add(new Field(unquoted));
-                    }
-                }
-            }
-            else
-            {
-                qualifiers = RepoDb.Data.DbConnection.GetQualifiers(connection, tableName, null, transaction);
-            }
+            var qualifiers = RepoDb.Data.DbConnection.GetQualifiers(connection, tableName, names, null, transaction);
             var loaded = new HashSet<string>(map.Fields.Select(field => field.Name.AsUnquoted(true, dbSetting)), StringComparer.OrdinalIgnoreCase);
             var missing = qualifiers.FirstOrDefault(qualifier => !loaded.Contains(qualifier.Name));
             if (missing != null)
