@@ -71,6 +71,140 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
         #endregion
 
+        #region Bypass Existing Rows
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithBypassExistingRowsBulkMergesTheRowsWithThePrimaryKeyAsTheQualifiers()
+        {
+            // Setup
+            var path = Write(Rows(3));
+            var destination = FakeBulkDestination.Create();
+
+            // Act
+            var actual = destination.ImportDataFromJson("Customer", path, bypassExistingRows: true);
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMerge", call.Method);
+            Assert.AreEqual("Customer", call.TableName);
+            Assert.AreEqual(3, call.RowCount);
+            CollectionAssert.AreEqual(new[] { "Id" }, call.Qualifiers);
+            Assert.AreEqual(3, actual.LoadedRowCount);
+        }
+
+        [TestMethod]
+        public async Task TestImportDataFromJsonAsyncWithBypassExistingRowsBulkMergesTheRowsWithThePrimaryKeyAsTheQualifiers()
+        {
+            // Setup
+            var path = Write(Rows(3));
+            var destination = FakeBulkDestination.Create();
+
+            // Act
+            var actual = await destination.ImportDataFromJsonAsync("Customer", path, bypassExistingRows: true);
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMergeAsync", call.Method);
+            CollectionAssert.AreEqual(new[] { "Id" }, call.Qualifiers);
+            Assert.AreEqual(3, actual.LoadedRowCount);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithBypassExistingRowsBulkMergesEveryBuffer()
+        {
+            // Setup
+            var path = Write(Rows(5));
+
+            // Act
+            var actual = FakeBulkDestination.Create().ImportDataFromJson("Customer", path, 2, true);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "BulkMerge", "BulkMerge", "BulkMerge" }, FakeBulkOperations.Calls.Select(c => c.Method).ToArray());
+            Assert.AreEqual(5, actual.LoadedRowCount);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithBypassExistingRowsBulkMergesTheRowsWithTheIdentityAsTheQualifierIfThereIsNoPrimaryKey()
+        {
+            // Setup
+            var path = Write(Rows(2));
+
+            // Act
+            FakeBulkDestination.CreateIdentityOnly().ImportDataFromJson("Customer", path, bypassExistingRows: true);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Id" }, FakeBulkOperations.Calls.Single().Qualifiers);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithoutBypassExistingRowsBulkInsertsTheRows()
+        {
+            // Setup
+            var path = Write(Rows(2));
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromJson("Customer", path);
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkInsert", call.Method);
+            Assert.IsNull(call.Qualifiers);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromJsonWithBypassExistingRowsIfTheTableHasNoPrimaryKeyAndNoIdentity()
+        {
+            // Setup
+            var path = Write(Rows(2));
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.CreateKeyless().ImportDataFromJson("Customer", path, bypassExistingRows: true));
+            Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnImportDataFromJsonAsyncWithBypassExistingRowsIfTheTableHasNoPrimaryKeyAndNoIdentity()
+        {
+            // Setup
+            var path = Write(Rows(2));
+
+            // Act/Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(() => FakeBulkDestination.CreateKeyless().ImportDataFromJsonAsync("Customer", path, bypassExistingRows: true));
+            Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromJsonWithBypassExistingRowsIfTheQualifierIsNotAColumnOfTheFile()
+        {
+            // Setup
+            var path = Write("[{\"Name\":\"Name 1\"}]");
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromJsonWithBypassExistingRowsIfTheQualifierIsGeneratedByTheDatabase()
+        {
+            // Setup
+            var path = Write(Rows(2));
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, identityBehavior: LoadIdentityBehavior.Ignore));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromJsonWithBypassExistingRowsIfTheProviderHasNoBulkMerge()
+        {
+            // Setup
+            var path = Write(Rows(2));
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, bypassExistingRows: true));
+        }
+
+        #endregion
+
         #region Arguments
 
         [TestMethod]

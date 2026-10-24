@@ -720,7 +720,7 @@ namespace RepoDb.Data
         /// <param name="transaction">The transaction to be used on the destination connection.</param>
         /// <returns>The qualifiers.</returns>
         /// <exception cref="InvalidOperationException">The target table has no primary key and no identity column, or its qualifiers are not copied.</exception>
-        private static IList<Field> GetQualifiers(IDbConnection destinationConnection,
+        internal static IList<Field> GetQualifiers(IDbConnection destinationConnection,
             string targetTable,
             ISet<string> excludedColumns,
             IDbTransaction transaction)

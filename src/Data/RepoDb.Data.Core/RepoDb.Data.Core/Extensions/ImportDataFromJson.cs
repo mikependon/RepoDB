@@ -58,6 +58,7 @@ namespace RepoDb.Data
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
         /// <param name="filename">The path of the JSON file.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted at once with the bulk insert. The default is 10000.</param>
+        /// <param name="bypassExistingRows">Defines whether the rows that already exist in the table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the table as the qualifiers (its identity column if it has no primary key), which must be columns of the file. An <see cref="InvalidOperationException"/> is thrown if the table has neither, or the provider has no bulk merge. The default is <c>false</c>.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
@@ -70,11 +71,12 @@ namespace RepoDb.Data
         /// <exception cref="ArgumentOutOfRangeException">The buffer size is less than 1, or a behavior is not defined.</exception>
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         /// <exception cref="FormatException">The file is not valid JSON, a row is not an object, or a value cannot be converted into the type of its column.</exception>
-        /// <exception cref="InvalidOperationException">No column of the file matches a column of the table.</exception>
+        /// <exception cref="InvalidOperationException">No column of the file matches a column of the table, or the existing rows are bypassed and the table has no qualifiers (a primary key or an identity column) among the columns of the file, or the provider has no bulk merge.</exception>
         public static LoadProgress ImportDataFromJson(this IDbConnection connection,
             string tableName,
             string filename,
             int bufferSize = 10000,
+            bool bypassExistingRows = false,
             LoadColumnMappingBehavior columnMappingBehavior = LoadColumnMappingBehavior.Automatic,
             LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
             Action<LoadProgress> progressCallback = null,
@@ -85,6 +87,7 @@ namespace RepoDb.Data
         {
             Validate(connection, tableName, filename, bufferSize, columnMappingBehavior, identityBehavior);
             var map = CreateMap(connection, tableName, transaction, identityBehavior, JsonHelper.ReadColumns(filename));
+            var qualifiers = bypassExistingRows ? GetQualifiers(connection, tableName, map, transaction) : null;
             var progress = new LoadProgress
             {
                 Start = DateTime.UtcNow,
@@ -92,7 +95,7 @@ namespace RepoDb.Data
             };
             progressCallback?.Invoke(progress);
 
-            var bulk = IsBulk(connection, map, false);
+            var bulk = IsBulk(connection, map, false, bypassExistingRows);
             var buffer = new List<object[]>(Math.Min(bufferSize, 1024));
             using (var reader = JsonHelper.Open(filename))
             {
@@ -108,13 +111,13 @@ namespace RepoDb.Data
                     }
                     if (buffer.Count == bufferSize)
                     {
-                        Flush(connection, tableName, map, buffer, bulk, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
+                        Flush(connection, tableName, map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
                     }
                 }
             }
             if (buffer.Count > 0)
             {
-                Flush(connection, tableName, map, buffer, bulk, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
+                Flush(connection, tableName, map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
             }
             progressCallback?.Invoke(progress);
             return progress;
@@ -131,6 +134,7 @@ namespace RepoDb.Data
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
         /// <param name="filename">The path of the JSON file.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted at once with the bulk insert. The default is 10000.</param>
+        /// <param name="bypassExistingRows">Defines whether the rows that already exist in the table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the table as the qualifiers (its identity column if it has no primary key), which must be columns of the file. An <see cref="InvalidOperationException"/> is thrown if the table has neither, or the provider has no bulk merge. The default is <c>false</c>.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
@@ -144,11 +148,12 @@ namespace RepoDb.Data
         /// <exception cref="ArgumentOutOfRangeException">The buffer size is less than 1, or a behavior is not defined.</exception>
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         /// <exception cref="FormatException">The file is not valid JSON, a row is not an object, or a value cannot be converted into the type of its column.</exception>
-        /// <exception cref="InvalidOperationException">No column of the file matches a column of the table.</exception>
+        /// <exception cref="InvalidOperationException">No column of the file matches a column of the table, or the existing rows are bypassed and the table has no qualifiers (a primary key or an identity column) among the columns of the file, or the provider has no bulk merge.</exception>
         public static async Task<LoadProgress> ImportDataFromJsonAsync(this IDbConnection connection,
             string tableName,
             string filename,
             int bufferSize = 10000,
+            bool bypassExistingRows = false,
             LoadColumnMappingBehavior columnMappingBehavior = LoadColumnMappingBehavior.Automatic,
             LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
             Action<LoadProgress> progressCallback = null,
@@ -160,6 +165,7 @@ namespace RepoDb.Data
         {
             Validate(connection, tableName, filename, bufferSize, columnMappingBehavior, identityBehavior);
             var map = CreateMap(connection, tableName, transaction, identityBehavior, await JsonHelper.ReadColumnsAsync(filename, cancellationToken).ConfigureAwait(false));
+            var qualifiers = bypassExistingRows ? GetQualifiers(connection, tableName, map, transaction) : null;
             var progress = new LoadProgress
             {
                 Start = DateTime.UtcNow,
@@ -167,7 +173,7 @@ namespace RepoDb.Data
             };
             progressCallback?.Invoke(progress);
 
-            var bulk = IsBulk(connection, map, true);
+            var bulk = IsBulk(connection, map, true, bypassExistingRows);
             var buffer = new List<object[]>(Math.Min(bufferSize, 1024));
             using (var reader = JsonHelper.Open(filename))
             {
@@ -183,13 +189,13 @@ namespace RepoDb.Data
                     }
                     if (buffer.Count == bufferSize)
                     {
-                        await FlushAsync(connection, tableName, map, buffer, bulk, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
+                        await FlushAsync(connection, tableName, map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
                     }
                 }
             }
             if (buffer.Count > 0)
             {
-                await FlushAsync(connection, tableName, map, buffer, bulk, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
+                await FlushAsync(connection, tableName, map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
             }
             progressCallback?.Invoke(progress);
             return progress;
@@ -290,21 +296,54 @@ namespace RepoDb.Data
         }
 
         /// <summary>
-        /// Checks whether the rows are loaded with the bulk insert, which is when the provider of the connection has one.
+        /// Checks whether the rows are loaded with the bulk insert, which is when the provider of the connection has one (the bulk merge is required if the existing rows are bypassed).
         /// </summary>
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="map">The map of the columns.</param>
         /// <param name="isAsync">A value that indicates whether the asynchronous bulk insert is searched.</param>
-        /// <returns><c>true</c> if the rows are loaded with the bulk insert; otherwise, <c>false</c>.</returns>
+        /// <param name="bypassExistingRows">A value that indicates whether the bulk merge is used instead of the bulk insert.</param>
+        /// <returns><c>true</c> if the rows are loaded with the bulk insert (or the bulk merge); otherwise, <c>false</c>.</returns>
+        /// <exception cref="InvalidOperationException">The existing rows are bypassed and the provider has no bulk merge.</exception>
         private static bool IsBulk(IDbConnection connection,
             ColumnMap map,
-            bool isAsync)
+            bool isAsync,
+            bool bypassExistingRows)
         {
             using (var table = CreateTable(map))
             using (var reader = table.CreateDataReader())
             {
+                if (bypassExistingRows)
+                {
+                    BulkInsertInvoker.EnsureAvailable(connection, reader, isAsync, true);
+                    return true;
+                }
                 return BulkInsertInvoker.IsAvailable(connection, reader, isAsync);
             }
+        }
+
+        /// <summary>
+        /// Gets the qualifiers of the bulk merge: the primary key columns of the table, or its identity column if it has no primary key.
+        /// </summary>
+        /// <param name="connection">The connection of the database that has the table.</param>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="map">The map of the columns.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The qualifiers.</returns>
+        /// <exception cref="InvalidOperationException">The table has no primary key and no identity column, or a qualifier is not a column that is loaded.</exception>
+        private static IList<Field> GetQualifiers(IDbConnection connection,
+            string tableName,
+            ColumnMap map,
+            IDbTransaction transaction)
+        {
+            var qualifiers = RepoDb.Data.DbConnection.GetQualifiers(connection, tableName, null, transaction);
+            var dbSetting = connection.GetDbSetting();
+            var loaded = new HashSet<string>(map.Fields.Select(field => field.Name.AsUnquoted(true, dbSetting)), StringComparer.OrdinalIgnoreCase);
+            var missing = qualifiers.FirstOrDefault(qualifier => !loaded.Contains(qualifier.Name));
+            if (missing != null)
+            {
+                throw new InvalidOperationException($"The existing rows cannot be bypassed as the qualifier '{missing.Name}' of the table '{tableName}' is not a column of the file that is loaded.");
+            }
+            return qualifiers;
         }
 
         /// <summary>
@@ -401,6 +440,7 @@ namespace RepoDb.Data
         /// <param name="map">The map of the columns.</param>
         /// <param name="buffer">The buffered rows (cleared when they are inserted).</param>
         /// <param name="bulk">A value that indicates whether the rows are inserted with the bulk insert.</param>
+        /// <param name="qualifiers">The qualifiers of the bulk merge, or <c>null</c> to bulk insert the rows.</param>
         /// <param name="size">The number of rows of the buffer.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert.</param>
         /// <param name="identityBehavior">Defines whether the values of the identity columns are kept by the bulk insert.</param>
@@ -415,6 +455,7 @@ namespace RepoDb.Data
             ColumnMap map,
             IList<object[]> buffer,
             bool bulk,
+            IList<Field> qualifiers,
             int size,
             LoadColumnMappingBehavior columnMappingBehavior,
             LoadIdentityBehavior identityBehavior,
@@ -431,7 +472,9 @@ namespace RepoDb.Data
                 using (var table = ToTable(map, buffer))
                 using (var reader = table.CreateDataReader())
                 {
-                    inserted = BulkInsertInvoker.BulkInsert(connection, tableName, reader, size, columnMappingBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction);
+                    inserted = qualifiers != null
+                        ? BulkInsertInvoker.BulkMerge(connection, tableName, reader, qualifiers, size, columnMappingBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction)
+                        : BulkInsertInvoker.BulkInsert(connection, tableName, reader, size, columnMappingBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction);
                 }
             }
             else
@@ -449,6 +492,7 @@ namespace RepoDb.Data
         /// <param name="map">The map of the columns.</param>
         /// <param name="buffer">The buffered rows (cleared when they are inserted).</param>
         /// <param name="bulk">A value that indicates whether the rows are inserted with the bulk insert.</param>
+        /// <param name="qualifiers">The qualifiers of the bulk merge, or <c>null</c> to bulk insert the rows.</param>
         /// <param name="size">The number of rows of the buffer.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert.</param>
         /// <param name="identityBehavior">Defines whether the values of the identity columns are kept by the bulk insert.</param>
@@ -465,6 +509,7 @@ namespace RepoDb.Data
             ColumnMap map,
             IList<object[]> buffer,
             bool bulk,
+            IList<Field> qualifiers,
             int size,
             LoadColumnMappingBehavior columnMappingBehavior,
             LoadIdentityBehavior identityBehavior,
@@ -482,7 +527,9 @@ namespace RepoDb.Data
                 using (var table = ToTable(map, buffer))
                 using (var reader = table.CreateDataReader())
                 {
-                    inserted = await BulkInsertInvoker.BulkInsertAsync(connection, tableName, reader, size, columnMappingBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+                    inserted = qualifiers != null
+                        ? await BulkInsertInvoker.BulkMergeAsync(connection, tableName, reader, qualifiers, size, columnMappingBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false)
+                        : await BulkInsertInvoker.BulkInsertAsync(connection, tableName, reader, size, columnMappingBehavior, identityBehavior == LoadIdentityBehavior.KeepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
                 }
             }
             else
