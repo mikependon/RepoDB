@@ -114,7 +114,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(Rows(1));
 
             // Act/Assert
-            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromCsv("Customer", path, separator));
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromCsv("Customer", path, separator: separator));
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(Rows(1));
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentException>(() => new FakeDbConnection().ImportDataFromCsvAsync("Customer", path, '"'));
+            await Assert.ThrowsAsync<ArgumentException>(() => new FakeDbConnection().ImportDataFromCsvAsync("Customer", path, separator: '"'));
         }
 
         #endregion
@@ -279,7 +279,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = destination.ImportDataFromCsv("Customer", path, separator);
+            var actual = destination.ImportDataFromCsv("Customer", path, separator: separator);
 
             // Assert
             Assert.AreEqual(2L, actual.LoadedRowCount);
@@ -294,7 +294,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            destination.ImportDataFromCsv("Customer", path, ';');
+            destination.ImportDataFromCsv("Customer", path, separator: ';');
 
             // Assert
             Assert.IsTrue(Inserts(destination).Single().Parameters.Values.Contains("a,b"));
@@ -491,7 +491,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(Rows(3, ";"));
 
             // Act
-            var actual = await FakeBulkDestination.Create().ImportDataFromCsvAsync("Customer", path, ';', bypassExistingRows: true);
+            var actual = await FakeBulkDestination.Create().ImportDataFromCsvAsync("Customer", path, separator: ';', bypassExistingRows: true);
 
             // Assert
             Assert.AreEqual("BulkMergeAsync", FakeBulkOperations.Calls.Single().Method);
@@ -645,6 +645,181 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var update = destination.Executions.First(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal));
             StringAssert.Contains(update.CommandText, "WHERE [Id] = ");
             StringAssert.Contains(update.CommandText, "SET [Name] = ");
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvWithMappingsLoadsTheMappedColumnsOnly()
+        {
+            // Setup
+            var path = Write("Code,Title,Extra\n7,Seven,x");
+            var destination = new FakeDbConnection();
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+
+            // Act
+            var actual = destination.ImportDataFromCsv("Customer", path, mappings: mappings);
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7, "Seven" }, insert.Parameters.Values.ToArray());
+            Assert.AreEqual(1L, actual.LoadedRowCount);
+        }
+
+        [TestMethod]
+        public async Task TestImportDataFromCsvAsyncWithMappingsLoadsTheMappedColumnsOnly()
+        {
+            // Setup
+            var path = Write("Code,Title,Extra\n7,Seven,x");
+            var destination = new FakeDbConnection();
+            var mappings = new[] { new CopyColumnMapping("title", "name"), new CopyColumnMapping("CODE", "ID") };
+
+            // Act
+            await destination.ImportDataFromCsvAsync("Customer", path, mappings: mappings);
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7, "Seven" }, insert.Parameters.Values.ToArray());
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvWithMappingsDoesNotLoadAColumnOfTheFileThatHasTheNameOfAColumnOfTheTableButIsNotMapped()
+        {
+            // Setup
+            var path = Write("Code,Id,Name\n7,8,Same");
+            var destination = new FakeDbConnection();
+
+            // Act
+            destination.ImportDataFromCsv("Customer", path, mappings: new[] { new CopyColumnMapping("Code", "Id") });
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7 }, insert.Parameters.Values.ToArray());
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvWithMappingsLoadsAColumnOfTheFileIntoMoreThanOneColumnOfTheTable()
+        {
+            // Setup
+            var path = Write("Code,Title,Extra\n7,Seven,x");
+            var destination = new FakeDbConnection();
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Code", "Name") };
+
+            // Act
+            destination.ImportDataFromCsv("Customer", path, mappings: mappings);
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7, "7" }, insert.Parameters.Values.ToArray());
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvWithEmptyMappingsLoadsTheColumnsByTheirNames()
+        {
+            // Setup
+            var path = Write("Id,Name\n7,Same");
+            var destination = new FakeDbConnection();
+
+            // Act
+            destination.ImportDataFromCsv("Customer", path, mappings: new List<CopyColumnMapping>());
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7, "Same" }, insert.Parameters.Values.ToArray());
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromCsvWithMappingsIfADestinationColumnIsNotAColumnOfTheTable()
+        {
+            // Setup
+            var path = Write("Code,Title,Extra\n7,Seven,x");
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromCsv("Customer", path, mappings: new[] { new CopyColumnMapping("Code", "Missing") }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromCsvWithMappingsIfADestinationColumnIsMappedMoreThanOnce()
+        {
+            // Setup
+            var path = Write("Code,Title,Extra\n7,Seven,x");
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "id") };
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromCsv("Customer", path, mappings: mappings));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromCsvWithMappingsIfAMappingIsNull()
+        {
+            // Setup
+            var path = Write("Code,Title,Extra\n7,Seven,x");
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromCsv("Customer", path, mappings: new CopyColumnMapping[] { null }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromCsvWithMappingsIfAMappingHasAnEmptyColumn()
+        {
+            // Setup
+            var path = Write("Code,Title,Extra\n7,Seven,x");
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromCsv("Customer", path, mappings: new[] { new CopyColumnMapping(" ", "Id") }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromCsvWithMappingsIfASourceColumnIsNotAColumnOfTheHeader()
+        {
+            // Setup
+            var path = Write("Code,Title,Extra\n7,Seven,x");
+            var destination = new FakeDbConnection();
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Missing", "Name") };
+
+            // Act
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => destination.ImportDataFromCsv("Customer", path, mappings: mappings));
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvWithMappingsAndBypassExistingRowsBulkMergesTheRowsWithTheMappedQualifier()
+        {
+            // Setup
+            var path = Write("Code,Title,Extra\n7,Seven,x");
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromCsv("Customer", path, bypassExistingRows: true, mappings: mappings);
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMerge", call.Method);
+            CollectionAssert.AreEqual(new[] { "Id" }, call.Qualifiers);
+            CollectionAssert.AreEqual(new[] { "Id", "Name" }, FakeBulkOperations.LastColumns);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromCsvWithMappingsAndBypassExistingRowsIfTheMappingsDoNotLoadTheQualifier()
+        {
+            // Setup
+            var path = Write("Code,Title,Extra\n7,Seven,x");
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromCsv("Customer", path, bypassExistingRows: true, mappings: new[] { new CopyColumnMapping("Title", "Name") }));
+            Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvWithMappingsLeavesTheIdentityColumnToTheDatabaseIfItIsNotToBeKept()
+        {
+            // Setup
+            var path = Write("Code,Title,Extra\n7,Seven,x");
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromCsv("Customer", path, mappings: mappings, identityBehavior: LoadIdentityBehavior.Ignore);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Name" }, FakeBulkOperations.LastColumns);
         }
 
         #endregion

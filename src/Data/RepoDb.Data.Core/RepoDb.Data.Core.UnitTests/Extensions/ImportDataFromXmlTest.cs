@@ -533,6 +533,183 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             StringAssert.Contains(update.CommandText, "SET [Name] = ");
         }
 
+        [TestMethod]
+        public void TestImportDataFromXmlWithMappingsLoadsTheMappedColumnsOnly()
+        {
+            // Setup
+            var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
+            var destination = new FakeDbConnection();
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+
+            // Act
+            var actual = destination.ImportDataFromXml("Customer", path, mappings: mappings);
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7, "Seven" }, insert.Parameters.Values.ToArray());
+            Assert.AreEqual(1L, actual.LoadedRowCount);
+        }
+
+        [TestMethod]
+        public async Task TestImportDataFromXmlAsyncWithMappingsLoadsTheMappedColumnsOnly()
+        {
+            // Setup
+            var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
+            var destination = new FakeDbConnection();
+            var mappings = new[] { new CopyColumnMapping("title", "name"), new CopyColumnMapping("CODE", "ID") };
+
+            // Act
+            await destination.ImportDataFromXmlAsync("Customer", path, mappings: mappings);
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7, "Seven" }, insert.Parameters.Values.ToArray());
+        }
+
+        [TestMethod]
+        public void TestImportDataFromXmlWithMappingsDoesNotLoadAColumnOfTheFileThatHasTheNameOfAColumnOfTheTableButIsNotMapped()
+        {
+            // Setup
+            var path = Write("<rows><row><Code>7</Code><Id>8</Id><Name>Same</Name></row></rows>");
+            var destination = new FakeDbConnection();
+
+            // Act
+            destination.ImportDataFromXml("Customer", path, mappings: new[] { new CopyColumnMapping("Code", "Id") });
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7 }, insert.Parameters.Values.ToArray());
+        }
+
+        [TestMethod]
+        public void TestImportDataFromXmlWithMappingsLoadsAColumnOfTheFileIntoMoreThanOneColumnOfTheTable()
+        {
+            // Setup
+            var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
+            var destination = new FakeDbConnection();
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Code", "Name") };
+
+            // Act
+            destination.ImportDataFromXml("Customer", path, mappings: mappings);
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7, "7" }, insert.Parameters.Values.ToArray());
+        }
+
+        [TestMethod]
+        public void TestImportDataFromXmlWithEmptyMappingsLoadsTheColumnsByTheirNames()
+        {
+            // Setup
+            var path = Write("<rows><row><Id>7</Id><Name>Same</Name></row></rows>");
+            var destination = new FakeDbConnection();
+
+            // Act
+            destination.ImportDataFromXml("Customer", path, mappings: new List<CopyColumnMapping>());
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7, "Same" }, insert.Parameters.Values.ToArray());
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromXmlWithMappingsIfADestinationColumnIsNotAColumnOfTheTable()
+        {
+            // Setup
+            var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, mappings: new[] { new CopyColumnMapping("Code", "Missing") }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromXmlWithMappingsIfADestinationColumnIsMappedMoreThanOnce()
+        {
+            // Setup
+            var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "id") };
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, mappings: mappings));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromXmlWithMappingsIfAMappingIsNull()
+        {
+            // Setup
+            var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, mappings: new CopyColumnMapping[] { null }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromXmlWithMappingsIfAMappingHasAnEmptyColumn()
+        {
+            // Setup
+            var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromXml("Customer", path, mappings: new[] { new CopyColumnMapping(" ", "Id") }));
+        }
+
+        [TestMethod]
+        public void TestImportDataFromXmlWithMappingsLoadsNullIfAMappedColumnIsNotInTheFile()
+        {
+            // Setup
+            var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
+            var destination = new FakeDbConnection();
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Missing", "Name") };
+
+            // Act
+            var actual = destination.ImportDataFromXml("Customer", path, mappings: mappings);
+
+            // Assert
+            Assert.AreEqual(1L, actual.LoadedRowCount);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromXmlWithMappingsAndBypassExistingRowsBulkMergesTheRowsWithTheMappedQualifier()
+        {
+            // Setup
+            var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromXml("Customer", path, bypassExistingRows: true, mappings: mappings);
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMerge", call.Method);
+            CollectionAssert.AreEqual(new[] { "Id" }, call.Qualifiers);
+            CollectionAssert.AreEqual(new[] { "Id", "Name" }, FakeBulkOperations.LastColumns);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromXmlWithMappingsAndBypassExistingRowsIfTheMappingsDoNotLoadTheQualifier()
+        {
+            // Setup
+            var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromXml("Customer", path, bypassExistingRows: true, mappings: new[] { new CopyColumnMapping("Title", "Name") }));
+            Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromXmlWithMappingsLeavesTheIdentityColumnToTheDatabaseIfItIsNotToBeKept()
+        {
+            // Setup
+            var path = Write("<rows><row><Code>7</Code><Title>Seven</Title><Extra>x</Extra></row></rows>");
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromXml("Customer", path, mappings: mappings, identityBehavior: LoadIdentityBehavior.Ignore);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Name" }, FakeBulkOperations.LastColumns);
+        }
+
         #endregion
     }
 }

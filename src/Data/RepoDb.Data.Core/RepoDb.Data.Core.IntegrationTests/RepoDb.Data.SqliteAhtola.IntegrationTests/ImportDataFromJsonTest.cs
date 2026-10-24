@@ -404,6 +404,51 @@ namespace RepoDb.Data.SqliteAhtola.IntegrationTests
 
         #endregion
 
+        #region Mappings
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithMappingsLoadsTheMappedColumnsIntoTheirTargetColumns()
+        {
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                var path = Write("[{\"Code\":5,\"Title\":\"Five\",\"Cost\":5.5,\"Id\":99,\"Name\":\"Ignored\"},{\"Code\":6,\"Title\":\"Six\",\"Cost\":6.5}]");
+                var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name"), new CopyColumnMapping("Cost", "Amount") };
+
+                // Act
+                var actual = target.ImportDataFromJson("LoadItem", path, mappings: mappings);
+
+                // Assert
+                Assert.AreEqual(2L, actual.LoadedRowCount);
+                var rows = Rows();
+                CollectionAssert.AreEqual(new long[] { 5, 6 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
+                CollectionAssert.AreEqual(new[] { "Five", "Six" }, rows.Select(r => (string)r["Name"]).ToArray());
+                Assert.AreEqual(5.5m, Convert.ToDecimal(rows[0]["Amount"]));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestImportDataFromJsonAsyncWithMappingsAndBypassExistingRowsUpdatesTheRowsByTheMappedKey()
+        {
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.ExecuteOnTarget(@"INSERT INTO ""LoadItem"" (""Id"", ""Name"") VALUES (5, 'Old 5')");
+                var path = Write("[{\"Code\":5,\"Title\":\"Five\"},{\"Code\":6,\"Title\":\"Six\"}]");
+                var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+
+                // Act
+                await target.ImportDataFromJsonAsync("LoadItem", path, bypassExistingRows: true, mappings: mappings);
+
+                // Assert
+                var rows = Rows();
+                CollectionAssert.AreEqual(new long[] { 5, 6 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
+                CollectionAssert.AreEqual(new[] { "Five", "Six" }, rows.Select(r => (string)r["Name"]).ToArray());
+            }
+        }
+
+        #endregion
+
         #region Errors
 
         [TestMethod]

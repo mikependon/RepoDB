@@ -162,6 +162,9 @@ namespace RepoDb.Data.Helpers
         }
 
         /// <inheritdoc />
+        public bool HasAllColumns => true;
+
+        /// <inheritdoc />
         public void Validate()
         {
             if (_separator == '"' || _separator == '\r' || _separator == '\n')

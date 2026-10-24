@@ -29,6 +29,9 @@ namespace RepoDb.Data.Helpers
         }
 
         /// <inheritdoc />
+        public bool HasAllColumns => false;
+
+        /// <inheritdoc />
         public void Validate()
         {
         }

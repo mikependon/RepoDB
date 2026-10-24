@@ -34,6 +34,7 @@ namespace RepoDb.Data
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
         /// <param name="filename">The path of the CSV file.</param>
+        /// <param name="mappings">The mappings of the columns of the file (the source) to the columns of the table (the destination), as in <c>CopyDataTo</c> (see <see cref="CopyColumnMapping"/>). Only the mapped columns are loaded, and a column of the file can be mapped to more than one column of the table. The default is <c>null</c>, which loads the columns of the file that have the same name as a column of the table.</param>
         /// <param name="separator">The character that separates the fields of a line. It must not be a quote or a line break. The default is <c>,</c>.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted at once with the bulk insert. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the table as the qualifiers (its identity column if it has no primary key), which must be columns of the file. An <see cref="InvalidOperationException"/> is thrown if the table has neither. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
@@ -48,7 +49,7 @@ namespace RepoDb.Data
         /// <returns>The <see cref="LoadProgress"/> of the load, which is the same instance that the callback receives.</returns>
         /// <exception cref="ArgumentNullException">The connection, the table name or the file name is <c>null</c> (or white space).</exception>
         /// <exception cref="ArgumentOutOfRangeException">The buffer size is less than 1, or a behavior is not defined.</exception>
-        /// <exception cref="ArgumentException">A qualifier is empty, or is not a column of the table.</exception>
+        /// <exception cref="ArgumentException">A qualifier is empty, or is not a column of the table, or a mapping is not valid (its destination column is not a column of the table or is mapped more than once, or its source column is not a column of the file).</exception>
         /// <exception cref="ArgumentException">The separator is a quote or a line break.</exception>
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         /// <exception cref="FormatException">The file is not valid CSV, a row has more fields than the header, or a value cannot be converted into the type of its column.</exception>
@@ -56,6 +57,7 @@ namespace RepoDb.Data
         public static LoadProgress ImportDataFromCsv(this IDbConnection connection,
             string tableName,
             string filename,
+            IList<CopyColumnMapping> mappings = null,
             char separator = ',',
             int bufferSize = 10000,
             bool bypassExistingRows = false,
@@ -68,7 +70,7 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            return ImportPipeline.Run(connection, tableName, filename, new CsvImportSource(filename, separator), bufferSize, bypassExistingRows, qualifiers, columnMappingBehavior, identityBehavior, progressCallback, commandTimeout, traceKey, trace, transaction);
+            return ImportPipeline.Run(connection, tableName, filename, new CsvImportSource(filename, separator), bufferSize, bypassExistingRows, qualifiers, mappings, columnMappingBehavior, identityBehavior, progressCallback, commandTimeout, traceKey, trace, transaction);
         }
 
         #endregion
@@ -81,6 +83,7 @@ namespace RepoDb.Data
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
         /// <param name="filename">The path of the CSV file.</param>
+        /// <param name="mappings">The mappings of the columns of the file (the source) to the columns of the table (the destination), as in <c>CopyDataTo</c> (see <see cref="CopyColumnMapping"/>). Only the mapped columns are loaded, and a column of the file can be mapped to more than one column of the table. The default is <c>null</c>, which loads the columns of the file that have the same name as a column of the table.</param>
         /// <param name="separator">The character that separates the fields of a line. It must not be a quote or a line break. The default is <c>,</c>.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted at once with the bulk insert. The default is 10000.</param>
         /// <param name="bypassExistingRows">Defines whether the rows that already exist in the table are bypassed: the rows are bulk merged instead of bulk inserted, with the primary key columns of the table as the qualifiers (its identity column if it has no primary key), which must be columns of the file. An <see cref="InvalidOperationException"/> is thrown if the table has neither. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
@@ -96,7 +99,7 @@ namespace RepoDb.Data
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="LoadProgress"/> of the load, which is the same instance that the callback receives.</returns>
         /// <exception cref="ArgumentNullException">The connection, the table name or the file name is <c>null</c> (or white space).</exception>
         /// <exception cref="ArgumentOutOfRangeException">The buffer size is less than 1, or a behavior is not defined.</exception>
-        /// <exception cref="ArgumentException">A qualifier is empty, or is not a column of the table.</exception>
+        /// <exception cref="ArgumentException">A qualifier is empty, or is not a column of the table, or a mapping is not valid (its destination column is not a column of the table or is mapped more than once, or its source column is not a column of the file).</exception>
         /// <exception cref="ArgumentException">The separator is a quote or a line break.</exception>
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         /// <exception cref="FormatException">The file is not valid CSV, a row has more fields than the header, or a value cannot be converted into the type of its column.</exception>
@@ -104,6 +107,7 @@ namespace RepoDb.Data
         public static Task<LoadProgress> ImportDataFromCsvAsync(this IDbConnection connection,
             string tableName,
             string filename,
+            IList<CopyColumnMapping> mappings = null,
             char separator = ',',
             int bufferSize = 10000,
             bool bypassExistingRows = false,
@@ -117,7 +121,7 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return ImportPipeline.RunAsync(connection, tableName, filename, new CsvImportSource(filename, separator), bufferSize, bypassExistingRows, qualifiers, columnMappingBehavior, identityBehavior, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            return ImportPipeline.RunAsync(connection, tableName, filename, new CsvImportSource(filename, separator), bufferSize, bypassExistingRows, qualifiers, mappings, columnMappingBehavior, identityBehavior, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
         }
 
         #endregion

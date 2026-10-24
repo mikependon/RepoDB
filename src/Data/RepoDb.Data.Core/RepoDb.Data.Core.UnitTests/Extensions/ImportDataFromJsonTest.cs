@@ -116,7 +116,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var path = Write(Rows(5));
 
             // Act
-            var actual = FakeBulkDestination.Create().ImportDataFromJson("Customer", path, 2, true);
+            var actual = FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bufferSize: 2, bypassExistingRows: true);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "BulkMerge", "BulkMerge", "BulkMerge" }, FakeBulkOperations.Calls.Select(c => c.Method).ToArray());
@@ -330,6 +330,184 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var update = destination.Executions.First(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal));
             StringAssert.Contains(update.CommandText, "WHERE [Id] = ");
             StringAssert.Contains(update.CommandText, "SET [Name] = ");
+        }
+
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithMappingsLoadsTheMappedColumnsOnly()
+        {
+            // Setup
+            var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
+            var destination = new FakeDbConnection();
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+
+            // Act
+            var actual = destination.ImportDataFromJson("Customer", path, mappings: mappings);
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7, "Seven" }, insert.Parameters.Values.ToArray());
+            Assert.AreEqual(1L, actual.LoadedRowCount);
+        }
+
+        [TestMethod]
+        public async Task TestImportDataFromJsonAsyncWithMappingsLoadsTheMappedColumnsOnly()
+        {
+            // Setup
+            var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
+            var destination = new FakeDbConnection();
+            var mappings = new[] { new CopyColumnMapping("title", "name"), new CopyColumnMapping("CODE", "ID") };
+
+            // Act
+            await destination.ImportDataFromJsonAsync("Customer", path, mappings: mappings);
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7, "Seven" }, insert.Parameters.Values.ToArray());
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithMappingsDoesNotLoadAColumnOfTheFileThatHasTheNameOfAColumnOfTheTableButIsNotMapped()
+        {
+            // Setup
+            var path = Write("[{\"Code\":7,\"Id\":8,\"Name\":\"Same\"}]");
+            var destination = new FakeDbConnection();
+
+            // Act
+            destination.ImportDataFromJson("Customer", path, mappings: new[] { new CopyColumnMapping("Code", "Id") });
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7 }, insert.Parameters.Values.ToArray());
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithMappingsLoadsAColumnOfTheFileIntoMoreThanOneColumnOfTheTable()
+        {
+            // Setup
+            var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
+            var destination = new FakeDbConnection();
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Code", "Name") };
+
+            // Act
+            destination.ImportDataFromJson("Customer", path, mappings: mappings);
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7, "7" }, insert.Parameters.Values.ToArray());
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithEmptyMappingsLoadsTheColumnsByTheirNames()
+        {
+            // Setup
+            var path = Write("[{\"Id\":7,\"Name\":\"Same\"}]");
+            var destination = new FakeDbConnection();
+
+            // Act
+            destination.ImportDataFromJson("Customer", path, mappings: new List<CopyColumnMapping>());
+
+            // Assert
+            var insert = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
+            CollectionAssert.AreEquivalent(new object[] { 7, "Same" }, insert.Parameters.Values.ToArray());
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromJsonWithMappingsIfADestinationColumnIsNotAColumnOfTheTable()
+        {
+            // Setup
+            var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, mappings: new[] { new CopyColumnMapping("Code", "Missing") }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromJsonWithMappingsIfADestinationColumnIsMappedMoreThanOnce()
+        {
+            // Setup
+            var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "id") };
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, mappings: mappings));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromJsonWithMappingsIfAMappingIsNull()
+        {
+            // Setup
+            var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, mappings: new CopyColumnMapping[] { null }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromJsonWithMappingsIfAMappingHasAnEmptyColumn()
+        {
+            // Setup
+            var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, mappings: new[] { new CopyColumnMapping(" ", "Id") }));
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithMappingsLoadsNullIfAMappedColumnIsNotInTheFile()
+        {
+            // Setup
+            var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
+            var destination = new FakeDbConnection();
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Missing", "Name") };
+
+            // Act
+            var actual = destination.ImportDataFromJson("Customer", path, mappings: mappings);
+
+            // Assert
+            Assert.AreEqual(1L, actual.LoadedRowCount);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithMappingsAndBypassExistingRowsBulkMergesTheRowsWithTheMappedQualifier()
+        {
+            // Setup
+            var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, mappings: mappings);
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMerge", call.Method);
+            CollectionAssert.AreEqual(new[] { "Id" }, call.Qualifiers);
+            CollectionAssert.AreEqual(new[] { "Id", "Name" }, FakeBulkOperations.LastColumns);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromJsonWithMappingsAndBypassExistingRowsIfTheMappingsDoNotLoadTheQualifier()
+        {
+            // Setup
+            var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromJson("Customer", path, bypassExistingRows: true, mappings: new[] { new CopyColumnMapping("Title", "Name") }));
+            Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonWithMappingsLeavesTheIdentityColumnToTheDatabaseIfItIsNotToBeKept()
+        {
+            // Setup
+            var path = Write("[{\"Code\":7,\"Title\":\"Seven\",\"Extra\":\"x\"}]");
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromJson("Customer", path, mappings: mappings, identityBehavior: LoadIdentityBehavior.Ignore);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Name" }, FakeBulkOperations.LastColumns);
         }
 
         #endregion

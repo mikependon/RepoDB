@@ -42,6 +42,11 @@ namespace RepoDb.Data.Helpers
             /// Gets the position of each column of the file (by its name, without the case) in the values of a row.
             /// </summary>
             public IDictionary<string, int> Index { get; } = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+            /// <summary>
+            /// Gets the columns of the table that get the value of a column of the file that is mapped to more than one column: the position of the value, and the position of its copy.
+            /// </summary>
+            public IList<KeyValuePair<int, int>> Copies { get; } = new List<KeyValuePair<int, int>>();
         }
 
         #endregion
@@ -58,6 +63,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="bufferSize">The number of rows that are buffered and inserted at once.</param>
         /// <param name="bypassExistingRows">A value that indicates whether the rows are merged (with the primary key, or the identity, as the qualifiers) instead of inserted.</param>
         /// <param name="qualifierNames">The names of the columns that identify the existing rows, or <c>null</c> to use the primary key (or the identity) of the table. Used only if the existing rows are bypassed.</param>
+        /// <param name="mappings">The mappings of the columns of the file to the columns of the table, or <c>null</c> to load the columns that have the same name on both.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept.</param>
         /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
@@ -73,6 +79,7 @@ namespace RepoDb.Data.Helpers
             int bufferSize,
             bool bypassExistingRows,
             IList<string> qualifierNames,
+            IList<CopyColumnMapping> mappings,
             LoadColumnMappingBehavior columnMappingBehavior,
             LoadIdentityBehavior identityBehavior,
             Action<LoadProgress> progressCallback,
@@ -83,7 +90,7 @@ namespace RepoDb.Data.Helpers
         {
             Validate(connection, tableName, filename, bufferSize, columnMappingBehavior, identityBehavior);
             source.Validate();
-            var map = CreateMap(connection, tableName, transaction, identityBehavior, source.ReadColumns());
+            var map = CreateMap(connection, tableName, transaction, identityBehavior, source.ReadColumns(), mappings, source.HasAllColumns);
             var qualifiers = bypassExistingRows ? GetQualifiers(connection, tableName, map, qualifierNames, transaction) : null;
             var progress = new LoadProgress
             {
@@ -103,7 +110,7 @@ namespace RepoDb.Data.Helpers
                     {
                         break;
                     }
-                    buffer.Add(ConvertValues(values, reader.RowNumber, map));
+                    buffer.Add(ConvertValues(Copy(values, map), reader.RowNumber, map));
                     if (buffer.Count == bufferSize)
                     {
                         Flush(connection, tableName, map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
@@ -128,6 +135,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="bufferSize">The number of rows that are buffered and inserted at once.</param>
         /// <param name="bypassExistingRows">A value that indicates whether the rows are merged (with the primary key, or the identity, as the qualifiers) instead of inserted.</param>
         /// <param name="qualifierNames">The names of the columns that identify the existing rows, or <c>null</c> to use the primary key (or the identity) of the table. Used only if the existing rows are bypassed.</param>
+        /// <param name="mappings">The mappings of the columns of the file to the columns of the table, or <c>null</c> to load the columns that have the same name on both.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept.</param>
         /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
@@ -144,6 +152,7 @@ namespace RepoDb.Data.Helpers
             int bufferSize,
             bool bypassExistingRows,
             IList<string> qualifierNames,
+            IList<CopyColumnMapping> mappings,
             LoadColumnMappingBehavior columnMappingBehavior,
             LoadIdentityBehavior identityBehavior,
             Action<LoadProgress> progressCallback,
@@ -155,7 +164,7 @@ namespace RepoDb.Data.Helpers
         {
             Validate(connection, tableName, filename, bufferSize, columnMappingBehavior, identityBehavior);
             source.Validate();
-            var map = CreateMap(connection, tableName, transaction, identityBehavior, await source.ReadColumnsAsync(cancellationToken).ConfigureAwait(false));
+            var map = CreateMap(connection, tableName, transaction, identityBehavior, await source.ReadColumnsAsync(cancellationToken).ConfigureAwait(false), mappings, source.HasAllColumns);
             var qualifiers = bypassExistingRows ? GetQualifiers(connection, tableName, map, qualifierNames, transaction) : null;
             var progress = new LoadProgress
             {
@@ -175,7 +184,7 @@ namespace RepoDb.Data.Helpers
                     {
                         break;
                     }
-                    buffer.Add(ConvertValues(values, reader.RowNumber, map));
+                    buffer.Add(ConvertValues(Copy(values, map), reader.RowNumber, map));
                     if (buffer.Count == bufferSize)
                     {
                         await FlushAsync(connection, tableName, map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
@@ -245,24 +254,77 @@ namespace RepoDb.Data.Helpers
         }
 
         /// <summary>
-        /// Maps the columns of the file to the columns of the table.
+        /// Maps the columns of the file to the columns of the table: by the mappings if there are any (only the mapped columns are loaded), otherwise by their names.
         /// </summary>
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="identityBehavior">Defines whether the identity columns are mapped (kept) or left to the database.</param>
         /// <param name="columns">The names of the columns of the file.</param>
+        /// <param name="mappings">The mappings of the columns of the file to the columns of the table, or <c>null</c>.</param>
+        /// <param name="hasAllColumns">A value that indicates whether <paramref name="columns"/> has every column of the file, so a mapped column that is not in it does not exist.</param>
         /// <returns>The map of the columns.</returns>
+        /// <exception cref="ArgumentException">A mapping is not valid: it is <c>null</c>, it has an empty name, its destination column is not a column of the table (or is mapped more than once), or its source column is not a column of the file.</exception>
         /// <exception cref="InvalidOperationException">The file has columns, and no column of the file matches a column of the table.</exception>
         private static ColumnMap CreateMap(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
             LoadIdentityBehavior identityBehavior,
-            IList<string> columns)
+            IList<string> columns,
+            IList<CopyColumnMapping> mappings,
+            bool hasAllColumns)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var map = new ColumnMap();
+            if (mappings != null && mappings.Count > 0)
+            {
+                var known = new HashSet<string>(columns, StringComparer.OrdinalIgnoreCase);
+                var destinations = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var mapping in mappings)
+                {
+                    if (mapping == null)
+                    {
+                        throw new ArgumentException("The column mappings must not contain a null item.", "mappings");
+                    }
+                    if (string.IsNullOrWhiteSpace(mapping.SourceColumn) || string.IsNullOrWhiteSpace(mapping.DestinationColumn))
+                    {
+                        throw new ArgumentException("The source and the destination columns of a column mapping must not be empty.", "mappings");
+                    }
+                    var field = dbFields.GetByUnquotedName(mapping.DestinationColumn.AsUnquoted(true, dbSetting));
+                    if (field == null)
+                    {
+                        throw new ArgumentException($"The destination column '{mapping.DestinationColumn}' does not exist on the table '{tableName}'.", "mappings");
+                    }
+                    if (!destinations.Add(field.Name.AsUnquoted(true, dbSetting)))
+                    {
+                        throw new ArgumentException($"The destination column '{mapping.DestinationColumn}' is mapped more than once.", "mappings");
+                    }
+                    if (hasAllColumns && !known.Contains(mapping.SourceColumn))
+                    {
+                        throw new ArgumentException($"The source column '{mapping.SourceColumn}' does not exist on the file.", "mappings");
+                    }
+                    if (identityBehavior == LoadIdentityBehavior.Ignore && field.IsIdentity)
+                    {
+                        continue;
+                    }
+                    var position = map.Fields.Count;
+                    map.Fields.Add(field);
+                    if (map.Index.TryGetValue(mapping.SourceColumn, out var first))
+                    {
+                        map.Copies.Add(new KeyValuePair<int, int>(first, position));
+                    }
+                    else
+                    {
+                        map.Index[mapping.SourceColumn] = position;
+                    }
+                }
+                if (map.Fields.Count == 0)
+                {
+                    throw new InvalidOperationException($"No column of the file is mapped to a column of the table '{tableName}' that is loaded.");
+                }
+                return map;
+            }
             foreach (var column in columns)
             {
                 var field = dbFields.GetByUnquotedName(column.AsUnquoted(true, dbSetting));
@@ -280,6 +342,22 @@ namespace RepoDb.Data.Helpers
                 throw new InvalidOperationException($"No column of the file matches a column of the table '{tableName}'.");
             }
             return map;
+        }
+
+        /// <summary>
+        /// Gives the value of a column of the file to every other column of the table that it is mapped to.
+        /// </summary>
+        /// <param name="values">The values of a row by the position of the columns of the map.</param>
+        /// <param name="map">The map of the columns.</param>
+        /// <returns>The values.</returns>
+        private static object[] Copy(object[] values,
+            ColumnMap map)
+        {
+            foreach (var copy in map.Copies)
+            {
+                values[copy.Value] = values[copy.Key];
+            }
+            return values;
         }
 
         /// <summary>

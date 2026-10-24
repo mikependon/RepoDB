@@ -20,6 +20,12 @@ namespace RepoDb.Data.Helpers
     internal interface IImportSource
     {
         /// <summary>
+        /// Gets a value that indicates whether <see cref="ReadColumns"/> gives every column of the file (a CSV header does, while the columns of the rows of a JSON or XML file
+        /// are found by looking at the first rows only). A column that a mapping names must be one of them only if they are every column.
+        /// </summary>
+        bool HasAllColumns { get; }
+
+        /// <summary>
         /// Validates the options of the source (i.e.: the separator of a CSV file).
         /// </summary>
         /// <exception cref="ArgumentException">An option of the source is not valid.</exception>
