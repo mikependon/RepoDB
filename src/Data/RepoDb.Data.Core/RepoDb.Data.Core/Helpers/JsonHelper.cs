@@ -8,7 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -190,30 +189,8 @@ namespace RepoDb.Data.Helpers
         /// <returns>The value as the type, or <c>null</c> if the value is <c>null</c>.</returns>
         /// <exception cref="FormatException">The value cannot be converted into the type.</exception>
         public static object ConvertValue(object value,
-            Type type)
-        {
-            if (value == null || type == null)
-            {
-                return value;
-            }
-            type = Nullable.GetUnderlyingType(type) ?? type;
-            if (type == typeof(object) || type.IsInstanceOfType(value))
-            {
-                return value;
-            }
-            if (IsIntegral(type) && HasFraction(value))
-            {
-                throw new FormatException($"The value '{value}' has a fraction, which '{type.Name}' cannot hold.");
-            }
-            try
-            {
-                return ConvertCore(value, type);
-            }
-            catch (Exception e) when (e is FormatException || e is InvalidCastException || e is OverflowException || e is ArgumentException)
-            {
-                throw new FormatException($"The value '{value}' cannot be converted into '{type.Name}'.", e);
-            }
-        }
+            Type type) =>
+            ValueConverter.Convert(value, type);
 
         #endregion
 
@@ -240,72 +217,6 @@ namespace RepoDb.Data.Helpers
                 }
             }
         }
-
-        /// <summary>
-        /// Converts a value that is not null, and is not of the type already.
-        /// </summary>
-        /// <param name="value">The value that was read from the JSON.</param>
-        /// <param name="type">The type of the column.</param>
-        /// <returns>The value as the type.</returns>
-        private static object ConvertCore(object value,
-            Type type)
-        {
-            if (type == typeof(string))
-            {
-                return value is bool flag ? (flag ? "true" : "false") : Convert.ToString(value, CultureInfo.InvariantCulture);
-            }
-            if (type == typeof(Guid))
-            {
-                return Guid.Parse(Convert.ToString(value, CultureInfo.InvariantCulture));
-            }
-            if (type == typeof(DateTime))
-            {
-                return DateTime.Parse(Convert.ToString(value, CultureInfo.InvariantCulture), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-            }
-            if (type == typeof(DateTimeOffset))
-            {
-                return DateTimeOffset.Parse(Convert.ToString(value, CultureInfo.InvariantCulture), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-            }
-            if (type == typeof(TimeSpan))
-            {
-                return TimeSpan.Parse(Convert.ToString(value, CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
-            }
-            if (type == typeof(byte[]))
-            {
-                return Convert.FromBase64String(Convert.ToString(value, CultureInfo.InvariantCulture));
-            }
-            if (type == typeof(bool))
-            {
-                return value is string text ? bool.Parse(text) : Convert.ToBoolean(value, CultureInfo.InvariantCulture);
-            }
-            if (type == typeof(char))
-            {
-                return Convert.ToChar(value, CultureInfo.InvariantCulture);
-            }
-            if (type.IsEnum)
-            {
-                return value is string name ? Enum.Parse(type, name, true) : Enum.ToObject(type, ConvertCore(value, Enum.GetUnderlyingType(type)));
-            }
-            return Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
-        }
-
-        /// <summary>
-        /// Checks whether a number has a fraction.
-        /// </summary>
-        /// <param name="value">The value that was read from the JSON.</param>
-        /// <returns><c>true</c> if the value is a number that has a fraction; otherwise, <c>false</c>.</returns>
-        private static bool HasFraction(object value) =>
-            (value is decimal number && decimal.Truncate(number) != number) ||
-            (value is double real && Math.Truncate(real) != real);
-
-        /// <summary>
-        /// Checks whether the type is an integral number type.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns><c>true</c> if the type is an integral number type; otherwise, <c>false</c>.</returns>
-        private static bool IsIntegral(Type type) =>
-            type == typeof(byte) || type == typeof(sbyte) || type == typeof(short) || type == typeof(ushort) ||
-            type == typeof(int) || type == typeof(uint) || type == typeof(long) || type == typeof(ulong);
 
         #endregion
     }
