@@ -18,7 +18,7 @@ using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
-using static RepoDb.Schema.DbConnection;
+using static RepoDb.Schema.DbConnectionExtension;
 
 namespace RepoDb.Schema
 {

@@ -24,7 +24,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// Contains the helper methods of the <see cref="CopyTableSchemaToExtension"/> class: the checks of the destination tables, the reports of the results and the validation of the arguments.
     /// </summary>
-    internal static class DbConnection
+    internal static class DbConnectionExtension
     {
         #region Methods
 
