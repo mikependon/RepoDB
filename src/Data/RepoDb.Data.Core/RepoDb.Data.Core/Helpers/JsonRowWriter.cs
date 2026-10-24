@@ -171,6 +171,10 @@ namespace RepoDb.Data.Helpers
         /// <returns>The bytes.</returns>
         private static byte[] ReadAll(Stream stream)
         {
+            if (stream.CanSeek)
+            {
+                stream.Position = 0;
+            }
             using (var memory = new MemoryStream())
             {
                 stream.CopyTo(memory);

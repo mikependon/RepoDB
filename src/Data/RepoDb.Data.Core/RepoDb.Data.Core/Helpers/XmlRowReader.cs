@@ -18,7 +18,7 @@ namespace RepoDb.Data.Helpers
 {
     /// <summary>
     /// Reads the rows of an XML file forward only, without loading the file in memory: each child element of the root element is a row, and each child element of a row is a
-    /// column (its name is the name of the column and its text is the value). The attributes are not columns. An empty element is a <c>null</c> value, and an element that has
+    /// column (its name is the name of the column and its text is the value). The attributes are not columns. A self-closing element (<c>&lt;Name /&gt;</c>) is a <c>null</c> value, an element that has no content between its start and end tags (<c>&lt;Name&gt;&lt;/Name&gt;</c>) is an empty text (the value is converted to <c>null</c> when the column is not a text), and an element that has
     /// child elements has the XML of its content as the value.
     /// </summary>
     internal sealed class XmlRowReader : IImportRowReader
@@ -118,7 +118,7 @@ namespace RepoDb.Data.Helpers
                         {
                             if (row.NodeType == XmlNodeType.Element && row.Depth == 1)
                             {
-                                var name = row.LocalName;
+                                var name = XmlConvert.DecodeName(row.LocalName);
                                 cells.Add(new KeyValuePair<string, string>(name, ReadCell(row)));
                             }
                         }
@@ -157,7 +157,7 @@ namespace RepoDb.Data.Helpers
                         {
                             if (row.NodeType == XmlNodeType.Element && row.Depth == 1)
                             {
-                                var name = row.LocalName;
+                                var name = XmlConvert.DecodeName(row.LocalName);
                                 cells.Add(new KeyValuePair<string, string>(name, await ReadCellAsync(row, cancellationToken).ConfigureAwait(false)));
                             }
                         }
@@ -323,7 +323,7 @@ namespace RepoDb.Data.Helpers
         /// Reads the text of a cell: the reader of the row is left on the end of the cell.
         /// </summary>
         /// <param name="row">The reader of the row, on the start of the cell.</param>
-        /// <returns>The text, or <c>null</c> if the cell is empty.</returns>
+        /// <returns>The text (empty if the cell has no content between its start and end tags), or <c>null</c> if the cell is self-closing.</returns>
         private static string ReadCell(XmlReader row)
         {
             if (row.IsEmptyElement)
@@ -350,7 +350,7 @@ namespace RepoDb.Data.Helpers
                 }
                 more = row.Read();
             }
-            return text.Length == 0 ? null : text.ToString();
+            return text.ToString();
         }
 
         /// <summary>
@@ -358,7 +358,7 @@ namespace RepoDb.Data.Helpers
         /// </summary>
         /// <param name="row">The reader of the row, on the start of the cell.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result is the text, or <c>null</c> if the cell is empty.</returns>
+        /// <returns>A task that represents the asynchronous operation. The task result is the text (empty if the cell has no content between its start and end tags), or <c>null</c> if the cell is self-closing.</returns>
         private static async Task<string> ReadCellAsync(XmlReader row,
             CancellationToken cancellationToken)
         {
@@ -387,7 +387,7 @@ namespace RepoDb.Data.Helpers
                 }
                 more = await row.ReadAsync().ConfigureAwait(false);
             }
-            return text.Length == 0 ? null : text.ToString();
+            return text.ToString();
         }
 
         /// <summary>

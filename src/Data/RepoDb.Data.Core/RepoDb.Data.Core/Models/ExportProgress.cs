@@ -11,7 +11,7 @@ using System;
 namespace RepoDb.Data.Models
 {
     /// <summary>
-    /// A class that holds the progress of an export of the rows of a table into a file (see <c>ExportDataAsJson</c>). The same instance is passed to the progress callback
+    /// A class that holds the progress of an export of the rows of a table into a file (see <c>ExportDataAsJson</c>, <c>ExportDataAsXml</c> and <c>ExportDataAsCsv</c>). The same instance is passed to the progress callback
     /// every time, and it is returned when the export ends, so read what is needed inside the callback.
     /// </summary>
     public class ExportProgress

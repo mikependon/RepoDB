@@ -33,6 +33,11 @@ namespace RepoDb.Data.Helpers
                 return value;
             }
             type = Nullable.GetUnderlyingType(type) ?? type;
+            if (value is string empty && empty.Length == 0 && type != typeof(string) && type != typeof(object) && type != typeof(byte[]))
+            {
+                // An empty text has no value of a number, a date, a boolean...: it is a null (an empty text is an empty binary, though)
+                return null;
+            }
             if (type == typeof(object) || type.IsInstanceOfType(value))
             {
                 return value;

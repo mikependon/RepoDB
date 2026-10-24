@@ -200,6 +200,37 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
+        public void TestImportDataFromXmlInsertsASelfClosingElementAsNullAndAnElementWithoutContentAsAnEmptyText()
+        {
+            // Setup
+            var path = Write("<rows><row><Id>1</Id><Name></Name></row><row><Id>2</Id><Name /></row></rows>");
+            var destination = new FakeDbConnection();
+
+            // Act
+            destination.ImportDataFromXml("Customer", path);
+
+            // Assert
+            var inserts = Inserts(destination).ToList();
+            Assert.IsTrue(inserts[0].Parameters.Values.Contains(string.Empty));
+            Assert.IsFalse(inserts[1].Parameters.Values.Any(v => v is string));
+        }
+
+        [TestMethod]
+        public void TestImportDataFromXmlInsertsAnElementWithoutContentOfAColumnThatIsNotATextAsNull()
+        {
+            // Setup
+            var path = Write("<rows><row><Id></Id><Name>A</Name><Birthday></Birthday></row></rows>");
+            var destination = new FakeDbConnection();
+
+            // Act
+            var actual = destination.ImportDataFromXml("Customer", path);
+
+            // Assert
+            Assert.AreEqual(1L, actual.LoadedRowCount);
+            Assert.IsFalse(Inserts(destination).Single().Parameters.Values.Any(v => v is int || v is DateTime));
+        }
+
+        [TestMethod]
         public void TestImportDataFromXmlGivesTheXmlOfTheContentOfAnElementThatHasChildElements()
         {
             // Setup

@@ -30,7 +30,7 @@ namespace RepoDb.Data
         #region ImportDataFromXml (Sync)
 
         /// <summary>
-        /// Loads the rows of a XML file into a table without loading the file in memory. The rows are buffered, and every <paramref name="bufferSize"/> rows they are inserted with the bulk insert of the provider (in batches of plain inserts if it has none). The file has a root element whose child elements are the rows, and the child elements of a row are its columns (the attributes are ignored, and an empty element is <c>null</c>). The columns that the table does not have are ignored, and the values are converted into the types of the columns of the table.
+        /// Loads the rows of a XML file into a table without loading the file in memory. The rows are buffered, and every <paramref name="bufferSize"/> rows they are inserted with the bulk insert of the provider (in batches of plain inserts if it has none). The file has a root element whose child elements are the rows, and the child elements of a row are its columns (the attributes are ignored, a self-closing element is <c>null</c>, and an element with no content between its tags is an empty text (<c>null</c> for a column that is not a text)). The columns that the table does not have are ignored, and the values are converted into the types of the columns of the table.
         /// </summary>
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
