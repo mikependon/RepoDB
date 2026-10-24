@@ -25,7 +25,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
     /// Loads the rows of a JSON file into a table of a database.
     /// </summary>
     [TestClass]
-    public class LoadDataFromJsonTest
+    public class ImportDataFromJsonTest
     {
         #region Private Variables
 
@@ -81,10 +81,10 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
 
         #endregion
 
-        #region LoadDataFromJson
+        #region ImportDataFromJson
 
         [TestMethod]
-        public void TestLoadDataFromJson()
+        public void TestImportDataFromJson()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -92,7 +92,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Array(5);
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path);
+                var actual = target.ImportDataFromJson("LoadItem", path);
 
                 // Assert
                 Assert.AreEqual(5L, actual.TotalRowCount);
@@ -106,7 +106,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonLoadsTheValuesOfTheColumnsWithTheirTypes()
+        public void TestImportDataFromJsonLoadsTheValuesOfTheColumnsWithTheirTypes()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -114,7 +114,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Array(2);
 
                 // Act
-                target.LoadDataFromJson("LoadItem", path);
+                target.ImportDataFromJson("LoadItem", path);
 
                 // Assert
                 var rows = Rows();
@@ -129,7 +129,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonLoadsNullValuesAndTheValuesThatAreMissing()
+        public void TestImportDataFromJsonLoadsNullValuesAndTheValuesThatAreMissing()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -137,7 +137,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write("[{\"Id\":1,\"Name\":null,\"Amount\":null},{\"Id\":2,\"Name\":\"Two\"}]");
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path);
+                var actual = target.ImportDataFromJson("LoadItem", path);
 
                 // Assert
                 Assert.AreEqual(2L, actual.LoadedRowCount);
@@ -150,7 +150,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonLoadsAnObjectThatHoldsTheRows()
+        public void TestImportDataFromJsonLoadsAnObjectThatHoldsTheRows()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -158,7 +158,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write("{\"source\":\"export\",\"count\":3,\"rows\":[" + string.Join(",", Enumerable.Range(1, 3).Select(Row)) + "]}");
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path);
+                var actual = target.ImportDataFromJson("LoadItem", path);
 
                 // Assert
                 Assert.AreEqual(3L, actual.TotalRowCount);
@@ -167,7 +167,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonLoadsASequenceOfObjects()
+        public void TestImportDataFromJsonLoadsASequenceOfObjects()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -175,7 +175,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write(string.Join("\n", Enumerable.Range(1, 4).Select(Row)));
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path);
+                var actual = target.ImportDataFromJson("LoadItem", path);
 
                 // Assert
                 Assert.AreEqual(4L, actual.TotalRowCount);
@@ -184,7 +184,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonLoadsAValueWithItsType()
+        public void TestImportDataFromJsonLoadsAValueWithItsType()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -192,7 +192,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write("[{\"Id\":{\"type\":\"Int32\",\"value\":8},\"Name\":{\"type\":\"String\",\"value\":\"Eight\"}}]");
 
                 // Act
-                target.LoadDataFromJson("LoadItem", path);
+                target.ImportDataFromJson("LoadItem", path);
 
                 // Assert
                 var rows = Rows();
@@ -202,7 +202,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonIgnoresTheColumnsThatTheTableDoesNotHave()
+        public void TestImportDataFromJsonIgnoresTheColumnsThatTheTableDoesNotHave()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -210,7 +210,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write("[{\"Id\":1,\"Name\":\"One\",\"Unknown\":\"x\"},{\"Id\":2,\"Name\":\"Two\",\"Unknown\":\"y\"}]");
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path);
+                var actual = target.ImportDataFromJson("LoadItem", path);
 
                 // Assert
                 Assert.AreEqual(2L, actual.LoadedRowCount);
@@ -219,7 +219,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonAddsTheRowsToTheRowsThatTheTableHas()
+        public void TestImportDataFromJsonAddsTheRowsToTheRowsThatTheTableHas()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -228,7 +228,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Array(3);
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path);
+                var actual = target.ImportDataFromJson("LoadItem", path);
 
                 // Assert
                 Assert.AreEqual(3L, actual.LoadedRowCount);
@@ -237,7 +237,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonOfAnEmptyArrayLoadsNothing()
+        public void TestImportDataFromJsonOfAnEmptyArrayLoadsNothing()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -246,7 +246,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var calls = 0;
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, progressCallback: _ => calls++);
+                var actual = target.ImportDataFromJson("LoadItem", path, progressCallback: _ => calls++);
 
                 // Assert
                 Assert.AreEqual(0L, actual.TotalRowCount);
@@ -262,7 +262,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         #region Batch And Bulk Operations
 
         [TestMethod]
-        public void TestLoadDataFromJsonInsertsTheRowsInBatchesOfTheBufferSize()
+        public void TestImportDataFromJsonInsertsTheRowsInBatchesOfTheBufferSize()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -270,7 +270,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Array(3000);
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, bufferSize: 500);
+                var actual = target.ImportDataFromJson("LoadItem", path, bufferSize: 500);
 
                 // Assert
                 Assert.AreEqual(3000L, actual.TotalRowCount);
@@ -281,7 +281,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonLoadsAllTheRowsInBatchesOfTheBufferSize()
+        public void TestImportDataFromJsonLoadsAllTheRowsInBatchesOfTheBufferSize()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -289,7 +289,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Array(3000);
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, bufferSize: 1000);
+                var actual = target.ImportDataFromJson("LoadItem", path, bufferSize: 1000);
 
                 // Assert
                 Assert.AreEqual(3000L, actual.LoadedRowCount);
@@ -303,7 +303,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonCallsTheProgressCallbackAfterTheCountAfterEveryOperationAndAtTheEnd()
+        public void TestImportDataFromJsonCallsTheProgressCallbackAfterTheCountAfterEveryOperationAndAtTheEnd()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -312,7 +312,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var seen = new List<(int Batch, long Loaded, long Total)>();
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, bufferSize: 500, progressCallback: p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount)));
+                var actual = target.ImportDataFromJson("LoadItem", path, bufferSize: 500, progressCallback: p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount)));
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { (0, 0L, 1200L), (1, 500L, 1200L), (2, 1000L, 1200L), (3, 1200L, 1200L), (3, 1200L, 1200L) }, seen);
@@ -321,7 +321,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonKeepsTheBatchesThatSucceededIfALaterBatchFails()
+        public void TestImportDataFromJsonKeepsTheBatchesThatSucceededIfALaterBatchFails()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -330,7 +330,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 LoadProgress progress = null;
 
                 // Act/Assert
-                Assert.Throws<DuckDBException>(() => target.LoadDataFromJson("LoadItem", path, bufferSize: 2, progressCallback: p => progress = p));
+                Assert.Throws<DuckDBException>(() => target.ImportDataFromJson("LoadItem", path, bufferSize: 2, progressCallback: p => progress = p));
                 Assert.AreEqual(4, Helper.TargetCount("\"LoadItem\""));
                 Assert.AreEqual(2, progress.BatchNumber);
                 Assert.AreEqual(4L, progress.LoadedRowCount);
@@ -338,7 +338,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonWithATransactionThatIsRolledBackLoadsNothing()
+        public void TestImportDataFromJsonWithATransactionThatIsRolledBackLoadsNothing()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -349,7 +349,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 // Act
                 using (var transaction = target.BeginTransaction())
                 {
-                    var actual = target.LoadDataFromJson("LoadItem", path, bufferSize: 4, transaction: transaction);
+                    var actual = target.ImportDataFromJson("LoadItem", path, bufferSize: 4, transaction: transaction);
                     transaction.Rollback();
 
                     // Assert
@@ -364,7 +364,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         #region Errors
 
         [TestMethod]
-        public void ThrowExceptionOnLoadDataFromJsonIfAValueCannotBeConvertedIntoTheTypeOfItsColumn()
+        public void ThrowExceptionOnImportDataFromJsonIfAValueCannotBeConvertedIntoTheTypeOfItsColumn()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -372,14 +372,14 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write("[{\"Id\":1,\"Name\":\"One\"},{\"Id\":\"abc\",\"Name\":\"Two\"}]");
 
                 // Act/Assert
-                var exception = Assert.Throws<FormatException>(() => target.LoadDataFromJson("LoadItem", path));
+                var exception = Assert.Throws<FormatException>(() => target.ImportDataFromJson("LoadItem", path));
                 StringAssert.Contains(exception.Message, "Row 2", StringComparison.Ordinal);
                 StringAssert.Contains(exception.Message, "Id", StringComparison.Ordinal);
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnLoadDataFromJsonIfTheFileIsNotValidJson()
+        public void ThrowExceptionOnImportDataFromJsonIfTheFileIsNotValidJson()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -387,13 +387,13 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write("[{\"Id\":1,\"Name\":\"One\"},{\"Id\":2,");
 
                 // Act/Assert
-                Assert.Throws<FormatException>(() => target.LoadDataFromJson("LoadItem", path));
+                Assert.Throws<FormatException>(() => target.ImportDataFromJson("LoadItem", path));
                 Assert.AreEqual(0, Helper.TargetCount("\"LoadItem\""));
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnLoadDataFromJsonIfNoColumnOfTheFileMatchesAColumnOfTheTable()
+        public void ThrowExceptionOnImportDataFromJsonIfNoColumnOfTheFileMatchesAColumnOfTheTable()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -401,7 +401,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write("[{\"A\":1,\"B\":2}]");
 
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => target.LoadDataFromJson("LoadItem", path));
+                Assert.Throws<InvalidOperationException>(() => target.ImportDataFromJson("LoadItem", path));
             }
         }
 
@@ -410,7 +410,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         #region Async
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsync()
+        public async Task TestImportDataFromJsonAsync()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -418,7 +418,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Array(5);
 
                 // Act
-                var actual = await target.LoadDataFromJsonAsync("LoadItem", path);
+                var actual = await target.ImportDataFromJsonAsync("LoadItem", path);
 
                 // Assert
                 Assert.AreEqual(5L, actual.TotalRowCount);
@@ -428,7 +428,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsyncLoadsAllTheRowsInBatchesOfTheBufferSize()
+        public async Task TestImportDataFromJsonAsyncLoadsAllTheRowsInBatchesOfTheBufferSize()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -437,7 +437,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var last = 0L;
 
                 // Act
-                var actual = await target.LoadDataFromJsonAsync("LoadItem", path, bufferSize: 1000, progressCallback: p => last = p.LoadedRowCount);
+                var actual = await target.ImportDataFromJsonAsync("LoadItem", path, bufferSize: 1000, progressCallback: p => last = p.LoadedRowCount);
 
                 // Assert
                 Assert.AreEqual(3000L, actual.LoadedRowCount);
@@ -448,7 +448,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsyncLoadsASequenceOfObjects()
+        public async Task TestImportDataFromJsonAsyncLoadsASequenceOfObjects()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -456,7 +456,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write(string.Join("\n", Enumerable.Range(1, 6).Select(Row)));
 
                 // Act
-                var actual = await target.LoadDataFromJsonAsync("LoadItem", path, bufferSize: 4);
+                var actual = await target.ImportDataFromJsonAsync("LoadItem", path, bufferSize: 4);
 
                 // Assert
                 Assert.AreEqual(6L, actual.LoadedRowCount);
@@ -465,7 +465,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnLoadDataFromJsonAsyncIfAValueCannotBeConvertedIntoTheTypeOfItsColumn()
+        public async Task ThrowExceptionOnImportDataFromJsonAsyncIfAValueCannotBeConvertedIntoTheTypeOfItsColumn()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -473,7 +473,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write("[{\"Id\":\"abc\"}]");
 
                 // Act/Assert
-                await Assert.ThrowsAsync<FormatException>(() => target.LoadDataFromJsonAsync("LoadItem", path));
+                await Assert.ThrowsAsync<FormatException>(() => target.ImportDataFromJsonAsync("LoadItem", path));
             }
         }
 
@@ -482,7 +482,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         #region Identity And Column Mapping Behaviors
 
         [TestMethod]
-        public void TestLoadDataFromJsonKeepsTheIdentityValuesOfTheFileByDefault()
+        public void TestImportDataFromJsonKeepsTheIdentityValuesOfTheFileByDefault()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -490,7 +490,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write("[" + string.Join(",", new[] { 10, 20, 30 }.Select(Row)) + "]");
 
                 // Act
-                target.LoadDataFromJson("LoadItem", path);
+                target.ImportDataFromJson("LoadItem", path);
 
                 // Assert
                 CollectionAssert.AreEqual(new long[] { 10, 20, 30 }, Rows().Select(r => Convert.ToInt64(r["Id"])).ToArray());
@@ -498,7 +498,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonKeepsTheIdentityValuesOfTheFileWithTheBulkInsert()
+        public void TestImportDataFromJsonKeepsTheIdentityValuesOfTheFileWithTheBulkInsert()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -506,7 +506,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Write("[" + string.Join(",", new[] { 10, 20, 30 }.Select(Row)) + "]");
 
                 // Act
-                target.LoadDataFromJson("LoadItem", path, identityBehavior: LoadIdentityBehavior.KeepIdentity);
+                target.ImportDataFromJson("LoadItem", path, identityBehavior: LoadIdentityBehavior.KeepIdentity);
 
                 // Assert
                 CollectionAssert.AreEqual(new long[] { 10, 20, 30 }, Rows().Select(r => Convert.ToInt64(r["Id"])).ToArray());
@@ -514,7 +514,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonWithTheStrictBypassColumnMappingBehavior()
+        public void TestImportDataFromJsonWithTheStrictBypassColumnMappingBehavior()
         {
             using (var target = new DuckDBConnection(Database.ConnectionStringForTarget))
             {
@@ -522,7 +522,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 var path = Array(3);
 
                 // Act
-                var actual = target.LoadDataFromJson("LoadItem", path, columnMappingBehavior: LoadColumnMappingBehavior.StrictBypass);
+                var actual = target.ImportDataFromJson("LoadItem", path, columnMappingBehavior: LoadColumnMappingBehavior.StrictBypass);
 
                 // Assert
                 Assert.AreEqual(3L, actual.LoadedRowCount);

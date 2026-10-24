@@ -21,9 +21,9 @@ namespace RepoDb.Data
         public const string CopyDataTo = "CopyDataTo";
 
         /// <summary>
-        /// The trace key for the 'LoadDataFromJson' operation.
+        /// The trace key for the 'ImportDataFromJson' operation.
         /// </summary>
-        public const string LoadDataFromJson = "LoadDataFromJson";
+        public const string ImportDataFromJson = "ImportDataFromJson";
 
         /// <summary>
         /// The trace key for the 'MoveDataTo' operation.

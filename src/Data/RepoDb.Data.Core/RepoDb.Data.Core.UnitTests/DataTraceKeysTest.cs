@@ -21,10 +21,10 @@ namespace RepoDb.Data.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestDataTraceKeysLoadDataFromJson()
+        public void TestDataTraceKeysImportDataFromJson()
         {
             // Assert
-            Assert.AreEqual("LoadDataFromJson", DataTraceKeys.LoadDataFromJson);
+            Assert.AreEqual("ImportDataFromJson", DataTraceKeys.ImportDataFromJson);
         }
 
         [TestMethod]

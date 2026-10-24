@@ -25,7 +25,7 @@ namespace RepoDb.Data
     /// <summary>
     /// Contains the extension methods of <see cref="IDbConnection"/> object for loading the rows of a JSON file into a table.
     /// </summary>
-    public static class LoadDataFromJsonExtension
+    public static class ImportDataFromJsonExtension
     {
         #region Private Types
 
@@ -49,7 +49,7 @@ namespace RepoDb.Data
 
         #region Public Methods
 
-        #region LoadDataFromJson (Sync)
+        #region ImportDataFromJson (Sync)
 
         /// <summary>
         /// Loads the rows of a JSON file into a table without loading the file in memory. The rows are buffered, and every <paramref name="bufferSize"/> rows they are inserted with the bulk insert of the provider (in batches of plain inserts if it has none). The file is an array of objects, an object whose first array property holds the rows, or a sequence of objects. The columns that the table does not have are ignored, and the values are converted into the types of the columns of the table.
@@ -62,7 +62,7 @@ namespace RepoDb.Data
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.LoadDataFromJson"/>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.ImportDataFromJson"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used. The default is <c>null</c>.</param>
         /// <returns>The <see cref="LoadProgress"/> of the load, which is the same instance that the callback receives.</returns>
@@ -71,7 +71,7 @@ namespace RepoDb.Data
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         /// <exception cref="FormatException">The file is not valid JSON, a row is not an object, or a value cannot be converted into the type of its column.</exception>
         /// <exception cref="InvalidOperationException">No column of the file matches a column of the table.</exception>
-        public static LoadProgress LoadDataFromJson(this IDbConnection connection,
+        public static LoadProgress ImportDataFromJson(this IDbConnection connection,
             string tableName,
             string filename,
             int bufferSize = 10000,
@@ -79,7 +79,7 @@ namespace RepoDb.Data
             LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
             Action<LoadProgress> progressCallback = null,
             int? commandTimeout = null,
-            string traceKey = DataTraceKeys.LoadDataFromJson,
+            string traceKey = DataTraceKeys.ImportDataFromJson,
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
@@ -122,10 +122,10 @@ namespace RepoDb.Data
 
         #endregion
 
-        #region LoadDataFromJson (Async)
+        #region ImportDataFromJson (Async)
 
         /// <summary>
-        /// Loads the rows of a JSON file into a table in an asynchronous way. See <see cref="LoadDataFromJson"/> for how the rows are read, buffered and inserted.
+        /// Loads the rows of a JSON file into a table in an asynchronous way. See <see cref="ImportDataFromJson"/> for how the rows are read, buffered and inserted.
         /// </summary>
         /// <param name="connection">The connection of the database that has the table.</param>
         /// <param name="tableName">The name of the table that the rows are loaded into.</param>
@@ -135,7 +135,7 @@ namespace RepoDb.Data
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
-        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.LoadDataFromJson"/>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.ImportDataFromJson"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
@@ -145,7 +145,7 @@ namespace RepoDb.Data
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         /// <exception cref="FormatException">The file is not valid JSON, a row is not an object, or a value cannot be converted into the type of its column.</exception>
         /// <exception cref="InvalidOperationException">No column of the file matches a column of the table.</exception>
-        public static async Task<LoadProgress> LoadDataFromJsonAsync(this IDbConnection connection,
+        public static async Task<LoadProgress> ImportDataFromJsonAsync(this IDbConnection connection,
             string tableName,
             string filename,
             int bufferSize = 10000,
@@ -153,7 +153,7 @@ namespace RepoDb.Data
             LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
             Action<LoadProgress> progressCallback = null,
             int? commandTimeout = null,
-            string traceKey = DataTraceKeys.LoadDataFromJson,
+            string traceKey = DataTraceKeys.ImportDataFromJson,
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)

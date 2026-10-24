@@ -11,7 +11,7 @@ using System;
 namespace RepoDb.Data.Models
 {
     /// <summary>
-    /// A class that holds the progress of a load of the rows of a file into a table (see <c>LoadDataFromJson</c>). The same instance is passed to the progress callback
+    /// A class that holds the progress of a load of the rows of a file into a table (see <c>ImportDataFromJson</c>). The same instance is passed to the progress callback
     /// every time, and it is returned when the load ends, so read what is needed inside the callback.
     /// </summary>
     public class LoadProgress

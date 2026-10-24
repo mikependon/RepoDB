@@ -25,7 +25,7 @@ using RepoDb.DbSettings;
 namespace RepoDb.Data.Core.UnitTests.Extensions
 {
     [TestClass]
-    public class LoadDataFromJsonTest
+    public class ImportDataFromJsonTest
     {
         #region Helpers
 
@@ -74,82 +74,82 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         #region Arguments
 
         [TestMethod]
-        public void ThrowExceptionOnLoadDataFromJsonIfTheConnectionIsNull()
+        public void ThrowExceptionOnImportDataFromJsonIfTheConnectionIsNull()
         {
             // Setup
             var path = Write("[]");
 
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => ((IDbConnection)null).LoadDataFromJson("Customer", path));
+            Assert.Throws<ArgumentNullException>(() => ((IDbConnection)null).ImportDataFromJson("Customer", path));
         }
 
         [DataTestMethod]
         [DataRow(null)]
         [DataRow("")]
         [DataRow("  ")]
-        public void ThrowExceptionOnLoadDataFromJsonIfTheTableNameIsNullOrWhiteSpace(string tableName)
+        public void ThrowExceptionOnImportDataFromJsonIfTheTableNameIsNullOrWhiteSpace(string tableName)
         {
             // Setup
             var path = Write("[]");
 
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => new FakeDbConnection().LoadDataFromJson(tableName, path));
+            Assert.Throws<ArgumentNullException>(() => new FakeDbConnection().ImportDataFromJson(tableName, path));
         }
 
         [DataTestMethod]
         [DataRow(null)]
         [DataRow("")]
         [DataRow("  ")]
-        public void ThrowExceptionOnLoadDataFromJsonIfTheFileNameIsNullOrWhiteSpace(string filename)
+        public void ThrowExceptionOnImportDataFromJsonIfTheFileNameIsNullOrWhiteSpace(string filename)
         {
             // Act/Assert
-            Assert.Throws<ArgumentNullException>(() => new FakeDbConnection().LoadDataFromJson("Customer", filename));
+            Assert.Throws<ArgumentNullException>(() => new FakeDbConnection().ImportDataFromJson("Customer", filename));
         }
 
         [TestMethod]
-        public void ThrowExceptionOnLoadDataFromJsonIfTheFileDoesNotExist()
+        public void ThrowExceptionOnImportDataFromJsonIfTheFileDoesNotExist()
         {
             // Act/Assert
-            Assert.Throws<FileNotFoundException>(() => new FakeDbConnection().LoadDataFromJson("Customer", Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".json")));
+            Assert.Throws<FileNotFoundException>(() => new FakeDbConnection().ImportDataFromJson("Customer", Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".json")));
         }
 
         [DataTestMethod]
         [DataRow(0)]
         [DataRow(-5)]
-        public void ThrowExceptionOnLoadDataFromJsonIfTheBufferSizeIsLessThanOne(int size)
+        public void ThrowExceptionOnImportDataFromJsonIfTheBufferSizeIsLessThanOne(int size)
         {
             // Setup
             var path = Write("[]");
 
             // Act/Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path, bufferSize: size));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, bufferSize: size));
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnLoadDataFromJsonAsyncIfTheConnectionIsNull()
+        public async Task ThrowExceptionOnImportDataFromJsonAsyncIfTheConnectionIsNull()
         {
             // Setup
             var path = Write("[]");
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => ((IDbConnection)null).LoadDataFromJsonAsync("Customer", path));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => ((IDbConnection)null).ImportDataFromJsonAsync("Customer", path));
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnLoadDataFromJsonAsyncIfTheFileDoesNotExist()
+        public async Task ThrowExceptionOnImportDataFromJsonAsyncIfTheFileDoesNotExist()
         {
             // Act/Assert
-            await Assert.ThrowsAsync<FileNotFoundException>(() => new FakeDbConnection().LoadDataFromJsonAsync("Customer", Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".json")));
+            await Assert.ThrowsAsync<FileNotFoundException>(() => new FakeDbConnection().ImportDataFromJsonAsync("Customer", Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".json")));
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnLoadDataFromJsonAsyncIfTheBufferSizeIsInvalid()
+        public async Task ThrowExceptionOnImportDataFromJsonAsyncIfTheBufferSizeIsInvalid()
         {
             // Setup
             var path = Write("[]");
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => new FakeDbConnection().LoadDataFromJsonAsync("Customer", path, bufferSize: 0));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => new FakeDbConnection().ImportDataFromJsonAsync("Customer", path, bufferSize: 0));
         }
 
         #endregion
@@ -157,7 +157,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         #region Batch Operations
 
         [TestMethod]
-        public void TestLoadDataFromJsonInsertsTheRowsInBatchesIfTheProviderHasNoBulkInsert()
+        public void TestImportDataFromJsonInsertsTheRowsInBatchesIfTheProviderHasNoBulkInsert()
         {
             // Setup
             var path = Write(Rows(5));
@@ -165,7 +165,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var seen = new List<(int Batch, long Loaded, long Total)>();
 
             // Act
-            var actual = destination.LoadDataFromJson("Customer", path, bufferSize: 2, progressCallback: Snapshot(seen));
+            var actual = destination.ImportDataFromJson("Customer", path, bufferSize: 2, progressCallback: Snapshot(seen));
 
             // Assert
             Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
@@ -177,14 +177,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonInsertsTheValuesConvertedIntoTheTypesOfTheColumns()
+        public void TestImportDataFromJsonInsertsTheValuesConvertedIntoTheTypesOfTheColumns()
         {
             // Setup
             var path = Write("[{\"Id\":7,\"Name\":\"Seven\",\"Birthday\":\"2026-01-02T03:04:05Z\"}]");
             var destination = new FakeDbConnection();
 
             // Act
-            destination.LoadDataFromJson("Customer", path);
+            destination.ImportDataFromJson("Customer", path);
 
             // Assert
             var execution = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
@@ -193,14 +193,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonCallsTheProgressCallbackWithTheSameInstanceThatItReturns()
+        public void TestImportDataFromJsonCallsTheProgressCallbackWithTheSameInstanceThatItReturns()
         {
             // Setup
             var path = Write(Rows(3));
             var seen = new List<LoadProgress>();
 
             // Act
-            var actual = new FakeDbConnection().LoadDataFromJson("Customer", path, bufferSize: 1, progressCallback: seen.Add);
+            var actual = new FakeDbConnection().ImportDataFromJson("Customer", path, bufferSize: 1, progressCallback: seen.Add);
 
             // Assert
             Assert.IsTrue(seen.Count >= 2);
@@ -208,28 +208,28 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonCallsTheCallbackAfterTheRowsAreCountedAndWhenItEnds()
+        public void TestImportDataFromJsonCallsTheCallbackAfterTheRowsAreCountedAndWhenItEnds()
         {
             // Setup
             var path = Write(Rows(2));
             var seen = new List<(int Batch, long Loaded, long Total)>();
 
             // Act
-            new FakeDbConnection().LoadDataFromJson("Customer", path, bufferSize: 50, progressCallback: p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount)));
+            new FakeDbConnection().ImportDataFromJson("Customer", path, bufferSize: 50, progressCallback: p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount)));
 
             // Assert
             CollectionAssert.AreEqual(new[] { (0, 0L, 2L), (1, 2L, 2L), (1, 2L, 2L) }, seen);
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonSetsTheStartInUtc()
+        public void TestImportDataFromJsonSetsTheStartInUtc()
         {
             // Setup
             var path = Write(Rows(1));
             var before = DateTime.UtcNow;
 
             // Act
-            var actual = new FakeDbConnection().LoadDataFromJson("Customer", path);
+            var actual = new FakeDbConnection().ImportDataFromJson("Customer", path);
 
             // Assert
             Assert.AreEqual(DateTimeKind.Utc, actual.Start.Kind);
@@ -238,7 +238,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonOfAFileWithoutRowsCallsTheCallbackTwiceAndInsertsNothing()
+        public void TestImportDataFromJsonOfAFileWithoutRowsCallsTheCallbackTwiceAndInsertsNothing()
         {
             // Setup
             var path = Write("[]");
@@ -246,7 +246,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var seen = new List<(int Batch, long Loaded, long Total)>();
 
             // Act
-            var actual = destination.LoadDataFromJson("Customer", path, progressCallback: p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount)));
+            var actual = destination.ImportDataFromJson("Customer", path, progressCallback: p => seen.Add((p.BatchNumber, p.LoadedRowCount, p.TotalRowCount)));
 
             // Assert
             CollectionAssert.AreEqual(new[] { (0, 0L, 0L), (0, 0L, 0L) }, seen);
@@ -256,14 +256,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonWithoutACallbackStillLoadsTheRows()
+        public void TestImportDataFromJsonWithoutACallbackStillLoadsTheRows()
         {
             // Setup
             var path = Write(Rows(4));
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = destination.LoadDataFromJson("Customer", path, bufferSize: 3, progressCallback: null);
+            var actual = destination.ImportDataFromJson("Customer", path, bufferSize: 3, progressCallback: null);
 
             // Assert
             Assert.AreEqual(4L, actual.LoadedRowCount);
@@ -271,28 +271,28 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonPassesTheCommandTimeoutOfTheBatchOperation()
+        public void TestImportDataFromJsonPassesTheCommandTimeoutOfTheBatchOperation()
         {
             // Setup
             var path = Write(Rows(2));
             var destination = new FakeDbConnection();
 
             // Act
-            destination.LoadDataFromJson("Customer", path, commandTimeout: 33);
+            destination.ImportDataFromJson("Customer", path, commandTimeout: 33);
 
             // Assert
             Assert.IsTrue(destination.Executions.Where(e => e.Kind == "NonQuery").All(e => e.CommandTimeout == 33));
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonIgnoresTheColumnsOfTheFileThatTheTableDoesNotHave()
+        public void TestImportDataFromJsonIgnoresTheColumnsOfTheFileThatTheTableDoesNotHave()
         {
             // Setup
             var path = Write("[{\"Id\":1,\"Name\":\"A\",\"Unknown\":\"x\"},{\"Id\":2,\"Name\":\"B\",\"Unknown\":\"y\"}]");
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = destination.LoadDataFromJson("Customer", path);
+            var actual = destination.ImportDataFromJson("Customer", path);
 
             // Assert
             Assert.AreEqual(2L, actual.LoadedRowCount);
@@ -302,14 +302,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonInsertsTheMissingValuesAsNull()
+        public void TestImportDataFromJsonInsertsTheMissingValuesAsNull()
         {
             // Setup
             var path = Write("[{\"Id\":1,\"Name\":\"A\",\"Birthday\":null},{\"Id\":2,\"Name\":\"B\"}]");
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = destination.LoadDataFromJson("Customer", path);
+            var actual = destination.ImportDataFromJson("Customer", path);
 
             // Assert
             Assert.AreEqual(2L, actual.LoadedRowCount);
@@ -320,7 +320,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         #region Bulk Operations
 
         [TestMethod]
-        public void TestLoadDataFromJsonUsesTheBulkInsertInBlocksOfTheBufferSize()
+        public void TestImportDataFromJsonUsesTheBulkInsertInBlocksOfTheBufferSize()
         {
             // Setup
             var path = Write(Rows(10));
@@ -328,7 +328,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var seen = new List<(int Batch, long Loaded, long Total)>();
 
             // Act
-            var actual = destination.LoadDataFromJson("Customer", path, bufferSize: 4, progressCallback: Snapshot(seen));
+            var actual = destination.ImportDataFromJson("Customer", path, bufferSize: 4, progressCallback: Snapshot(seen));
 
             // Assert
             var calls = FakeBulkOperations.Calls;
@@ -341,27 +341,27 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonWithASingleRowUsesTheBulkInsert()
+        public void TestImportDataFromJsonWithASingleRowUsesTheBulkInsert()
         {
             // Setup
             var path = Write(Rows(1));
 
             // Act
-            new FakeBulkDbConnection().LoadDataFromJson("Customer", path);
+            new FakeBulkDbConnection().ImportDataFromJson("Customer", path);
 
             // Assert
             Assert.AreEqual(1, FakeBulkOperations.Calls.Length);
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonUsesTheBatchInsertIfTheProviderHasNoBulkInsert()
+        public void TestImportDataFromJsonUsesTheBatchInsertIfTheProviderHasNoBulkInsert()
         {
             // Setup
             var path = Write(Rows(10));
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = destination.LoadDataFromJson("Customer", path, bufferSize: 4);
+            var actual = destination.ImportDataFromJson("Customer", path, bufferSize: 4);
 
             // Assert
             Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
@@ -370,31 +370,31 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonPassesTheArgumentsToTheBulkInsert()
+        public void TestImportDataFromJsonPassesTheArgumentsToTheBulkInsert()
         {
             // Setup
             var path = Write(Rows(6));
             var transaction = new Mock<IDbTransaction>().Object;
 
             // Act
-            new FakeBulkDbConnection().LoadDataFromJson("Customer", path, bufferSize: 6, commandTimeout: 12, transaction: transaction);
+            new FakeBulkDbConnection().ImportDataFromJson("Customer", path, bufferSize: 6, commandTimeout: 12, transaction: transaction);
 
             // Assert
             var call = FakeBulkOperations.Calls.Single();
             Assert.AreEqual(6, call.BatchSize);
             Assert.AreEqual(12, call.Timeout);
             Assert.AreSame(transaction, call.Transaction);
-            Assert.AreEqual(DataTraceKeys.LoadDataFromJson, call.TraceKey);
+            Assert.AreEqual(DataTraceKeys.ImportDataFromJson, call.TraceKey);
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonReadsTheBulkRowsWithTheTypesOfTheColumns()
+        public void TestImportDataFromJsonReadsTheBulkRowsWithTheTypesOfTheColumns()
         {
             // Setup
             var path = Write(Rows(3));
 
             // Act
-            var actual = new FakeBulkDbConnection().LoadDataFromJson("Customer", path);
+            var actual = new FakeBulkDbConnection().ImportDataFromJson("Customer", path);
 
             // Assert
             Assert.AreEqual(3L, actual.LoadedRowCount);
@@ -406,13 +406,13 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         #region Shapes
 
         [TestMethod]
-        public void TestLoadDataFromJsonLoadsAnObjectThatHoldsTheRows()
+        public void TestImportDataFromJsonLoadsAnObjectThatHoldsTheRows()
         {
             // Setup
             var path = Write("{\"meta\":{\"x\":1},\"rows\":" + Rows(3) + "}");
 
             // Act
-            var actual = new FakeDbConnection().LoadDataFromJson("Customer", path);
+            var actual = new FakeDbConnection().ImportDataFromJson("Customer", path);
 
             // Assert
             Assert.AreEqual(3L, actual.TotalRowCount);
@@ -420,13 +420,13 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonLoadsASequenceOfObjects()
+        public void TestImportDataFromJsonLoadsASequenceOfObjects()
         {
             // Setup
             var path = Write(string.Join("\n", Enumerable.Range(1, 4).Select(i => "{\"Id\":" + i + ",\"Name\":\"Name " + i + "\"}")));
 
             // Act
-            var actual = new FakeDbConnection().LoadDataFromJson("Customer", path, bufferSize: 3);
+            var actual = new FakeDbConnection().ImportDataFromJson("Customer", path, bufferSize: 3);
 
             // Assert
             Assert.AreEqual(4L, actual.TotalRowCount);
@@ -435,14 +435,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonLoadsAValueWithItsType()
+        public void TestImportDataFromJsonLoadsAValueWithItsType()
         {
             // Setup
             var path = Write("[{\"Id\":{\"type\":\"Int32\",\"value\":9},\"Name\":{\"type\":\"String\",\"value\":\"Nine\"}}]");
             var destination = new FakeDbConnection();
 
             // Act
-            destination.LoadDataFromJson("Customer", path);
+            destination.ImportDataFromJson("Customer", path);
 
             // Assert
             var values = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal)).Parameters.Values.ToArray();
@@ -454,40 +454,40 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         #region Errors
 
         [TestMethod]
-        public void ThrowExceptionOnLoadDataFromJsonIfNoColumnOfTheFileMatchesAColumnOfTheTable()
+        public void ThrowExceptionOnImportDataFromJsonIfNoColumnOfTheFileMatchesAColumnOfTheTable()
         {
             // Setup
             var path = Write("[{\"A\":1,\"B\":2}]");
 
             // Act/Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path));
+            var exception = Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path));
             StringAssert.Contains(exception.Message, "Customer", StringComparison.Ordinal);
         }
 
         [TestMethod]
-        public void ThrowExceptionOnLoadDataFromJsonIfAValueCannotBeConvertedIntoTheTypeOfItsColumn()
+        public void ThrowExceptionOnImportDataFromJsonIfAValueCannotBeConvertedIntoTheTypeOfItsColumn()
         {
             // Setup
             var path = Write("[{\"Id\":1,\"Name\":\"A\"},{\"Id\":1.5,\"Name\":\"B\"}]");
 
             // Act/Assert
-            var exception = Assert.Throws<FormatException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path));
+            var exception = Assert.Throws<FormatException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path));
             StringAssert.Contains(exception.Message, "Row 2", StringComparison.Ordinal);
             StringAssert.Contains(exception.Message, "Id", StringComparison.Ordinal);
         }
 
         [TestMethod]
-        public void ThrowExceptionOnLoadDataFromJsonIfTheFileIsNotValidJson()
+        public void ThrowExceptionOnImportDataFromJsonIfTheFileIsNotValidJson()
         {
             // Setup
             var path = Write("[{\"Id\":1},");
 
             // Act/Assert
-            Assert.Throws<FormatException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path));
+            Assert.Throws<FormatException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path));
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonStopsAtTheBatchThatFailsAndKeepsTheProgressOfTheOnesThatSucceeded()
+        public void TestImportDataFromJsonStopsAtTheBatchThatFailsAndKeepsTheProgressOfTheOnesThatSucceeded()
         {
             // Setup
             var path = Write(Rows(6));
@@ -497,7 +497,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() =>
-                destination.LoadDataFromJson("Customer", path, bufferSize: 2, progressCallback: p =>
+                destination.ImportDataFromJson("Customer", path, bufferSize: 2, progressCallback: p =>
                 {
                     seen.Add(p);
                     if (++calls == 3)
@@ -515,7 +515,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         #region Async
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsyncInsertsTheRowsInBatchesIfTheProviderHasNoBulkInsert()
+        public async Task TestImportDataFromJsonAsyncInsertsTheRowsInBatchesIfTheProviderHasNoBulkInsert()
         {
             // Setup
             var path = Write(Rows(5));
@@ -523,7 +523,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var seen = new List<(int Batch, long Loaded, long Total)>();
 
             // Act
-            var actual = await destination.LoadDataFromJsonAsync("Customer", path, bufferSize: 2, progressCallback: Snapshot(seen));
+            var actual = await destination.ImportDataFromJsonAsync("Customer", path, bufferSize: 2, progressCallback: Snapshot(seen));
 
             // Assert
             Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
@@ -533,14 +533,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsyncUsesTheBulkInsertInBlocksOfTheBufferSize()
+        public async Task TestImportDataFromJsonAsyncUsesTheBulkInsertInBlocksOfTheBufferSize()
         {
             // Setup
             var path = Write(Rows(10));
             var destination = new FakeBulkDbConnection();
 
             // Act
-            var actual = await destination.LoadDataFromJsonAsync("Customer", path, bufferSize: 4);
+            var actual = await destination.ImportDataFromJsonAsync("Customer", path, bufferSize: 4);
 
             // Assert
             var calls = FakeBulkOperations.Calls;
@@ -551,13 +551,13 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsyncLoadsASequenceOfObjects()
+        public async Task TestImportDataFromJsonAsyncLoadsASequenceOfObjects()
         {
             // Setup
             var path = Write(string.Join("\n", Enumerable.Range(1, 4).Select(i => "{\"Id\":" + i + ",\"Name\":\"Name " + i + "\"}")));
 
             // Act
-            var actual = await new FakeDbConnection().LoadDataFromJsonAsync("Customer", path, bufferSize: 3);
+            var actual = await new FakeDbConnection().ImportDataFromJsonAsync("Customer", path, bufferSize: 3);
 
             // Assert
             Assert.AreEqual(4L, actual.LoadedRowCount);
@@ -565,14 +565,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsyncOfAFileWithoutRowsCallsTheCallbackTwice()
+        public async Task TestImportDataFromJsonAsyncOfAFileWithoutRowsCallsTheCallbackTwice()
         {
             // Setup
             var path = Write("[]");
             var count = 0;
 
             // Act
-            var actual = await new FakeDbConnection().LoadDataFromJsonAsync("Customer", path, progressCallback: _ => count++);
+            var actual = await new FakeDbConnection().ImportDataFromJsonAsync("Customer", path, progressCallback: _ => count++);
 
             // Assert
             Assert.AreEqual(2, count);
@@ -580,27 +580,27 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnLoadDataFromJsonAsyncIfNoColumnOfTheFileMatchesAColumnOfTheTable()
+        public async Task ThrowExceptionOnImportDataFromJsonAsyncIfNoColumnOfTheFileMatchesAColumnOfTheTable()
         {
             // Setup
             var path = Write("[{\"A\":1}]");
 
             // Act/Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(() => new FakeDbConnection().LoadDataFromJsonAsync("Customer", path));
+            await Assert.ThrowsAsync<InvalidOperationException>(() => new FakeDbConnection().ImportDataFromJsonAsync("Customer", path));
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnLoadDataFromJsonAsyncIfAValueCannotBeConvertedIntoTheTypeOfItsColumn()
+        public async Task ThrowExceptionOnImportDataFromJsonAsyncIfAValueCannotBeConvertedIntoTheTypeOfItsColumn()
         {
             // Setup
             var path = Write("[{\"Id\":\"abc\"}]");
 
             // Act/Assert
-            await Assert.ThrowsAsync<FormatException>(() => new FakeDbConnection().LoadDataFromJsonAsync("Customer", path));
+            await Assert.ThrowsAsync<FormatException>(() => new FakeDbConnection().ImportDataFromJsonAsync("Customer", path));
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnLoadDataFromJsonAsyncIfTheTokenIsCancelled()
+        public async Task ThrowExceptionOnImportDataFromJsonAsyncIfTheTokenIsCancelled()
         {
             // Setup
             var path = Write(Rows(5));
@@ -609,7 +609,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
                 source.Cancel();
 
                 // Act/Assert
-                await Assert.ThrowsAsync<OperationCanceledException>(() => new FakeDbConnection().LoadDataFromJsonAsync("Customer", path, cancellationToken: source.Token));
+                await Assert.ThrowsAsync<OperationCanceledException>(() => new FakeDbConnection().ImportDataFromJsonAsync("Customer", path, cancellationToken: source.Token));
             }
         }
 
@@ -618,44 +618,44 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         #region Identity And Column Mapping Behaviors
 
         [TestMethod]
-        public void ThrowExceptionOnLoadDataFromJsonIfTheColumnMappingBehaviorIsNotDefined()
+        public void ThrowExceptionOnImportDataFromJsonIfTheColumnMappingBehaviorIsNotDefined()
         {
             // Setup
             var path = Write("[]");
 
             // Act/Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path, columnMappingBehavior: (LoadColumnMappingBehavior)99));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, columnMappingBehavior: (LoadColumnMappingBehavior)99));
         }
 
         [TestMethod]
-        public void ThrowExceptionOnLoadDataFromJsonIfTheIdentityBehaviorIsNotDefined()
+        public void ThrowExceptionOnImportDataFromJsonIfTheIdentityBehaviorIsNotDefined()
         {
             // Setup
             var path = Write("[]");
 
             // Act/Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path, identityBehavior: (LoadIdentityBehavior)99));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, identityBehavior: (LoadIdentityBehavior)99));
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnLoadDataFromJsonAsyncIfTheIdentityBehaviorIsNotDefined()
+        public async Task ThrowExceptionOnImportDataFromJsonAsyncIfTheIdentityBehaviorIsNotDefined()
         {
             // Setup
             var path = Write("[]");
 
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => new FakeDbConnection().LoadDataFromJsonAsync("Customer", path, identityBehavior: (LoadIdentityBehavior)99));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => new FakeDbConnection().ImportDataFromJsonAsync("Customer", path, identityBehavior: (LoadIdentityBehavior)99));
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonKeepsTheIdentityColumnByDefaultInTheBatchInsert()
+        public void TestImportDataFromJsonKeepsTheIdentityColumnByDefaultInTheBatchInsert()
         {
             // Setup
             var path = Write(Rows(1));
             var destination = new FakeDbConnection();
 
             // Act
-            destination.LoadDataFromJson("Customer", path);
+            destination.ImportDataFromJson("Customer", path);
 
             // Assert
             var execution = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
@@ -664,14 +664,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonLeavesTheIdentityColumnToTheDatabaseInTheBatchInsertIfItIsNotToKeepIt()
+        public void TestImportDataFromJsonLeavesTheIdentityColumnToTheDatabaseInTheBatchInsertIfItIsNotToKeepIt()
         {
             // Setup
             var path = Write(Rows(1));
             var destination = new FakeDbConnection();
 
             // Act
-            destination.LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
+            destination.ImportDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
 
             // Assert
             var execution = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
@@ -680,14 +680,14 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsyncLeavesTheIdentityColumnToTheDatabaseInTheBatchInsertIfItIsNotToKeepIt()
+        public async Task TestImportDataFromJsonAsyncLeavesTheIdentityColumnToTheDatabaseInTheBatchInsertIfItIsNotToKeepIt()
         {
             // Setup
             var path = Write(Rows(1));
             var destination = new FakeDbConnection();
 
             // Act
-            await destination.LoadDataFromJsonAsync("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
+            await destination.ImportDataFromJsonAsync("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
 
             // Assert
             var execution = destination.Executions.Single(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal));
@@ -695,62 +695,62 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnLoadDataFromJsonIfTheIdentityColumnIsTheOnlyColumnAndItIsNotToBeKept()
+        public void ThrowExceptionOnImportDataFromJsonIfTheIdentityColumnIsTheOnlyColumnAndItIsNotToBeKept()
         {
             // Setup
             var path = Write("[{\"Id\":1}]");
 
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore));
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().ImportDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore));
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonPassesTheKeepIdentityOptionToTheBulkInsertByDefault()
+        public void TestImportDataFromJsonPassesTheKeepIdentityOptionToTheBulkInsertByDefault()
         {
             // Setup
             var path = Write(Rows(3));
 
             // Act
-            new FakeBulkOptionsDbConnection().LoadDataFromJson("Customer", path);
+            new FakeBulkOptionsDbConnection().ImportDataFromJson("Customer", path);
 
             // Assert
             Assert.AreEqual(FakeBulkCopyOptions.KeepIdentity, FakeBulkOperations.Calls.Single().Options);
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonDoesNotPassTheKeepIdentityOptionToTheBulkInsertIfItIsNotToKeepIt()
+        public void TestImportDataFromJsonDoesNotPassTheKeepIdentityOptionToTheBulkInsertIfItIsNotToKeepIt()
         {
             // Setup
             var path = Write(Rows(3));
 
             // Act
-            new FakeBulkOptionsDbConnection().LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
+            new FakeBulkOptionsDbConnection().ImportDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
 
             // Assert
             Assert.AreEqual(FakeBulkCopyOptions.Default, FakeBulkOperations.Calls.Single().Options);
         }
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsyncPassesTheIdentityBehaviorToTheBulkInsert()
+        public async Task TestImportDataFromJsonAsyncPassesTheIdentityBehaviorToTheBulkInsert()
         {
             // Setup
             var path = Write(Rows(3));
 
             // Act
-            await new FakeBulkIdentityBehaviorDbConnection().LoadDataFromJsonAsync("Customer", path);
+            await new FakeBulkIdentityBehaviorDbConnection().ImportDataFromJsonAsync("Customer", path);
 
             // Assert
             Assert.AreEqual(FakeBulkImportIdentityBehavior.KeepIdentity, FakeBulkOperations.Calls.Single().IdentityBehavior);
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonDoesNotSendTheIdentityColumnToTheBulkInsertIfItIsNotToKeepIt()
+        public void TestImportDataFromJsonDoesNotSendTheIdentityColumnToTheBulkInsertIfItIsNotToKeepIt()
         {
             // Setup
             var path = Write(Rows(3));
 
             // Act
-            new FakeBulkIdentityBehaviorDbConnection().LoadDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
+            new FakeBulkIdentityBehaviorDbConnection().ImportDataFromJson("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore);
 
             // Assert
             Assert.IsNull(FakeBulkOperations.Calls.Single().IdentityBehavior);
@@ -758,13 +758,13 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonSendsTheIdentityColumnToTheBulkInsertIfItIsToKeepIt()
+        public void TestImportDataFromJsonSendsTheIdentityColumnToTheBulkInsertIfItIsToKeepIt()
         {
             // Setup
             var path = Write(Rows(3));
 
             // Act
-            new FakeBulkIdentityBehaviorDbConnection().LoadDataFromJson("Customer", path);
+            new FakeBulkIdentityBehaviorDbConnection().ImportDataFromJson("Customer", path);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Id", "Name", "Birthday" }, FakeBulkOperations.LastColumns);
@@ -774,41 +774,41 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         [DataRow(LoadColumnMappingBehavior.Automatic, "Automatic")]
         [DataRow(LoadColumnMappingBehavior.Strict, "Strict")]
         [DataRow(LoadColumnMappingBehavior.StrictBypass, "StrictBypass")]
-        public void TestLoadDataFromJsonPassesTheColumnMappingBehaviorToTheBulkInsert(LoadColumnMappingBehavior behavior,
+        public void TestImportDataFromJsonPassesTheColumnMappingBehaviorToTheBulkInsert(LoadColumnMappingBehavior behavior,
             string expected)
         {
             // Setup
             var path = Write(Rows(3));
 
             // Act
-            new FakeBulkSettingDbConnection().LoadDataFromJson("Customer", path, columnMappingBehavior: behavior);
+            new FakeBulkSettingDbConnection().ImportDataFromJson("Customer", path, columnMappingBehavior: behavior);
 
             // Assert
             Assert.AreEqual(expected, FakeBulkOperations.Calls.Single().ColumnMappingsBehavior);
         }
 
         [TestMethod]
-        public async Task TestLoadDataFromJsonAsyncPassesTheColumnMappingBehaviorToTheBulkInsert()
+        public async Task TestImportDataFromJsonAsyncPassesTheColumnMappingBehaviorToTheBulkInsert()
         {
             // Setup
             var path = Write(Rows(3));
 
             // Act
-            await new FakeBulkSettingDbConnection().LoadDataFromJsonAsync("Customer", path, columnMappingBehavior: LoadColumnMappingBehavior.StrictBypass);
+            await new FakeBulkSettingDbConnection().ImportDataFromJsonAsync("Customer", path, columnMappingBehavior: LoadColumnMappingBehavior.StrictBypass);
 
             // Assert
             Assert.AreEqual("StrictBypass", FakeBulkOperations.Calls.Single().ColumnMappingsBehavior);
         }
 
         [TestMethod]
-        public void TestLoadDataFromJsonIgnoresTheColumnMappingBehaviorInTheBatchInsert()
+        public void TestImportDataFromJsonIgnoresTheColumnMappingBehaviorInTheBatchInsert()
         {
             // Setup
             var path = Write(Rows(2));
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = destination.LoadDataFromJson("Customer", path, columnMappingBehavior: LoadColumnMappingBehavior.Strict);
+            var actual = destination.ImportDataFromJson("Customer", path, columnMappingBehavior: LoadColumnMappingBehavior.Strict);
 
             // Assert
             Assert.AreEqual(2L, actual.LoadedRowCount);
