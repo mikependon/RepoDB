@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using RepoDb.Data.Enumerations;
+using RepoDb.Data.Interfaces;
 using RepoDb.Data.Models;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -49,6 +50,129 @@ namespace RepoDb.Data.Helpers
             public IList<KeyValuePair<int, int>> Copies { get; } = new List<KeyValuePair<int, int>>();
         }
 
+        /// <summary>
+        /// Runs the interceptors over the rows of the file: every row is given to them as a <see cref="CopyRow"/> with the columns of the table that it is loaded into (named by them, typed
+        /// by them), then the row that the last interceptor returns is what is loaded. The columns of that row are the ones that are loaded (the ones that the table does not have are
+        /// left out, and so are the identity columns if the database generates them), and they must be the same for every row.
+        /// </summary>
+        private sealed class Interception
+        {
+            private readonly IList<IDataInterceptor<CopyRow>> _interceptors;
+            private readonly List<CopyColumn> _columns;
+            private readonly ColumnMap _source;
+            private readonly Func<string, DbField> _find;
+            private readonly LoadIdentityBehavior _identityBehavior;
+            private readonly IList<Field> _qualifiers;
+            private readonly string _tableName;
+            private ColumnMap _map;
+            private string[] _names;
+            private int[] _ordinals;
+
+            public Interception(IList<IDataInterceptor<CopyRow>> interceptors,
+                ColumnMap source,
+                Func<string, DbField> find,
+                Func<string, string> unquote,
+                LoadIdentityBehavior identityBehavior,
+                IList<Field> qualifiers,
+                string tableName)
+            {
+                _interceptors = interceptors;
+                _source = source;
+                _find = find;
+                _identityBehavior = identityBehavior;
+                _qualifiers = qualifiers;
+                _tableName = tableName;
+                _columns = source.Fields.Select(field => new CopyColumn(unquote(field.Name), field.Type)).ToList();
+            }
+
+            /// <summary>
+            /// Gets the map of the columns that are loaded: the one of the file until the first row goes through the interceptors, then the one of the rows that they return.
+            /// </summary>
+            public ColumnMap Map => _map ?? _source;
+
+            /// <summary>
+            /// Runs the interceptors over a row.
+            /// </summary>
+            /// <param name="values">The values of the row by the position of the columns of the map of the file, already converted into the types of the columns.</param>
+            /// <param name="rowNumber">The number of the row in the file, starting at 1.</param>
+            /// <returns>The values of the row that the last interceptor returned, by the position of the columns of <see cref="Map"/>.</returns>
+            /// <exception cref="InvalidOperationException">An interceptor returned <c>null</c>, the rows do not have the same columns, or no column of the rows matches a column of the table.</exception>
+            /// <exception cref="FormatException">A value cannot be converted into the type of its column.</exception>
+            public object[] Apply(object[] values,
+                long rowNumber)
+            {
+                var row = RowInterception.Apply(new CopyRow(_columns, values), _interceptors);
+                if (_names == null)
+                {
+                    Shape(row);
+                }
+                else if (!IsShape(row))
+                {
+                    throw new InvalidOperationException("The data interceptors must give every row the same columns, in the same order.");
+                }
+                var result = new object[_map.Fields.Count];
+                for (var i = 0; i < result.Length; i++)
+                {
+                    try
+                    {
+                        result[i] = ValueConverter.Convert(row[_ordinals[i]], _map.Fields[i].Type);
+                    }
+                    catch (FormatException e)
+                    {
+                        throw new FormatException($"Row {rowNumber}, column '{_map.Fields[i].Name}': {e.Message}", e);
+                    }
+                }
+                return result;
+            }
+
+            private void Shape(CopyRow row)
+            {
+                var map = new ColumnMap();
+                var ordinals = new List<int>();
+                for (var i = 0; i < row.Count; i++)
+                {
+                    var field = _find(row.Columns[i].Name);
+                    if (field == null || (_identityBehavior == LoadIdentityBehavior.Ignore && field.IsIdentity))
+                    {
+                        continue;
+                    }
+                    map.Fields.Add(field);
+                    ordinals.Add(i);
+                }
+                if (map.Fields.Count == 0)
+                {
+                    throw new InvalidOperationException($"No column of the rows that the data interceptors give matches a column of the table '{_tableName}'.");
+                }
+                if (_qualifiers != null)
+                {
+                    var missing = _qualifiers.FirstOrDefault(qualifier => !map.Fields.Any(field => string.Equals(_find(qualifier.Name)?.Name, field.Name, StringComparison.OrdinalIgnoreCase)));
+                    if (missing != null)
+                    {
+                        throw new InvalidOperationException($"The existing rows cannot be bypassed as the qualifier '{missing.Name}' of the table '{_tableName}' is not a column of the rows that the data interceptors give.");
+                    }
+                }
+                _names = row.Columns.Select(column => column.Name).ToArray();
+                _ordinals = ordinals.ToArray();
+                _map = map;
+            }
+
+            private bool IsShape(CopyRow row)
+            {
+                if (row.Count != _names.Length)
+                {
+                    return false;
+                }
+                for (var i = 0; i < _names.Length; i++)
+                {
+                    if (!string.Equals(row.Columns[i].Name, _names[i], StringComparison.OrdinalIgnoreCase))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -66,6 +190,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="mappings">The mappings of the columns of the file to the columns of the table, or <c>null</c> to load the columns that have the same name on both.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the file goes through before it is loaded, in order, or <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="traceKey">The tracking key to be used.</param>
@@ -82,6 +207,7 @@ namespace RepoDb.Data.Helpers
             IList<CopyColumnMapping> mappings,
             LoadColumnMappingBehavior columnMappingBehavior,
             LoadIdentityBehavior identityBehavior,
+            IList<IDataInterceptor<CopyRow>> dataInterceptors,
             Action<LoadProgress> progressCallback,
             int? commandTimeout,
             string traceKey,
@@ -90,8 +216,9 @@ namespace RepoDb.Data.Helpers
         {
             Validate(connection, tableName, filename, bufferSize, columnMappingBehavior, identityBehavior);
             source.Validate();
-            var map = CreateMap(connection, tableName, transaction, identityBehavior, source.ReadColumns(), mappings, source.HasAllColumns);
+            var map = CreateMap(connection, tableName, transaction, dataInterceptors != null && dataInterceptors.Count > 0 ? LoadIdentityBehavior.KeepIdentity : identityBehavior, source.ReadColumns(), mappings, source.HasAllColumns);
             var qualifiers = bypassExistingRows ? GetQualifiers(connection, tableName, map, qualifierNames, transaction) : null;
+            var interception = CreateInterception(connection, tableName, transaction, identityBehavior, map, qualifiers, dataInterceptors);
             var progress = new LoadProgress
             {
                 Start = DateTime.UtcNow,
@@ -110,16 +237,16 @@ namespace RepoDb.Data.Helpers
                     {
                         break;
                     }
-                    buffer.Add(ConvertValues(Copy(values, map), reader.RowNumber, map));
+                    buffer.Add(interception == null ? ConvertValues(Copy(values, map), reader.RowNumber, map) : interception.Apply(ConvertValues(Copy(values, map), reader.RowNumber, map), reader.RowNumber));
                     if (buffer.Count == bufferSize)
                     {
-                        Flush(connection, tableName, map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
+                        Flush(connection, tableName, interception?.Map ?? map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
                     }
                 }
             }
             if (buffer.Count > 0)
             {
-                Flush(connection, tableName, map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
+                Flush(connection, tableName, interception?.Map ?? map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback);
             }
             progressCallback?.Invoke(progress);
             return progress;
@@ -138,6 +265,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="mappings">The mappings of the columns of the file to the columns of the table, or <c>null</c> to load the columns that have the same name on both.</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the file goes through before it is loaded, in order, or <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="traceKey">The tracking key to be used.</param>
@@ -155,6 +283,7 @@ namespace RepoDb.Data.Helpers
             IList<CopyColumnMapping> mappings,
             LoadColumnMappingBehavior columnMappingBehavior,
             LoadIdentityBehavior identityBehavior,
+            IList<IDataInterceptor<CopyRow>> dataInterceptors,
             Action<LoadProgress> progressCallback,
             int? commandTimeout,
             string traceKey,
@@ -164,8 +293,9 @@ namespace RepoDb.Data.Helpers
         {
             Validate(connection, tableName, filename, bufferSize, columnMappingBehavior, identityBehavior);
             source.Validate();
-            var map = CreateMap(connection, tableName, transaction, identityBehavior, await source.ReadColumnsAsync(cancellationToken).ConfigureAwait(false), mappings, source.HasAllColumns);
+            var map = CreateMap(connection, tableName, transaction, dataInterceptors != null && dataInterceptors.Count > 0 ? LoadIdentityBehavior.KeepIdentity : identityBehavior, await source.ReadColumnsAsync(cancellationToken).ConfigureAwait(false), mappings, source.HasAllColumns);
             var qualifiers = bypassExistingRows ? GetQualifiers(connection, tableName, map, qualifierNames, transaction) : null;
+            var interception = CreateInterception(connection, tableName, transaction, identityBehavior, map, qualifiers, dataInterceptors);
             var progress = new LoadProgress
             {
                 Start = DateTime.UtcNow,
@@ -184,16 +314,16 @@ namespace RepoDb.Data.Helpers
                     {
                         break;
                     }
-                    buffer.Add(ConvertValues(Copy(values, map), reader.RowNumber, map));
+                    buffer.Add(interception == null ? ConvertValues(Copy(values, map), reader.RowNumber, map) : interception.Apply(ConvertValues(Copy(values, map), reader.RowNumber, map), reader.RowNumber));
                     if (buffer.Count == bufferSize)
                     {
-                        await FlushAsync(connection, tableName, map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
+                        await FlushAsync(connection, tableName, interception?.Map ?? map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
                     }
                 }
             }
             if (buffer.Count > 0)
             {
-                await FlushAsync(connection, tableName, map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
+                await FlushAsync(connection, tableName, interception?.Map ?? map, buffer, bulk, qualifiers, bufferSize, columnMappingBehavior, identityBehavior, commandTimeout, traceKey, trace, transaction, progress, progressCallback, cancellationToken).ConfigureAwait(false);
             }
             progressCallback?.Invoke(progress);
             return progress;
@@ -342,6 +472,42 @@ namespace RepoDb.Data.Helpers
                 throw new InvalidOperationException($"No column of the file matches a column of the table '{tableName}'.");
             }
             return map;
+        }
+
+        /// <summary>
+        /// Creates the interception of the rows, if the user gave interceptors.
+        /// </summary>
+        /// <param name="connection">The connection of the database that has the table.</param>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="identityBehavior">Defines whether the identity values are kept.</param>
+        /// <param name="map">The map of the columns of the file.</param>
+        /// <param name="qualifiers">The qualifiers of the merge, or <c>null</c>.</param>
+        /// <param name="interceptors">The interceptors that the user gave, or <c>null</c>.</param>
+        /// <returns>The interception, or <c>null</c> if there are no interceptors.</returns>
+        /// <exception cref="ArgumentException">An interceptor is <c>null</c>.</exception>
+        private static Interception CreateInterception(IDbConnection connection,
+            string tableName,
+            IDbTransaction transaction,
+            LoadIdentityBehavior identityBehavior,
+            ColumnMap map,
+            IList<Field> qualifiers,
+            IList<IDataInterceptor<CopyRow>> interceptors)
+        {
+            interceptors = RowInterception.Normalize(interceptors);
+            if (interceptors == null)
+            {
+                return null;
+            }
+            var dbSetting = connection.GetDbSetting();
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            return new Interception(interceptors,
+                map,
+                name => dbFields.GetByUnquotedName(name.AsUnquoted(true, dbSetting)),
+                name => name.AsUnquoted(true, dbSetting),
+                identityBehavior,
+                qualifiers,
+                tableName);
         }
 
         /// <summary>

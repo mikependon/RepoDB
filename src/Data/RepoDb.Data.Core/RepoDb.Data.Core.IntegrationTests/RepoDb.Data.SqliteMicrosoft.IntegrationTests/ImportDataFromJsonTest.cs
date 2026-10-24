@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Data.Enumerations;
+using RepoDb.Data.Interfaces;
 using RepoDb.Data.Models;
 using RepoDb.Data.SqliteMicrosoft.IntegrationTests.Setup;
 using RepoDb.Schema;
@@ -444,6 +445,68 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
                 var rows = Rows();
                 CollectionAssert.AreEqual(new long[] { 5, 6 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
                 CollectionAssert.AreEqual(new[] { "Five", "Six" }, rows.Select(r => (string)r["Name"]).ToArray());
+            }
+        }
+
+        #endregion
+
+        #region Data Interceptors
+
+        private sealed class DoubleAmountInterceptor : IDataInterceptor<CopyRow>
+        {
+            public CopyRow Transform(CopyRow data)
+            {
+                data["Amount"] = (decimal)data["Amount"] * 2;
+                return data;
+            }
+        }
+
+        private sealed class RenameInterceptor : IDataInterceptor<CopyRow>
+        {
+            public CopyRow Transform(CopyRow data)
+            {
+                data["Name"] = "Item " + data["Id"] + ": " + data["Name"];
+                return data;
+            }
+        }
+
+        [TestMethod]
+        public void TestImportDataFromJsonLoadsTheRowsThatTheInterceptorsGiveInTheOrderTheyArePassed()
+        {
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                var path = Array(3);
+                var interceptors = new List<IDataInterceptor<CopyRow>> { new DoubleAmountInterceptor(), new RenameInterceptor() };
+
+                // Act
+                var actual = target.ImportDataFromJson("LoadItem", path, dataInterceptors: interceptors);
+
+                // Assert
+                Assert.AreEqual(3L, actual.LoadedRowCount);
+                var rows = Rows();
+                CollectionAssert.AreEqual(new[] { "Item 1: Name 1", "Item 2: Name 2", "Item 3: Name 3" }, rows.Select(r => (string)r["Name"]).ToArray());
+                CollectionAssert.AreEqual(new[] { 2.5m, 4.5m, 6.5m }, rows.Select(r => Convert.ToDecimal(r["Amount"])).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public async Task TestImportDataFromJsonAsyncWithInterceptorsAndBypassExistingRowsUpdatesTheRowsWithTheResultOfTheInterceptors()
+        {
+            using (var target = new SqliteConnection(Database.ConnectionStringForTarget))
+            {
+                // Setup
+                Helper.ExecuteOnTarget(@"INSERT INTO ""LoadItem"" (""Id"", ""Name"") VALUES (1, 'Old 1')");
+                var path = Array(2);
+                var interceptors = new List<IDataInterceptor<CopyRow>> { new RenameInterceptor() };
+
+                // Act
+                await target.ImportDataFromJsonAsync("LoadItem", path, bypassExistingRows: true, dataInterceptors: interceptors);
+
+                // Assert
+                var rows = Rows();
+                CollectionAssert.AreEqual(new long[] { 1, 2 }, rows.Select(r => Convert.ToInt64(r["Id"])).ToArray());
+                CollectionAssert.AreEqual(new[] { "Item 1: Name 1", "Item 2: Name 2" }, rows.Select(r => (string)r["Name"]).ToArray());
             }
         }
 

@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using RepoDb.Data.Enumerations;
 using RepoDb.Data.Helpers;
+using RepoDb.Data.Interfaces;
 using RepoDb.Data.Models;
 using RepoDb.Interfaces;
 
@@ -40,6 +41,7 @@ namespace RepoDb.Data
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the table that the file has. The default is <c>null</c>, which uses the primary key columns of the table (its identity column if it has no primary key).</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the file goes through before it is loaded, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is loaded. The row has the columns of the table that the file is loaded into (after the <c>mappings</c>), with their types, and every row must end with the same columns. The columns that the table does not have are left out, and so is an identity column that is not to be kept (after the interceptors have seen it). The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.ImportDataFromJson"/>.</param>
@@ -48,7 +50,7 @@ namespace RepoDb.Data
         /// <returns>The <see cref="LoadProgress"/> of the load, which is the same instance that the callback receives.</returns>
         /// <exception cref="ArgumentNullException">The connection, the table name or the file name is <c>null</c> (or white space).</exception>
         /// <exception cref="ArgumentOutOfRangeException">The buffer size is less than 1, or a behavior is not defined.</exception>
-        /// <exception cref="ArgumentException">A qualifier is empty, or is not a column of the table, or a mapping is not valid (its destination column is not a column of the table or is mapped more than once, or its source column is not a column of the file).</exception>
+        /// <exception cref="ArgumentException">A data interceptor is <c>null</c>, or a qualifier is empty, or is not a column of the table, or a mapping is not valid (its destination column is not a column of the table or is mapped more than once, or its source column is not a column of the file).</exception>
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         /// <exception cref="FormatException">The file is not valid JSON, a row is not an object, or a value cannot be converted into the type of its column.</exception>
         /// <exception cref="InvalidOperationException">No column of the file matches a column of the table, or the existing rows are bypassed and the table has no qualifiers (a primary key or an identity column) among the columns of the file.</exception>
@@ -61,13 +63,14 @@ namespace RepoDb.Data
             IList<string> qualifiers = null,
             LoadColumnMappingBehavior columnMappingBehavior = LoadColumnMappingBehavior.Automatic,
             LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
             Action<LoadProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.ImportDataFromJson,
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            return ImportPipeline.Run(connection, tableName, filename, new JsonImportSource(filename), bufferSize, bypassExistingRows, qualifiers, mappings, columnMappingBehavior, identityBehavior, progressCallback, commandTimeout, traceKey, trace, transaction);
+            return ImportPipeline.Run(connection, tableName, filename, new JsonImportSource(filename), bufferSize, bypassExistingRows, qualifiers, mappings, columnMappingBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
         }
 
         #endregion
@@ -86,6 +89,7 @@ namespace RepoDb.Data
         /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="bypassExistingRows"/> is enabled, and they must be columns of the table that the file has. The default is <c>null</c>, which uses the primary key columns of the table (its identity column if it has no primary key).</param>
         /// <param name="columnMappingBehavior">Defines how the columns of the file are aligned with the columns of the table by the bulk insert of the provider (ignored if it has none). The default is <see cref="LoadColumnMappingBehavior.Automatic"/>.</param>
         /// <param name="identityBehavior">Defines whether the identity values of the file are kept, or ignored so the database generates them. The default is <see cref="LoadIdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the file goes through before it is loaded, in the order that they are given: each one receives the <see cref="CopyRow"/> that the previous one returned, and the row that the last one returns is the one that is loaded. The row has the columns of the table that the file is loaded into (after the <c>mappings</c>), with their types, and every row must end with the same columns. The columns that the table does not have are left out, and so is an identity column that is not to be kept (after the interceptors have seen it). The default is <c>null</c>.</param>
         /// <param name="progressCallback">The callback that receives the <see cref="LoadProgress"/> after the rows are counted, after every batch is inserted, and when the load has ended. The default is <c>null</c>.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.ImportDataFromJson"/>.</param>
@@ -95,7 +99,7 @@ namespace RepoDb.Data
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="LoadProgress"/> of the load, which is the same instance that the callback receives.</returns>
         /// <exception cref="ArgumentNullException">The connection, the table name or the file name is <c>null</c> (or white space).</exception>
         /// <exception cref="ArgumentOutOfRangeException">The buffer size is less than 1, or a behavior is not defined.</exception>
-        /// <exception cref="ArgumentException">A qualifier is empty, or is not a column of the table, or a mapping is not valid (its destination column is not a column of the table or is mapped more than once, or its source column is not a column of the file).</exception>
+        /// <exception cref="ArgumentException">A data interceptor is <c>null</c>, or a qualifier is empty, or is not a column of the table, or a mapping is not valid (its destination column is not a column of the table or is mapped more than once, or its source column is not a column of the file).</exception>
         /// <exception cref="FileNotFoundException">The file does not exist.</exception>
         /// <exception cref="FormatException">The file is not valid JSON, a row is not an object, or a value cannot be converted into the type of its column.</exception>
         /// <exception cref="InvalidOperationException">No column of the file matches a column of the table, or the existing rows are bypassed and the table has no qualifiers (a primary key or an identity column) among the columns of the file.</exception>
@@ -108,6 +112,7 @@ namespace RepoDb.Data
             IList<string> qualifiers = null,
             LoadColumnMappingBehavior columnMappingBehavior = LoadColumnMappingBehavior.Automatic,
             LoadIdentityBehavior identityBehavior = LoadIdentityBehavior.KeepIdentity,
+            IList<IDataInterceptor<CopyRow>> dataInterceptors = null,
             Action<LoadProgress> progressCallback = null,
             int? commandTimeout = null,
             string traceKey = DataTraceKeys.ImportDataFromJson,
@@ -115,7 +120,7 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return ImportPipeline.RunAsync(connection, tableName, filename, new JsonImportSource(filename), bufferSize, bypassExistingRows, qualifiers, mappings, columnMappingBehavior, identityBehavior, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            return ImportPipeline.RunAsync(connection, tableName, filename, new JsonImportSource(filename), bufferSize, bypassExistingRows, qualifiers, mappings, columnMappingBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
         }
 
         #endregion

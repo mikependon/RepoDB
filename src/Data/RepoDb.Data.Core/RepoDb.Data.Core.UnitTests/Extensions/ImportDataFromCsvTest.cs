@@ -18,6 +18,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Data.Core.UnitTests.CustomObjects;
 using RepoDb.Data.Core.UnitTests.Fake.BulkOperations;
 using RepoDb.Data.Enumerations;
+using RepoDb.Data.Interfaces;
 using RepoDb.Data.Models;
 
 namespace RepoDb.Data.Core.UnitTests.Extensions
@@ -821,6 +822,222 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Assert
             CollectionAssert.AreEqual(new[] { "Name" }, FakeBulkOperations.LastColumns);
         }
+
+        #region Data Interceptors
+
+        private static IList<IDataInterceptor<CopyRow>> Interceptors(params Func<CopyRow, CopyRow>[] transforms) =>
+            transforms.Select(transform => (IDataInterceptor<CopyRow>)new FakeDataInterceptor(transform)).ToList();
+
+        private static List<object> InsertedValues(FakeDbConnection connection) =>
+            connection.Executions.Where(e => e.CommandText.StartsWith("INSERT INTO", StringComparison.Ordinal)).SelectMany(e => e.Parameters.Values).ToList();
+
+        [TestMethod]
+        public void TestImportDataFromCsvLoadsTheRowsThatTheInterceptorsGiveInOrder()
+        {
+            // Setup
+            var path = Write(Rows(3));
+            var destination = new FakeDbConnection();
+            var interceptors = Interceptors(
+                row => { row["Name"] = ((string)row["Name"]).ToUpperInvariant(); return row; },
+                row => { row["Name"] = row["Name"] + "!"; return row; });
+
+            // Act
+            var actual = destination.ImportDataFromCsv("Customer", path, dataInterceptors: interceptors);
+
+            // Assert
+            CollectionAssert.AreEquivalent(new[] { "NAME 1!", "NAME 2!", "NAME 3!" }, InsertedValues(destination).OfType<string>().ToList());
+            Assert.AreEqual(3L, actual.LoadedRowCount);
+        }
+
+        [TestMethod]
+        public async Task TestImportDataFromCsvAsyncLoadsTheRowsThatTheInterceptorsGive()
+        {
+            // Setup
+            var path = Write(Rows(2));
+            var destination = new FakeDbConnection();
+            var interceptors = Interceptors(row => { row["Name"] = "Changed"; return row; });
+
+            // Act
+            await destination.ImportDataFromCsvAsync("Customer", path, dataInterceptors: interceptors);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Changed", "Changed" }, InsertedValues(destination).OfType<string>().ToList());
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvGivesTheInterceptorsTheValuesConvertedIntoTheTypesOfTheColumns()
+        {
+            // Setup
+            var path = Write(Rows(2));
+            var seen = new List<Type>();
+            var interceptors = Interceptors(row => { seen.Add(row["Id"].GetType()); return row; });
+
+            // Act
+            new FakeDbConnection().ImportDataFromCsv("Customer", path, dataInterceptors: interceptors);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { typeof(int), typeof(int) }, seen);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvGivesTheInterceptorsTheColumnsOfTheTableThatTheMappingsGive()
+        {
+            // Setup
+            var path = Write("Code,Title\n7,Seven");
+            var names = new List<string>();
+            var interceptors = Interceptors(row => { names.AddRange(row.Columns.Select(c => c.Name)); return row; });
+            var mappings = new[] { new CopyColumnMapping("Code", "Id"), new CopyColumnMapping("Title", "Name") };
+
+            // Act
+            new FakeDbConnection().ImportDataFromCsv("Customer", path, mappings, dataInterceptors: interceptors);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Id", "Name" }, names);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvConvertsTheValuesThatTheInterceptorsGive()
+        {
+            // Setup
+            var path = Write(Rows(1));
+            var destination = new FakeDbConnection();
+            var interceptors = Interceptors(row => { row["Id"] = "42"; return row; });
+
+            // Act
+            destination.ImportDataFromCsv("Customer", path, dataInterceptors: interceptors);
+
+            // Assert
+            Assert.IsTrue(InsertedValues(destination).Contains(42));
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvBulkInsertsTheColumnsThatTheInterceptorsGive()
+        {
+            // Setup
+            var path = Write(Rows(2));
+            var interceptors = Interceptors(row => { row.Remove("Birthday"); return row; });
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromCsv("Customer", path, dataInterceptors: interceptors);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Id", "Name" }, FakeBulkOperations.LastColumns);
+            Assert.AreEqual(2, FakeBulkOperations.Calls.Single().RowCount);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvLeavesOutTheColumnsThatTheInterceptorsAddAndTheTableDoesNotHave()
+        {
+            // Setup
+            var path = Write(Rows(1));
+            var interceptors = Interceptors(row => row.Add("Extra", typeof(string), "e"));
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromCsv("Customer", path, dataInterceptors: interceptors);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Id", "Name", "Birthday" }, FakeBulkOperations.LastColumns);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvLeavesTheIdentityColumnOutAfterTheInterceptorsIfItIsNotToBeKept()
+        {
+            // Setup
+            var path = Write(Rows(1));
+            var interceptors = Interceptors(row => { row["Id"] = 500; return row; });
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromCsv("Customer", path, identityBehavior: LoadIdentityBehavior.Ignore, dataInterceptors: interceptors);
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "Name", "Birthday" }, FakeBulkOperations.LastColumns);
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvWithInterceptorsAndBypassExistingRowsBulkMergesTheRowsWithTheQualifiers()
+        {
+            // Setup
+            var path = Write(Rows(2));
+            var interceptors = Interceptors(row => { row["Name"] = "Changed"; return row; });
+
+            // Act
+            FakeBulkDestination.Create().ImportDataFromCsv("Customer", path, bypassExistingRows: true, dataInterceptors: interceptors);
+
+            // Assert
+            var call = FakeBulkOperations.Calls.Single();
+            Assert.AreEqual("BulkMerge", call.Method);
+            CollectionAssert.AreEqual(new[] { "Id" }, call.Qualifiers);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromCsvWithBypassExistingRowsIfAnInterceptorRemovesAQualifier()
+        {
+            // Setup
+            var path = Write(Rows(2));
+            var interceptors = Interceptors(row => { row.Remove("Id"); return row; });
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => FakeBulkDestination.Create().ImportDataFromCsv("Customer", path, bypassExistingRows: true, dataInterceptors: interceptors));
+            Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromCsvIfAnInterceptorReturnsNull()
+        {
+            // Setup
+            var path = Write(Rows(1));
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().ImportDataFromCsv("Customer", path, dataInterceptors: Interceptors(row => null)));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromCsvIfAnInterceptorIsNull()
+        {
+            // Setup
+            var path = Write(Rows(1));
+
+            // Act/Assert
+            Assert.Throws<ArgumentException>(() => new FakeDbConnection().ImportDataFromCsv("Customer", path, dataInterceptors: new List<IDataInterceptor<CopyRow>> { null }));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromCsvIfAnInterceptorGivesAnotherShapeToAnotherRow()
+        {
+            // Setup
+            var path = Write(Rows(3));
+            var interceptors = Interceptors(row => (int)row["Id"] == 2 ? row.Remove("Name") ? row : row : row);
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().ImportDataFromCsv("Customer", path, dataInterceptors: interceptors));
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnImportDataFromCsvIfNoColumnOfTheRowsThatTheInterceptorsGiveMatchesAColumnOfTheTable()
+        {
+            // Setup
+            var path = Write(Rows(1));
+            var interceptors = Interceptors(row => new CopyRow(new[] { new CopyColumn("Unknown", typeof(int)) }, new object[] { 1 }));
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().ImportDataFromCsv("Customer", path, dataInterceptors: interceptors));
+        }
+
+        [TestMethod]
+        public void TestImportDataFromCsvWithEmptyInterceptorsLoadsTheRowsAsTheyAre()
+        {
+            // Setup
+            var path = Write(Rows(2));
+            var destination = new FakeDbConnection();
+
+            // Act
+            destination.ImportDataFromCsv("Customer", path, dataInterceptors: new List<IDataInterceptor<CopyRow>>());
+
+            // Assert
+            CollectionAssert.AreEquivalent(new[] { "Name 1", "Name 2" }, InsertedValues(destination).OfType<string>().ToList());
+        }
+
+        #endregion
 
         #endregion
     }
