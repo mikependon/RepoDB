@@ -126,6 +126,19 @@ namespace RepoDb.Data.Helpers
             return inserted - loaded;
         }
 
+        /// <summary>
+        /// Logs the result of the bulk merge of a table. The rows of the target table are not compared, as the merge updates the rows that already exist instead of adding them.
+        /// </summary>
+        /// <param name="progress">The progress that holds the logs.</param>
+        /// <param name="destinationConnection">The destination connection.</param>
+        /// <param name="table">The target table.</param>
+        /// <param name="merged">The number of rows that the bulk merge has reported.</param>
+        public static void LogBulkMerge(CopyProgress progress,
+            IDbConnection destinationConnection,
+            string table,
+            int merged) =>
+            Add(progress, destinationConnection, CopyLogLevel.Info, $"{merged} row(s) were merged into the table '{table}' by the bulk merge.");
+
         #endregion
     }
 }

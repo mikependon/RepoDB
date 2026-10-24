@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -20,19 +21,21 @@ using RepoDb.Interfaces;
 namespace RepoDb.Data.Helpers
 {
     /// <summary>
-    /// Invokes the <c>BulkInsert</c> (and <c>BulkInsertAsync</c>) extension method that the <c>BulkOperations</c> package of the destination provider defines for its connection,
-    /// so a data reader can be fed to it. The extension methods are defined for the connection type of each provider (with different options), so they are found by their shape
-    /// (<c>BulkInsert(connection, string tableName, reader, ...)</c>) and the optional arguments are given by their names.
+    /// Invokes the <c>BulkInsert</c> and <c>BulkMerge</c> (and <c>BulkInsertAsync</c>, <c>BulkMergeAsync</c>) extension methods that the <c>BulkOperations</c> package of the destination provider defines for its connection,
+    /// so a data reader can be fed to them. The extension methods are defined for the connection type of each provider (with different options), so they are found by their shape
+    /// (<c>BulkInsert(connection, string tableName, reader, ...)</c>, <c>BulkMerge(connection, string tableName, reader, ...)</c>) and the optional arguments are given by their names.
     /// </summary>
     internal static class BulkInsertInvoker
     {
         #region Private Variables
 
+        private const string BulkInsertName = "BulkInsert";
+        private const string BulkMergeName = "BulkMerge";
         private const string BulkOperationsSuffix = ".BulkOperations";
         private const string ColumnMappingsBehaviorProperty = "BulkColumnMappingsBehavior";
         private const string KeepIdentityOption = "KeepIdentity";
-        private static readonly ConcurrentDictionary<(Type Connection, Type Reader, bool IsAsync), MethodInfo> _methods =
-            new ConcurrentDictionary<(Type, Type, bool), MethodInfo>();
+        private static readonly ConcurrentDictionary<(Type Connection, Type Reader, bool IsAsync, string Name), MethodInfo> _methods =
+            new ConcurrentDictionary<(Type, Type, bool, string), MethodInfo>();
 
         #endregion
 
@@ -48,7 +51,27 @@ namespace RepoDb.Data.Helpers
         internal static bool IsAvailable(IDbConnection connection,
             IDataReader reader,
             bool isAsync) =>
-            Find(connection, reader, isAsync) != null;
+            Find(connection, reader, isAsync, BulkInsertName) != null;
+
+        /// <summary>
+        /// Ensures that the <c>BulkOperations</c> package of the provider of the connection has the bulk insert (or the bulk merge) for the reader.
+        /// </summary>
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="reader">The reader of the rows to be copied.</param>
+        /// <param name="isAsync">A value that indicates whether the asynchronous method is searched.</param>
+        /// <param name="merge">A value that indicates whether the bulk merge is searched instead of the bulk insert.</param>
+        /// <exception cref="InvalidOperationException">The bulk method is not available.</exception>
+        internal static void EnsureAvailable(IDbConnection connection,
+            IDataReader reader,
+            bool isAsync,
+            bool merge)
+        {
+            var name = merge ? BulkMergeName : BulkInsertName;
+            if (Find(connection, reader, isAsync, name) == null)
+            {
+                throw CreateMissingException(connection, name);
+            }
+        }
 
         /// <summary>
         /// Bulk inserts the rows of the reader into the table.
@@ -75,20 +98,36 @@ namespace RepoDb.Data.Helpers
             ITrace trace,
             IDbTransaction transaction)
         {
-            var method = Find(connection, reader, false) ?? throw CreateMissingException(connection);
-            using (ColumnMappingsScope.Enter(connection, columnMappingsBehavior))
-            {
-                try
-                {
-                    return Convert.ToInt32(method.Invoke(null, CreateArguments(method, connection, tableName, reader, batchSize, keepIdentity, commandTimeout, traceKey, trace, transaction, CancellationToken.None)), System.Globalization.CultureInfo.InvariantCulture);
-                }
-                catch (TargetInvocationException e) when (e.InnerException != null)
-                {
-                    System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(e.InnerException).Throw();
-                    throw;
-                }
-            }
+            return Invoke(BulkInsertName, connection, tableName, reader, null, batchSize, columnMappingsBehavior, keepIdentity, commandTimeout, traceKey, trace, transaction);
         }
+
+        /// <summary>
+        /// Bulk merges the rows of the reader into the table.
+        /// </summary>
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="reader">The reader of the rows to be merged.</param>
+        /// <param name="qualifiers">The fields that identify the existing rows (the primary key, or the identity, of the table).</param>
+        /// <param name="batchSize">The number of rows of a batch.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns of the reader are aligned with the columns of the table.</param>
+        /// <param name="keepIdentity">A value that indicates whether the values of the identity columns are kept (the default of the library) or generated by the database.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that were merged.</returns>
+        internal static int BulkMerge(IDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<Field> qualifiers,
+            int batchSize,
+            Enum columnMappingsBehavior,
+            bool keepIdentity,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction) =>
+            Invoke(BulkMergeName, connection, tableName, reader, qualifiers, batchSize, columnMappingsBehavior, keepIdentity, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Bulk inserts the rows of the reader into the table in an asynchronous way.
@@ -117,12 +156,93 @@ namespace RepoDb.Data.Helpers
             IDbTransaction transaction,
             CancellationToken cancellationToken)
         {
-            var method = Find(connection, reader, true) ?? throw CreateMissingException(connection);
+            return await InvokeAsync(BulkInsertName, connection, tableName, reader, null, batchSize, columnMappingsBehavior, keepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Bulk merges the rows of the reader into the table in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="reader">The reader of the rows to be merged.</param>
+        /// <param name="qualifiers">The fields that identify the existing rows (the primary key, or the identity, of the table).</param>
+        /// <param name="batchSize">The number of rows of a batch.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns of the reader are aligned with the columns of the table.</param>
+        /// <param name="keepIdentity">A value that indicates whether the values of the identity columns are kept (the default of the library) or generated by the database.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>The number of rows that were merged.</returns>
+        internal static Task<int> BulkMergeAsync(IDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<Field> qualifiers,
+            int batchSize,
+            Enum columnMappingsBehavior,
+            bool keepIdentity,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction,
+            CancellationToken cancellationToken) =>
+            InvokeAsync(BulkMergeName, connection, tableName, reader, qualifiers, batchSize, columnMappingsBehavior, keepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken);
+
+        /// <summary>
+        /// Invokes the bulk method of the provider (the column mappings behavior is applied while it runs).
+        /// </summary>
+        private static int Invoke(string name,
+            IDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<Field> qualifiers,
+            int batchSize,
+            Enum columnMappingsBehavior,
+            bool keepIdentity,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction)
+        {
+            var method = Find(connection, reader, false, name) ?? throw CreateMissingException(connection, name);
+            using (ColumnMappingsScope.Enter(connection, columnMappingsBehavior))
+            {
+                try
+                {
+                    return Convert.ToInt32(method.Invoke(null, CreateArguments(method, connection, tableName, reader, qualifiers, batchSize, keepIdentity, commandTimeout, traceKey, trace, transaction, CancellationToken.None)), System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch (TargetInvocationException e) when (e.InnerException != null)
+                {
+                    System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(e.InnerException).Throw();
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Invokes the asynchronous bulk method of the provider (the column mappings behavior is applied while it runs).
+        /// </summary>
+        private static async Task<int> InvokeAsync(string name,
+            IDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<Field> qualifiers,
+            int batchSize,
+            Enum columnMappingsBehavior,
+            bool keepIdentity,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction,
+            CancellationToken cancellationToken)
+        {
+            var method = Find(connection, reader, true, name) ?? throw CreateMissingException(connection, name);
             using (await ColumnMappingsScope.EnterAsync(connection, columnMappingsBehavior, cancellationToken).ConfigureAwait(false))
             {
                 try
                 {
-                    var task = (Task)method.Invoke(null, CreateArguments(method, connection, tableName, reader, batchSize, keepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken));
+                    var task = (Task)method.Invoke(null, CreateArguments(method, connection, tableName, reader, qualifiers, batchSize, keepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken));
                     await task.ConfigureAwait(false);
                     return Convert.ToInt32(task.GetType().GetProperty(nameof(Task<int>.Result)).GetValue(task), System.Globalization.CultureInfo.InvariantCulture);
                 }
@@ -291,17 +411,20 @@ namespace RepoDb.Data.Helpers
         /// <param name="connection">The connection of the destination database.</param>
         /// <param name="reader">The reader of the rows to be inserted.</param>
         /// <param name="isAsync">A value that indicates whether the asynchronous method is searched.</param>
+        /// <param name="name">The name of the bulk method (<c>BulkInsert</c> or <c>BulkMerge</c>, without the suffix of the asynchronous one).</param>
         /// <returns>The method, or <c>null</c> if there is none.</returns>
         private static MethodInfo Find(IDbConnection connection,
             IDataReader reader,
-            bool isAsync)
+            bool isAsync,
+            string name)
         {
-            var key = (connection.GetType(), reader.GetType(), isAsync);
+            name = isAsync ? name + "Async" : name;
+            var key = (connection.GetType(), reader.GetType(), isAsync, name);
             if (_methods.TryGetValue(key, out var method))
             {
                 return method;
             }
-            return _methods.GetOrAdd(key, _ => Search(key.Item1, key.Item2, isAsync));
+            return _methods.GetOrAdd(key, _ => Search(key.Item1, key.Item2, key.Item4));
         }
 
         /// <summary>
@@ -309,13 +432,12 @@ namespace RepoDb.Data.Helpers
         /// </summary>
         /// <param name="connectionType">The type of the connection of the destination database.</param>
         /// <param name="readerType">The type of the reader of the rows to be inserted.</param>
-        /// <param name="isAsync">A value that indicates whether the asynchronous method is searched.</param>
+        /// <param name="name">The name of the method (i.e.: <c>BulkInsert</c>, <c>BulkMergeAsync</c>).</param>
         /// <returns>The method, or <c>null</c> if there is none.</returns>
         private static MethodInfo Search(Type connectionType,
             Type readerType,
-            bool isAsync)
+            string name)
         {
-            var name = isAsync ? "BulkInsertAsync" : "BulkInsert";
             return GetBulkOperationsTypes()
                 .SelectMany(type => type.GetMethods(BindingFlags.Public | BindingFlags.Static))
                 .Where(method => method.Name == name &&
@@ -427,10 +549,11 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Creates the arguments of the method: the optional arguments are given by their names, and the other ones keep their default values.
         /// </summary>
-        /// <param name="method">The <c>BulkInsert</c> method.</param>
+        /// <param name="method">The <c>BulkInsert</c> or <c>BulkMerge</c> method.</param>
         /// <param name="connection">The connection of the destination database.</param>
         /// <param name="tableName">The name of the table.</param>
         /// <param name="reader">The reader of the rows to be inserted.</param>
+        /// <param name="qualifiers">The qualifiers of the bulk merge, or <c>null</c>.</param>
         /// <param name="batchSize">The number of rows of a batch.</param>
         /// <param name="keepIdentity">A value that indicates whether the values of the identity columns are kept (the default of the library) or generated by the database.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -443,6 +566,7 @@ namespace RepoDb.Data.Helpers
             IDbConnection connection,
             string tableName,
             IDataReader reader,
+            IEnumerable<Field> qualifiers,
             int batchSize,
             bool keepIdentity,
             int? commandTimeout,
@@ -463,6 +587,9 @@ namespace RepoDb.Data.Helpers
                 {
                     case "batchSize":
                         arguments[i] = batchSize;
+                        break;
+                    case "qualifiers":
+                        arguments[i] = qualifiers ?? GetDefault(parameter);
                         break;
                     case "bulkCopyTimeout":
                     case "commandTimeout":
@@ -548,12 +675,14 @@ namespace RepoDb.Data.Helpers
         }
 
         /// <summary>
-        /// Creates the exception that is thrown when there is no <c>BulkInsert</c> method for the connection.
+        /// Creates the exception that is thrown when there is no bulk method for the connection.
         /// </summary>
         /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="name">The name of the bulk method (<c>BulkInsert</c> or <c>BulkMerge</c>).</param>
         /// <returns>The exception.</returns>
-        private static InvalidOperationException CreateMissingException(IDbConnection connection) =>
-            new InvalidOperationException($"There is no 'BulkInsert' extension method for the connection '{connection.GetType().FullName}'. Please install and reference the 'BulkOperations' package of the provider.");
+        private static InvalidOperationException CreateMissingException(IDbConnection connection,
+            string name) =>
+            new InvalidOperationException($"There is no '{name}' extension method for the connection '{connection.GetType().FullName}'. Please install and reference the 'BulkOperations' package of the provider.");
 
         #endregion
     }

@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -51,6 +52,8 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
         public string ColumnMappingsBehavior { get; set; }
 
         public int RowCount { get; set; }
+
+        public string[] Qualifiers { get; set; }
     }
 
     /// <summary>
@@ -64,6 +67,40 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
     /// A connection that has a fake <c>BulkInsert</c> and <c>BulkInsertAsync</c> (with the optional arguments of a real provider).
     /// </summary>
     public sealed class FakeBulkDbConnection : FakeBulkConnectionBase
+    {
+    }
+
+    /// <summary>
+    /// A connection that has a fake <c>BulkInsert</c>, <c>BulkMerge</c> (and their asynchronous ones), the base of the connections that are the destination of the copy of the data.
+    /// Its database and data source are fixed, and the test project maps its setting, helper and statement builder.
+    /// </summary>
+    public abstract class FakeBulkMappedDbConnection : FakeBulkConnectionBase
+    {
+        public override string Database => "FakeDatabase";
+
+        public override string DataSource => "FakeDataSource";
+
+        public override ConnectionState State => ConnectionState.Open;
+    }
+
+    /// <summary>
+    /// A destination connection whose table has a primary key (that is the identity too).
+    /// </summary>
+    public sealed class FakeBulkKeyedDbConnection : FakeBulkMappedDbConnection
+    {
+    }
+
+    /// <summary>
+    /// A destination connection whose table has an identity column, and no primary key.
+    /// </summary>
+    public sealed class FakeBulkIdentityOnlyDbConnection : FakeBulkMappedDbConnection
+    {
+    }
+
+    /// <summary>
+    /// A destination connection whose table has neither a primary key nor an identity column.
+    /// </summary>
+    public sealed class FakeBulkKeylessDbConnection : FakeBulkMappedDbConnection
     {
     }
 
@@ -399,6 +436,113 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
                 TraceKey = traceKey,
                 CancellationToken = cancellationToken,
                 RowCount = count
+            });
+            return count;
+        }
+
+        // The ones of the destination connections of the copy of the data
+        public static int BulkInsert(this FakeBulkMappedDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            int? batchSize = null,
+            int? bulkCopyTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            string traceKey = "FakeTraceKey")
+        {
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall
+            {
+                Method = nameof(BulkInsert),
+                TableName = tableName,
+                BatchSize = batchSize,
+                Timeout = bulkCopyTimeout,
+                Transaction = transaction,
+                Trace = trace,
+                TraceKey = traceKey,
+                RowCount = count
+            });
+            return count;
+        }
+
+        public static async Task<int> BulkInsertAsync(this FakeBulkMappedDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            int? batchSize = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            string traceKey = "FakeTraceKey",
+            CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall
+            {
+                Method = nameof(BulkInsertAsync),
+                TableName = tableName,
+                BatchSize = batchSize,
+                Timeout = commandTimeout,
+                Transaction = transaction,
+                Trace = trace,
+                TraceKey = traceKey,
+                CancellationToken = cancellationToken,
+                RowCount = count
+            });
+            return count;
+        }
+
+        public static int BulkMerge(this FakeBulkMappedDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<Field> qualifiers = null,
+            int? batchSize = null,
+            int? bulkCopyTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            string traceKey = "FakeTraceKey")
+        {
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall
+            {
+                Method = nameof(BulkMerge),
+                TableName = tableName,
+                BatchSize = batchSize,
+                Timeout = bulkCopyTimeout,
+                Transaction = transaction,
+                Trace = trace,
+                TraceKey = traceKey,
+                RowCount = count,
+                Qualifiers = qualifiers?.Select(field => field.Name).ToArray()
+            });
+            return count;
+        }
+
+        public static async Task<int> BulkMergeAsync(this FakeBulkMappedDbConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<Field> qualifiers = null,
+            int? batchSize = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            string traceKey = "FakeTraceKey",
+            CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            var count = Read(reader);
+            _calls.Enqueue(new FakeBulkCall
+            {
+                Method = nameof(BulkMergeAsync),
+                TableName = tableName,
+                BatchSize = batchSize,
+                Timeout = commandTimeout,
+                Transaction = transaction,
+                Trace = trace,
+                TraceKey = traceKey,
+                CancellationToken = cancellationToken,
+                RowCount = count,
+                Qualifiers = qualifiers?.Select(field => field.Name).ToArray()
             });
             return count;
         }

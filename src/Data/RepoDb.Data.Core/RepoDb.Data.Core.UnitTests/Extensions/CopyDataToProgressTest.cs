@@ -167,7 +167,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), bufferSize: 2);
+            var actual = source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bufferSize: 2);
 
             // Assert
             var item = actual.Items.Single();
@@ -186,7 +186,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
 
             // Act
-            var actual = await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), bufferSize: 2);
+            var actual = await source.CopyDataToAsync("Person", "Customer", FakeBulkDestination.Create(), bufferSize: 2);
 
             // Assert
             var item = actual.Items.Single();
@@ -203,7 +203,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
 
             // Act
-            var item = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), bufferSize: 2).Items.Single();
+            var item = source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bufferSize: 2).Items.Single();
 
             // Assert
             Assert.IsTrue(item.Batches.All(b => b.StartTime >= item.StartTime && b.StartTime <= b.EndTime && b.EndTime <= item.EndTime));
@@ -243,7 +243,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var totals = new List<(int Rows, int Batches, int Number, int BatchRows)>();
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), bufferSize: 2,
+            var actual = source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bufferSize: 2,
                 progressCallback: p =>
                 {
                     seen.Add(p);
@@ -262,7 +262,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", new FakeDbConnection(), bufferSize: 2);
+            var actual = source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bufferSize: 2);
 
             // Assert
             Assert.AreEqual(1, actual.CompletedTableCount);
@@ -276,7 +276,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var source = new FakeDbConnection { Data = FakeDbConnection.CreatePersons(5) };
 
             // Act
-            var actual = await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), bufferSize: 2);
+            var actual = await source.CopyDataToAsync("Person", "Customer", FakeBulkDestination.Create(), bufferSize: 2);
 
             // Assert
             Assert.AreEqual(1, actual.CompletedTableCount);
@@ -334,8 +334,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 1000, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null);
-            DataDbConnection.CopyRows(source, destination, "Pet", "Animal", null, 1000, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 1000, false, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Pet", "Animal", null, 1000, false, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null);
 
             // Assert
             Assert.AreEqual(2, options.Items.Count);
@@ -358,8 +358,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
 
             // Act
-            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 1000, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null);
-            DataDbConnection.CopyRows(source, destination, "Pet", "Animal", null, 1000, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Person", "Customer", null, 1000, false, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null);
+            DataDbConnection.CopyRows(source, destination, "Pet", "Animal", null, 1000, false, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null);
 
             // Assert
             Assert.IsTrue(options.Items[0].Logs.All(l => l.Text.Contains("Customer")));
@@ -376,8 +376,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var options = new CopyProgress { StartTime = DateTime.UtcNow };
 
             // Act
-            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 1000, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null, CancellationToken.None);
-            await DataDbConnection.CopyRowsAsync(source, destination, "Pet", "Animal", null, 1000, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null, CancellationToken.None);
+            await DataDbConnection.CopyRowsAsync(source, destination, "Person", "Customer", null, 1000, false, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null, CancellationToken.None);
+            await DataDbConnection.CopyRowsAsync(source, destination, "Pet", "Animal", null, 1000, false, LoadColumnMappingBehavior.Automatic, LoadIdentityBehavior.KeepIdentity, null, options, null, null, null, null, null, CancellationToken.None);
 
             // Assert
             Assert.AreEqual(2, options.Items.Count);
