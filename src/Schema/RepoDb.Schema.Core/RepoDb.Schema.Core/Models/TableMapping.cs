@@ -21,12 +21,15 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Creates a new instance of <see cref="TableMapping"/> class.
         /// </summary>
-        /// <param name="tableName">The name of the table of the source database, with or without its schema (i.e.: <c>Person</c> or <c>dbo.Person</c>).</param>
+        /// <param name="source">The name of the table of the source database, with or without its schema (i.e.: <c>Person</c> or <c>dbo.Person</c>).</param>
+        /// <param name="destination">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name).</param>
         /// <param name="columns">The mappings of the columns of the table that are created in the destination database.</param>
-        public TableMapping(string tableName,
+        public TableMapping(string source,
+            string destination,
             IList<ColumnMapping> columns)
         {
-            TableName = tableName;
+            Source = source;
+            Destination = destination;
             Columns = columns;
         }
 
@@ -37,7 +40,12 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets the name of the table of the source database, with or without its schema (i.e.: <c>Person</c> or <c>dbo.Person</c>).
         /// </summary>
-        public string TableName { get; }
+        public string Source { get; }
+
+        /// <summary>
+        /// Gets the name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.
+        /// </summary>
+        public string Destination { get; }
 
         /// <summary>
         /// Gets the mappings of the columns of the table that are created in the destination database (see <see cref="ColumnMapping"/>).

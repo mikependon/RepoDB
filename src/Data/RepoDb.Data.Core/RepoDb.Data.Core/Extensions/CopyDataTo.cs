@@ -81,7 +81,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the source table.</typeparam>
         /// <param name="connection">The source connection.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
@@ -163,7 +163,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="connection">The source connection.</param>
         /// <param name="sourceTable">The name of the source table.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
@@ -249,7 +249,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the source table.</typeparam>
         /// <param name="connection">The source connection.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
@@ -331,7 +331,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="connection">The source connection.</param>
         /// <param name="sourceTable">The name of the source table.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
@@ -431,7 +431,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the source table.</typeparam>
         /// <param name="connection">The source connection.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
@@ -517,7 +517,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="connection">The source connection.</param>
         /// <param name="sourceTable">The name of the source table.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
@@ -607,7 +607,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the source table.</typeparam>
         /// <param name="connection">The source connection.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
@@ -693,7 +693,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="connection">The source connection.</param>
         /// <param name="sourceTable">The name of the source table.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
         /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
@@ -793,7 +793,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the source table.</typeparam>
         /// <param name="connection">The source connection.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
@@ -875,7 +875,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="connection">The source connection.</param>
         /// <param name="sourceTable">The name of the source table.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
@@ -961,7 +961,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the source table.</typeparam>
         /// <param name="connection">The source connection.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
@@ -1043,7 +1043,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="connection">The source connection.</param>
         /// <param name="sourceTable">The name of the source table.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
@@ -1143,7 +1143,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the source table.</typeparam>
         /// <param name="connection">The source connection.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
@@ -1229,7 +1229,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="connection">The source connection.</param>
         /// <param name="sourceTable">The name of the source table.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The name of the destination connection registered in the <see cref="ConnectionManager"/>.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
@@ -1319,7 +1319,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the source table.</typeparam>
         /// <param name="connection">The source connection.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>
@@ -1405,7 +1405,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="connection">The source connection.</param>
         /// <param name="sourceTable">The name of the source table.</param>
-        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied.</param>
+        /// <param name="targetTable">The name of the target table. Its schema (i.e.: <c>Sales.Person</c>) is used when the schema is copied, and the table is created with this name (the related tables are created with their own names, so the names of the source and the target tables must be the same when they are copied).</param>
         /// <param name="destinationConnection">The destination connection.</param>
         /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
         /// <param name="where">The expression used to filter the rows of the source table to be copied. The default is <c>null</c>, which copies all the rows.</param>

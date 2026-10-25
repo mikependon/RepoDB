@@ -563,7 +563,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         #region Table Mappings
 
         private static TableMapping Table(string name, params ColumnMapping[] columns) =>
-            new TableMapping(name, columns);
+            new TableMapping(name, null, columns);
 
         private static IList<TableMapping> Tables(params TableMapping[] tables) =>
             tables;
@@ -575,10 +575,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var columns = new[] { Map("Id"), Map("Name", "FullName") };
 
             // Act
-            var actual = new TableMapping("Person", columns);
+            var actual = new TableMapping("Person", null, columns);
 
             // Assert
-            Assert.AreEqual("Person", actual.TableName);
+            Assert.AreEqual("Person", actual.Source);
             Assert.AreSame(columns, actual.Columns);
         }
 
@@ -776,7 +776,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, GetDestination(), Tables(new TableMapping("Person", null))));
+                new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, GetDestination(), Tables(new TableMapping("Person", null, null))));
             Assert.Throws<ArgumentException>(() =>
                 new CustomDbConnection().CopyTableSchemaTo(new[] { "Person" }, GetDestination(), Tables(Table("Person"))));
         }

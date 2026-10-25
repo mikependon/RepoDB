@@ -213,7 +213,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopyDataToIfTheTablesHaveDifferentNamesAndTheTargetTableHasASchema()
+        public void TestCopyDataToWithDifferentTableNamesAndATargetTableWithASchemaCreatesTheTableByTheNameOfTheTargetTable()
         {
             using (var source = new MySqlConnection(Database.ConnectionStringForSource))
             using (var target = new MySqlConnection(Database.ConnectionStringForTarget))
@@ -221,9 +221,12 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 // Setup
                 Helper.MapSchemaReader(source);
 
-                // Act/Assert
-                Assert.Throws<ArgumentException>(() => source.CopyDataTo("Currency", "repodb_data_target_sales.Money", target));
-                Assert.AreEqual(0, Helper.TargetTables().Count);
+                // Act
+                var actual = source.CopyDataTo("Currency", "repodb_data_target_sales.Money", target).RowCount;
+
+                // Assert
+                Assert.AreEqual(3, actual);
+                Assert.AreEqual(1, Helper.TargetTables().Count);
             }
         }
 
@@ -316,7 +319,7 @@ namespace RepoDb.Data.MySql.IntegrationTests
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopyDataToAsyncIfTheTablesHaveDifferentNamesAndTheTargetTableHasASchema()
+        public async Task TestCopyDataToAsyncWithDifferentTableNamesAndATargetTableWithASchemaCreatesTheTableByTheNameOfTheTargetTable()
         {
             using (var source = new MySqlConnection(Database.ConnectionStringForSource))
             using (var target = new MySqlConnection(Database.ConnectionStringForTarget))
@@ -324,8 +327,11 @@ namespace RepoDb.Data.MySql.IntegrationTests
                 // Setup
                 Helper.MapSchemaReader(source);
 
-                // Act/Assert
-                await Assert.ThrowsAsync<ArgumentException>(() => source.CopyDataToAsync("Currency", "repodb_data_target_sales.Money", target));
+                // Act
+                var actual = (await source.CopyDataToAsync("Currency", "repodb_data_target_sales.Money", target)).RowCount;
+
+                // Assert
+                Assert.AreEqual(3, actual);
             }
         }
 

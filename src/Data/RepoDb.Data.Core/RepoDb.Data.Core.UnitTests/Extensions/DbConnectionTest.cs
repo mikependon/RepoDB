@@ -231,6 +231,27 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
         #endregion
 
+        #region GetRenamedTable
+
+        [DataTestMethod]
+        [DataRow("Person", "Human", "Human")]
+        [DataRow("dbo.Person", "Sales.Human", "Human")]
+        [DataRow("Person", "[Human]", "Human")]
+        [DataRow("Person", "person", null)]
+        [DataRow("dbo.Person", "[Sales].[PERSON]", null)]
+        [DataRow("Person", null, null)]
+        [DataRow("Person", " ", null)]
+        public void TestGetRenamedTableReturnsTheNewSimpleNameOnlyWhenItIsNotTheNameOfTheSourceTable(string source, string target, string expected)
+        {
+            // Act
+            var actual = DataDbConnection.GetRenamedTable(source, target);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
         #region GetTargetSchema
 
         [TestMethod]
@@ -1287,15 +1308,19 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnValidateIfTheTablesHaveDifferentNamesAndTheSchemaIsRequested()
+        public void ThrowExceptionOnValidateIfTheTablesHaveDifferentNamesAndTheRelationshipBehaviorIsNotTableOnly()
         {
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
                 DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, RelationshipBehavior.Parents, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null));
-            Assert.Throws<ArgumentException>(() =>
-                DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Drop, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null));
-            Assert.Throws<ArgumentException>(() =>
-                DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), "Sales", 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null));
+        }
+
+        [TestMethod]
+        public void TestValidateAcceptsTablesWithDifferentNamesIfOnlyTheTableIsCopiedEvenIfTheSchemaIsRequested()
+        {
+            // Act/Assert
+            DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Drop, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null);
+            DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), "Sales", 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null);
         }
 
         [TestMethod]

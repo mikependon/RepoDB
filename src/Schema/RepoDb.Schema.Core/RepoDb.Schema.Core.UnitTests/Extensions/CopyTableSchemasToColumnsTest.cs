@@ -128,7 +128,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         private static IList<TableMapping> Tables(params (string Name, string[] Columns)[] tables) =>
-            tables.Select(table => new TableMapping(table.Name, table.Columns.Select(column => new ColumnMapping(column)).ToList())).ToList();
+            tables.Select(table => new TableMapping(table.Name, null, table.Columns.Select(column => new ColumnMapping(column)).ToList())).ToList();
 
         private static CustomDbConnection GetDestination(params string[] existing) =>
             new CustomDbConnection { ScalarResult = statement => existing.Contains(statement) ? 1 : 0 };

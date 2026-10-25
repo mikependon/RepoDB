@@ -636,7 +636,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer("CREATE TABLE Person;", "CREATE TABLE Country;");
             var tables = new List<TableMapping>
             {
-                new TableMapping("Person", new List<ColumnMapping> { new ColumnMapping("Id") })
+                new TableMapping("Person", null, new List<ColumnMapping> { new ColumnMapping("Id") })
             };
 
             // Act

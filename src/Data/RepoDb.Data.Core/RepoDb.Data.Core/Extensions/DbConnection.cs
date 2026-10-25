@@ -73,11 +73,13 @@ namespace RepoDb.Data
             var results = new List<CopyTableSchemaResultItem>();
             var schemaBehavior = ToSchemaBehavior(relationshipBehavior);
             var schemaMappings = ToSchemaMappings(mappings);
+            var renamedTable = GetRenamedTable(sourceTable, targetTable);
             if (schemaMappings == null)
             {
-                connection.CopyTableSchemaTo(new[] { sourceTable },
+                connection.CopyTableSchemaTo(sourceTable,
                     destinationConnection,
                     targetSchema: targetSchema,
+                    targetTable: renamedTable,
                     tableExistenceBehavior: tableExistenceBehavior,
                     relationshipBehavior: schemaBehavior,
                     createdCallback: results.Add,
@@ -89,7 +91,7 @@ namespace RepoDb.Data
             {
                 connection.CopyTableSchemaTo(new[] { sourceTable },
                     destinationConnection,
-                    new[] { new TableMapping(sourceTable, schemaMappings) },
+                    new[] { new TableMapping(sourceTable, renamedTable, schemaMappings) },
                     targetSchema: targetSchema,
                     tableExistenceBehavior: tableExistenceBehavior,
                     relationshipBehavior: schemaBehavior,
@@ -146,11 +148,13 @@ namespace RepoDb.Data
             var results = new List<CopyTableSchemaResultItem>();
             var schemaBehavior = ToSchemaBehavior(relationshipBehavior);
             var schemaMappings = ToSchemaMappings(mappings);
+            var renamedTable = GetRenamedTable(sourceTable, targetTable);
             if (schemaMappings == null)
             {
-                await connection.CopyTableSchemaToAsync(new[] { sourceTable },
+                await connection.CopyTableSchemaToAsync(sourceTable,
                     destinationConnection,
                     targetSchema: targetSchema,
+                    targetTable: renamedTable,
                     tableExistenceBehavior: tableExistenceBehavior,
                     relationshipBehavior: schemaBehavior,
                     createdCallback: results.Add,
@@ -163,7 +167,7 @@ namespace RepoDb.Data
             {
                 await connection.CopyTableSchemaToAsync(new[] { sourceTable },
                     destinationConnection,
-                    new[] { new TableMapping(sourceTable, schemaMappings) },
+                    new[] { new TableMapping(sourceTable, renamedTable, schemaMappings) },
                     targetSchema: targetSchema,
                     tableExistenceBehavior: tableExistenceBehavior,
                     relationshipBehavior: schemaBehavior,
@@ -221,6 +225,22 @@ namespace RepoDb.Data
         internal static string GetName(IDbConnection connection,
             CopyTableSchemaResultItem result) =>
             GetName(connection, result.Target.Table.Table.Schema, result.Target.Table.Table.Name);
+
+        /// <summary>
+        /// Gets the name that the table is created with in the destination database, if it is not the name of the source table.
+        /// </summary>
+        /// <param name="sourceTable">The name of the source table, with or without its schema.</param>
+        /// <param name="targetTable">The name of the target table, with or without its schema.</param>
+        /// <returns>The name of the target table without its schema and quotes, or <c>null</c> if it is the name of the source table.</returns>
+        internal static string GetRenamedTable(string sourceTable,
+            string targetTable)
+        {
+            static string Simple(string name) =>
+                name.Split('.').Last().Trim().Trim('[', ']', '"', '`');
+
+            var target = string.IsNullOrWhiteSpace(targetTable) ? null : Simple(targetTable);
+            return target == null || string.Equals(target, Simple(sourceTable), StringComparison.OrdinalIgnoreCase) ? null : target;
+        }
 
         /// <summary>
         /// Gets the name of the table, quoted for the database of the connection.
@@ -1065,9 +1085,9 @@ namespace RepoDb.Data
                     throw new ArgumentException($"The destination column '{duplicate.Key}' is mapped more than once.", nameof(mappings));
                 }
             }
-            if (IsSchemaRequested(relationshipBehavior, tableExistenceBehavior, targetSchema) && !string.Equals(GetTableName(connection, sourceTable), GetTableName(destinationConnection, targetTable), StringComparison.Ordinal))
+            if (relationshipBehavior != RelationshipBehavior.TableOnly && !string.Equals(GetTableName(connection, sourceTable), GetTableName(destinationConnection, targetTable), StringComparison.Ordinal))
             {
-                throw new ArgumentException("The schema is copied with the name of the source table, so the source and the target tables must have the same name (the schema of the target table can be different) when the relationship behavior is not 'TableOnly', the table existence behavior is not 'Skip' or the target table has a schema.", nameof(targetTable));
+                throw new ArgumentException("The related tables are copied with the names of the source tables, so the source and the target tables must have the same name (the schema of the target table can be different) when the relationship behavior is not 'TableOnly'.", nameof(targetTable));
             }
         }
 

@@ -106,31 +106,31 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopyDataToIfTheTablesHaveDifferentNamesAndTheTableExistenceBehaviorIsNotSkip()
+        public void TestCopyDataToWithDifferentTableNamesAndATableExistenceBehaviorThatIsNotSkipCopiesTheSchemaWithTheNameOfTheTargetTable()
         {
             foreach (var behavior in ExistsBehaviors)
             {
-                // Act/Assert
-                Assert.Throws<ArgumentException>(() =>
+                // Act/Assert (the names are valid, so the schema is copied, but there is no schema reader for the connection)
+                Assert.Throws<MissingMappingException>(() =>
                     GetConnection().CopyDataTo("Person", "Customer", GetConnection(), tableExistenceBehavior: behavior));
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnCopyDataToIfTheTablesHaveDifferentNamesAndTheTargetTableHasASchema()
+        public void TestCopyDataToWithDifferentTableNamesAndATargetTableWithASchemaCopiesTheSchemaWithTheNameOfTheTargetTable()
         {
-            // Act/Assert
-            Assert.Throws<ArgumentException>(() =>
+            // Act/Assert (the names are valid, so the schema is copied, but there is no schema reader for the connection)
+            Assert.Throws<MissingMappingException>(() =>
                 GetConnection().CopyDataTo("Person", "Sales.Customer", new CustomDbConnection()));
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<MissingMappingException>(() =>
                 GetConnection().CopyDataTo("Person", "[Sales].[Customer]", new CustomDbConnection()));
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopyDataToAsyncIfTheTablesHaveDifferentNamesAndTheTargetTableHasASchema()
+        public async Task TestCopyDataToAsyncWithDifferentTableNamesAndATargetTableWithASchemaCopiesTheSchemaWithTheNameOfTheTargetTable()
         {
             // Act/Assert
-            await Assert.ThrowsAsync<ArgumentException>(() =>
+            await Assert.ThrowsAsync<MissingMappingException>(() =>
                 GetConnection().CopyDataToAsync("Person", "Sales.Customer", new CustomDbConnection()));
         }
 
@@ -166,12 +166,12 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnCopyDataToAsyncIfTheTablesHaveDifferentNamesAndTheTableExistenceBehaviorIsNotSkip()
+        public async Task TestCopyDataToAsyncWithDifferentTableNamesAndATableExistenceBehaviorThatIsNotSkipCopiesTheSchemaWithTheNameOfTheTargetTable()
         {
             foreach (var behavior in ExistsBehaviors)
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<ArgumentException>(() =>
+                await Assert.ThrowsAsync<MissingMappingException>(() =>
                     GetConnection().CopyDataToAsync("Person", "Customer", GetConnection(), tableExistenceBehavior: behavior));
             }
         }

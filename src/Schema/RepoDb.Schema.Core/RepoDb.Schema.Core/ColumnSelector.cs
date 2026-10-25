@@ -122,19 +122,29 @@ namespace RepoDb.Schema
                 {
                     throw new ArgumentException("The tables can not contain a null item.", "mappings");
                 }
-                if (string.IsNullOrWhiteSpace(table.TableName))
+                if (string.IsNullOrWhiteSpace(table.Source))
                 {
                     throw new ArgumentException("The name of a table can not be null or white space.", "mappings");
                 }
-                if (!names.Add(Unquote(table.TableName)))
+                if (!names.Add(Unquote(table.Source)))
                 {
-                    throw new ArgumentException($"The table '{table.TableName}' is given more than once.", "mappings");
+                    throw new ArgumentException($"The table '{table.Source}' is given more than once.", "mappings");
                 }
                 if (table.Columns == null || table.Columns.Count == 0)
                 {
-                    throw new ArgumentException($"At least one column mapping must be given for the table '{table.TableName}': a table can not be created without columns.", "mappings");
+                    throw new ArgumentException($"At least one column mapping must be given for the table '{table.Source}': a table can not be created without columns.", "mappings");
+                }
+                if (table.Destination != null && string.IsNullOrWhiteSpace(Unquote(table.Destination)))
+                {
+                    throw new ArgumentException($"The new name of the table '{table.Source}' can not be white space.", "mappings");
                 }
                 Normalize(table.Columns, out _, out _);
+            }
+            var targets = tables.Where(table => table.Destination != null).Select(table => Unquote(table.Destination)).ToList();
+            var repeated = targets.GroupBy(name => name, StringComparer.OrdinalIgnoreCase).FirstOrDefault(group => group.Count() > 1);
+            if (repeated != null)
+            {
+                throw new ArgumentException($"More than one table is renamed to '{repeated.Key}'.", "mappings");
             }
             return tables;
         }
@@ -152,22 +162,23 @@ namespace RepoDb.Schema
             var selections = new Dictionary<TableInfo, Selection>();
             foreach (var table in tables)
             {
-                var name = Unquote(table.TableName);
+                var name = Unquote(table.Source);
                 var matches = schemas.Select(schema => schema.Table).Where(info => Matches(name, info)).Distinct().ToList();
                 if (matches.Count == 0)
                 {
-                    throw new ArgumentException($"The table '{table.TableName}' is not one of the tables that are copied.", "mappings");
+                    var found = string.Join(", ", schemas.Select(schema => $"'{GetName(schema.Table)}'").Distinct());
+                    throw new ArgumentException($"The table '{table.Source}' is not one of the tables that are copied. The tables found are: {(found.Length == 0 ? "(none)" : found)}. The name must be the one of the table in the source database, not the new name of the table.", "mappings");
                 }
                 if (matches.Count > 1)
                 {
-                    throw new ArgumentException($"The table '{table.TableName}' is more than one of the tables that are copied: give the name of its schema, i.e.: 'dbo.{name}'.", "mappings");
+                    throw new ArgumentException($"The table '{table.Source}' is more than one of the tables that are copied: give the name of its schema, i.e.: 'dbo.{name}'.", "mappings");
                 }
                 if (selections.ContainsKey(matches[0]))
                 {
                     throw new ArgumentException($"The table '{GetName(matches[0])}' is given more than once.", "mappings");
                 }
                 Normalize(table.Columns, out var columns, out var renamed);
-                selections[matches[0]] = new Selection(columns, renamed);
+                selections[matches[0]] = new Selection(columns, renamed, table.Destination == null ? null : Unquote(table.Destination));
             }
             return selections;
         }
@@ -187,7 +198,7 @@ namespace RepoDb.Schema
             var selections = new Dictionary<TableInfo, Selection>();
             foreach (var schema in requested)
             {
-                selections[schema.Table] = new Selection(columns, null);
+                selections[schema.Table] = new Selection(columns, null, null);
             }
             return Apply(schemas, selections);
         }
@@ -238,6 +249,49 @@ namespace RepoDb.Schema
 
             // The columns are renamed, and what uses them follows the new names
             return renamedByTable.Count == 0 ? result : result.Select(schema => Rename(schema, renamedByTable)).ToList();
+        }
+
+        /// <summary>
+        /// Gives the tables their names in the destination database, and the foreign keys that reference them follow the new names.
+        /// </summary>
+        /// <param name="schemas">The schemas of all the tables that are copied.</param>
+        /// <param name="renamed">The new names of the tables by the table.</param>
+        /// <returns>The schemas of the tables (the same list if no table is renamed). The schemas that are read from the source database are not changed.</returns>
+        /// <exception cref="ArgumentException">A table is renamed to the name of another table of the same schema.</exception>
+        public static IList<TableSchema> RenameTables(IList<TableSchema> schemas,
+            IDictionary<TableInfo, string> renamed)
+        {
+            if (renamed == null || renamed.Count == 0)
+            {
+                return schemas;
+            }
+
+            TableInfo Map(TableInfo table) =>
+                renamed.TryGetValue(table, out var name) && !string.Equals(name, table.Name, StringComparison.Ordinal) ?
+                    new TableInfo(name, table.Schema, table.Database, table.Provider) : table;
+
+            var result = schemas.Select(schema => new TableSchema(Map(schema.Table))
+            {
+                Columns = schema.Columns,
+                PrimaryKey = schema.PrimaryKey,
+                Indexes = schema.Indexes,
+                UniqueConstraints = schema.UniqueConstraints,
+                CheckConstraints = schema.CheckConstraints,
+                ForeignKeys = schema.ForeignKeys.Select(foreignKey => new ForeignKeyInfo(foreignKey.Name)
+                {
+                    Columns = foreignKey.Columns,
+                    ReferencedTable = Map(foreignKey.ReferencedTable),
+                    ReferencedColumns = foreignKey.ReferencedColumns,
+                    UpdateRule = foreignKey.UpdateRule,
+                    DeleteRule = foreignKey.DeleteRule
+                }).ToList()
+            }).ToList();
+            var duplicate = result.GroupBy(schema => schema.Table).FirstOrDefault(group => group.Count() > 1);
+            if (duplicate != null)
+            {
+                throw new ArgumentException($"More than one table is created as '{GetName(duplicate.Key)}'.", "mappings");
+            }
+            return result;
         }
 
         #endregion
@@ -452,7 +506,7 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="name">The name of the table.</param>
         /// <returns>The name without the quotes.</returns>
-        private static string Unquote(string name) =>
+        internal static string Unquote(string name) =>
             name.Trim().Replace("[", string.Empty).Replace("]", string.Empty).Replace("\"", string.Empty).Replace("`", string.Empty);
 
         /// <summary>
@@ -482,11 +536,14 @@ namespace RepoDb.Schema
             /// </summary>
             /// <param name="columns">The distinct names of the source columns to be created (<c>null</c> if all the columns are created).</param>
             /// <param name="renamed">The new names of the columns by the source column name (<c>null</c> if no column is renamed).</param>
+            /// <param name="targetName">The name of the table in the destination database (<c>null</c> if the table keeps its name).</param>
             public Selection(IList<string> columns,
-                IDictionary<string, string> renamed)
+                IDictionary<string, string> renamed,
+                string targetName)
             {
                 Columns = columns;
                 Renamed = renamed;
+                TargetName = targetName;
             }
 
             #endregion
@@ -502,6 +559,11 @@ namespace RepoDb.Schema
             /// Gets the new names of the columns by the source column name (<c>null</c> if no column is renamed).
             /// </summary>
             public IDictionary<string, string> Renamed { get; }
+
+            /// <summary>
+            /// Gets the name of the table in the destination database (<c>null</c> if the table keeps its name).
+            /// </summary>
+            public string TargetName { get; }
 
             #endregion
         }
