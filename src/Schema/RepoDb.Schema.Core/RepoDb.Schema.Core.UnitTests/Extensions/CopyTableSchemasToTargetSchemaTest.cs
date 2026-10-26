@@ -315,7 +315,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var destination = GetDestination();
 
             // Act
-            var result = new CustomDbConnection().CopyTableSchemaTo("Invoice", destination, "archive").Items.Single();
+            var result = new CustomDbConnection().CopyTableSchemaTo("Invoice", destination, targetSchema: "archive").Items.Single();
 
             // Assert
             Assert.AreEqual("archive", result.Target.Table.Table.Schema);
@@ -388,7 +388,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer();
 
             // Act
-            var result = (await new CustomDbConnection().CopyTableSchemaToAsync("Invoice", GetDestination(), "archive")).Items.Single();
+            var result = (await new CustomDbConnection().CopyTableSchemaToAsync("Invoice", GetDestination(), targetSchema: "archive")).Items.Single();
 
             // Assert
             Assert.AreEqual("archive", result.Target.Table.Table.Schema);

@@ -39,6 +39,7 @@ namespace RepoDb.Schema
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="columns">The names of the columns of the source table to be copied. The default is <c>null</c>, which copies all the columns.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="TableExistsBehavior.Skip"/>.</param>
@@ -48,10 +49,10 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <returns>The <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
         public static CopyTableSchemaResult CopyTableSchemaTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
+            string targetTable = null,
             string targetSchema = null,
             string[] columns = null,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
@@ -60,10 +61,9 @@ namespace RepoDb.Schema
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
-            IDbTransaction transaction = null,
-            string targetTable = null)
+            IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction, targetTable);
+            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetTable, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -72,6 +72,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The source connection.</param>
         /// <param name="tableName">The name of the table to be copied.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="columns">The names of the columns of the source table to be copied. The default is <c>null</c>, which copies all the columns.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="TableExistsBehavior.Skip"/>.</param>
@@ -81,11 +82,11 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <returns>The <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
         public static CopyTableSchemaResult CopyTableSchemaTo(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
+            string targetTable = null,
             string targetSchema = null,
             string[] columns = null,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
@@ -94,8 +95,7 @@ namespace RepoDb.Schema
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
-            IDbTransaction transaction = null,
-            string targetTable = null)
+            IDbTransaction transaction = null)
         {
             Validate(connection, tableName, destinationConnection);
 
@@ -155,6 +155,7 @@ namespace RepoDb.Schema
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="columns">The names of the columns of the source table to be copied. The default is <c>null</c>, which copies all the columns.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="TableExistsBehavior.Skip"/>.</param>
@@ -164,11 +165,11 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
         public static Task<CopyTableSchemaResult> CopyTableSchemaToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
+            string targetTable = null,
             string targetSchema = null,
             string[] columns = null,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
@@ -178,10 +179,9 @@ namespace RepoDb.Schema
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
-            string targetTable = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction, targetTable, cancellationToken);
+            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetTable, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -190,6 +190,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The source connection.</param>
         /// <param name="tableName">The name of the table to be copied.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="columns">The names of the columns of the source table to be copied. The default is <c>null</c>, which copies all the columns.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="TableExistsBehavior.Skip"/>.</param>
@@ -199,12 +200,12 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
         public static async Task<CopyTableSchemaResult> CopyTableSchemaToAsync(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
+            string targetTable = null,
             string targetSchema = null,
             string[] columns = null,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
@@ -214,7 +215,6 @@ namespace RepoDb.Schema
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
-            string targetTable = null,
             CancellationToken cancellationToken = default)
         {
             Validate(connection, tableName, destinationConnection);
@@ -276,6 +276,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="mappings">The columns of the source table to be copied, as <see cref="ColumnMapping"/> (the source column and its name in the destination table).</param>
+        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="TableExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="RelatedTableBehavior.TableOnly"/>.</param>
@@ -284,11 +285,11 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <returns>The <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
         public static CopyTableSchemaResult CopyTableSchemaTo<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             IList<ColumnMapping> mappings,
+            string targetTable = null,
             string targetSchema = null,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             RelatedTableBehavior relationshipBehavior = RelatedTableBehavior.TableOnly,
@@ -296,10 +297,9 @@ namespace RepoDb.Schema
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
-            IDbTransaction transaction = null,
-            string targetTable = null)
+            IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, targetSchema, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction, targetTable);
+            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, targetTable, targetSchema, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -309,6 +309,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table to be copied.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="mappings">The columns of the source table to be copied, as <see cref="ColumnMapping"/> (the source column and its name in the destination table).</param>
+        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="TableExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="RelatedTableBehavior.TableOnly"/>.</param>
@@ -317,12 +318,12 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <returns>The <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
         public static CopyTableSchemaResult CopyTableSchemaTo(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
             IList<ColumnMapping> mappings,
+            string targetTable = null,
             string targetSchema = null,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             RelatedTableBehavior relationshipBehavior = RelatedTableBehavior.TableOnly,
@@ -330,8 +331,7 @@ namespace RepoDb.Schema
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
-            IDbTransaction transaction = null,
-            string targetTable = null)
+            IDbTransaction transaction = null)
         {
             Validate(connection, tableName, destinationConnection);
             ColumnSelector.Normalize(mappings, out _, out _);
@@ -406,6 +406,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="mappings">The columns of the source table to be copied, as <see cref="ColumnMapping"/> (the source column and its name in the destination table).</param>
+        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="TableExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="RelatedTableBehavior.TableOnly"/>.</param>
@@ -414,12 +415,12 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
         public static Task<CopyTableSchemaResult> CopyTableSchemaToAsync<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(this IDbConnection connection,
             IDbConnection destinationConnection,
             IList<ColumnMapping> mappings,
+            string targetTable = null,
             string targetSchema = null,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             RelatedTableBehavior relationshipBehavior = RelatedTableBehavior.TableOnly,
@@ -428,10 +429,9 @@ namespace RepoDb.Schema
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
-            string targetTable = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, targetSchema, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction, targetTable, cancellationToken);
+            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, targetTable, targetSchema, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -441,6 +441,7 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table to be copied.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
         /// <param name="mappings">The columns of the source table to be copied, as <see cref="ColumnMapping"/> (the source column and its name in the destination table).</param>
+        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <param name="targetSchema">The schema of the destination database that the tables are created in. The default is <c>null</c>, which uses the default schema of the destination database.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when the table already exists in the destination database. The default is <see cref="TableExistsBehavior.Skip"/>.</param>
         /// <param name="relationshipBehavior">Defines which related tables (through the foreign keys) are copied together with the table. The default is <see cref="RelatedTableBehavior.TableOnly"/>.</param>
@@ -449,13 +450,13 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used. The default is <see cref="SchemaTraceKeys.CopyTableSchemaTo"/>.</param>
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
-        /// <param name="targetTable">The name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyTableSchemaResult"/> that describes the schema copy operation.</returns>
         public static async Task<CopyTableSchemaResult> CopyTableSchemaToAsync(this IDbConnection connection,
             string tableName,
             IDbConnection destinationConnection,
             IList<ColumnMapping> mappings,
+            string targetTable = null,
             string targetSchema = null,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
             RelatedTableBehavior relationshipBehavior = RelatedTableBehavior.TableOnly,
@@ -464,7 +465,6 @@ namespace RepoDb.Schema
             string traceKey = SchemaTraceKeys.CopyTableSchemaTo,
             ITrace trace = null,
             IDbTransaction transaction = null,
-            string targetTable = null,
             CancellationToken cancellationToken = default)
         {
             Validate(connection, tableName, destinationConnection);
