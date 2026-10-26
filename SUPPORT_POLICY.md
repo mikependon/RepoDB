@@ -4,6 +4,8 @@ RepoDB is primarily maintained by a single entity and this entity is a person an
 
 When doing an operational support, we will not enforce any monetray contributions from the other party as all kind of support is always free. 💸🚫
 
+For which versions are supported, see the [Versioning Policy](VERSIONING_POLICY.md#-v1x-long-term-support) (the `v1.x.x` line is supported for 12 months after `v2.0.0` is released) and the [Security Policy](SECURITY.md#-supported-versions).
+
 ### Support Process 🛠️
 
 #### Kind of Support 📋

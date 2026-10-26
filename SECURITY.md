@@ -4,7 +4,7 @@ RepoDB takes security seriously, but is honest about what that means in practice
 
 ## 📦 Supported Versions
 
-Only the **latest published release** of each RepoDB package (see the [package list](PACKAGES.md)) receives security fixes. There is no formal backport policy — fixes ship forward as a new version, not as a patch to an older major/minor line (see our [Versioning Policy](VERSIONING_POLICY.md)).
+Only the **latest published release** of each RepoDB package (see the [package list](PACKAGES.md)) receives security fixes, with one exception: the final `v1.x.x` line continues to receive security fixes (as patches) for 12 months after `v2.0.0` is released. See [v1.x Long-Term Support](VERSIONING_POLICY.md#-v1x-long-term-support). Outside of that window, there is no formal backport policy — fixes ship forward as a new version, not as a patch to an older major/minor line (see our [Versioning Policy](VERSIONING_POLICY.md)).
 
 If you're running an older version, upgrade to the latest before reporting — the issue may already be fixed.
 
