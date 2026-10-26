@@ -31,6 +31,7 @@ namespace RepoDb.Schema
                 c.is_nullable AS IsNullable,
                 c.is_identity AS IsIdentity,
                 c.collation_name AS Collation,
+                CONVERT(int, COLLATIONPROPERTY(c.collation_name, 'CodePage')) AS CodePage,
                 dc.definition AS DefaultDefinition,
                 cc.definition AS ComputedDefinition,
                 CAST(idc.seed_value AS bigint) AS IdentitySeed,

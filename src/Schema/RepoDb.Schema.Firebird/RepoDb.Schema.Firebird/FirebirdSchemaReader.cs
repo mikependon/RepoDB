@@ -522,7 +522,9 @@ namespace RepoDb.Schema
         {
             using (var reader = _connection.ExecuteReader(sql,
                 param: ToParameters(parameters),
-                traceKey: traceKey,
+                traceKey: SchemaReadContext.Current?.TraceKey ?? traceKey,
+                commandTimeout: SchemaReadContext.Current?.CommandTimeout,
+                trace: SchemaReadContext.Current?.Trace,
                 transaction: _transaction))
             {
                 var list = new List<T>();
@@ -553,7 +555,9 @@ namespace RepoDb.Schema
         {
             using (var reader = await _connection.ExecuteReaderAsync(sql,
                 param: ToParameters(parameters),
-                traceKey: traceKey,
+                traceKey: SchemaReadContext.Current?.TraceKey ?? traceKey,
+                commandTimeout: SchemaReadContext.Current?.CommandTimeout,
+                trace: SchemaReadContext.Current?.Trace,
                 transaction: _transaction,
                 cancellationToken: cancellationToken).ConfigureAwait(false))
             {
@@ -655,7 +659,7 @@ namespace RepoDb.Schema
                 defaultDefinition != null,
                 Provider);
 
-            return new ColumnInfo
+            return SchemaColumnMetadata.Apply(new ColumnInfo
             {
                 Field = field,
                 Ordinal = Int(r, "Ordinal"),
@@ -664,7 +668,7 @@ namespace RepoDb.Schema
                 DefaultExpression = defaultDefinition,
                 DefaultValue = SchemaDefaultValue.Classify(defaultDefinition),
                 ComputedExpression = ToComputedExpression(Text(r, "ComputedDefinition"))
-            };
+            }, r);
         }
 
         /// <summary>

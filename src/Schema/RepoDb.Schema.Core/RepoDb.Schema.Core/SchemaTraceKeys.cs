@@ -81,6 +81,21 @@ namespace RepoDb.Schema
         public const string ResolveSchemaName = "ResolveSchemaName";
 
         /// <summary>
+        /// The trace key for saving JSON definitions.
+        /// </summary>
+        public const string SaveDefinitionAsJson = "SaveDefinitionAsJson";
+
+        /// <summary>
+        /// The trace key for saving XML definitions.
+        /// </summary>
+        public const string SaveDefinitionAsXml = "SaveDefinitionAsXml";
+
+        /// <summary>
+        /// The trace key for saving YAML definitions.
+        /// </summary>
+        public const string SaveDefinitionAsYaml = "SaveDefinitionAsYaml";
+
+        /// <summary>
         /// The trace key used when the existence of a table is being checked.
         /// </summary>
         public const string TableExists = "TableExists";

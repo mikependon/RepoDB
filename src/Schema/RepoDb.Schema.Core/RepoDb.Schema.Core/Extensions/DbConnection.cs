@@ -11,7 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using RepoDb.Exceptions;
@@ -22,11 +24,70 @@ using RepoDb.Schema.Models;
 namespace RepoDb.Schema
 {
     /// <summary>
-    /// Contains the helper methods of the <see cref="CopyTableSchemaToExtension"/> class: the checks of the destination tables, the reports of the results and the validation of the arguments.
+    /// Contains the helper methods for copying table schemas and extracting definitions, including destination checks, result reporting, and argument validation.
     /// </summary>
     internal static class DbConnectionExtension
     {
         #region Methods
+
+        /// <summary>
+        /// Extracts the selected table schemas and saves their definition in the requested format.
+        /// </summary>
+        /// <param name="connection">The source connection with a registered schema reader.</param>
+        /// <param name="tableName">The source table, optionally schema-qualified.</param>
+        /// <param name="filename">The output filename.</param>
+        /// <param name="relationshipBehavior">The related tables to include.</param>
+        /// <param name="commandTimeout">The catalog query timeout in seconds.</param>
+        /// <param name="traceKey">The tracking key for catalog queries.</param>
+        /// <param name="trace">The catalog query trace.</param>
+        /// <param name="format">The output format: yaml, json, or xml.</param>
+        internal static void SaveDefinition(IDbConnection connection,
+            string tableName,
+            string filename,
+            RelatedTableBehavior relationshipBehavior,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            string format)
+        {
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentException("A table name is required.", nameof(tableName));
+            if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException("A filename is required.", nameof(filename));
+            if (!Enum.IsDefined(typeof(RelatedTableBehavior), relationshipBehavior)) throw new ArgumentOutOfRangeException(nameof(relationshipBehavior));
+            if (commandTimeout < 0) throw new ArgumentOutOfRangeException(nameof(commandTimeout));
+            var path = Path.GetFullPath(filename);
+            var reader = SchemaReaderMapper.Get(connection) ?? throw new MissingMappingException(
+                $"There is no schema reader mapping for '{connection.GetType().FullName}'. Register one through SchemaReaderMapper.");
+
+            string content;
+            using (new SchemaReadContext(commandTimeout, traceKey, trace))
+            {
+                if (!reader.TableExists(tableName)) throw new InvalidOperationException($"The table '{tableName}' does not exist.");
+                var root = reader.GetTableSchema(tableName);
+                var names = relationshipBehavior == RelatedTableBehavior.TableOnly
+                    ? new[] { tableName }
+                    : reader.GetRelatedTables(new[] { tableName }, relationshipBehavior);
+                var tables = names.Select(name => string.Equals(name, tableName, StringComparison.Ordinal) ? root : reader.GetTableSchema(name))
+                    .Concat(new[] { root }).GroupBy(table => table.Table).Select(group => group.First()).ToList();
+                var definition = SchemaDefinition.Create(root.Table, tables, relationshipBehavior);
+                content = SchemaDefinitionSerializer.Serialize(definition, format);
+            }
+
+            // Keep the temporary file on the same volume to allow atomic replacement.
+            var temporary = Path.Combine(Path.GetDirectoryName(path), ".repodb-" + Guid.NewGuid().ToString("N") + ".tmp");
+            try
+            {
+                using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+                using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true)))
+                    writer.Write(content);
+                if (File.Exists(path)) File.Replace(temporary, path, null);
+                else File.Move(temporary, path);
+            }
+            finally
+            {
+                if (File.Exists(temporary)) File.Delete(temporary);
+            }
+        }
 
         /// <summary>
         /// Gets the schema of the destination database that the tables are created in: the given one, or the default schema of the setting of the destination connection (see <see cref="IDbSetting.DefaultSchema"/>).

@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -19,14 +19,24 @@ namespace RepoDb.Schema.Models
         #region Properties
 
         /// <summary>
-        /// Gets or sets the base field information (name, type, size, precision, scale, nullability, primary and identity flags).
+        /// Gets the character set reported by the provider, or null when unknown.
         /// </summary>
-        public DbField Field { get; internal set; }
+        public string CharacterSet { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the position of the column within the table (starting at 1).
+        /// Gets or sets the collation of the column, or <c>null</c> if it is not applicable.
         /// </summary>
-        public int Ordinal { get; internal set; }
+        public string Collation { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the comment of the column, or null if there is none.
+        /// </summary>
+        public string Comment { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the expression of a computed or generated column, or <c>null</c> if the column is not computed.
+        /// </summary>
+        public string ComputedExpression { get; internal set; }
 
         /// <summary>
         /// Gets or sets the default expression of the column, or <c>null</c> if there is none.
@@ -40,9 +50,9 @@ namespace RepoDb.Schema.Models
         public ColumnDefaultValue DefaultValue { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the seed of the identity column, or <c>null</c> if the column is not an identity.
+        /// Gets or sets the base field information (name, type, size, precision, scale, nullability, primary and identity flags).
         /// </summary>
-        public long? IdentitySeed { get; internal set; }
+        public DbField Field { get; internal set; }
 
         /// <summary>
         /// Gets or sets the increment of the identity column, or <c>null</c> if the column is not an identity.
@@ -50,19 +60,44 @@ namespace RepoDb.Schema.Models
         public long? IdentityIncrement { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the expression of a computed or generated column, or <c>null</c> if the column is not computed.
+        /// Gets or sets the seed of the identity column, or <c>null</c> if the column is not an identity.
         /// </summary>
-        public string ComputedExpression { get; internal set; }
+        public long? IdentitySeed { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the collation of the column, or <c>null</c> if it is not applicable.
+        /// Gets whether the text encoding supports Unicode, or null when unknown.
         /// </summary>
-        public string Collation { get; internal set; }
+        public bool? IsUnicode { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the comment of the column, or <c>null</c> if there is none.
+        /// Gets the unit of Field.Size (bytes, characters, or utf16CodeUnits), or null when unknown.
         /// </summary>
-        public string Comment { get; internal set; }
+        public string LengthUnit { get; internal set; }
+
+        /// <summary>
+        /// Gets the full provider type declaration when available.
+        /// </summary>
+        public string NativeType { get; internal set; }
+
+        /// <summary>
+        /// Gets the numeric precision without DbField's byte limit, or null when unknown.
+        /// </summary>
+        public int? NumericPrecision { get; internal set; }
+
+        /// <summary>
+        /// Gets the numeric scale, including negative scales, or null when unknown.
+        /// </summary>
+        public int? NumericScale { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the position of the column within the table (starting at 1).
+        /// </summary>
+        public int Ordinal { get; internal set; }
+
+        /// <summary>
+        /// Gets the fractional-second precision, or null when unknown.
+        /// </summary>
+        public int? TemporalPrecision { get; internal set; }
 
         #endregion
 
@@ -94,7 +129,14 @@ namespace RepoDb.Schema.Models
             hashCode.Add(IdentityIncrement);
             hashCode.Add(ComputedExpression);
             hashCode.Add(Collation);
+            hashCode.Add(NativeType);
+            hashCode.Add(NumericPrecision);
+            hashCode.Add(NumericScale);
             hashCode.Add(Comment);
+            hashCode.Add(CharacterSet);
+            hashCode.Add(IsUnicode);
+            hashCode.Add(LengthUnit);
+            hashCode.Add(TemporalPrecision);
             return hashCode.ToHashCode();
         }
 
@@ -124,7 +166,14 @@ namespace RepoDb.Schema.Models
                 && Equals(IdentityIncrement, other.IdentityIncrement)
                 && Equals(ComputedExpression, other.ComputedExpression)
                 && Equals(Collation, other.Collation)
-                && Equals(Comment, other.Comment);
+                && Equals(NativeType, other.NativeType)
+                && Equals(NumericPrecision, other.NumericPrecision)
+                && Equals(NumericScale, other.NumericScale)
+                && Equals(Comment, other.Comment)
+                && Equals(CharacterSet, other.CharacterSet)
+                && Equals(IsUnicode, other.IsUnicode)
+                && Equals(LengthUnit, other.LengthUnit)
+                && Equals(TemporalPrecision, other.TemporalPrecision);
         }
 
         /// <summary>

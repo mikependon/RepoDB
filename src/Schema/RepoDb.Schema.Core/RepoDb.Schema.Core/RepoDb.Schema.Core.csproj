@@ -82,6 +82,7 @@
     <InternalsVisibleTo Include="RepoDb.Schema.Sqlite.Microsoft.IntegrationTests" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="10.0.13" />
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>

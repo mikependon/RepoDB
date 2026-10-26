@@ -552,7 +552,9 @@ namespace RepoDb.Schema
             var currentSchema = RefersToCurrentSchema(parameters) || sql.Contains("@CurrentSchema") ? CurrentSchema() : null;
             using (var reader = _connection.ExecuteReader(sql,
                 param: ToParameters(parameters, currentSchema),
-                traceKey: traceKey,
+                traceKey: SchemaReadContext.Current?.TraceKey ?? traceKey,
+                commandTimeout: SchemaReadContext.Current?.CommandTimeout,
+                trace: SchemaReadContext.Current?.Trace,
                 transaction: _transaction))
             {
                 var list = new List<T>();
@@ -584,7 +586,9 @@ namespace RepoDb.Schema
             var currentSchema = RefersToCurrentSchema(parameters) || sql.Contains("@CurrentSchema") ? await CurrentSchemaAsync(cancellationToken).ConfigureAwait(false) : null;
             using (var reader = await _connection.ExecuteReaderAsync(sql,
                 param: ToParameters(parameters, currentSchema),
-                traceKey: traceKey,
+                traceKey: SchemaReadContext.Current?.TraceKey ?? traceKey,
+                commandTimeout: SchemaReadContext.Current?.CommandTimeout,
+                trace: SchemaReadContext.Current?.Trace,
                 transaction: _transaction,
                 cancellationToken: cancellationToken).ConfigureAwait(false))
             {
@@ -682,7 +686,7 @@ namespace RepoDb.Schema
                 !string.IsNullOrWhiteSpace(defaultDefinition),
                 Provider);
 
-            return new ColumnInfo
+            return SchemaColumnMetadata.Apply(new ColumnInfo
             {
                 Field = field,
                 Ordinal = Int(r, "Ordinal"),
@@ -690,7 +694,7 @@ namespace RepoDb.Schema
                 IdentityIncrement = NullableLong(r, "IdentityIncrement"),
                 DefaultExpression = string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition,
                 DefaultValue = SchemaDefaultValue.Classify(string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition)
-            };
+            }, r);
         }
 
         /// <summary>

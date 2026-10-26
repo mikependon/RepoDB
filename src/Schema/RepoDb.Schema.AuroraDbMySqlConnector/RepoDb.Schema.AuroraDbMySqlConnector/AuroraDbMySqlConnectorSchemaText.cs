@@ -24,6 +24,8 @@ namespace RepoDb.Schema
                 c.DATA_TYPE AS TypeName,
                 c.COLUMN_TYPE AS ColumnType,
                 c.CHARACTER_MAXIMUM_LENGTH AS MaxLength,
+                c.CHARACTER_SET_NAME AS CharacterSet,
+                c.DATETIME_PRECISION AS TemporalPrecision,
                 c.NUMERIC_PRECISION AS `Precision`,
                 COALESCE(c.NUMERIC_SCALE, c.DATETIME_PRECISION) AS `Scale`,
                 CASE WHEN c.IS_NULLABLE = 'YES' THEN 1 ELSE 0 END AS IsNullable,

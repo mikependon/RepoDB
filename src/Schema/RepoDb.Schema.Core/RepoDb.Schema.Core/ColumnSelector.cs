@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -449,7 +449,14 @@ namespace RepoDb.Schema
                 IdentityIncrement = column.IdentityIncrement,
                 ComputedExpression = column.ComputedExpression,
                 Collation = column.Collation,
-                Comment = column.Comment
+                Comment = column.Comment,
+                CharacterSet = column.CharacterSet,
+                IsUnicode = column.IsUnicode,
+                LengthUnit = column.LengthUnit,
+                NativeType = column.NativeType,
+                NumericPrecision = column.NumericPrecision,
+                NumericScale = column.NumericScale,
+                TemporalPrecision = column.TemporalPrecision
             };
         }
 

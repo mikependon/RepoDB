@@ -474,7 +474,9 @@ namespace RepoDb.Schema
         {
             using (var reader = _connection.ExecuteReader(sql,
                 param: ToParameters(parameters),
-                traceKey: traceKey,
+                traceKey: SchemaReadContext.Current?.TraceKey ?? traceKey,
+                commandTimeout: SchemaReadContext.Current?.CommandTimeout,
+                trace: SchemaReadContext.Current?.Trace,
                 transaction: _transaction))
             {
                 var list = new List<T>();
@@ -505,7 +507,9 @@ namespace RepoDb.Schema
         {
             using (var reader = await _connection.ExecuteReaderAsync(sql,
                 param: ToParameters(parameters),
-                traceKey: traceKey,
+                traceKey: SchemaReadContext.Current?.TraceKey ?? traceKey,
+                commandTimeout: SchemaReadContext.Current?.CommandTimeout,
+                trace: SchemaReadContext.Current?.Trace,
                 transaction: _transaction,
                 cancellationToken: cancellationToken).ConfigureAwait(false))
             {
@@ -763,7 +767,12 @@ namespace RepoDb.Schema
                     DefaultExpression = column.Default,
                     DefaultValue = SchemaDefaultValue.Classify(column.Default),
                     ComputedExpression = column.Hidden >= 2 ? parsed?.GeneratedExpression : null,
-                    Collation = parsed?.Collation
+                    Collation = parsed?.Collation,
+                    NativeType = column.DeclaredType,
+                    NumericPrecision = isNumeric && arguments.Count > 0 ? (int?)arguments[0] : null,
+                    NumericScale = isNumeric && arguments.Count > 1 ? (int?)arguments[1] : null,
+                    IsUnicode = clientType == typeof(string) ? (bool?)true : null,
+                    LengthUnit = clientType == typeof(string) ? "characters" : null
                 });
             }
             return columns;
