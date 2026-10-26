@@ -58,6 +58,8 @@ Improve your productivity with Desktop Studio. Plan, prioritize and manage your 
 
 <img width="1278" height="762" alt="image" src="https://github.com/user-attachments/assets/6473902b-8c7b-42fb-9880-5d04a2b0b587" />
 
+<img width="1277" height="761" alt="Screenshot 2026-10-26 073450" src="https://github.com/user-attachments/assets/c9eda351-62a4-46c4-930f-7a05821cbb87" />
+
 The Desktop Studio is still being developed, but it is available as per request. Please send us an email if you would like to try.
 
 ## Get Started
