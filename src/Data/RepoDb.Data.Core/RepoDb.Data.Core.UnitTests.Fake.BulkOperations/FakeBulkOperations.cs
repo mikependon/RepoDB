@@ -310,6 +310,8 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
     /// </summary>
     public abstract class FakeBulkConnectionBase : DbConnection
     {
+        public int ScalarExecutions { get; set; }
+
         public override string ConnectionString { get; set; }
 
         public override string Database { get; }

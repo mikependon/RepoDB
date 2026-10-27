@@ -738,7 +738,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             Assert.AreEqual(3, call.RowCount);
             CollectionAssert.AreEqual(new[] { "Id" }, call.Qualifiers);
             Assert.AreEqual(3, options.RowCount);
-            Assert.AreEqual(0L, options.Items.Single().SkippedRowCount);
+            Assert.IsNull(options.Items.Single().SkippedRowCount);
         }
 
         [TestMethod]

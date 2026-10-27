@@ -101,8 +101,11 @@ namespace RepoDb.Data.Core.UnitTests.Fake.BulkOperations
         }
 
         /// <inheritdoc />
-        public override object ExecuteScalar() =>
-            null;
+        public override object ExecuteScalar()
+        {
+            ((FakeBulkConnectionBase)Connection).ScalarExecutions++;
+            return null;
+        }
 
         /// <inheritdoc />
         public override void Prepare()

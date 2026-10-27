@@ -244,7 +244,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 var progress = new List<(int Batch, int Rows, int Total, DateTime Start, DateTime End)>();
 
                 // Act
-                var actual = source.CopyDataTo("Number", target, bufferSize: 500, progressCallback: p => progress.Add((p.BatchCount, p.CurrentBatch.RowCount, p.RowCount, p.StartTime, p.EndTime))).RowCount;
+                var actual = source.CopyDataTo("Number", target, bufferSize: 500, progressCallback: p => { if (p.CurrentBatch != null) progress.Add((p.BatchCount, p.CurrentBatch.RowCount, p.RowCount, p.StartTime, p.EndTime)); }).RowCount;
 
                 // Assert
                 Assert.AreEqual(2500, actual);
@@ -557,7 +557,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                 var progress = new List<(int Rows, int Total)>();
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Number", target, bufferSize: 500, progressCallback: p => progress.Add((p.CurrentBatch.RowCount, p.RowCount)))).RowCount;
+                var actual = (await source.CopyDataToAsync("Number", target, bufferSize: 500, progressCallback: p => { if (p.CurrentBatch != null) progress.Add((p.CurrentBatch.RowCount, p.RowCount)); })).RowCount;
 
                 // Assert
                 Assert.AreEqual(2500, actual);

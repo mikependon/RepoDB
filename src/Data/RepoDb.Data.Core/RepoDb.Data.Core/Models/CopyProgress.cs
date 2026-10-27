@@ -14,7 +14,7 @@ namespace RepoDb.Data.Models
 {
     /// <summary>
     /// A class that holds the details of a copy operation: when it ran, how much it has copied so far, and the tables that it copied
-    /// (each one with its source and its target table, its batches and its logs). The same instance is passed to the progress callback after every batch,
+    /// (each one with its source and its target table, its batches and its logs). The same instance is passed to the progress callback after each source table is counted, then after every batch,
     /// so read what is needed inside the callback.
     /// </summary>
     public class CopyProgress
@@ -66,6 +66,20 @@ namespace RepoDb.Data.Models
         /// Gets the number of rows that were copied so far, for all the tables.
         /// </summary>
         public int RowCount { get; internal set; }
+
+        /// <summary>
+        /// Gets the estimated cumulative bytes of copied values, excluding object overhead and wire encoding.
+        /// Strings use two bytes per character; nulls and unsupported provider-specific values contribute zero.
+        /// </summary>
+        public long CopiedBytes { get; internal set; }
+
+        /// <summary>
+        /// Gets the source rows to copy, measured before copying with the source filter applied.
+        /// During counting callbacks this total accumulates after each source table is counted.
+        /// </summary>
+        public long TotalRowCount { get; internal set; }
+
+        internal IDictionary<string, long> SourceRowCounts { get; } = new Dictionary<string, long>();
 
         /// <summary>
         /// Gets the number of rows that were copied per second so far, or <c>0</c> if no time has passed.

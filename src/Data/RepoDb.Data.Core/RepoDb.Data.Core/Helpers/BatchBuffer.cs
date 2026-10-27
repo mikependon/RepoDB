@@ -88,6 +88,23 @@ namespace RepoDb.Data.Helpers
         /// </summary>
         public int Count => _table.Rows.Count;
 
+        /// <summary>Gets the estimated bytes of the buffered values.</summary>
+        public long CopiedBytes
+        {
+            get
+            {
+                long bytes = 0;
+                foreach (DataRow row in _table.Rows)
+                {
+                    for (var i = 0; i < _table.Columns.Count; i++)
+                    {
+                        bytes += CopySize.OfValue(row[i]);
+                    }
+                }
+                return bytes;
+            }
+        }
+
         /// <summary>
         /// Checks whether the batches have a column with the specified name (the case is ignored). With interceptors, the columns are known when the first row is buffered.
         /// </summary>

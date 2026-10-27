@@ -260,8 +260,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(2, FakeBulkOperations.Calls.Length);
-            StringAssert.Contains(source.Executions.Single().CommandText, "WHERE");
-            Assert.AreEqual(1, source.Executions.Single().Parameters.Values.Single());
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "WHERE");
+            Assert.AreEqual(1, source.Executions.Single(e => e.Kind == "Reader").Parameters.Values.Single());
         }
 
         [TestMethod]
@@ -303,7 +303,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             source.CopyDataTo("Person", name, Filter());
 
             // Assert
-            StringAssert.Contains(source.Executions.Single().CommandText, "WHERE");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "WHERE");
         }
 
         [TestMethod]
@@ -319,7 +319,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             // Assert
             Assert.AreEqual(3, actual);
             Assert.AreEqual("Customer", Call().TableName);
-            StringAssert.Contains(source.Executions.Single().CommandText, "[Person]");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "[Person]");
         }
 
         [TestMethod]
@@ -357,7 +357,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             source.CopyDataTo<Person>(new FakeBulkDbConnection(), p => p.Id > 1);
 
             // Assert
-            StringAssert.Contains(source.Executions.Single().CommandText, "WHERE");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "WHERE");
         }
 
         [TestMethod]
@@ -381,7 +381,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             source.CopyDataTo<Person>("Customer", new FakeBulkDbConnection(), p => p.Id > 1);
 
             // Assert
-            StringAssert.Contains(source.Executions.Single().CommandText, "WHERE");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "WHERE");
         }
 
         [TestMethod]
@@ -410,7 +410,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             Assert.AreEqual(250, call.BatchSize);
             Assert.AreEqual(12, call.Timeout);
             Assert.AreSame(transaction, call.Transaction);
-            Assert.AreEqual(12, source.Executions.Single().CommandTimeout);
+            Assert.AreEqual(12, source.Executions.Single(e => e.Kind == "Reader").CommandTimeout);
         }
 
         [TestMethod]
@@ -421,7 +421,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Act
             var actual = new FakeDbConnection().CopyDataTo("Person", "Customer", new FakeBulkDbConnection(),
-                progressCallback: p => progress.Add((p.BatchCount, p.CurrentBatch.RowCount, p.RowCount, p.StartTime, p.EndTime))).RowCount;
+                progressCallback: p => { if (p.CurrentBatch != null) progress.Add((p.BatchCount, p.CurrentBatch.RowCount, p.RowCount, p.StartTime, p.EndTime)); }).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -491,7 +491,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual("BulkMerge", FakeBulkOperations.Calls.Single().Method);
-            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Name]");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "[Name] AS [Name]");
         }
 
         [TestMethod]
@@ -641,7 +641,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var times = new List<(DateTime Start, DateTime End, DateTime OperationStart, DateTime OperationEnd)>();
 
             // Act
-            source.CopyDataTo("Person", "Customer", destination, bufferSize: 2, progressCallback: p => times.Add((p.CurrentBatch.StartTime, p.CurrentBatch.EndTime, p.StartTime, p.EndTime)));
+            source.CopyDataTo("Person", "Customer", destination, bufferSize: 2, progressCallback: p => { if (p.CurrentBatch != null) times.Add((p.CurrentBatch.StartTime, p.CurrentBatch.EndTime, p.StartTime, p.EndTime)); });
 
             // Assert
             Assert.AreEqual(2, times.Count);
@@ -659,7 +659,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var batches = new List<int>();
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", destination, bufferSize: 2, progressCallback: p => batches.Add(p.CurrentBatch.RowCount)).RowCount;
+            var actual = source.CopyDataTo("Person", "Customer", destination, bufferSize: 2, progressCallback: p => { if (p.CurrentBatch != null) batches.Add(p.CurrentBatch.RowCount); }).RowCount;
 
             // Assert
             Assert.AreEqual(5, actual);
@@ -912,7 +912,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             await source.CopyDataToAsync<Person>(new FakeBulkDbConnection(), p => p.Id > 1);
 
             // Assert
-            StringAssert.Contains(source.Executions.Single().CommandText, "WHERE");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "WHERE");
         }
 
         [TestMethod]
@@ -936,7 +936,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             await source.CopyDataToAsync<Person>("Customer", new FakeBulkDbConnection(), p => p.Id > 1);
 
             // Assert
-            StringAssert.Contains(source.Executions.Single().CommandText, "WHERE");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "WHERE");
         }
 
         [TestMethod]
@@ -960,7 +960,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             await source.CopyDataToAsync("Person", new FakeBulkDbConnection(), Filter());
 
             // Assert
-            StringAssert.Contains(source.Executions.Single().CommandText, "WHERE");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "WHERE");
         }
 
         [TestMethod]
@@ -991,7 +991,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Act
             var actual = (await new FakeDbConnection().CopyDataToAsync("Person", "Customer", new FakeBulkDbConnection(),
-                progressCallback: p => progress.Add((p.BatchCount, p.CurrentBatch.RowCount, p.RowCount)))).RowCount;
+                progressCallback: p => { if (p.CurrentBatch != null) progress.Add((p.BatchCount, p.CurrentBatch.RowCount, p.RowCount)); })).RowCount;
 
             // Assert
             Assert.AreEqual(3, actual);
@@ -1006,7 +1006,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var batches = new List<int>();
 
             // Act
-            var actual = (await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), bufferSize: 2, progressCallback: p => batches.Add(p.CurrentBatch.RowCount))).RowCount;
+            var actual = (await source.CopyDataToAsync("Person", "Customer", new FakeDbConnection(), bufferSize: 2, progressCallback: p => { if (p.CurrentBatch != null) batches.Add(p.CurrentBatch.RowCount); })).RowCount;
 
             // Assert
             Assert.AreEqual(5, actual);
@@ -1072,7 +1072,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mappings: mappings);
 
             // Assert
-            var commandText = source.Executions.Single().CommandText;
+            var commandText = source.Executions.Single(e => e.Kind == "Reader").CommandText;
             StringAssert.Contains(commandText, "[Id] AS [Id], [Name] AS [Birthday]");
             Assert.IsFalse(commandText.Contains("[Birthday],"));
         }
@@ -1088,7 +1088,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             await source.CopyDataToAsync("Person", "Customer", FakeBulkDestination.Create(), mappings: mappings);
 
             // Assert
-            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "[Name] AS [Birthday]");
         }
 
         [TestMethod]
@@ -1102,8 +1102,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mappings: new List<ColumnMapping>());
 
             // Assert
-            Assert.IsTrue(source.Executions.All(e => !e.CommandText.Contains(" AS ")));
-            Assert.IsTrue(source.Executions.All(e => e.CommandText.Contains("[Id]") && e.CommandText.Contains("[Name]") && e.CommandText.Contains("[Birthday]")));
+            Assert.IsTrue(source.Executions.Where(e => e.Kind == "Reader").All(e => !e.CommandText.Contains(" AS ")));
+            Assert.IsTrue(source.Executions.Where(e => e.Kind == "Reader").All(e => e.CommandText.Contains("[Id]") && e.CommandText.Contains("[Name]") && e.CommandText.Contains("[Birthday]")));
         }
 
         [TestMethod]
@@ -1170,7 +1170,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(3, actual);
-            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "[Name] AS [Birthday]");
         }
 
         [TestMethod]
@@ -1184,7 +1184,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(3, actual);
-            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "[Name] AS [Birthday]");
         }
 
         [TestMethod]
@@ -1198,7 +1198,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             source.CopyDataTo("Person", name, new[] { new ColumnMapping("Name", "Birthday") });
 
             // Assert
-            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "[Name] AS [Birthday]");
         }
 
         [TestMethod]
@@ -1211,8 +1211,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), new[] { new ColumnMapping("Name", "Birthday") }, Filter());
 
             // Assert
-            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
-            StringAssert.Contains(source.Executions.Single().CommandText, "WHERE");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "[Name] AS [Birthday]");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "WHERE");
         }
 
         [TestMethod]
@@ -1227,7 +1227,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(3, actual);
-            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "[Name] AS [Birthday]");
         }
 
         [TestMethod]
@@ -1241,7 +1241,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual(3, actual);
-            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "[Name] AS [Birthday]");
         }
 
         [TestMethod]
@@ -1255,7 +1255,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             await source.CopyDataToAsync("Person", name, new[] { new ColumnMapping("Name", "Birthday") });
 
             // Assert
-            StringAssert.Contains(source.Executions.Single().CommandText, "[Name] AS [Birthday]");
+            StringAssert.Contains(source.Executions.Single(e => e.Kind == "Reader").CommandText, "[Name] AS [Birthday]");
         }
 
         [TestMethod]

@@ -50,8 +50,20 @@ namespace RepoDb.Data.Models
         public int RowCount { get; internal set; }
 
         /// <summary>
-        /// Gets the number of rows that were sent to the target table but were not loaded by the database provider (i.e.: a key, a unique or a foreign key
-        /// constraint was violated), or <c>null</c> if it is not known (it is known when the rows of the target table are counted).
+        /// Gets the estimated cumulative bytes of copied values, excluding object overhead and wire encoding.
+        /// Strings use two bytes per character; nulls and unsupported provider-specific values contribute zero.
+        /// </summary>
+        public long CopiedBytes { get; internal set; }
+
+        /// <summary>
+        /// Gets the source rows to copy, measured before copying with the source filter applied.
+        /// During counting callbacks this total accumulates after each source table is counted.
+        /// </summary>
+        public long TotalRowCount { get; internal set; }
+
+        /// <summary>
+        /// Gets the number of rows skipped by the provider, or <c>null</c> when unknown.
+        /// Copying does not query destination row counts, so silently skipped rows cannot be detected.
         /// </summary>
         public long? SkippedRowCount { get; internal set; }
 

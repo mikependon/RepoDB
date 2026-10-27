@@ -60,55 +60,17 @@ namespace RepoDb.Data.Core.UnitTests.Helpers
 
         #endregion
 
-        #region LogBulkInsert
-
         [TestMethod]
-        public void TestLogBulkInsertReturnsNullIfTheRowsOfTheTargetAreNotCounted()
+        public void TestLogBulkInsertReportsRowsSentWithoutInferringSkippedRows()
         {
-            // Setup
-            var progress = new CopyProgress { Current = new CopyProgressItem() };
-
-            // Act
-            var actual = CopyDataLogger.LogBulkInsert(progress, new FakeDbConnection(), "Person", 10, null, 10);
-
-            // Assert
-            Assert.IsNull(actual);
-            Assert.AreEqual(1, progress.Logs.Count);
-            Assert.AreEqual(LogLevel.Info, progress.Logs[0].Level);
-        }
-
-        [TestMethod]
-        public void TestLogBulkInsertReturnsZeroIfAllTheRowsWereLoaded()
-        {
-            // Setup
-            var progress = new CopyProgress { Current = new CopyProgressItem() };
-
-            // Act
-            var actual = CopyDataLogger.LogBulkInsert(progress, new FakeDbConnection(), "Person", 10, 5, 15);
-
-            // Assert
-            Assert.AreEqual(0L, actual);
-            Assert.AreEqual(1, progress.Logs.Count);
-        }
-
-        [TestMethod]
-        public void TestLogBulkInsertReturnsTheNumberOfRowsThatWereSkippedAndLogsAWarning()
-        {
-            // Setup
             var item = new CopyProgressItem();
             var progress = new CopyProgress { Current = item };
-
-            // Act
-            var actual = CopyDataLogger.LogBulkInsert(progress, new FakeDbConnection(), "Person", 10, 5, 12);
-
-            // Assert
-            Assert.AreEqual(3L, actual);
-            Assert.AreEqual(2, progress.Logs.Count);
-            Assert.AreEqual(LogLevel.Warning, progress.Logs[1].Level);
-            StringAssert.Contains(progress.Logs[1].Text, "3 of 10", System.StringComparison.Ordinal);
-            Assert.AreEqual(2, item.Logs.Count);
+            CopyDataLogger.LogBulkInsert(progress, new FakeDbConnection(), "Person", 10);
+            Assert.AreEqual(1, progress.Logs.Count);
+            Assert.AreEqual(LogLevel.Info, progress.Logs[0].Level);
+            StringAssert.Contains(progress.Logs[0].Text, "10 row(s)", System.StringComparison.Ordinal);
+            Assert.AreSame(progress.Logs[0], item.Logs[0]);
+            Assert.IsNull(item.SkippedRowCount);
         }
-
-        #endregion
     }
 }

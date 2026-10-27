@@ -11,8 +11,7 @@ using System;
 namespace RepoDb.Data.Models
 {
     /// <summary>
-    /// A class that holds the details of a batch of rows that was copied into a target table. A provider that has a bulk insert
-    /// receives all the rows of a table in one go, so such a table is reported as one batch.
+    /// A class that holds the details of a batch of rows that was copied into a target table. Rows are buffered and reported one batch at a time.
     /// </summary>
     public class CopyBatch
     {
@@ -37,6 +36,12 @@ namespace RepoDb.Data.Models
         /// Gets the number of rows that were copied by the batch.
         /// </summary>
         public int RowCount { get; internal set; }
+
+        /// <summary>
+        /// Gets the estimated cumulative bytes of copied values, excluding object overhead and wire encoding.
+        /// Strings use two bytes per character; nulls and unsupported provider-specific values contribute zero.
+        /// </summary>
+        public long CopiedBytes { get; internal set; }
 
         /// <summary>
         /// Gets the time (in UTC) when the batch has started.

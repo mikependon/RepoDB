@@ -326,6 +326,43 @@ namespace RepoDb.Data
         }
 
         /// <summary>
+        /// Counts all selected source tables before copying. Each callback exposes the accumulating totals.
+        /// </summary>
+        internal static void CountSourceRows(IDbConnection connection,
+            IList<(string Source, string Target, QueryGroup Where)> tables,
+            CopyProgress progress, Action<CopyProgress> callback, int? commandTimeout, ITrace trace)
+        {
+            foreach (var table in tables)
+            {
+                var count = connection.Count(table.Source, table.Where, commandTimeout: commandTimeout, trace: trace);
+                progress.SourceRowCounts[table.Source] = count;
+                progress.TotalRowCount += count;
+                progress.EndTime = DateTime.UtcNow;
+                callback?.Invoke(progress);
+            }
+        }
+
+        /// <summary>
+        /// Counts the selected source tables asynchronously before copying.
+        /// </summary>
+        internal static async Task CountSourceRowsAsync(IDbConnection connection,
+            IList<(string Source, string Target, QueryGroup Where)> tables,
+            CopyProgress progress, Action<CopyProgress> callback, int? commandTimeout, ITrace trace,
+            CancellationToken cancellationToken)
+        {
+            foreach (var table in tables)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var count = await connection.CountAsync(table.Source, table.Where, commandTimeout: commandTimeout,
+                    trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
+                progress.SourceRowCounts[table.Source] = count;
+                progress.TotalRowCount += count;
+                progress.EndTime = DateTime.UtcNow;
+                callback?.Invoke(progress);
+            }
+        }
+
+        /// <summary>
         /// Copies the rows of the source table into the target table. The rows are read with a data reader that is fed to the bulk insert of the destination connection
         /// (the <c>BulkOperations</c> package of its provider), or to its bulk merge if the rows that already exist are bypassed. If the provider has no bulk insert, the rows of the reader are inserted in batches.
         /// </summary>
@@ -378,35 +415,37 @@ namespace RepoDb.Data
             {
                 if (IsBulkAvailable(destinationConnection, buffer, false, bypassExistingRows))
                 {
-                    var before = bypassExistingRows ? null : CopyDataLogger.Count(destinationConnection, targetTable, transaction);
                     var total = 0;
                     while (buffer.Fill())
                     {
                         EnsureQualifiers(buffer, qualifiers, interceptors != null && item.Batches.Count == 0);
-                        int copied;
                         using (var batchReader = buffer.CreateReader())
                         {
-                            copied = bypassExistingRows
+                            _ = bypassExistingRows
                                 ? BulkInsertInvoker.BulkMerge(destinationConnection, targetTable, batchReader, qualifiers, bufferSize, columnMappingsBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction)
                                 : BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, batchReader, bufferSize, columnMappingsBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction);
                         }
+                        var copied = buffer.Count;
+                        var bytes = buffer.CopiedBytes;
                         total += copied;
                         buffer.Clear();
-                        Report(options, copied, progressCallback);
+                        Report(options, copied, progressCallback, bytes);
                     }
                     if (item.Batches.Count == 0)
                     {
                         Report(options, 0, progressCallback);
                     }
-                    var after = CopyDataLogger.Count(destinationConnection, targetTable, transaction);
-                    RecordCopy(options, item, destinationConnection, targetTable, bypassExistingRows, total, before, after);
+                    RecordCopy(options, destinationConnection, targetTable, bypassExistingRows, total);
                 }
                 else
                 {
                     var action = new Action<IList<object>>((IList<object> b) =>
-                        Report(options, bypassExistingRows
+                    {
+                        _ = bypassExistingRows
                             ? RowInserter.Merge(destinationConnection, targetTable, b, qualifiers, commandTimeout, traceKey, trace, transaction)
-                            : RowInserter.Insert(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction), progressCallback));
+                            : RowInserter.Insert(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction);
+                        Report(options, b.Count, progressCallback, CopySize.OfRows(b));
+                    });
                     var batch = new List<object>(bufferSize);
                     var columns = interceptors == null ? null : RowInterception.GetColumns(reader);
                     while (reader.Read())
@@ -482,35 +521,37 @@ namespace RepoDb.Data
             {
                 if (IsBulkAvailable(destinationConnection, buffer, true, bypassExistingRows))
                 {
-                    var before = bypassExistingRows ? null : await CopyDataLogger.CountAsync(destinationConnection, targetTable, transaction, cancellationToken).ConfigureAwait(false);
                     var total = 0;
                     while (await buffer.FillAsync(cancellationToken).ConfigureAwait(false))
                     {
                         EnsureQualifiers(buffer, qualifiers, interceptors != null && item.Batches.Count == 0);
-                        int copied;
                         using (var batchReader = buffer.CreateReader())
                         {
-                            copied = bypassExistingRows
+                            _ = bypassExistingRows
                                 ? await BulkInsertInvoker.BulkMergeAsync(destinationConnection, targetTable, batchReader, qualifiers, bufferSize, columnMappingsBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false)
                                 : await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, batchReader, bufferSize, columnMappingsBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
                         }
+                        var copied = buffer.Count;
+                        var bytes = buffer.CopiedBytes;
                         total += copied;
                         buffer.Clear();
-                        Report(options, copied, progressCallback);
+                        Report(options, copied, progressCallback, bytes);
                     }
                     if (item.Batches.Count == 0)
                     {
                         Report(options, 0, progressCallback);
                     }
-                    var after = await CopyDataLogger.CountAsync(destinationConnection, targetTable, transaction, cancellationToken).ConfigureAwait(false);
-                    RecordCopy(options, item, destinationConnection, targetTable, bypassExistingRows, total, before, after);
+                    RecordCopy(options, destinationConnection, targetTable, bypassExistingRows, total);
                 }
                 else
                 {
                     var action = new Func<IList<object>, Task>(async (IList<object> b) =>
-                        Report(options, bypassExistingRows
+                    {
+                        _ = bypassExistingRows
                             ? await RowInserter.MergeAsync(destinationConnection, targetTable, b, qualifiers, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false)
-                            : await RowInserter.InsertAsync(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false), progressCallback));
+                            : await RowInserter.InsertAsync(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+                        Report(options, b.Count, progressCallback, CopySize.OfRows(b));
+                    });
                     var batch = new List<object>(bufferSize);
                     var columns = interceptors == null ? null : RowInterception.GetColumns(reader);
                     while (await ReadAsync(reader, cancellationToken).ConfigureAwait(false))
@@ -531,33 +572,21 @@ namespace RepoDb.Data
             Complete(options, item);
         }
 
-        /// <summary>
-        /// Logs the result of the bulk insert (or the bulk merge) of a table, and records what is known about the rows of its target table.
-        /// </summary>
-        /// <param name="options">The progress of the copy.</param>
-        /// <param name="item">The item of the table.</param>
-        /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="targetTable">The name of the target table.</param>
-        /// <param name="bypassExistingRows">A value that indicates whether the rows were merged instead of inserted.</param>
-        /// <param name="total">The number of rows that the bulk operation has reported.</param>
-        /// <param name="before">The number of rows of the target table before the bulk insert, or <c>null</c> if it is not known (or not needed).</param>
-        /// <param name="after">The number of rows of the target table after the bulk operation, or <c>null</c> if it is not known.</param>
+        /// <summary>Logs the in-memory row total without querying the destination.</summary>
         private static void RecordCopy(CopyProgress options,
-            CopyProgressItem item,
             IDbConnection destinationConnection,
             string targetTable,
             bool bypassExistingRows,
-            int total,
-            long? before,
-            long? after)
+            int total)
         {
             if (bypassExistingRows)
             {
                 CopyDataLogger.LogBulkMerge(options, destinationConnection, targetTable, total);
-                Record(item, 0, after);
-                return;
             }
-            Record(item, CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, total, before, after), after);
+            else
+            {
+                CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, total);
+            }
         }
 
         /// <summary>
@@ -918,6 +947,7 @@ namespace RepoDb.Data
                 Source = CreateEndpoint(connection, sourceTable),
                 Target = CreateEndpoint(destinationConnection, targetTable)
             };
+            item.TotalRowCount = options.SourceRowCounts.TryGetValue(sourceTable, out var count) ? count : 0;
             item.Source.RowCount = 0;
             options.Items.Add(item);
             options.Current = item;
@@ -942,24 +972,6 @@ namespace RepoDb.Data
             };
 
         /// <summary>
-        /// Records what is known about the rows of the target table after the bulk insert of the table.
-        /// </summary>
-        /// <param name="item">The item of the table.</param>
-        /// <param name="skipped">The number of rows that the provider did not load, or <c>null</c> if it is not known.</param>
-        /// <param name="rowCount">The number of rows of the target table after the bulk insert, or <c>null</c> if it is not known.</param>
-        private static void Record(CopyProgressItem item,
-            long? skipped,
-            long? rowCount)
-        {
-            if (item == null)
-            {
-                return;
-            }
-            item.SkippedRowCount = skipped;
-            item.Target.RowCount = rowCount;
-        }
-
-        /// <summary>
         /// Reports the progress of the copy: a batch of rows was copied.
         /// </summary>
         /// <param name="options">The progress of the copy.</param>
@@ -967,7 +979,8 @@ namespace RepoDb.Data
         /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
         private static void Report(CopyProgress options,
             int inserted,
-            Action<CopyProgress> progressCallback)
+            Action<CopyProgress> progressCallback,
+            long copiedBytes = 0)
         {
             var item = options.Current;
             var now = DateTime.UtcNow;
@@ -975,10 +988,13 @@ namespace RepoDb.Data
             {
                 Number = item.Batches.Count + 1,
                 RowCount = inserted,
+                CopiedBytes = copiedBytes,
                 StartTime = item.NextBatchStart,
                 EndTime = now
             });
             item.RowCount += inserted;
+            item.CopiedBytes += copiedBytes;
+            options.CopiedBytes += copiedBytes;
             item.Source.RowCount = (item.Source.RowCount ?? 0) + inserted;
             item.EndTime = now;
             options.BatchCount++;

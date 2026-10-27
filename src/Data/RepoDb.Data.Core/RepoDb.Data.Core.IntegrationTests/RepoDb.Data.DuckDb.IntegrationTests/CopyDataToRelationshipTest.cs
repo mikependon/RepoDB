@@ -829,7 +829,7 @@ namespace RepoDb.Data.DuckDb.IntegrationTests
                 // Act
                 var actual = source.CopyDataTo("Person", target,
                     relationshipBehavior: RelationshipBehavior.ParentsAndChildren,
-                    progressCallback: p => batches.Add(p.Current.Source.Table.Name));
+                    progressCallback: p => { if (p.CurrentBatch != null) batches.Add(p.Current.Source.Table.Name); });
 
                 // Assert
                 CollectionAssert.AreEqual(new[] { "Country", "Person", "Pet", "Toy" }, batches.Distinct().ToArray());

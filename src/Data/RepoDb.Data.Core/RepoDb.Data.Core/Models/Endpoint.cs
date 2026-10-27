@@ -29,8 +29,7 @@ namespace RepoDb.Data.Models
 
         /// <summary>
         /// Gets the number of rows of the table. On the source it is the number of rows that were read by the copy (without the rows that the filter leaves out).
-        /// On the target it is the number of rows that the table has after the copy, or <c>null</c> if the rows of the table are not counted (the target is counted
-        /// when its rows are copied with the bulk insert of the provider).
+        /// On the target it is <c>null</c>: the copy operation does not query destination row counts.
         /// </summary>
         public long? RowCount { get; internal set; }
 
