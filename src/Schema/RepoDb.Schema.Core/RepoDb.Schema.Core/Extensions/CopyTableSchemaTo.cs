@@ -543,6 +543,7 @@ namespace RepoDb.Schema
         /// <param name="targetSchema">The schema of the destination database that the tables are created in.</param>
         /// <param name="selectedColumns">The distinct names of the columns to be created (<c>null</c> if all the columns are created).</param>
         /// <param name="tableMappings">The columns to be created table by table (<c>null</c> if the columns are the same for every requested table).</param>
+        /// <param name="targetTable">The name of the table in the destination database (<c>null</c> if the name of the source table is used). It is only allowed for a single table.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database.</param>
         /// <param name="relationshipBehavior">Defines which related tables are copied together with the given tables.</param>
         /// <param name="createdCallback">The callback that receives the item of each table once its schema is created.</param>
@@ -632,6 +633,7 @@ namespace RepoDb.Schema
         /// <param name="targetSchema">The schema of the destination database that the tables are created in.</param>
         /// <param name="selectedColumns">The distinct names of the columns to be created (<c>null</c> if all the columns are created).</param>
         /// <param name="tableMappings">The columns to be created table by table (<c>null</c> if the columns are the same for every requested table).</param>
+        /// <param name="targetTable">The name of the table in the destination database (<c>null</c> if the name of the source table is used). It is only allowed for a single table.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database.</param>
         /// <param name="relationshipBehavior">Defines which related tables are copied together with the given tables.</param>
         /// <param name="createdCallback">The callback that receives the item of each table once its schema is created.</param>

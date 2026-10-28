@@ -30,6 +30,19 @@ namespace RepoDb.Schema
         /// <summary>
         /// Executes a schema plan and reports each table at the same completion point for copies and loads.
         /// </summary>
+        /// <param name="startTime">The time (in UTC) when the operation has started.</param>
+        /// <param name="tables">The tables of the plan.</param>
+        /// <param name="schemaComposer">The composer of the destination database.</param>
+        /// <param name="connection">The source connection, or <c>null</c> for a file definition.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database.</param>
+        /// <param name="createdCallback">The callback that receives the item of each table once its schema is created.</param>
+        /// <param name="errorCallback">The callback that receives an error when a statement fails.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <returns>The result of the schema operation.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static CopyTableSchemaResult Execute(DateTime startTime,
             IList<PlanTable> tables,
@@ -85,6 +98,20 @@ namespace RepoDb.Schema
         /// <summary>
         /// Asynchronously executes a schema plan with cancellation and the same completion callbacks as copies.
         /// </summary>
+        /// <param name="startTime">The time (in UTC) when the operation has started.</param>
+        /// <param name="tables">The tables of the plan.</param>
+        /// <param name="schemaComposer">The composer of the destination database.</param>
+        /// <param name="connection">The source connection, or <c>null</c> for a file definition.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database.</param>
+        /// <param name="createdCallback">The callback that receives the item of each table once its schema is created.</param>
+        /// <param name="errorCallback">The callback that receives an error when a statement fails.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the result of the schema operation.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static async Task<CopyTableSchemaResult> ExecuteAsync(DateTime startTime,
             IList<PlanTable> tables,

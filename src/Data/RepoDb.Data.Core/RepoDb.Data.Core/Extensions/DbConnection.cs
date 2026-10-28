@@ -328,9 +328,18 @@ namespace RepoDb.Data
         /// <summary>
         /// Counts all selected source tables before copying. Each callback exposes the accumulating totals.
         /// </summary>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="tables">The source tables, with their target tables and filters.</param>
+        /// <param name="progress">The progress that receives the counts.</param>
+        /// <param name="callback">The callback that receives the progress after each table is counted, or <c>null</c>.</param>
+        /// <param name="commandTimeout">The command timeout in seconds, or <c>null</c> for the default.</param>
+        /// <param name="trace">The trace object to be used.</param>
         internal static void CountSourceRows(IDbConnection connection,
             IList<(string Source, string Target, QueryGroup Where)> tables,
-            CopyProgress progress, Action<CopyProgress> callback, int? commandTimeout, ITrace trace)
+            CopyProgress progress,
+            Action<CopyProgress> callback,
+            int? commandTimeout,
+            ITrace trace)
         {
             foreach (var table in tables)
             {
@@ -345,9 +354,20 @@ namespace RepoDb.Data
         /// <summary>
         /// Counts the selected source tables asynchronously before copying.
         /// </summary>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="tables">The source tables, with their target tables and filters.</param>
+        /// <param name="progress">The progress that receives the counts.</param>
+        /// <param name="callback">The callback that receives the progress after each table is counted, or <c>null</c>.</param>
+        /// <param name="commandTimeout">The command timeout in seconds, or <c>null</c> for the default.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         internal static async Task CountSourceRowsAsync(IDbConnection connection,
             IList<(string Source, string Target, QueryGroup Where)> tables,
-            CopyProgress progress, Action<CopyProgress> callback, int? commandTimeout, ITrace trace,
+            CopyProgress progress,
+            Action<CopyProgress> callback,
+            int? commandTimeout,
+            ITrace trace,
             CancellationToken cancellationToken)
         {
             foreach (var table in tables)
@@ -572,7 +592,14 @@ namespace RepoDb.Data
             Complete(options, item);
         }
 
-        /// <summary>Logs the in-memory row total without querying the destination.</summary>
+        /// <summary>
+        /// Logs the in-memory row total without querying the destination.
+        /// </summary>
+        /// <param name="options">The progress of the copy that holds the logs.</param>
+        /// <param name="destinationConnection">The destination connection.</param>
+        /// <param name="targetTable">The target table.</param>
+        /// <param name="mergeExistingRows">Whether the rows were merged (<c>true</c>) or inserted (<c>false</c>).</param>
+        /// <param name="total">The number of rows that were sent.</param>
         private static void RecordCopy(CopyProgress options,
             IDbConnection destinationConnection,
             string targetTable,
@@ -977,6 +1004,7 @@ namespace RepoDb.Data
         /// <param name="options">The progress of the copy.</param>
         /// <param name="inserted">The number of rows that were inserted by the batch.</param>
         /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
+        /// <param name="copiedBytes">The estimated bytes of the values that were copied by the batch.</param>
         private static void Report(CopyProgress options,
             int inserted,
             Action<CopyProgress> progressCallback,

@@ -11,9 +11,18 @@ using System.Collections.Generic;
 
 namespace RepoDb.Data.Helpers
 {
-    /// <summary>Estimates payload bytes without serializing values or retaining completed batches.</summary>
+    /// <summary>
+    /// Estimates payload bytes without serializing values or retaining completed batches.
+    /// </summary>
     internal static class CopySize
     {
+        #region Methods
+
+        /// <summary>
+        /// Estimates the payload bytes of the values of the rows.
+        /// </summary>
+        /// <param name="rows">The rows (each one is a dictionary of the column names and the values).</param>
+        /// <returns>The estimated bytes of the values of all the rows.</returns>
         internal static long OfRows(IList<object> rows)
         {
             long bytes = 0;
@@ -27,6 +36,11 @@ namespace RepoDb.Data.Helpers
             return bytes;
         }
 
+        /// <summary>
+        /// Estimates the payload bytes of a value. Nulls and unsupported provider-specific values count as zero.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The estimated bytes of the value.</returns>
         internal static long OfValue(object value)
         {
             if (value == null || value == DBNull.Value) return 0;
@@ -40,5 +54,7 @@ namespace RepoDb.Data.Helpers
             if (value is byte || value is sbyte || value is bool) return 1;
             return 0;
         }
+
+        #endregion
     }
 }

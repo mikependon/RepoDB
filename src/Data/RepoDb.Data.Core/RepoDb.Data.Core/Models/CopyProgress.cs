@@ -79,6 +79,9 @@ namespace RepoDb.Data.Models
         /// </summary>
         public long TotalRowCount { get; internal set; }
 
+        /// <summary>
+        /// Gets the number of source rows per source table, as measured before copying.
+        /// </summary>
         internal IDictionary<string, long> SourceRowCounts { get; } = new Dictionary<string, long>();
 
         /// <summary>

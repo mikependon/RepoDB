@@ -29,8 +29,16 @@ namespace RepoDb.Schema
         /// <summary>
         /// Validates arguments before reading the file or accessing the destination.
         /// </summary>
-        internal static void Validate(IDbConnection connection, string filename,
-            TableExistsBehavior tableExistenceBehavior, int? commandTimeout, IDbTransaction transaction)
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="filename">The name of the definition file.</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        internal static void Validate(IDbConnection connection,
+            string filename,
+            TableExistsBehavior tableExistenceBehavior,
+            int? commandTimeout,
+            IDbTransaction transaction)
         {
             if (connection == null) throw new ArgumentNullException(nameof(connection));
             if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException("A filename is required.", nameof(filename));
@@ -43,9 +51,23 @@ namespace RepoDb.Schema
         /// <summary>
         /// Applies all included tables, reporting each completion just as a schema copy does.
         /// </summary>
-        internal static LoadDefinitionResult Apply(IDbConnection connection, SchemaDefinitionResult definition,
-            TableExistsBehavior tableExistenceBehavior, Action<CopyTableSchemaResultItem> createdCallback,
-            int? commandTimeout, string traceKey, ITrace trace, IDbTransaction transaction)
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="definition">The definition that is read from the file (nothing is applied if it is <c>null</c>).</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database.</param>
+        /// <param name="createdCallback">The callback that receives the item of each table once its schema is created.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <returns>The result of the load, or <c>null</c> if there is no definition.</returns>
+        internal static LoadDefinitionResult Apply(IDbConnection connection,
+            SchemaDefinitionResult definition,
+            TableExistsBehavior tableExistenceBehavior,
+            Action<CopyTableSchemaResultItem> createdCallback,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction)
         {
             if (definition == null) return null;
             var startTime = DateTime.UtcNow;
@@ -59,9 +81,25 @@ namespace RepoDb.Schema
         /// <summary>
         /// Asynchronously applies all included tables with cancellation and asynchronous database tracing.
         /// </summary>
-        internal static async Task<LoadDefinitionResult> ApplyAsync(IDbConnection connection, SchemaDefinitionResult definition,
-            TableExistsBehavior tableExistenceBehavior, Action<CopyTableSchemaResultItem> createdCallback,
-            int? commandTimeout, string traceKey, ITrace trace, IDbTransaction transaction, CancellationToken cancellationToken)
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <param name="definition">The definition that is read from the file (nothing is applied if it is <c>null</c>).</param>
+        /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database.</param>
+        /// <param name="createdCallback">The callback that receives the item of each table once its schema is created.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the result of the load, or <c>null</c> if there is no definition.</returns>
+        internal static async Task<LoadDefinitionResult> ApplyAsync(IDbConnection connection,
+            SchemaDefinitionResult definition,
+            TableExistsBehavior tableExistenceBehavior,
+            Action<CopyTableSchemaResultItem> createdCallback,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction,
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (definition == null) return null;
@@ -76,6 +114,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Gets the registered destination composer; a source schema reader is not required.
         /// </summary>
+        /// <param name="connection">The connection of the destination database.</param>
+        /// <returns>The schema composer that is mapped to the connection.</returns>
         private static ISchemaComposer Composer(IDbConnection connection) =>
             SchemaComposerMapper.Get(connection) ?? throw new MissingMappingException(
                 $"There is no schema composer mapping found for '{connection.GetType().FullName}'. Register one via SchemaComposerMapper.");
@@ -84,7 +124,11 @@ namespace RepoDb.Schema
         /// Uses the shared cycle-aware dependency orderer and preserves the schema identities saved in the file.
         /// External dependencies are not expanded into additional tables.
         /// </summary>
-        private static System.Collections.Generic.IList<PlanTable> CreateTables(SchemaDefinitionResult definition, ISchemaComposer composer)
+        /// <param name="definition">The definition that is read from the file.</param>
+        /// <param name="composer">The composer of the destination database.</param>
+        /// <returns>The tables of the plan, in dependency order.</returns>
+        private static System.Collections.Generic.IList<PlanTable> CreateTables(SchemaDefinitionResult definition,
+            ISchemaComposer composer)
         {
             var keys = definition.Tables.Select((table, position) => new
             {

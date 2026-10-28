@@ -24,6 +24,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Parses one definition using the writer's two-space indentation and scalar conventions.
         /// </summary>
+        /// <param name="content">The YAML content of the definition file.</param>
+        /// <returns>The definition document.</returns>
         internal static JsonObject Parse(string content)
         {
             var lines = content.Replace("\r\n", "\n").Split('\n').Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
@@ -37,7 +39,13 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reads a block collection, rejecting mixed collection types and duplicate mapping keys.
         /// </summary>
-        private static JsonNode Collection(string[] lines, ref int position, int indent)
+        /// <param name="lines">The nonempty lines of the document.</param>
+        /// <param name="position">The index of the line that is read first. It is advanced past the lines of the collection.</param>
+        /// <param name="indent">The indentation of the collection, in spaces.</param>
+        /// <returns>The array or object that the collection represents.</returns>
+        private static JsonNode Collection(string[] lines,
+            ref int position,
+            int indent)
         {
             if (indent > 128) throw new InvalidDataException("The definition nesting limit was exceeded.");
             var isArray = lines[position].TrimStart().StartsWith("-", StringComparison.Ordinal);

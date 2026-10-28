@@ -27,6 +27,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Validates the document and reconstructs its tables without consulting a database.
         /// </summary>
+        /// <param name="document">The definition document that is read from the file.</param>
+        /// <returns>The definition that is reconstructed from the document.</returns>
         internal static SchemaDefinitionResult Read(JsonObject document)
         {
             try
@@ -62,6 +64,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reconstructs one table and its ordered keys and constraints.
         /// </summary>
+        /// <param name="node">The table node of the document.</param>
+        /// <returns>The reconstructed table.</returns>
         private static TableSchema ReadTable(JsonObject node)
         {
             var table = new TableSchema(Table(Object(node, "table")));
@@ -92,6 +96,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reconstructs index ordering, included columns, flags, and its native SQL filter.
         /// </summary>
+        /// <param name="node">The index node of the table.</param>
+        /// <returns>The reconstructed index.</returns>
         private static IndexInfo Index(JsonNode node)
         {
             var columns = Array(node, "columns");
@@ -110,7 +116,11 @@ namespace RepoDb.Schema
         /// <summary>
         /// Restores portable column metadata; numeric metadata outside the byte range stays on ColumnInfo.
         /// </summary>
-        private static ColumnInfo Column(JsonObject node, PrimaryKeyInfo primary)
+        /// <param name="node">The column node of the table.</param>
+        /// <param name="primary">The primary key of the table, or <c>null</c> if the table has none.</param>
+        /// <returns>The reconstructed column.</returns>
+        private static ColumnInfo Column(JsonObject node,
+            PrimaryKeyInfo primary)
         {
             foreach (var property in new[] { "identity", "default", "computed", "collation", "comment" })
                 if (!node.ContainsKey(property)) throw new InvalidDataException("Missing column property: " + property);
@@ -139,6 +149,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// Validates table identities and the column references that can be resolved inside the file.
         /// </summary>
+        /// <param name="result">The definition that is reconstructed from the document.</param>
         private static void Validate(SchemaDefinitionResult result)
         {
             var tables = new Dictionary<TableInfo, TableSchema>();
@@ -181,7 +192,12 @@ namespace RepoDb.Schema
         /// <summary>
         /// Ensures a key or index uses distinct existing columns.
         /// </summary>
-        private static void ValidateColumns(IList<string> names, HashSet<string> columns, bool allowEmpty = false)
+        /// <param name="names">The names of the columns of the key or index.</param>
+        /// <param name="columns">The names of the columns of the table.</param>
+        /// <param name="allowEmpty">Whether the key or index can have no columns.</param>
+        private static void ValidateColumns(IList<string> names,
+            HashSet<string> columns,
+            bool allowEmpty = false)
         {
             if ((!allowEmpty && names.Count == 0) || names.Distinct(StringComparer.Ordinal).Count() != names.Count || names.Any(n => !columns.Contains(n)))
                 throw new InvalidDataException("A key or index contains invalid column references.");
@@ -190,6 +206,7 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks that each serialized foreign-key external flag agrees with the included table identities.
         /// </summary>
+        /// <param name="result">The definition that is reconstructed from the document.</param>
         private static void ValidateReferences(SchemaDefinitionResult result)
         {
             var included = new HashSet<TableInfo>(result.Tables.Select(t => t.Table));
@@ -206,31 +223,47 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reconstructs a table identity, including its source metadata.
         /// </summary>
+        /// <param name="node">The node of the table identity.</param>
+        /// <returns>The identity of the table.</returns>
         private static TableInfo Table(JsonObject node) =>
             new TableInfo(Name(node), Text(node, "schema"), Text(node, "database"), Text(node, "provider"));
 
         /// <summary>
         /// Reads a required object.
         /// </summary>
-        private static JsonObject Object(JsonNode node, string name) =>
+        /// <param name="node">The parent node.</param>
+        /// <param name="name">The name of the property.</param>
+        /// <returns>The object that the property holds.</returns>
+        private static JsonObject Object(JsonNode node,
+            string name) =>
             (node as JsonObject)?[name] as JsonObject ?? throw new InvalidDataException("Missing object: " + name);
 
         /// <summary>
         /// Reads an object in a collection, rejecting null and scalar entries.
         /// </summary>
+        /// <param name="node">The node of the collection entry.</param>
+        /// <returns>The entry as an object.</returns>
         private static JsonObject ObjectValue(JsonNode node) =>
             node as JsonObject ?? throw new InvalidDataException("Expected a definition object.");
 
         /// <summary>
         /// Reads a required array.
         /// </summary>
-        private static JsonArray Array(JsonNode node, string name) =>
+        /// <param name="node">The parent node.</param>
+        /// <param name="name">The name of the property.</param>
+        /// <returns>The array that the property holds.</returns>
+        private static JsonArray Array(JsonNode node,
+            string name) =>
             (node as JsonObject)?[name] as JsonArray ?? throw new InvalidDataException("Missing array: " + name);
 
         /// <summary>
         /// Reads a required property that can contain a null string.
         /// </summary>
-        private static string Text(JsonNode node, string name)
+        /// <param name="node">The parent node.</param>
+        /// <param name="name">The name of the property.</param>
+        /// <returns>The text that the property holds, or <c>null</c>.</returns>
+        private static string Text(JsonNode node,
+            string name)
         {
             if (!(node is JsonObject obj) || !obj.ContainsKey(name)) throw new InvalidDataException("Missing property: " + name);
             return node[name]?.GetValue<string>();
@@ -239,6 +272,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reads a nonempty object name.
         /// </summary>
+        /// <param name="node">The node that has the name.</param>
+        /// <returns>The name.</returns>
         private static string Name(JsonNode node)
         {
             var name = Text(node, "name");
@@ -248,25 +283,41 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reads an ordered string collection.
         /// </summary>
-        private static IList<string> Strings(JsonNode node, string name) =>
+        /// <param name="node">The parent node.</param>
+        /// <param name="name">The name of the property.</param>
+        /// <returns>The strings that the property holds, in order.</returns>
+        private static IList<string> Strings(JsonNode node,
+            string name) =>
             Array(node, name).Select(n => n?.GetValue<string>() ?? throw new InvalidDataException("Null column name.")).ToList();
 
         /// <summary>
         /// Reads a required scalar value.
         /// </summary>
-        private static T Value<T>(JsonNode node, string name) =>
+        /// <param name="node">The parent node.</param>
+        /// <param name="name">The name of the property.</param>
+        /// <returns>The value that the property holds.</returns>
+        private static T Value<T>(JsonNode node,
+            string name) =>
             node[name] == null ? throw new InvalidDataException("Missing value: " + name) : node[name].GetValue<T>();
 
         /// <summary>
         /// Reads a nullable scalar value.
         /// </summary>
-        private static T? Optional<T>(JsonNode node, string name) where T : struct =>
+        /// <param name="node">The parent node.</param>
+        /// <param name="name">The name of the property.</param>
+        /// <returns>The value that the property holds, or <c>null</c> if it is missing.</returns>
+        private static T? Optional<T>(JsonNode node,
+            string name) where T : struct =>
             node[name] == null ? (T?)null : node[name].GetValue<T>();
 
         /// <summary>
         /// Reads a named enum value, rejecting numeric and unknown values.
         /// </summary>
-        private static T Enumeration<T>(JsonNode node, string name) where T : struct
+        /// <param name="node">The parent node.</param>
+        /// <param name="name">The name of the property.</param>
+        /// <returns>The enumeration value that the property names.</returns>
+        private static T Enumeration<T>(JsonNode node,
+            string name) where T : struct
         {
             var text = Text(node, name);
             if (!Enum.TryParse<T>(text, out var value) || !Enum.IsDefined(typeof(T), value) || !string.Equals(value.ToString(), text, StringComparison.Ordinal))
@@ -277,17 +328,25 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reads the native SQL from an optional expression, retaining dialect metadata in the document.
         /// </summary>
-        private static string Expression(JsonNode node, string name) =>
+        /// <param name="node">The parent node.</param>
+        /// <param name="name">The name of the property.</param>
+        /// <returns>The native SQL of the expression, or <c>null</c> if there is no expression.</returns>
+        private static string Expression(JsonNode node,
+            string name) =>
             node[name] == null ? null : Text(Object(node, name), "sql");
 
         /// <summary>
         /// Converts metadata to DbField's restricted range without losing the original ColumnInfo value.
         /// </summary>
+        /// <param name="value">The numeric metadata.</param>
+        /// <returns>The value as a byte, or <c>null</c> if it is missing or outside the byte range.</returns>
         private static byte? Byte(int? value) => value >= 0 && value <= byte.MaxValue ? (byte?)value.Value : null;
 
         /// <summary>
         /// Resolves only known portable logical types; it never loads CLR types named by a file.
         /// </summary>
+        /// <param name="name">The portable logical type name.</param>
+        /// <returns>The CLR type of the logical type, or <c>null</c> for an unknown type.</returns>
         private static Type LogicalType(string name)
         {
             switch (name)

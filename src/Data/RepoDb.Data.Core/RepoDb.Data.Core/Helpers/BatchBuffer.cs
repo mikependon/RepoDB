@@ -27,15 +27,54 @@ namespace RepoDb.Data.Helpers
     {
         #region Private Variables
 
+        /// <summary>
+        /// The data reader that has the rows.
+        /// </summary>
         private readonly IDataReader _source;
+
+        /// <summary>
+        /// The number of rows of a batch.
+        /// </summary>
         private readonly int _batchSize;
+
+        /// <summary>
+        /// The ordinals of the source columns that are buffered.
+        /// </summary>
         private readonly int[] _ordinals;
+
+        /// <summary>
+        /// The table that holds the rows of the current batch.
+        /// </summary>
         private DataTable _table;
+
+        /// <summary>
+        /// The values of the row that is being read from the source.
+        /// </summary>
         private readonly object[] _values;
+
+        /// <summary>
+        /// The values of the row that is being buffered.
+        /// </summary>
         private readonly object[] _row;
+
+        /// <summary>
+        /// The names of the columns of the source (without the case) that are left out of the batches.
+        /// </summary>
         private readonly ISet<string> _excludedColumns;
+
+        /// <summary>
+        /// The interceptors that every row goes through, or <c>null</c> if there are none.
+        /// </summary>
         private readonly IList<IDataInterceptor<Row>> _interceptors;
+
+        /// <summary>
+        /// The columns of the source, used to read the rows as <see cref="Row"/> objects when there are interceptors.
+        /// </summary>
         private readonly List<Column> _columns;
+
+        /// <summary>
+        /// The names of the columns of the batches, known once the first row has gone through the interceptors.
+        /// </summary>
         private string[] _shape;
 
         #endregion
@@ -88,7 +127,9 @@ namespace RepoDb.Data.Helpers
         /// </summary>
         public int Count => _table.Rows.Count;
 
-        /// <summary>Gets the estimated bytes of the buffered values.</summary>
+        /// <summary>
+        /// Gets the estimated bytes of the buffered values.
+        /// </summary>
         public long CopiedBytes
         {
             get

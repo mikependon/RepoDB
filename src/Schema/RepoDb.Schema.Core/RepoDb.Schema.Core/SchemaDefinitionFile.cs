@@ -32,8 +32,17 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reads and traces a definition without opening or querying the connection.
         /// </summary>
-        internal static SchemaDefinitionResult Read(IDbConnection connection, string filename,
-            string traceKey, ITrace trace, Func<string, JsonObject> parse)
+        /// <param name="connection">The connection that the definition is read for. It is not opened or queried.</param>
+        /// <param name="filename">The name of the definition file.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="parse">The function that parses the content of the file into the definition document.</param>
+        /// <returns>The definition read from the file, or <c>null</c> if the trace cancelled the read.</returns>
+        internal static SchemaDefinitionResult Read(IDbConnection connection,
+            string filename,
+            string traceKey,
+            ITrace trace,
+            Func<string, JsonObject> parse)
         {
             Validate(connection, filename);
             var log = new CancellableTraceLog(Guid.NewGuid(), traceKey, filename);
@@ -54,8 +63,19 @@ namespace RepoDb.Schema
         /// <summary>
         /// Uses asynchronous file reads and trace callbacks, honoring cancellation before and during reading.
         /// </summary>
-        internal static async Task<SchemaDefinitionResult> ReadAsync(IDbConnection connection, string filename,
-            string traceKey, ITrace trace, Func<string, JsonObject> parse, CancellationToken cancellationToken)
+        /// <param name="connection">The connection that the definition is read for. It is not opened or queried.</param>
+        /// <param name="filename">The name of the definition file.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="parse">The function that parses the content of the file into the definition document.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the definition read from the file, or <c>null</c> if the trace cancelled the read.</returns>
+        internal static async Task<SchemaDefinitionResult> ReadAsync(IDbConnection connection,
+            string filename,
+            string traceKey,
+            ITrace trace,
+            Func<string, JsonObject> parse,
+            CancellationToken cancellationToken)
         {
             Validate(connection, filename);
             cancellationToken.ThrowIfCancellationRequested();
@@ -91,7 +111,10 @@ namespace RepoDb.Schema
         /// <summary>
         /// Checks the common required arguments before invoking tracing or accessing the file.
         /// </summary>
-        private static void Validate(IDbConnection connection, string filename)
+        /// <param name="connection">The connection that the definition is read for.</param>
+        /// <param name="filename">The name of the definition file.</param>
+        private static void Validate(IDbConnection connection,
+            string filename)
         {
             if (connection == null) throw new ArgumentNullException(nameof(connection));
             if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException("A filename is required.", nameof(filename));
@@ -100,7 +123,11 @@ namespace RepoDb.Schema
         /// <summary>
         /// Opens a strict UTF-8 file reader with optional asynchronous file access.
         /// </summary>
-        private static StreamReader Open(string filename, bool asynchronous = false) =>
+        /// <param name="filename">The name of the definition file.</param>
+        /// <param name="asynchronous">Whether the file is opened for asynchronous access.</param>
+        /// <returns>The reader of the file.</returns>
+        private static StreamReader Open(string filename,
+            bool asynchronous = false) =>
             new StreamReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 4096,
                 asynchronous ? FileOptions.Asynchronous | FileOptions.SequentialScan : FileOptions.SequentialScan),
                 new UTF8Encoding(false, true), true);
@@ -108,6 +135,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Applies the existing trace cancellation contract.
         /// </summary>
+        /// <param name="log">The trace log that the trace may have cancelled.</param>
+        /// <returns><c>true</c> if the trace cancelled the read; otherwise, <c>false</c>.</returns>
         private static bool Cancelled(CancellableTraceLog log)
         {
             if (log.IsCancelled && log.IsThrowException) throw new CancelledExecutionException("The definition read was cancelled by the trace.");
@@ -117,7 +146,11 @@ namespace RepoDb.Schema
         /// <summary>
         /// Normalizes syntax errors while leaving file access exceptions intact.
         /// </summary>
-        private static SchemaDefinitionResult Parse(string content, Func<string, JsonObject> parse)
+        /// <param name="content">The content of the definition file.</param>
+        /// <param name="parse">The function that parses the content into the definition document.</param>
+        /// <returns>The definition that is read from the document.</returns>
+        private static SchemaDefinitionResult Parse(string content,
+            Func<string, JsonObject> parse)
         {
             try { return SchemaDefinitionReader.Read(parse(content)); }
             catch (Exception exception) when (exception is JsonException || exception is XmlException || exception is DecoderFallbackException)

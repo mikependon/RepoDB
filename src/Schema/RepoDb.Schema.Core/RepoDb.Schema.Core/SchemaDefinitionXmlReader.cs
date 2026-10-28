@@ -25,6 +25,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Reads an XML document without permitting external entities or document type declarations.
         /// </summary>
+        /// <param name="content">The XML content of the definition file.</param>
+        /// <returns>The definition document.</returns>
         internal static JsonObject Parse(string content)
         {
             using (var text = new StringReader(content))
@@ -39,7 +41,11 @@ namespace RepoDb.Schema
         /// <summary>
         /// Restores the explicit scalar and collection types used by the writer.
         /// </summary>
-        private static JsonNode Node(XElement element, int depth)
+        /// <param name="element">The XML element to be restored.</param>
+        /// <param name="depth">The nesting depth of the element, limited to prevent excessive recursion.</param>
+        /// <returns>The node that the element represents.</returns>
+        private static JsonNode Node(XElement element,
+            int depth)
         {
             if (depth > 64) throw new InvalidDataException("The definition nesting limit was exceeded.");
             var type = (string)element.Attribute("type");

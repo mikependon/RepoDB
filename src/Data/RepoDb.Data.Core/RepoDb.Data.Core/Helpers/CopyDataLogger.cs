@@ -47,7 +47,13 @@ namespace RepoDb.Data.Helpers
             progress.Current?.Logs.Add(log);
         }
 
-        /// <summary>Logs the number of rows sent from the in-memory batches.</summary>
+        /// <summary>
+        /// Logs the number of rows sent from the in-memory batches.
+        /// </summary>
+        /// <param name="progress">The progress that holds the logs.</param>
+        /// <param name="destinationConnection">The destination connection.</param>
+        /// <param name="table">The target table.</param>
+        /// <param name="inserted">The number of rows that were sent by the bulk insert.</param>
         public static void LogBulkInsert(CopyProgress progress,
             IDbConnection destinationConnection,
             string table,
