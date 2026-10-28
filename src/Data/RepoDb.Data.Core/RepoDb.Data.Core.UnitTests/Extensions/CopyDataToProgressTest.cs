@@ -60,8 +60,8 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
                 }
             };
             var result = asynchronous
-                ? await source.CopyDataToAsync("Person", "Customer", destination, bufferSize: 2, bypassExistingRows: merge, progressCallback: callback)
-                : source.CopyDataTo("Person", "Customer", destination, bufferSize: 2, bypassExistingRows: merge, progressCallback: callback);
+                ? await source.CopyDataToAsync("Person", "Customer", destination, bufferSize: 2, mergeExistingRows: merge, progressCallback: callback)
+                : source.CopyDataTo("Person", "Customer", destination, bufferSize: 2, mergeExistingRows: merge, progressCallback: callback);
 
             CollectionAssert.AreEqual(new[] { (5L, 0, 0L), (5L, 2, 40L), (5L, 4, 88L), (5L, 5, 112L) }, seen);
             Assert.AreEqual(112L, result.Items.Single().Batches.Sum(b => b.CopiedBytes));

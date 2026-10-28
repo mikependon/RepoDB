@@ -76,7 +76,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Id\", \"Name\") VALUES (2, 'Old Japan'), (9, 'Other')");
 
                 // Act
-                var actual = source.CopyDataTo("Country", target, bypassExistingRows: true);
+                var actual = source.CopyDataTo("Country", target, mergeExistingRows: true);
 
                 // Assert
                 Assert.AreEqual(3, actual.RowCount);
@@ -97,7 +97,7 @@ namespace RepoDb.Data.SqliteMicrosoft.IntegrationTests
                 Helper.ExecuteOnTarget("INSERT INTO \"Country\" (\"Id\", \"Name\") VALUES (7, 'Japan')");
 
                 // Act
-                source.CopyDataTo("Country", target, bypassExistingRows: true, qualifiers: new[] { "Name" });
+                source.CopyDataTo("Country", target, mergeExistingRows: true, qualifiers: new[] { "Name" });
 
                 // Assert
                 var rows = Helper.TargetRows("\"Country\"", "\"Id\"");

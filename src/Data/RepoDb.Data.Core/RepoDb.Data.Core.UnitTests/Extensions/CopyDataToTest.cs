@@ -439,7 +439,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            var actual = source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bypassExistingRows: true).RowCount;
+            var actual = source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mergeExistingRows: true).RowCount;
 
             // Assert
             var call = FakeBulkOperations.Calls.Single();
@@ -456,7 +456,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            var actual = (await source.CopyDataToAsync("Person", "Customer", FakeBulkDestination.Create(), bypassExistingRows: true)).RowCount;
+            var actual = (await source.CopyDataToAsync("Person", "Customer", FakeBulkDestination.Create(), mergeExistingRows: true)).RowCount;
 
             // Assert
             var call = FakeBulkOperations.Calls.Single();
@@ -473,7 +473,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            new FakeDbConnection().CopyDataTo("Person", name, bypassExistingRows: true);
+            new FakeDbConnection().CopyDataTo("Person", name, mergeExistingRows: true);
 
             // Assert
             Assert.AreEqual("BulkMerge", FakeBulkOperations.Calls.Single().Method);
@@ -487,7 +487,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), new[] { new ColumnMapping("Id", "Id"), new ColumnMapping("Name", "Name") }, bypassExistingRows: true);
+            source.CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), new[] { new ColumnMapping("Id", "Id"), new ColumnMapping("Name", "Name") }, mergeExistingRows: true);
 
             // Assert
             Assert.AreEqual("BulkMerge", FakeBulkOperations.Calls.Single().Method);
@@ -499,7 +499,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() =>
-                new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.CreateKeyless(), bypassExistingRows: true));
+                new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.CreateKeyless(), mergeExistingRows: true));
         }
 
         [TestMethod]
@@ -509,7 +509,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bypassExistingRows: true, qualifiers: new[] { "Name" });
+            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mergeExistingRows: true, qualifiers: new[] { "Name" });
 
             // Assert
             var call = FakeBulkOperations.Calls.Single();
@@ -524,7 +524,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            await new FakeDbConnection().CopyDataToAsync("Person", "Customer", FakeBulkDestination.Create(), bypassExistingRows: true, qualifiers: new[] { "Id", "Name" });
+            await new FakeDbConnection().CopyDataToAsync("Person", "Customer", FakeBulkDestination.Create(), mergeExistingRows: true, qualifiers: new[] { "Id", "Name" });
 
             // Assert
             var call = FakeBulkOperations.Calls.Single();
@@ -540,7 +540,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            new FakeDbConnection().CopyDataTo("Person", name, bypassExistingRows: true, qualifiers: new[] { "Id" });
+            new FakeDbConnection().CopyDataTo("Person", name, mergeExistingRows: true, qualifiers: new[] { "Id" });
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Id" }, FakeBulkOperations.Calls.Single().Qualifiers);
@@ -554,7 +554,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var mappings = new[] { new ColumnMapping("Id", "Id"), new ColumnMapping("Name", "Name") };
 
             // Act
-            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mappings, bypassExistingRows: true, qualifiers: new[] { "Name" });
+            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mappings, mergeExistingRows: true, qualifiers: new[] { "Name" });
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Name" }, FakeBulkOperations.Calls.Single().Qualifiers);
@@ -580,7 +580,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            var actual = new FakeDbConnection().CopyDataTo("Person", "Customer", destination, bypassExistingRows: true, qualifiers: new[] { "Name" }).RowCount;
+            var actual = new FakeDbConnection().CopyDataTo("Person", "Customer", destination, mergeExistingRows: true, qualifiers: new[] { "Name" }).RowCount;
 
             // Assert
             var updates = destination.Executions.Where(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal)).ToList();
@@ -596,7 +596,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             var destination = new FakeDbConnection();
 
             // Act
-            await new FakeDbConnection().CopyDataToAsync("Person", "Customer", destination, bypassExistingRows: true);
+            await new FakeDbConnection().CopyDataToAsync("Person", "Customer", destination, mergeExistingRows: true);
 
             // Assert
             var update = destination.Executions.First(e => e.CommandText.StartsWith("UPDATE", StringComparison.Ordinal));
@@ -608,7 +608,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bypassExistingRows: true, qualifiers: new[] { "Missing" }));
+                new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mergeExistingRows: true, qualifiers: new[] { "Missing" }));
         }
 
         [TestMethod]
@@ -1360,7 +1360,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act
-            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bypassExistingRows: true, dataInterceptors: interceptors);
+            new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mergeExistingRows: true, dataInterceptors: interceptors);
 
             // Assert
             var call = FakeBulkOperations.Calls.Single();
@@ -1376,7 +1376,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             FakeBulkOperations.Reset();
 
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), bypassExistingRows: true, dataInterceptors: interceptors));
+            Assert.Throws<InvalidOperationException>(() => new FakeDbConnection().CopyDataTo("Person", "Customer", FakeBulkDestination.Create(), mergeExistingRows: true, dataInterceptors: interceptors));
             Assert.AreEqual(0, FakeBulkOperations.Calls.Length);
         }
 
