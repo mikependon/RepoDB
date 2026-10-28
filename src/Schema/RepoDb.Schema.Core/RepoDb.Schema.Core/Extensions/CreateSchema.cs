@@ -7,7 +7,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,6 +49,7 @@ namespace RepoDb.Schema
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns><c>true</c> if the schema was created; <c>false</c> if it already existed.</returns>
         /// <exception cref="ArgumentNullException">The connection or the name of the schema is <c>null</c> (or white space).</exception>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "Parameters are a Dictionary<string, object>, and the non-query has no parameters; neither path reflects over an object.")]
         public static bool CreateSchema(IDbConnection connection,
             string schemaName,
             string parameterPrefix,
@@ -60,7 +63,7 @@ namespace RepoDb.Schema
         {
             Validate(connection, schemaName);
             var exists = connection.ExecuteScalar(string.Format(CultureInfo.InvariantCulture, existsSql, parameterPrefix + ParameterName),
-                new { SchemaName = schemaName },
+                new Dictionary<string, object> { [ParameterName] = schemaName },
                 commandTimeout: commandTimeout,
                 traceKey: traceKey,
                 transaction: transaction,
@@ -93,6 +96,7 @@ namespace RepoDb.Schema
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is <c>true</c> if the schema was created; <c>false</c> if it already existed.</returns>
         /// <exception cref="ArgumentNullException">The connection or the name of the schema is <c>null</c> (or white space).</exception>
+        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "Parameters are a Dictionary<string, object>, and the non-query has no parameters; neither path reflects over an object.")]
         public static async Task<bool> CreateSchemaAsync(IDbConnection connection,
             string schemaName,
             string parameterPrefix,
@@ -107,7 +111,7 @@ namespace RepoDb.Schema
         {
             Validate(connection, schemaName);
             var exists = await connection.ExecuteScalarAsync(string.Format(CultureInfo.InvariantCulture, existsSql, parameterPrefix + ParameterName),
-                new { SchemaName = schemaName },
+                new Dictionary<string, object> { [ParameterName] = schemaName },
                 commandTimeout: commandTimeout,
                 traceKey: traceKey,
                 transaction: transaction,
