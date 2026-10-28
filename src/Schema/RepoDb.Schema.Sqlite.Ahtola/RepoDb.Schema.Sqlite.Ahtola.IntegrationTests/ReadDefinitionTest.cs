@@ -53,6 +53,12 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
                         var expected = JsonNode.Parse(File.ReadAllText(filename));
                         if (format == "xml") connection.SaveDefinitionAsXml($"{Database.SalesSchema}.Invoice", filename, behavior);
                         if (format == "yaml") connection.SaveDefinitionAsYaml($"{Database.SalesSchema}.Invoice", filename, behavior);
+                        if (asynchronous)
+                        {
+                            if (format == "json") await connection.SaveDefinitionAsJsonAsync($"{Database.SalesSchema}.Invoice", filename, behavior);
+                            else if (format == "xml") await connection.SaveDefinitionAsXmlAsync($"{Database.SalesSchema}.Invoice", filename, behavior);
+                            else await connection.SaveDefinitionAsYamlAsync($"{Database.SalesSchema}.Invoice", filename, behavior);
+                        }
                         var state = connection.State;
 
                         // Act

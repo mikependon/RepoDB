@@ -23,6 +23,19 @@ connection.SaveDefinitionAsXml("sales.Invoice", "invoice.xml");
 
 The three methods accept `connection`, `tableName`, `filename`, `relationshipBehavior`, `commandTimeout`, `traceKey`, and `trace`, in that order. The relationship behavior defaults to `TableOnly`. Each method writes UTF-8 without a byte-order mark and returns after the file is saved. The parent directory must exist. An existing file is replaced after extraction and serialization succeed, using a temporary file in the same directory. Exports contain definitions, not table data or connection strings.
 
+`SaveDefinitionAsJsonAsync`, `SaveDefinitionAsXmlAsync`, and `SaveDefinitionAsYamlAsync` accept the same arguments plus an optional final `CancellationToken`, and return `Task`:
+
+```csharp
+await connection.SaveDefinitionAsJsonAsync("sales.Invoice", "invoice.json",
+    relationshipBehavior: RelatedTableBehavior.ParentsAndChildren,
+    commandTimeout: 30,
+    cancellationToken: cancellationToken);
+```
+
+The async methods use `ISchemaReader`'s asynchronous catalog operations sequentially, forwarding cancellation and the scoped query settings. Provider readers use asynchronous trace callbacks. Definition construction and serialization run in memory; file writes and flushing use asynchronous IO. Cancellation is checked before committing the complete temporary file. Query, serialization, write, or cancellation failures leave an existing destination intact and remove the temporary file. Replacement itself is a synchronous filesystem operation; cancellation after the commit is not reported as a failed save.
+
+The exporters use explicit JSON nodes and XML construction, without reflection-based object serialization, runtime code generation, or `Task.Run`. The NativeAOT smoke project at `src/Providers/RepoDb.Core/RepoDb.NativeAotTests` exercises all three async exporters and every relationship behavior against SQLite, with `JsonSerializerIsReflectionEnabledByDefault=false`, and compares the output with synchronous saves. Publish it with `dotnet publish -c Release -r win-x64` from that project directory, then run the published executable. Native publishing requires the platform's native toolchain (on Windows, the Visual C++ build tools and Windows SDK). Application-level NativeAOT compatibility also depends on the selected database provider and any custom schema reader or trace implementation.
+
 The provider's reader determines which catalog objects are available. The format captures columns, primary keys, indexes, unique constraints, checks, defaults, identity settings, computed expressions, column comments, collations, and foreign keys. Objects not exposed by `ISchemaReader`, such as triggers and sequence definitions, are outside version 1.
 
 ## RepoDB.Schema definition format, version 1

@@ -90,6 +90,84 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
+        /// Asynchronously extracts and saves a definition, preserving the destination until the complete file is ready.
+        /// </summary>
+        /// <param name="connection">The source connection with a registered schema reader.</param>
+        /// <param name="tableName">The source table, optionally schema-qualified.</param>
+        /// <param name="filename">The output filename.</param>
+        /// <param name="relationshipBehavior">The related tables to include.</param>
+        /// <param name="commandTimeout">The catalog query timeout in seconds.</param>
+        /// <param name="traceKey">The tracking key for catalog queries.</param>
+        /// <param name="trace">The asynchronous catalog query trace.</param>
+        /// <param name="format">The output format: yaml, json, or xml.</param>
+        /// <param name="cancellationToken">The token for catalog queries and file writes.</param>
+        internal static async Task SaveDefinitionAsync(IDbConnection connection,
+            string tableName,
+            string filename,
+            RelatedTableBehavior relationshipBehavior,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            string format,
+            CancellationToken cancellationToken)
+        {
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentException("A table name is required.", nameof(tableName));
+            if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException("A filename is required.", nameof(filename));
+            if (!Enum.IsDefined(typeof(RelatedTableBehavior), relationshipBehavior)) throw new ArgumentOutOfRangeException(nameof(relationshipBehavior));
+            if (commandTimeout < 0) throw new ArgumentOutOfRangeException(nameof(commandTimeout));
+            cancellationToken.ThrowIfCancellationRequested();
+            var path = Path.GetFullPath(filename);
+            var reader = SchemaReaderMapper.Get(connection) ?? throw new MissingMappingException(
+                $"There is no schema reader mapping for '{connection.GetType().FullName}'. Register one through SchemaReaderMapper.");
+
+            string content;
+            using (new SchemaReadContext(commandTimeout, traceKey, trace))
+            {
+                if (!await reader.TableExistsAsync(tableName, cancellationToken).ConfigureAwait(false))
+                    throw new InvalidOperationException($"The table '{tableName}' does not exist.");
+                cancellationToken.ThrowIfCancellationRequested();
+                var root = await reader.GetTableSchemaAsync(tableName, cancellationToken).ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+                var names = relationshipBehavior == RelatedTableBehavior.TableOnly
+                    ? new[] { tableName }
+                    : await reader.GetRelatedTablesAsync(new[] { tableName }, relationshipBehavior, cancellationToken).ConfigureAwait(false);
+                var tables = new List<TableSchema>();
+                foreach (var name in names)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    tables.Add(string.Equals(name, tableName, StringComparison.Ordinal) ? root
+                        : await reader.GetTableSchemaAsync(name, cancellationToken).ConfigureAwait(false));
+                }
+                tables.Add(root);
+                cancellationToken.ThrowIfCancellationRequested();
+                var definition = SchemaDefinition.Create(root.Table, tables.GroupBy(table => table.Table).Select(group => group.First()).ToList(), relationshipBehavior);
+                content = SchemaDefinitionSerializer.Serialize(definition, format);
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            var bytes = new UTF8Encoding(false, true).GetBytes(content);
+            var temporary = Path.Combine(Path.GetDirectoryName(path), ".repodb-" + Guid.NewGuid().ToString("N") + ".tmp");
+            try
+            {
+                using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None,
+                    4096, FileOptions.Asynchronous | FileOptions.SequentialScan))
+                {
+                    await stream.WriteAsync(bytes, 0, bytes.Length, cancellationToken).ConfigureAwait(false);
+                    await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
+                }
+                // Cancellation is honored before committing the completed file, never after it is committed.
+                cancellationToken.ThrowIfCancellationRequested();
+                if (File.Exists(path)) File.Replace(temporary, path, null);
+                else File.Move(temporary, path);
+            }
+            finally
+            {
+                if (File.Exists(temporary)) File.Delete(temporary);
+            }
+        }
+
+        /// <summary>
         /// Gets the schema of the destination database that the tables are created in: the given one, or the default schema of the setting of the destination connection (see <see cref="IDbSetting.DefaultSchema"/>).
         /// </summary>
         /// <param name="targetSchema">The given schema, or <c>null</c>.</param>

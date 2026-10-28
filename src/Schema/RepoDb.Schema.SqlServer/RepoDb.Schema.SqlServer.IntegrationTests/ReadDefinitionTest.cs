@@ -53,6 +53,12 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                         var expected = JsonNode.Parse(File.ReadAllText(filename));
                         if (format == "xml") connection.SaveDefinitionAsXml("Sales.Invoice", filename, behavior);
                         if (format == "yaml") connection.SaveDefinitionAsYaml("Sales.Invoice", filename, behavior);
+                        if (asynchronous)
+                        {
+                            if (format == "json") await connection.SaveDefinitionAsJsonAsync("Sales.Invoice", filename, behavior);
+                            else if (format == "xml") await connection.SaveDefinitionAsXmlAsync("Sales.Invoice", filename, behavior);
+                            else await connection.SaveDefinitionAsYamlAsync("Sales.Invoice", filename, behavior);
+                        }
                         var state = connection.State;
 
                         // Act

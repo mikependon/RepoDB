@@ -79,7 +79,7 @@ namespace RepoDb.NativeAotTests
         public string Set(string input, PropertyHandlerSetOptions options) => input?.ToLowerInvariant();
     }
 
-    public static class Program
+    public static partial class Program
     {
         private static int failures;
         private static int passes;
@@ -105,6 +105,7 @@ namespace RepoDb.NativeAotTests
             Cleanup(connection);
 
             Console.WriteLine();
+            await TestSchemaDefinitionsAsync();
             Console.WriteLine($"{passes} passed, {failures} failed.");
             return failures == 0 ? 0 : 1;
         }

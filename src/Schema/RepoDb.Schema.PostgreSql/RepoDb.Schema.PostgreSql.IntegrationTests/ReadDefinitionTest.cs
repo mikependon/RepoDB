@@ -53,6 +53,12 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
                         var expected = JsonNode.Parse(File.ReadAllText(filename));
                         if (format == "xml") connection.SaveDefinitionAsXml("Person", filename, behavior);
                         if (format == "yaml") connection.SaveDefinitionAsYaml("Person", filename, behavior);
+                        if (asynchronous)
+                        {
+                            if (format == "json") await connection.SaveDefinitionAsJsonAsync("Person", filename, behavior);
+                            else if (format == "xml") await connection.SaveDefinitionAsXmlAsync("Person", filename, behavior);
+                            else await connection.SaveDefinitionAsYamlAsync("Person", filename, behavior);
+                        }
                         var state = connection.State;
 
                         // Act

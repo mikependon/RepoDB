@@ -13,11 +13,13 @@
     <Nullable>disable</Nullable>
     <IsPackable>false</IsPackable>
     <PublishAot>true</PublishAot>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
     <InvariantGlobalization>true</InvariantGlobalization>
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
     <NoWarn>$(NoWarn);MA0002;MA0004;MA0006;MA0011;MA0048;MA0051</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.csproj" />
+    <ProjectReference Include="..\..\..\Schema\RepoDb.Schema.Sqlite.Microsoft\RepoDb.Schema.Sqlite.Microsoft\RepoDb.Schema.Sqlite.Microsoft.csproj" />
   </ItemGroup>
 </Project>

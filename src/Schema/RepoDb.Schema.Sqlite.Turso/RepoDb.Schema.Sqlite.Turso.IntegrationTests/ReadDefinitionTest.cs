@@ -53,6 +53,12 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                         var expected = JsonNode.Parse(File.ReadAllText(filename));
                         if (format == "xml") connection.SaveDefinitionAsXml("Child", filename, behavior);
                         if (format == "yaml") connection.SaveDefinitionAsYaml("Child", filename, behavior);
+                        if (asynchronous)
+                        {
+                            if (format == "json") await connection.SaveDefinitionAsJsonAsync("Child", filename, behavior);
+                            else if (format == "xml") await connection.SaveDefinitionAsXmlAsync("Child", filename, behavior);
+                            else await connection.SaveDefinitionAsYamlAsync("Child", filename, behavior);
+                        }
                         var state = connection.State;
 
                         // Act

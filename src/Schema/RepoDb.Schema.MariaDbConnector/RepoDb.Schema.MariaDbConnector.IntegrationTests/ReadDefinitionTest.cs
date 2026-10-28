@@ -53,6 +53,12 @@ namespace RepoDb.Schema.MariaDbConnector.IntegrationTests
                         var expected = JsonNode.Parse(File.ReadAllText(filename));
                         if (format == "xml") connection.SaveDefinitionAsXml($"{Database.SourceSalesName}.Invoice", filename, behavior);
                         if (format == "yaml") connection.SaveDefinitionAsYaml($"{Database.SourceSalesName}.Invoice", filename, behavior);
+                        if (asynchronous)
+                        {
+                            if (format == "json") await connection.SaveDefinitionAsJsonAsync($"{Database.SourceSalesName}.Invoice", filename, behavior);
+                            else if (format == "xml") await connection.SaveDefinitionAsXmlAsync($"{Database.SourceSalesName}.Invoice", filename, behavior);
+                            else await connection.SaveDefinitionAsYamlAsync($"{Database.SourceSalesName}.Invoice", filename, behavior);
+                        }
                         var state = connection.State;
 
                         // Act
