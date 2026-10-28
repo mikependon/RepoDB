@@ -21,4 +21,7 @@
     <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
     <ProjectReference Include="..\RepoDb.Schema.Oracle\RepoDb.Schema.Oracle.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\ReadDefinitionTests\ReadDefinitionTest.cs" Link="Extensions\ReadDefinitionTest.cs" />
+  </ItemGroup>
 </Project>

@@ -96,6 +96,21 @@ namespace RepoDb.Schema
         public const string SaveDefinitionAsYaml = "SaveDefinitionAsYaml";
 
         /// <summary>
+        /// The trace key for reading a JSON definition file.
+        /// </summary>
+        public const string ReadDefinitionFromJson = "ReadDefinitionFromJson";
+
+        /// <summary>
+        /// The trace key for reading an XML definition file.
+        /// </summary>
+        public const string ReadDefinitionFromXml = "ReadDefinitionFromXml";
+
+        /// <summary>
+        /// The trace key for reading a YAML definition file.
+        /// </summary>
+        public const string ReadDefinitionFromYaml = "ReadDefinitionFromYaml";
+
+        /// <summary>
         /// The trace key used when the existence of a table is being checked.
         /// </summary>
         public const string TableExists = "TableExists";

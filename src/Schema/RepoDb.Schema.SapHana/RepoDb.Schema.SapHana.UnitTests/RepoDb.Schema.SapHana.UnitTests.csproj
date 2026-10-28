@@ -21,4 +21,7 @@
     <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
     <ProjectReference Include="..\RepoDb.Schema.SapHana\RepoDb.Schema.SapHana.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\ReadDefinitionTests\ReadDefinitionTest.cs" Link="Extensions\ReadDefinitionTest.cs" />
+  </ItemGroup>
 </Project>

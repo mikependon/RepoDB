@@ -123,3 +123,28 @@ type:
 ### Reader query settings
 
 All bundled readers consult `SchemaReadContext.Current` for the duration of an export. This supplies catalog queries with the export's timeout, trace key and `ITrace` instance. The enclosing context is restored on success or failure and is isolated by execution context. Existing `ISchemaReader` signatures are unchanged. Third-party readers must explicitly honor this context to support these settings; the exporter cannot impose a timeout on an arbitrary reader implementation.
+
+### Reading saved definitions
+
+Use `ReadDefinitionFromJson`, `ReadDefinitionFromXml`, or `ReadDefinitionFromYaml` to reconstruct a saved definition. Each also has an `Async` equivalent with an optional cancellation token.
+
+```csharp
+var definition = connection.ReadDefinitionFromJson("invoice.json");
+var asynchronous = await connection.ReadDefinitionFromYamlAsync("invoice.yaml",
+    cancellationToken: cancellationToken);
+
+foreach (var table in definition.Tables)
+{
+    Console.WriteLine(table.Table.Name);
+}
+```
+
+These methods read files only. They do not open the connection, require a schema reader registration, query catalogs, create tables, or execute saved SQL. Provider and database identities come from the file. `SchemaDefinitionResult` contains all included `TableSchema` objects, the root identity, source metadata, extraction relationship behavior, external dependency identities, and format version. No relationship behavior argument is needed: the file determines which tables and foreign keys are available. `TableOnly` exports cannot restore omitted foreign keys.
+
+`Definition` retains the complete parsed document, including expression dialects and portable metadata without equivalent model properties. Models reconstruct CLR types from the documented logical type names; `unknown` produces a null CLR type, and `string` produces `System.String`, including when the original client type was `System.Char`. No CLR type names from the file are loaded. Native declarations remain available through `ColumnInfo.NativeType` and `DbField.DatabaseType`. Numeric precision or scale outside the byte range is retained on `ColumnInfo`, with the corresponding `DbField` value null. The file format does not preserve every distinction between the original reader's CLR objects.
+
+JSON and typed XML use the structures described above. The YAML reader accepts the representation emitted by RepoDB's writer: two-space block indentation and JSON-quoted scalar strings. General YAML features such as tags, aliases, and block scalar strings are outside this representation. XML document type declarations and external entities are rejected.
+
+Invalid or unsupported definitions throw `InvalidDataException`; file access errors retain their normal IO exceptions. Validation checks the format/version, table identities, key and index column references, foreign-key mappings, and included versus external targets. It does not check whether an external table actually exists in a database.
+
+`traceKey` and `trace` apply to the file read. Sync methods use synchronous trace callbacks; async methods use asynchronous callbacks and forward cancellation. The before log's `Statement` is the filename, which a trace may change. Trace cancellation follows the existing contract: throw `CancelledExecutionException`, or return null when `Cancel(false)` is requested. A successful read invokes the after callback with the resulting definition.

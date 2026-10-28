@@ -21,4 +21,7 @@
     <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
     <ProjectReference Include="..\RepoDb.Schema.MariaDbConnector\RepoDb.Schema.MariaDbConnector.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\ReadDefinitionTests\ReadDefinitionTest.cs" Link="Extensions\ReadDefinitionTest.cs" />
+  </ItemGroup>
 </Project>
