@@ -52,6 +52,7 @@ namespace RepoDb.NativeAotTests
                 var filename = Path.Combine(Path.GetTempPath(), "repodb-aot-definition-" + Guid.NewGuid().ToString("N"));
                 try
                 {
+                    SchemaComposerMapper.Add<SqliteConnection>(new SqliteSchemaComposer(), true);
                     foreach (var behavior in new[] { RelatedTableBehavior.TableOnly, RelatedTableBehavior.Parents,
                         RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
                     {
@@ -92,6 +93,31 @@ namespace RepoDb.NativeAotTests
                             if (invoice.Columns.Count != 4 || invoice.PrimaryKey == null || invoice.Indexes.Count != 1 ||
                                 invoice.CheckConstraints.Count != 1 || invoice.ForeignKeys.Count != (behavior == RelatedTableBehavior.TableOnly ? 0 : 1))
                                 throw new Exception("Schema readers did not reconstruct the table metadata.");
+
+                            using var loadTarget = new SqliteConnection("Data Source=:memory:");
+                            await loadTarget.OpenAsync();
+                            var callbacks = new System.Collections.Generic.List<CopyTableSchemaResultItem>();
+                            LoadDefinitionResult loaded;
+                            LoadDefinitionResult loadedAsync;
+                            if (format == "json")
+                            {
+                                loaded = loadTarget.LoadDefinitionFromJson(filename, createdCallback: callbacks.Add);
+                                loadedAsync = await loadTarget.LoadDefinitionFromJsonAsync(filename, TableExistsBehavior.Drop);
+                            }
+                            else if (format == "xml")
+                            {
+                                loaded = loadTarget.LoadDefinitionFromXml(filename, createdCallback: callbacks.Add);
+                                loadedAsync = await loadTarget.LoadDefinitionFromXmlAsync(filename, TableExistsBehavior.Drop);
+                            }
+                            else
+                            {
+                                loaded = loadTarget.LoadDefinitionFromYaml(filename, createdCallback: callbacks.Add);
+                                loadedAsync = await loadTarget.LoadDefinitionFromYamlAsync(filename, TableExistsBehavior.Drop);
+                            }
+                            if (loaded.Definition.Tables.Count != count || loaded.CopyResult.Items.Count != count ||
+                                loadedAsync.CopyResult.Items.Count != count || callbacks.Count != count ||
+                                loadedAsync.CopyResult.Errors.Count != 0)
+                                throw new Exception("Schema file loading did not restore all tables or callbacks.");
                         }
 
                         SchemaComposerMapper.Add<SqliteConnection>(new SqliteSchemaComposer(), true);

@@ -193,6 +193,7 @@ namespace RepoDb.Schema
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="traceKey">The tracking key for file-load probes; null keeps the execute method's default.</param>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static void ProbeTables(IEnumerable<PlanTable> tables,
             TableExistsBehavior behavior,
@@ -200,12 +201,13 @@ namespace RepoDb.Schema
             IDbConnection destinationConnection,
             int? commandTimeout,
             ITrace trace,
-            IDbTransaction transaction)
+            IDbTransaction transaction,
+            string traceKey = null)
         {
             bool? Probe(string statement) =>
                 string.IsNullOrWhiteSpace(statement)
                     ? (bool?)null
-                    : ToBoolean(destinationConnection.ExecuteScalar(statement, commandTimeout: commandTimeout, transaction: transaction, trace: trace));
+                    : ToBoolean(destinationConnection.ExecuteScalar(statement, commandTimeout: commandTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? "ExecuteScalar"));
 
             // A foreign key is added to a table that exists only if the table that it references is copied, or already exists (a table is not created to be referenced)
             bool CanBeReferenced(ForeignKeyInfo foreignKey)
@@ -249,6 +251,7 @@ namespace RepoDb.Schema
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="transaction">The transaction to be used on the destination connection.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <param name="traceKey">The tracking key for file-load probes; null keeps the execute method's default.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static async Task ProbeTablesAsync(IEnumerable<PlanTable> tables,
@@ -258,12 +261,13 @@ namespace RepoDb.Schema
             int? commandTimeout,
             ITrace trace,
             IDbTransaction transaction,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            string traceKey = null)
         {
             async Task<bool?> Probe(string statement) =>
                 string.IsNullOrWhiteSpace(statement)
                     ? (bool?)null
-                    : ToBoolean(await destinationConnection.ExecuteScalarAsync(statement, commandTimeout: commandTimeout, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false));
+                    : ToBoolean(await destinationConnection.ExecuteScalarAsync(statement, commandTimeout: commandTimeout, transaction: transaction, trace: trace, cancellationToken: cancellationToken, traceKey: traceKey ?? "ExecuteScalar").ConfigureAwait(false));
 
             // A foreign key is added to a table that exists only if the table that it references is copied, or already exists (a table is not created to be referenced)
             async Task<bool> CanBeReferenced(ForeignKeyInfo foreignKey)
@@ -471,9 +475,9 @@ namespace RepoDb.Schema
                     Source = new Endpoint
                     {
                         Table = table.Original,
-                        Database = connection.Database,
+                        Database = connection == null ? table.Original.Table.Database : connection.Database,
                         Server = (connection as System.Data.Common.DbConnection)?.DataSource,
-                        DatabaseType = connection.GetType().Name
+                        DatabaseType = connection == null ? table.Original.Table.Provider : connection.GetType().Name
                     },
                     Target = new Endpoint
                     {

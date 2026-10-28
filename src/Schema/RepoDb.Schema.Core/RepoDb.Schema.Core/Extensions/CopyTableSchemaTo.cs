@@ -619,42 +619,8 @@ namespace RepoDb.Schema
             {
                 tables[i].Original = originals[i];
             }
-            ProbeTables(tables, tableExistenceBehavior, schemaComposer, destinationConnection, commandTimeout, trace, transaction);
-            var plan = Plan.Create(tables, tableExistenceBehavior, schemaComposer);
-            var errors = new List<ExecutionError>();
-            var items = new List<CopyTableSchemaResultItem>();
-
-            // Report the tables that have nothing to execute
-            Report(createdCallback, items, plan.Immediate, errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer);
-
-            // Iterate
-            for (var i = 0; i < plan.Steps.Count; i++)
-            {
-                try
-                {
-                    if (!string.IsNullOrWhiteSpace(plan.Steps[i].Statement))
-                    {
-                        destinationConnection.ExecuteNonQuery(plan.Steps[i].Statement,
-                            traceKey: traceKey,
-                            commandTimeout: commandTimeout,
-                            transaction: transaction,
-                            trace: trace);
-                    }
-                }
-                catch (Exception e) when (errorCallback != null && !(e is OperationCanceledException))
-                {
-                    var error = CreateError(e, plan.Steps[i], i);
-                    errors.Add(error);
-                    errorCallback(error);
-                }
-
-                // Report
-                Report(createdCallback, items, plan.Completions[i], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer);
-            }
-
-            // Report
-            Report(createdCallback, items, plan.Completions[-1], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer);
-            return CreateResult(startTime, items, errors);
+            return SchemaPlanExecutor.Execute(startTime, tables, schemaComposer, connection, destinationConnection,
+                tableExistenceBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction);
         }
 
         /// <summary>
@@ -749,43 +715,8 @@ namespace RepoDb.Schema
             {
                 tables[i].Original = originals[i];
             }
-            await ProbeTablesAsync(tables, tableExistenceBehavior, schemaComposer, destinationConnection, commandTimeout, trace, transaction, cancellationToken).ConfigureAwait(false);
-            var plan = Plan.Create(tables, tableExistenceBehavior, schemaComposer);
-            var errors = new List<ExecutionError>();
-            var items = new List<CopyTableSchemaResultItem>();
-
-            // Report the tables that have nothing to execute
-            Report(createdCallback, items, plan.Immediate, errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer);
-
-            // Iterate
-            for (var i = 0; i < plan.Steps.Count; i++)
-            {
-                try
-                {
-                    if (!string.IsNullOrWhiteSpace(plan.Steps[i].Statement))
-                    {
-                        await destinationConnection.ExecuteNonQueryAsync(plan.Steps[i].Statement,
-                            traceKey: traceKey,
-                            commandTimeout: commandTimeout,
-                            transaction: transaction,
-                            trace: trace,
-                            cancellationToken: cancellationToken).ConfigureAwait(false);
-                    }
-                }
-                catch (Exception e) when (errorCallback != null && !(e is OperationCanceledException))
-                {
-                    var error = CreateError(e, plan.Steps[i], i);
-                    errors.Add(error);
-                    errorCallback(error);
-                }
-
-                // Report
-                Report(createdCallback, items, plan.Completions[i], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer);
-            }
-
-            // Report
-            Report(createdCallback, items, plan.Completions[-1], errors, connection, destinationConnection, tableExistenceBehavior, schemaComposer);
-            return CreateResult(startTime, items, errors);
+            return await SchemaPlanExecutor.ExecuteAsync(startTime, tables, schemaComposer, connection, destinationConnection,
+                tableExistenceBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

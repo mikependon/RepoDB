@@ -115,6 +115,20 @@ namespace RepoDb.Schema
         /// </summary>
         public const string TableExists = "TableExists";
 
+        /// <summary>
+        /// The trace key for loading a JSON definition into a database.
+        /// </summary>
+        public const string LoadDefinitionFromJson = "LoadDefinitionFromJson";
+
+        /// <summary>
+        /// The trace key for loading a XML definition into a database.
+        /// </summary>
+        public const string LoadDefinitionFromXml = "LoadDefinitionFromXml";
+
+        /// <summary>
+        /// The trace key for loading a YAML definition into a database.
+        /// </summary>
+        public const string LoadDefinitionFromYaml = "LoadDefinitionFromYaml";
         #endregion
     }
 }

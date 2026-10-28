@@ -35,5 +35,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\ReadDefinitionTests\ReadDefinitionTest.cs" Link="Extensions\ReadDefinitionTest.cs" />
+    <Compile Include="..\..\ReadDefinitionTests\LoadDefinitionTestBase.cs" Link="Extensions\LoadDefinitionTestBase.cs" />
   </ItemGroup>
 </Project>

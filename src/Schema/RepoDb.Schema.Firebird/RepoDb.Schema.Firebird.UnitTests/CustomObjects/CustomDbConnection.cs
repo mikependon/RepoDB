@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2018 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -20,6 +20,10 @@ namespace RepoDb.Schema.Firebird.UnitTests.CustomObjects
             DbSettingMapper.Add<CustomDbConnection>(new FirebirdDbSetting(), true);
         }
 
+        /// <summary>
+        /// Gets or sets the result of a scalar command, allowing destination existence checks to be simulated.
+        /// </summary>
+        public System.Func<string, object> ScalarResult { get; set; }
         public override string ConnectionString { get; set; }
 
         public List<string> ExecutedCommands { get; } = new List<string>();

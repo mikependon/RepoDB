@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2018 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -55,7 +55,7 @@ namespace RepoDb.Schema.Sqlite.Turso.UnitTests.CustomObjects
 
         public override object ExecuteScalar()
         {
-            return default;
+            return (Connection as CustomDbConnection)?.ScalarResult?.Invoke(CommandText);
         }
 
         public new DbDataReader ExecuteReader()

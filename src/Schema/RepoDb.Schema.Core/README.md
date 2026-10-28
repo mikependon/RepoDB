@@ -161,3 +161,29 @@ JSON and typed XML use the structures described above. The YAML reader accepts t
 Invalid or unsupported definitions throw `InvalidDataException`; file access errors retain their normal IO exceptions. Validation checks the format/version, table identities, key and index column references, foreign-key mappings, and included versus external targets. It does not check whether an external table actually exists in a database.
 
 `traceKey` and `trace` apply to the file read. Sync methods use synchronous trace callbacks; async methods use asynchronous callbacks and forward cancellation. The before log's `Statement` is the filename, which a trace may change. Trace cancellation follows the existing contract: throw `CancelledExecutionException`, or return null when `Cancel(false)` is requested. A successful read invokes the after callback with the resulting definition.
+
+### Loading definitions into a database
+
+`LoadDefinitionFromJson`, `LoadDefinitionFromXml`, and `LoadDefinitionFromYaml` read a definition through the corresponding `ReadDefinitionFrom*` method and create its tables on the supplied destination connection. Each has an `Async` equivalent with an optional final cancellation token. Register a schema composer for the destination provider; no source schema reader or source database connection is needed.
+
+```csharp
+var result = await connection.LoadDefinitionFromJsonAsync("invoice.json",
+    tableExistenceBehavior: TableExistsBehavior.Skip,
+    createdCallback: item => Console.WriteLine($"{item.Target.Table.Table.Name}: {item.Outcome}"),
+    commandTimeout: 30,
+    cancellationToken: cancellationToken);
+
+var loadedTables = result.Definition.Tables;
+var creationOutcomes = result.CopyResult.Items;
+var warnings = result.CopyResult.Warnings;
+```
+
+The methods accept `connection`, `filename`, `tableExistenceBehavior`, `createdCallback`, `commandTimeout`, `traceKey`, `trace`, and `transaction`, in that order. Async methods add `cancellationToken`. The return type is `LoadDefinitionResult`: `Definition` preserves the complete file definition and `CopyResult` contains the destination outcomes, scripts, warnings, and source/target table metadata. The source endpoint uses the file's database/provider metadata and has no server address. If the file-read trace calls `Cancel(false)`, the loader returns null and performs no database operations.
+
+Loads and `CopyTableSchemaTo` share the same destination checks, SQL planning, execution, and table completion reporting. `createdCallback` receives the same item instances returned in `CopyResult.Items`, including skipped and aligned tables, at the same completion points as a copy. The saved table/schema identities are preserved; the corresponding destination namespaces must be available as required by its composer. The cycle-aware orderer creates included parents before children, and each composer handles foreign-key staging as it does for copies. No additional relationship traversal is performed: the file's saved selection controls which tables exist in the input. `TableOnly` files omit foreign keys. External tables are not loaded; foreign keys or features the copy pipeline cannot create are reported through the existing warnings and destination table metadata. The original file definition remains available even when destination features differ.
+
+`Skip` is the default. `Align` adds missing objects supported by the copy pipeline; `Throw` fails if a destination table already exists; `Drop` permanently removes existing tables and their data before recreating them. `commandTimeout`, `traceKey`, `trace`, and the optional destination `transaction` are forwarded to existence probes and DDL commands. Async methods use asynchronous database operations and trace callbacks. Callbacks remain synchronous, matching the copy API.
+
+Transactions must belong to the destination connection. Loaders neither commit nor roll them back. Without a suitable transaction, command failures, callback failures, or cancellation can leave earlier statements applied. DDL transaction support and implicit commits depend on the database provider. Use the returned definition for the input metadata and the copy result for what actually happened in the destination.
+
+The NativeAOT smoke test also exercises all six loader methods and completion callbacks for each saved relationship behavior, with reflection-based JSON serialization disabled. It roots the full schema core assembly for native compilation.
