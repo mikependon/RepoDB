@@ -7,8 +7,6 @@
 #endregion
 
 using System.Data;
-using System.IO;
-using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using RepoDb.Interfaces;
@@ -40,7 +38,7 @@ namespace RepoDb.Schema
                 filename,
                 traceKey,
                 trace,
-                content => JsonNode.Parse(content) as JsonObject ?? throw new InvalidDataException("The definition root must be an object."));
+                SchemaDefinitionJsonReader.Parse);
 
         /// <summary>
         /// Asynchronously reads a RepoDB JSON definition, including all tables and extraction metadata.
@@ -61,7 +59,7 @@ namespace RepoDb.Schema
                 filename,
                 traceKey,
                 trace,
-                content => JsonNode.Parse(content) as JsonObject ?? throw new InvalidDataException("The definition root must be an object."),
+                SchemaDefinitionJsonReader.Parse,
                 cancellationToken);
 
         #endregion

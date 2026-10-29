@@ -130,6 +130,21 @@ namespace RepoDb.Schema
         /// </summary>
         public const string LoadDefinitionFromYaml = "LoadDefinitionFromYaml";
 
+        /// <summary>
+        /// The trace key for validating a JSON definition file.
+        /// </summary>
+        public const string ValidateDefinitionFromJson = "ValidateDefinitionFromJson";
+
+        /// <summary>
+        /// The trace key for validating an XML definition file.
+        /// </summary>
+        public const string ValidateDefinitionFromXml = "ValidateDefinitionFromXml";
+
+        /// <summary>
+        /// The trace key for validating a YAML definition file.
+        /// </summary>
+        public const string ValidateDefinitionFromYaml = "ValidateDefinitionFromYaml";
+
         #endregion
     }
 }

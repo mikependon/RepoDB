@@ -160,6 +160,39 @@ namespace RepoDb.Schema.Core.UnitTests
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
 
+
+        [TestMethod]
+        public void TestSchemaTraceKeysValidateDefinitionFromJson()
+        {
+            // Act
+            var actual = SchemaTraceKeys.ValidateDefinitionFromJson;
+            var expected = "ValidateDefinitionFromJson";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSchemaTraceKeysValidateDefinitionFromXml()
+        {
+            // Act
+            var actual = SchemaTraceKeys.ValidateDefinitionFromXml;
+            var expected = "ValidateDefinitionFromXml";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestSchemaTraceKeysValidateDefinitionFromYaml()
+        {
+            // Act
+            var actual = SchemaTraceKeys.ValidateDefinitionFromYaml;
+            var expected = "ValidateDefinitionFromYaml";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
         #endregion
     }
 }
