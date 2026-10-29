@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using RepoDb.Schema.Enumerations;
 
+using RepoDb.Schema.Attributes;
+
 namespace RepoDb.Schema.Models
 {
     /// <summary>
@@ -52,12 +54,14 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets the identities of referenced tables whose definitions are outside the file.
         /// </summary>
+        [DefinitionIgnore]
         public IList<TableInfo> ExternalDependencies { get; internal set; }
 
         /// <summary>
         /// Gets the complete parsed document, including portable metadata without an equivalent schema model property.
         /// CLR types are reconstructed from portable logical types; unknown types have a null CLR type.
         /// </summary>
+        [DefinitionIgnore]
         public JsonObject Definition { get; internal set; }
 
         #endregion

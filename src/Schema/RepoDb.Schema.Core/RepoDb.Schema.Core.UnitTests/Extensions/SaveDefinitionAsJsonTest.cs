@@ -52,7 +52,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var actual = JsonNode.Parse(File.ReadAllText(Filename));
 
             // Assert
-            Assert.AreEqual(1, (int)actual["formatVersion"]);
+            Assert.AreEqual(2, (int)actual["formatVersion"]);
         }
 
         [TestMethod]
@@ -330,7 +330,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var actual = JsonNode.Parse(File.ReadAllText(Filename));
 
             // Assert
-            Assert.IsFalse((bool)actual["tables"][1]["foreignKeys"][0]["references"]["external"]);
+            Assert.IsNull(actual["tables"][1]["foreignKeys"][0]["references"]["external"]);
         }
 
         [TestMethod]
@@ -410,7 +410,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
-        public void TestSaveDefinitionAsJsonMarksExternalReferences()
+        public void TestSaveDefinitionAsJsonOmitsDerivedExternalFlag()
         {
             // Setup
             var connection = new CustomDbConnection();
@@ -422,11 +422,11 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var actual = JsonNode.Parse(File.ReadAllText(Filename));
 
             // Assert
-            Assert.IsTrue((bool)actual["tables"][0]["foreignKeys"][0]["references"]["external"]);
+            Assert.IsNull(actual["tables"][0]["foreignKeys"][0]["references"]["external"]);
         }
 
         [TestMethod]
-        public void TestSaveDefinitionAsJsonListsExternalDependencies()
+        public void TestSaveDefinitionAsJsonOmitsDerivedExternalDependencies()
         {
             // Setup
             var connection = new CustomDbConnection();
@@ -438,7 +438,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var actual = JsonNode.Parse(File.ReadAllText(Filename));
 
             // Assert
-            Assert.AreEqual("Customer", (string)actual["externalDependencies"][0]["name"]);
+            Assert.IsNull(actual["externalDependencies"]);
         }
 
         [TestMethod]

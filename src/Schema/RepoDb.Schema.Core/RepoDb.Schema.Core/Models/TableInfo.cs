@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -7,6 +7,8 @@
 #endregion
 
 using System;
+
+using RepoDb.Schema.Attributes;
 
 namespace RepoDb.Schema.Models
 {
@@ -53,12 +55,14 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets or sets the name of the database that the table belongs to (<c>null</c> if it is not known).
         /// </summary>
+        [DefinitionIgnore]
         public string Database { get; internal set; }
 
         /// <summary>
         /// Gets or sets the name of the provider of the database that the table belongs to (i.e.: <c>SqlServer</c>, <c>MySql</c>, <c>PostgreSql</c>, <c>SQLite</c>; the same as
         /// <see cref="RepoDb.DbField.Provider"/>), or <c>null</c> if it is not known.
         /// </summary>
+        [DefinitionIgnore]
         public string Provider { get; internal set; }
 
         #endregion

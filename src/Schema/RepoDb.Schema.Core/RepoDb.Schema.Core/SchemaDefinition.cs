@@ -33,19 +33,14 @@ namespace RepoDb.Schema
             IList<TableSchema> tables,
             RelatedTableBehavior behavior)
         {
-            var included = new HashSet<TableInfo>(tables.Select(t => t.Table));
-            var external = behavior == RelatedTableBehavior.TableOnly ? new List<TableInfo>() : tables
-                .SelectMany(t => t.ForeignKeys).Select(f => f.ReferencedTable).Where(t => t != null && !included.Contains(t))
-                .Distinct().OrderBy(t => t.Schema, StringComparer.Ordinal).ThenBy(t => t.Name, StringComparer.Ordinal).ToList();
             return new JsonObject
             {
                 ["format"] = "RepoDB.Schema",
-                ["formatVersion"] = 1,
+                ["formatVersion"] = 2,
                 ["source"] = new JsonObject { ["provider"] = root.Provider, ["database"] = root.Database },
-                ["extraction"] = new JsonObject { ["rootTable"] = Table(root), ["relationshipBehavior"] = behavior.ToString() },
+                ["extraction"] = new JsonObject { ["rootTable"] = Table(root, root), ["relationshipBehavior"] = behavior.ToString() },
                 ["tables"] = Array(tables.OrderBy(t => t.Table.Schema, StringComparer.Ordinal)
-                    .ThenBy(t => t.Table.Name, StringComparer.Ordinal).Select(t => TableDefinition(t, behavior, included))),
-                ["externalDependencies"] = Array(external.Select(Table))
+                    .ThenBy(t => t.Table.Name, StringComparer.Ordinal).Select(t => TableDefinition(t, behavior, root)))
             };
         }
 
@@ -73,24 +68,30 @@ namespace RepoDb.Schema
         /// Creates a definition of a table identity.
         /// </summary>
         /// <param name="table">The table identity, or null.</param>
+        /// <param name="source">The common source identity metadata.</param>
         /// <returns>The table identity definition, or null.</returns>
-        private static JsonObject Table(TableInfo table) => table == null ? null : new JsonObject
+        private static JsonObject Table(TableInfo table, TableInfo source)
         {
-            ["schema"] = table.Schema, ["name"] = table.Name, ["database"] = table.Database, ["provider"] = table.Provider
-        };
+            if (table == null) return null;
+            var result = new JsonObject { ["schema"] = table.Schema, ["name"] = table.Name };
+            // Retain overrides for identities outside the common source context.
+            if (table.Database != source.Database) result["database"] = table.Database;
+            if (table.Provider != source.Provider) result["provider"] = table.Provider;
+            return result;
+        }
 
         /// <summary>
         /// Creates a table definition containing its columns, keys, indexes, and constraints.
         /// </summary>
         /// <param name="table">The table schema to describe.</param>
         /// <param name="behavior">The relationship behavior controlling foreign-key inclusion.</param>
-        /// <param name="included">The identities of tables included in the extraction.</param>
+        /// <param name="source">The common source identity metadata.</param>
         /// <returns>The complete table definition.</returns>
         private static JsonObject TableDefinition(TableSchema table,
             RelatedTableBehavior behavior,
-            HashSet<TableInfo> included) => new JsonObject
+            TableInfo source) => new JsonObject
         {
-            ["table"] = Table(table.Table),
+            ["table"] = Table(table.Table, source),
             ["columns"] = Array(table.Columns.OrderBy(c => c.Ordinal).Select(Column)),
             ["primaryKey"] = table.PrimaryKey == null ? null : new JsonObject
             {
@@ -104,32 +105,29 @@ namespace RepoDb.Schema
                 ["name"] = i.Name, ["unique"] = i.IsUnique, ["clustered"] = i.IsClustered,
                 ["columns"] = Array(i.Columns.Select(c => new JsonObject
                 { ["name"] = c, ["direction"] = i.DescendingColumns.Contains(c) ? "descending" : "ascending" })),
-                ["includedColumns"] = Strings(i.IncludedColumns), ["filter"] = Expression(i.Filter, table.Table.Provider)
+                ["includedColumns"] = Strings(i.IncludedColumns), ["filter"] = Expression(i.Filter)
             })),
             ["checkConstraints"] = Array(table.CheckConstraints.OrderBy(c => c.Name, StringComparer.Ordinal).Select(c => new JsonObject
-            { ["name"] = c.Name, ["expression"] = Expression(c.Expression, table.Table.Provider) })),
+            { ["name"] = c.Name, ["expression"] = Expression(c.Expression) })),
             ["foreignKeys"] = behavior == RelatedTableBehavior.TableOnly ? new JsonArray() : Array(
                 table.ForeignKeys.OrderBy(f => f.Name, StringComparer.Ordinal).Select(f => new JsonObject
                 {
                     ["name"] = f.Name, ["columns"] = Strings(f.Columns),
                     ["references"] = new JsonObject
                     {
-                        ["table"] = Table(f.ReferencedTable), ["columns"] = Strings(f.ReferencedColumns),
-                        ["external"] = f.ReferencedTable == null || !included.Contains(f.ReferencedTable)
+                        ["table"] = Table(f.ReferencedTable, source), ["columns"] = Strings(f.ReferencedColumns)
                     },
                     ["onDelete"] = f.DeleteRule.ToString(), ["onUpdate"] = f.UpdateRule.ToString()
                 }))
         };
 
         /// <summary>
-        /// Creates a definition of a native SQL expression and its dialect.
+        /// Creates a definition of a native SQL expression; its dialect comes from the owning table or field.
         /// </summary>
         /// <param name="sql">The SQL expression, or null.</param>
-        /// <param name="provider">The provider identifying the SQL dialect.</param>
         /// <returns>The expression definition, or null.</returns>
-        private static JsonObject Expression(string sql,
-            string provider) => sql == null ? null : new JsonObject
-        { ["dialect"] = provider, ["sql"] = sql };
+        private static JsonObject Expression(string sql) => sql == null ? null : new JsonObject
+        { ["sql"] = sql };
 
         /// <summary>
         /// Creates a column definition while preserving its type and provider metadata.
@@ -145,7 +143,6 @@ namespace RepoDb.Schema
             bool? unicode = column.IsUnicode;
             var charset = column.CharacterSet;
             var unit = column.LengthUnit;
-            bool? fixedLength = null;
             if (text && string.Equals(field.Provider, "SqlServer", StringComparison.OrdinalIgnoreCase))
             {
                 if (string.Equals(baseType, "nvarchar", StringComparison.Ordinal) || string.Equals(baseType, "nchar", StringComparison.Ordinal) || string.Equals(baseType, "ntext", StringComparison.Ordinal))
@@ -162,11 +159,6 @@ namespace RepoDb.Schema
                     unit = unit ?? "bytes";
                 }
             }
-            if (text && baseType != null)
-            {
-                if (string.Equals(baseType, "char", StringComparison.Ordinal) || string.Equals(baseType, "nchar", StringComparison.Ordinal) || string.Equals(baseType, "character", StringComparison.Ordinal)) fixedLength = true;
-                else if (string.Equals(baseType, "varchar", StringComparison.Ordinal) || string.Equals(baseType, "nvarchar", StringComparison.Ordinal) || string.Equals(baseType, "text", StringComparison.Ordinal) || string.Equals(baseType, "ntext", StringComparison.Ordinal)) fixedLength = false;
-            }
             return new JsonObject
             {
                 ["name"] = field.Name, ["ordinal"] = column.Ordinal,
@@ -174,15 +166,14 @@ namespace RepoDb.Schema
                 {
                     ["logical"] = LogicalType(field.Type), ["native"] = column.NativeType ?? field.DatabaseType, ["provider"] = field.Provider,
                     ["length"] = field.Size, ["lengthUnit"] = unit,
-                    ["unbounded"] = field.Size == -1 ? (bool?)true : field.Size > 0 ? false : (bool?)null,
                     ["precision"] = column.NumericPrecision ?? field.Precision, ["scale"] = column.NumericScale ?? field.Scale, ["temporalPrecision"] = column.TemporalPrecision,
-                    ["fixedLength"] = fixedLength, ["unicode"] = unicode, ["characterSet"] = charset
+                    ["unicode"] = unicode, ["characterSet"] = charset
                 },
                 ["nullable"] = field.IsNullable,
                 ["identity"] = !field.IsIdentity ? null : new JsonObject { ["seed"] = column.IdentitySeed, ["increment"] = column.IdentityIncrement },
                 ["default"] = !field.HasDefaultValue && column.DefaultExpression == null ? null : new JsonObject
-                { ["kind"] = column.DefaultValue.ToString(), ["expression"] = Expression(column.DefaultExpression, field.Provider) },
-                ["computed"] = Expression(column.ComputedExpression, field.Provider),
+                { ["kind"] = column.DefaultValue.ToString(), ["expression"] = Expression(column.DefaultExpression) },
+                ["computed"] = Expression(column.ComputedExpression),
                 ["collation"] = column.Collation, ["comment"] = column.Comment
             };
         }

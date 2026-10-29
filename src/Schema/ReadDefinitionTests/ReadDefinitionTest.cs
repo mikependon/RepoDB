@@ -55,6 +55,89 @@ namespace RepoDb.Schema.Tests
 
         #region Methods
 
+        [TestMethod]
+        [DataRow("json")]
+        [DataRow("xml")]
+        [DataRow("yaml")]
+        public async Task CompactDefinitionOmitsRedundantMetadataAndRestoresDependencies(string format)
+        {
+            var document = Definition(RelatedTableBehavior.Children);
+            Assert.IsFalse(document.ContainsKey("externalDependencies"));
+            var root = document["extraction"]["rootTable"].AsObject();
+            Assert.IsFalse(root.ContainsKey("database"));
+            Assert.IsFalse(root.ContainsKey("provider"));
+            var table = document["tables"][0];
+            Assert.IsFalse(table["table"].AsObject().ContainsKey("database"));
+            Assert.IsFalse(table["table"].AsObject().ContainsKey("provider"));
+            var reference = table["foreignKeys"][0]["references"].AsObject();
+            Assert.IsFalse(reference.ContainsKey("external"));
+            Assert.IsFalse(reference["table"].AsObject().ContainsKey("database"));
+            Assert.IsFalse(reference["table"].AsObject().ContainsKey("provider"));
+            foreach (var column in table["columns"].AsArray())
+            {
+                Assert.IsFalse(column["type"].AsObject().ContainsKey("unbounded"));
+                Assert.IsFalse(column["type"].AsObject().ContainsKey("fixedLength"));
+            }
+            Assert.IsFalse(table["columns"][1]["computed"].AsObject().ContainsKey("dialect"));
+            Assert.IsFalse(table["indexes"][0]["filter"].AsObject().ContainsKey("dialect"));
+            Assert.IsFalse(table["checkConstraints"][0]["expression"].AsObject().ContainsKey("dialect"));
+            File.WriteAllText(filename, SchemaDefinitionSerializer.Serialize(document, format));
+            var result = await Read(format, true);
+            var dependency = result.ExternalDependencies.Single();
+            Assert.AreEqual("Customer", dependency.Name);
+            Assert.AreEqual("Source", dependency.Database);
+            Assert.AreEqual(Provider(), dependency.Provider);
+        }
+
+        [TestMethod]
+        [DataRow("json")]
+        [DataRow("xml")]
+        [DataRow("yaml")]
+        public async Task PreservesTableSourceOverridesIncludingExplicitNull(string format)
+        {
+            var document = Definition(RelatedTableBehavior.Children);
+            document["tables"][0]["foreignKeys"][0]["references"]["table"]["database"] = "Other";
+            document["tables"][0]["foreignKeys"][0]["references"]["table"]["provider"] = null;
+            File.WriteAllText(filename, SchemaDefinitionSerializer.Serialize(document, format));
+            var result = await Read(format, false);
+            Assert.AreEqual("Other", result.ExternalDependencies.Single().Database);
+            Assert.IsNull(result.ExternalDependencies.Single().Provider);
+            Assert.IsTrue(JsonNode.DeepEquals(document,
+                SchemaDefinition.Create(result.RootTable, result.Tables, result.RelationshipBehavior)));
+        }
+
+        [TestMethod]
+        [DataRow("json")]
+        [DataRow("xml")]
+        [DataRow("yaml")]
+        public async Task ReadsVersionOneAndValidatesItsExplicitExternalMetadata(string format)
+        {
+            var document = Definition(RelatedTableBehavior.Children);
+            document["formatVersion"] = 1;
+            var root = document["extraction"]["rootTable"];
+            root["database"] = "Source";
+            root["provider"] = Provider();
+            var table = document["tables"][0];
+            table["table"]["database"] = "Source";
+            table["table"]["provider"] = Provider();
+            var reference = table["foreignKeys"][0]["references"];
+            reference["external"] = true;
+            reference["table"]["database"] = "Source";
+            reference["table"]["provider"] = Provider();
+            document["externalDependencies"] = new JsonArray(reference["table"].DeepClone());
+            File.WriteAllText(filename, SchemaDefinitionSerializer.Serialize(document, format));
+            var result = await Read(format, true);
+            Assert.AreEqual(1, result.FormatVersion);
+            Assert.AreEqual("Customer", result.ExternalDependencies.Single().Name);
+            reference["external"] = false;
+            File.WriteAllText(filename, SchemaDefinitionSerializer.Serialize(document, format));
+            await Assert.ThrowsExactlyAsync<InvalidDataException>(() => Read(format, true));
+            reference["external"] = true;
+            document["externalDependencies"] = new JsonArray();
+            File.WriteAllText(filename, SchemaDefinitionSerializer.Serialize(document, format));
+            await Assert.ThrowsExactlyAsync<InvalidDataException>(() => Read(format, true));
+        }
+
         public static IEnumerable<object[]> FormatsAndBehaviors()
         {
             foreach (var format in new[] { "json", "xml", "yaml" })
@@ -76,7 +159,7 @@ namespace RepoDb.Schema.Tests
 
             // Assert
             Assert.IsTrue(JsonNode.DeepEquals(expected, actual.Definition));
-            Assert.AreEqual(1, actual.FormatVersion);
+            Assert.AreEqual(2, actual.FormatVersion);
             Assert.AreEqual(behavior, actual.RelationshipBehavior);
             Assert.AreEqual("Source", actual.Database);
             Assert.AreEqual(Provider(), actual.Provider);
@@ -151,7 +234,7 @@ namespace RepoDb.Schema.Tests
             File.WriteAllText(filename, "not a definition");
             await Assert.ThrowsExactlyAsync<InvalidDataException>(() => Read(format, true));
             var document = Definition(RelatedTableBehavior.Parents);
-            foreach (var property in new[] { "format", "formatVersion", "source", "extraction", "tables", "externalDependencies" })
+            foreach (var property in new[] { "format", "formatVersion", "source", "extraction", "tables" })
             {
                 var invalid = (JsonObject)document.DeepClone();
                 invalid.Remove(property);
@@ -178,7 +261,6 @@ namespace RepoDb.Schema.Tests
                 d => d["tables"][1]["columns"].AsArray().Add(d["tables"][1]["columns"][0].DeepClone()),
                 d => d["tables"][1]["foreignKeys"][0]["references"]["columns"][0] = "Missing",
                 d => d["tables"][1]["foreignKeys"][0]["onDelete"] = "Unknown",
-                d => d["tables"][1]["foreignKeys"][0]["references"]["external"] = true,
                 d => d["tables"][1]["columns"][0]["ordinal"] = 0,
                 d => d["tables"][0] = null,
                 d => d["tables"][1]["columns"][0] = null,

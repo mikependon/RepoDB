@@ -35,23 +35,31 @@ namespace RepoDb.Schema
             {
                 if (document == null || !string.Equals(Text(document, "format"), "RepoDB.Schema", StringComparison.Ordinal))
                     throw new InvalidDataException("The file is not a RepoDB schema definition.");
-                if (Value<int>(document, "formatVersion") != 1)
+                var version = Value<int>(document, "formatVersion");
+                if (version != 1 && version != 2)
                     throw new InvalidDataException("The schema definition version is not supported.");
                 var source = Object(document, "source");
                 var extraction = Object(document, "extraction");
                 var result = new SchemaDefinitionResult
                 {
-                    FormatVersion = 1,
+                    FormatVersion = version,
                     Provider = Text(source, "provider"),
                     Database = Text(source, "database"),
-                    RootTable = Table(Object(extraction, "rootTable")),
+                    RootTable = Table(Object(extraction, "rootTable"), source),
                     RelationshipBehavior = Enumeration<RelatedTableBehavior>(extraction, "relationshipBehavior"),
-                    Tables = Array(document, "tables").Select(t => ReadTable(ObjectValue(t))).ToList(),
-                    ExternalDependencies = Array(document, "externalDependencies").Select(t => Table(ObjectValue(t))).ToList(),
+                    Tables = Array(document, "tables").Select(t => ReadTable(ObjectValue(t), source)).ToList(),
+                    ExternalDependencies = version == 1 ? Array(document, "externalDependencies").Select(t => Table(ObjectValue(t), source)).ToList() : null,
                     Definition = document
                 };
+                if (version == 2)
+                {
+                    var included = new HashSet<TableInfo>(result.Tables.Select(t => t.Table));
+                    result.ExternalDependencies = result.Tables.SelectMany(t => t.ForeignKeys)
+                        .Select(f => f.ReferencedTable).Where(t => t != null && !included.Contains(t))
+                        .Distinct().OrderBy(t => t.Schema, StringComparer.Ordinal).ThenBy(t => t.Name, StringComparer.Ordinal).ToList();
+                }
                 Validate(result);
-                ValidateReferences(result);
+                if (version == 1) ValidateReferences(result);
                 return result;
             }
             catch (Exception exception) when (exception is InvalidOperationException || exception is FormatException ||
@@ -65,10 +73,11 @@ namespace RepoDb.Schema
         /// Reconstructs one table and its ordered keys and constraints.
         /// </summary>
         /// <param name="node">The table node of the document.</param>
+        /// <param name="source">The document source metadata.</param>
         /// <returns>The reconstructed table.</returns>
-        private static TableSchema ReadTable(JsonObject node)
+        private static TableSchema ReadTable(JsonObject node, JsonObject source)
         {
-            var table = new TableSchema(Table(Object(node, "table")));
+            var table = new TableSchema(Table(Object(node, "table"), source));
             if (!node.ContainsKey("primaryKey")) throw new InvalidDataException("Missing primaryKey metadata.");
             if (node["primaryKey"] is JsonObject primary)
                 table.PrimaryKey = new PrimaryKeyInfo(Name(primary))
@@ -85,7 +94,7 @@ namespace RepoDb.Schema
                 var reference = Object(f, "references");
                 return new ForeignKeyInfo(Name(f))
                 {
-                    Columns = Strings(f, "columns"), ReferencedTable = reference["table"] == null ? null : Table(Object(reference, "table")),
+                    Columns = Strings(f, "columns"), ReferencedTable = reference["table"] == null ? null : Table(Object(reference, "table"), source),
                     ReferencedColumns = Strings(reference, "columns"),
                     DeleteRule = Enumeration<ForeignKeyRule>(f, "onDelete"), UpdateRule = Enumeration<ForeignKeyRule>(f, "onUpdate")
                 };
@@ -224,9 +233,12 @@ namespace RepoDb.Schema
         /// Reconstructs a table identity, including its source metadata.
         /// </summary>
         /// <param name="node">The node of the table identity.</param>
+        /// <param name="source">The inherited source metadata, if available.</param>
         /// <returns>The identity of the table.</returns>
-        private static TableInfo Table(JsonObject node) =>
-            new TableInfo(Name(node), Text(node, "schema"), Text(node, "database"), Text(node, "provider"));
+        private static TableInfo Table(JsonObject node, JsonObject source = null) =>
+            new TableInfo(Name(node), Text(node, "schema"),
+                node.ContainsKey("database") ? Text(node, "database") : source == null ? null : Text(source, "database"),
+                node.ContainsKey("provider") ? Text(node, "provider") : source == null ? null : Text(source, "provider"));
 
         /// <summary>
         /// Reads a required object.

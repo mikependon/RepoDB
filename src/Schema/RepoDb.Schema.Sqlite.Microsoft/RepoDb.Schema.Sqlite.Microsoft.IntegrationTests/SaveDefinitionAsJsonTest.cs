@@ -153,7 +153,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         [DataRow(RelatedTableBehavior.Parents, 0)]
         [DataRow(RelatedTableBehavior.Children, 1)]
         [DataRow(RelatedTableBehavior.ParentsAndChildren, 0)]
-        public void TestSaveDefinitionAsJsonListsExternalDependencies(RelatedTableBehavior behavior,
+        public void TestSaveDefinitionAsJsonReconstructsExternalDependencies(RelatedTableBehavior behavior,
             int expectedCount)
         {
             // Setup
@@ -164,7 +164,8 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
             var actual = JsonNode.Parse(File.ReadAllText(Filename));
 
             // Assert
-            Assert.AreEqual(expectedCount, actual["externalDependencies"].AsArray().Count);
+            Assert.IsNull(actual["externalDependencies"]);
+            Assert.AreEqual(expectedCount, connection.ReadDefinitionFromJson(Filename).ExternalDependencies.Count);
         }
 
         [TestMethod]

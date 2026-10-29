@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RepoDb.Schema.Attributes;
 
 namespace RepoDb.Schema.Models
 {
@@ -55,6 +56,7 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets or sets the names of the key columns that are sorted in descending order. The other key columns are sorted in ascending order.
         /// </summary>
+        [DefinitionIgnore]
         public IList<string> DescendingColumns { get; internal set; } = new List<string>();
 
         /// <summary>
