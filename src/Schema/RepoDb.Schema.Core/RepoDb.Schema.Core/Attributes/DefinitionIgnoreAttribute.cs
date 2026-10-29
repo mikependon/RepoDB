@@ -15,7 +15,8 @@ namespace RepoDb.Schema.Attributes
     /// Source identity properties may be written as overrides when they differ from the document source.
     /// This attribute describes the portable definition contract, not general-purpose serialization.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Property,
+        Inherited = true)]
     public sealed class DefinitionIgnoreAttribute : Attribute
     {
     }

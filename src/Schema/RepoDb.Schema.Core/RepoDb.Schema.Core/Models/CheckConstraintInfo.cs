@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -7,7 +7,6 @@
 #endregion
 
 using System;
-
 
 namespace RepoDb.Schema.Models
 {
@@ -32,18 +31,18 @@ namespace RepoDb.Schema.Models
         #region Properties
 
         /// <summary>
-        /// Gets or sets the name of the check constraint.
-        /// </summary>
-        public string Name { get; internal set; }
-
-        /// <summary>
         /// Gets or sets the expression of the check constraint.
         /// </summary>
         public string Expression { get; internal set; }
 
+        /// <summary>
+        /// Gets or sets the name of the check constraint.
+        /// </summary>
+        public string Name { get; internal set; }
+
         #endregion
 
-        #region Overrides
+        #region Public Methods
 
         /// <summary>
         /// Gets the string that represents the instance of this <see cref="CheckConstraintInfo"/> object.
@@ -51,10 +50,6 @@ namespace RepoDb.Schema.Models
         /// <returns>The name of this <see cref="CheckConstraintInfo"/> object.</returns>
         public override string ToString() =>
             Name;
-
-        #endregion
-
-        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="CheckConstraintInfo"/>.
@@ -83,11 +78,14 @@ namespace RepoDb.Schema.Models
         /// <returns>True if the instances are equal.</returns>
         public bool Equals(CheckConstraintInfo other)
         {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return Equals(Name, other.Name)
-                && Equals(Expression, other.Expression);
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this,
+                other))
+                return true;
+            return Equals(Name,
+                other.Name) && Equals(Expression,
+                    other.Expression);
         }
 
         /// <summary>
@@ -103,6 +101,7 @@ namespace RepoDb.Schema.Models
             {
                 return objB is null;
             }
+
             return objA.Equals(objB);
         }
 
@@ -113,7 +112,8 @@ namespace RepoDb.Schema.Models
         /// <param name="objB">The second <see cref="CheckConstraintInfo"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(CheckConstraintInfo objA,
-            CheckConstraintInfo objB) => !(objA == objB);
+            CheckConstraintInfo objB) =>
+            !(objA == objB);
 
         #endregion
     }

@@ -34,14 +34,14 @@ namespace RepoDb.Schema
         #region Properties
 
         /// <summary>
-        /// Gets the SQL statement.
-        /// </summary>
-        public string Statement { get; }
-
-        /// <summary>
         /// Gets the table that the statement belongs to (<c>null</c> if it is not known).
         /// </summary>
         public PlanTable Owner { get; }
+
+        /// <summary>
+        /// Gets the SQL statement.
+        /// </summary>
+        public string Statement { get; }
 
         #endregion
     }

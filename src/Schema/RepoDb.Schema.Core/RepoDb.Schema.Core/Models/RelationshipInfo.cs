@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -22,9 +22,10 @@ namespace RepoDb.Schema.Models
         #region Properties
 
         /// <summary>
-        /// Gets or sets the schema of the table.
+        /// Gets or sets the tables that reference this table through their foreign keys (the tables that depend on this table).
+        /// A table that references itself is not included.
         /// </summary>
-        public TableSchema Schema { get; internal set; }
+        public IList<RelationshipInfo> Children { get; internal set; } = new List<RelationshipInfo>();
 
         /// <summary>
         /// Gets or sets the tables that this table references through its foreign keys (the tables that this table depends on,
@@ -33,14 +34,13 @@ namespace RepoDb.Schema.Models
         public IList<RelationshipInfo> Parents { get; internal set; } = new List<RelationshipInfo>();
 
         /// <summary>
-        /// Gets or sets the tables that reference this table through their foreign keys (the tables that depend on this table).
-        /// A table that references itself is not included.
+        /// Gets or sets the schema of the table.
         /// </summary>
-        public IList<RelationshipInfo> Children { get; internal set; } = new List<RelationshipInfo>();
+        public TableSchema Schema { get; internal set; }
 
         #endregion
 
-        #region Overrides
+        #region Public Methods
 
         /// <summary>
         /// Gets the string that represents the instance of this <see cref="RelationshipInfo"/> object.
@@ -48,10 +48,6 @@ namespace RepoDb.Schema.Models
         /// <returns>The name of the table of the schema of this <see cref="RelationshipInfo"/> object (<c>null</c> if it has no schema).</returns>
         public override string ToString() =>
             Schema?.ToString();
-
-        #endregion
-
-        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="RelationshipInfo"/>.
@@ -83,10 +79,13 @@ namespace RepoDb.Schema.Models
         /// <returns>True if the instances are equal.</returns>
         public bool Equals(RelationshipInfo other)
         {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return Equals(Schema, other.Schema);
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this,
+                other))
+                return true;
+            return Equals(Schema,
+                other.Schema);
         }
 
         /// <summary>
@@ -102,6 +101,7 @@ namespace RepoDb.Schema.Models
             {
                 return objB is null;
             }
+
             return objA.Equals(objB);
         }
 
@@ -112,7 +112,8 @@ namespace RepoDb.Schema.Models
         /// <param name="objB">The second <see cref="RelationshipInfo"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(RelationshipInfo objA,
-            RelationshipInfo objB) => !(objA == objB);
+            RelationshipInfo objB) =>
+            !(objA == objB);
 
         #endregion
     }

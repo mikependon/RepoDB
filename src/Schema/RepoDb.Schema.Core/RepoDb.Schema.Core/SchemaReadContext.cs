@@ -81,7 +81,8 @@ namespace RepoDb.Schema
         /// <summary>
         /// Restores the enclosing context.
         /// </summary>
-        public void Dispose() => Slot.Value = previous;
+        public void Dispose() =>
+            Slot.Value = previous;
 
         #endregion
     }

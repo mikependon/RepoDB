@@ -6,7 +6,6 @@
 
 #endregion
 
-
 namespace RepoDb.Schema.Models
 {
     /// <summary>

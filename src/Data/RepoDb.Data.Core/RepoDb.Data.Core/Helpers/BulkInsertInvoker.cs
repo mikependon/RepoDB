@@ -34,12 +34,11 @@ namespace RepoDb.Data.Helpers
         private const string BulkOperationsSuffix = ".BulkOperations";
         private const string ColumnMappingsBehaviorProperty = "BulkColumnMappingsBehavior";
         private const string KeepIdentityOption = "KeepIdentity";
-        private static readonly ConcurrentDictionary<(Type Connection, Type Reader, bool IsAsync, string Name), MethodInfo> _methods =
-            new ConcurrentDictionary<(Type, Type, bool, string), MethodInfo>();
+        private static readonly ConcurrentDictionary<(Type Connection, Type Reader, bool IsAsync, string Name), MethodInfo> _methods = new ConcurrentDictionary<(Type, Type, bool, string), MethodInfo>();
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Checks whether the <c>BulkOperations</c> package of the provider of the connection is available for the reader.
@@ -51,7 +50,10 @@ namespace RepoDb.Data.Helpers
         internal static bool IsAvailable(IDbConnection connection,
             IDataReader reader,
             bool isAsync) =>
-            Find(connection, reader, isAsync, BulkInsertName) != null;
+            Find(connection,
+                reader,
+                isAsync,
+                BulkInsertName) != null;
 
         /// <summary>
         /// Checks whether the <c>BulkOperations</c> package of the provider of the connection has a bulk merge for the reader.
@@ -63,7 +65,10 @@ namespace RepoDb.Data.Helpers
         internal static bool IsMergeAvailable(IDbConnection connection,
             IDataReader reader,
             bool isAsync) =>
-            Find(connection, reader, isAsync, BulkMergeName) != null;
+            Find(connection,
+                reader,
+                isAsync,
+                BulkMergeName) != null;
 
         /// <summary>
         /// Bulk inserts the rows of the reader into the table.
@@ -90,7 +95,18 @@ namespace RepoDb.Data.Helpers
             ITrace trace,
             IDbTransaction transaction)
         {
-            return Invoke(BulkInsertName, connection, tableName, reader, null, batchSize, columnMappingsBehavior, keepIdentity, commandTimeout, traceKey, trace, transaction);
+            return Invoke(BulkInsertName,
+                connection,
+                tableName,
+                reader,
+                null,
+                batchSize,
+                columnMappingsBehavior,
+                keepIdentity,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
         }
 
         /// <summary>
@@ -119,7 +135,18 @@ namespace RepoDb.Data.Helpers
             string traceKey,
             ITrace trace,
             IDbTransaction transaction) =>
-            Invoke(BulkMergeName, connection, tableName, reader, qualifiers, batchSize, columnMappingsBehavior, keepIdentity, commandTimeout, traceKey, trace, transaction);
+            Invoke(BulkMergeName,
+                connection,
+                tableName,
+                reader,
+                qualifiers,
+                batchSize,
+                columnMappingsBehavior,
+                keepIdentity,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Bulk inserts the rows of the reader into the table in an asynchronous way.
@@ -148,7 +175,19 @@ namespace RepoDb.Data.Helpers
             IDbTransaction transaction,
             CancellationToken cancellationToken)
         {
-            return await InvokeAsync(BulkInsertName, connection, tableName, reader, null, batchSize, columnMappingsBehavior, keepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+            return await InvokeAsync(BulkInsertName,
+                connection,
+                tableName,
+                reader,
+                null,
+                batchSize,
+                columnMappingsBehavior,
+                keepIdentity,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -179,11 +218,40 @@ namespace RepoDb.Data.Helpers
             ITrace trace,
             IDbTransaction transaction,
             CancellationToken cancellationToken) =>
-            InvokeAsync(BulkMergeName, connection, tableName, reader, qualifiers, batchSize, columnMappingsBehavior, keepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            InvokeAsync(BulkMergeName,
+                connection,
+                tableName,
+                reader,
+                qualifiers,
+                batchSize,
+                columnMappingsBehavior,
+                keepIdentity,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Invokes the bulk method of the provider (the column mappings behavior is applied while it runs).
         /// </summary>
+        /// <param name="name">The name of the provider's bulk extension method.</param>
+        /// <param name="connection">The destination connection.</param>
+        /// <param name="tableName">The destination table name.</param>
+        /// <param name="reader">The rows to insert or merge.</param>
+        /// <param name="qualifiers">The merge key columns, or null for insertion.</param>
+        /// <param name="batchSize">The requested number of rows per batch.</param>
+        /// <param name="columnMappingsBehavior">The provider's column mapping behavior for this invocation.</param>
+        /// <param name="keepIdentity">Whether existing identity values are preserved.</param>
+        /// <param name="commandTimeout">The command timeout in seconds.</param>
+        /// <param name="traceKey">The tracking key for the bulk operation.</param>
+        /// <param name="trace">The operation trace.</param>
+        /// <param name="transaction">The destination transaction.</param>
+        /// <returns>The number of affected rows.</returns>
         private static int Invoke(string name,
             IDbConnection connection,
             string tableName,
@@ -197,12 +265,30 @@ namespace RepoDb.Data.Helpers
             ITrace trace,
             IDbTransaction transaction)
         {
-            var method = Find(connection, reader, false, name) ?? throw CreateMissingException(connection, name);
-            using (ColumnMappingsScope.Enter(connection, columnMappingsBehavior))
+            var method = Find(connection,
+                reader,
+                false,
+                name) ?? throw CreateMissingException(connection,
+                    name);
+            using (ColumnMappingsScope.Enter(connection,
+                columnMappingsBehavior))
             {
                 try
                 {
-                    return Convert.ToInt32(method.Invoke(null, CreateArguments(method, connection, tableName, reader, qualifiers, batchSize, keepIdentity, commandTimeout, traceKey, trace, transaction, CancellationToken.None)), System.Globalization.CultureInfo.InvariantCulture);
+                    return Convert.ToInt32(method.Invoke(null,
+                        CreateArguments(method,
+                            connection,
+                            tableName,
+                            reader,
+                            qualifiers,
+                            batchSize,
+                            keepIdentity,
+                            commandTimeout,
+                            traceKey,
+                            trace,
+                            transaction,
+                            CancellationToken.None)),
+                        System.Globalization.CultureInfo.InvariantCulture);
                 }
                 catch (TargetInvocationException e) when (e.InnerException != null)
                 {
@@ -215,6 +301,20 @@ namespace RepoDb.Data.Helpers
         /// <summary>
         /// Invokes the asynchronous bulk method of the provider (the column mappings behavior is applied while it runs).
         /// </summary>
+        /// <param name="name">The name of the provider's bulk extension method.</param>
+        /// <param name="connection">The destination connection.</param>
+        /// <param name="tableName">The destination table name.</param>
+        /// <param name="reader">The rows to insert or merge.</param>
+        /// <param name="qualifiers">The merge key columns, or null for insertion.</param>
+        /// <param name="batchSize">The requested number of rows per batch.</param>
+        /// <param name="columnMappingsBehavior">The provider's column mapping behavior for this invocation.</param>
+        /// <param name="keepIdentity">Whether existing identity values are preserved.</param>
+        /// <param name="commandTimeout">The command timeout in seconds.</param>
+        /// <param name="traceKey">The tracking key for the bulk operation.</param>
+        /// <param name="trace">The operation trace.</param>
+        /// <param name="transaction">The destination transaction.</param>
+        /// <param name="cancellationToken">The token used to cancel the bulk operation.</param>
+        /// <returns>A task whose result is the number of affected rows.</returns>
         private static async Task<int> InvokeAsync(string name,
             IDbConnection connection,
             string tableName,
@@ -229,14 +329,33 @@ namespace RepoDb.Data.Helpers
             IDbTransaction transaction,
             CancellationToken cancellationToken)
         {
-            var method = Find(connection, reader, true, name) ?? throw CreateMissingException(connection, name);
-            using (await ColumnMappingsScope.EnterAsync(connection, columnMappingsBehavior, cancellationToken).ConfigureAwait(false))
+            var method = Find(connection,
+                reader,
+                true,
+                name) ?? throw CreateMissingException(connection,
+                    name);
+            using (await ColumnMappingsScope.EnterAsync(connection,
+                columnMappingsBehavior,
+                cancellationToken).ConfigureAwait(false))
             {
                 try
                 {
-                    var task = (Task)method.Invoke(null, CreateArguments(method, connection, tableName, reader, qualifiers, batchSize, keepIdentity, commandTimeout, traceKey, trace, transaction, cancellationToken));
+                    var task = (Task)method.Invoke(null,
+                        CreateArguments(method,
+                            connection,
+                            tableName,
+                            reader,
+                            qualifiers,
+                            batchSize,
+                            keepIdentity,
+                            commandTimeout,
+                            traceKey,
+                            trace,
+                            transaction,
+                            cancellationToken));
                     await task.ConfigureAwait(false);
-                    return Convert.ToInt32(task.GetType().GetProperty(nameof(Task<int>.Result)).GetValue(task), System.Globalization.CultureInfo.InvariantCulture);
+                    return Convert.ToInt32(task.GetType().GetProperty(nameof(Task<int>.Result)).GetValue(task),
+                        System.Globalization.CultureInfo.InvariantCulture);
                 }
                 catch (TargetInvocationException e) when (e.InnerException != null)
                 {
@@ -245,157 +364,6 @@ namespace RepoDb.Data.Helpers
                 }
             }
         }
-
-        #endregion
-
-        #region Column Mappings
-
-        /// <summary>
-        /// Applies the column mappings behavior to the bulk insert for as long as the scope lives. The bulk operations package of a provider reads the behavior
-        /// from the setting of the connection (the <c>BulkColumnMappingsBehavior</c> property of its <c>&lt;Provider&gt;BulkOperationsDbSetting</c>, of the enumeration
-        /// <c>&lt;Provider&gt;BulkColumnMappingsBehavior</c> that has the same names and values as <see cref="ColumnMappingBehavior"/>), so the behavior is set on the
-        /// setting and then set back. The setting is shared by every connection of the same type, so the bulk inserts of the setting take turns while the behavior is applied.
-        /// </summary>
-        private sealed class ColumnMappingsScope : IDisposable
-        {
-            #region Fields
-
-            private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<object, SemaphoreSlim> _gates =
-                new System.Runtime.CompilerServices.ConditionalWeakTable<object, SemaphoreSlim>();
-            private readonly object _setting;
-            private readonly PropertyInfo _property;
-            private readonly SemaphoreSlim _gate;
-            private object _previous;
-            private bool _applied;
-
-            #endregion
-
-            #region Constructors
-
-            /// <summary>
-            /// Creates a new instance of <see cref="ColumnMappingsScope"/> class.
-            /// </summary>
-            /// <param name="setting">The setting of the connection.</param>
-            /// <param name="property">The property of the setting that holds the behavior of the column mappings.</param>
-            /// <param name="gate">The lock that serializes the changes of the setting.</param>
-            private ColumnMappingsScope(object setting,
-                PropertyInfo property,
-                SemaphoreSlim gate)
-            {
-                _setting = setting;
-                _property = property;
-                _gate = gate;
-            }
-
-            #endregion
-
-            #region Methods
-
-            /// <summary>
-            /// Applies the behavior of the column mappings to the setting of the connection, until the scope is disposed.
-            /// </summary>
-            /// <param name="connection">The connection of the destination database.</param>
-            /// <param name="behavior">The behavior of the column mappings.</param>
-            /// <returns>The scope to be disposed to restore the setting.</returns>
-            internal static ColumnMappingsScope Enter(IDbConnection connection,
-                Enum behavior)
-            {
-                var scope = Create(connection, behavior);
-                if (scope?._gate == null)
-                {
-                    return scope;
-                }
-                scope._gate.Wait();
-                return scope.Apply(behavior);
-            }
-
-            /// <summary>
-            /// Applies the behavior of the column mappings to the setting of the connection asynchronously, until the scope is disposed.
-            /// </summary>
-            /// <param name="connection">The connection of the destination database.</param>
-            /// <param name="behavior">The behavior of the column mappings.</param>
-            /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-            /// <returns>A task that represents the asynchronous operation. The task result is the scope to be disposed to restore the setting.</returns>
-            internal static async Task<ColumnMappingsScope> EnterAsync(IDbConnection connection,
-                Enum behavior,
-                CancellationToken cancellationToken)
-            {
-                var scope = Create(connection, behavior);
-                if (scope?._gate == null)
-                {
-                    return scope;
-                }
-                await scope._gate.WaitAsync(cancellationToken).ConfigureAwait(false);
-                return scope.Apply(behavior);
-            }
-
-            /// <summary>
-            /// Finds the property of the setting of the connection that defines the behavior (<c>null</c> scope if the setting has none and the behavior is the default one).
-            /// </summary>
-            /// <param name="connection">The connection of the destination database.</param>
-            /// <param name="behavior">The behavior of the column mappings.</param>
-            /// <returns>The scope.</returns>
-            private static ColumnMappingsScope Create(IDbConnection connection,
-                Enum behavior)
-            {
-                var setting = DbSettingMapper.Get(connection);
-                var property = setting?.GetType().GetProperty(ColumnMappingsBehaviorProperty, BindingFlags.Public | BindingFlags.Instance);
-                if (property == null || !property.CanRead || !property.CanWrite || !property.PropertyType.IsEnum)
-                {
-                    if (string.Equals(behavior.ToString(), nameof(ColumnMappingBehavior.Automatic), StringComparison.Ordinal))
-                    {
-                        return new ColumnMappingsScope(null, null, null);
-                    }
-                    throw new InvalidOperationException($"The column mappings behavior '{behavior}' requires the setting of the bulk operations package of the provider " +
-                        $"(a setting with the '{ColumnMappingsBehaviorProperty}' property) to be mapped to the connection '{connection.GetType().FullName}'.");
-                }
-                if (!Enum.IsDefined(property.PropertyType, behavior.ToString()))
-                {
-                    throw new InvalidOperationException($"The column mappings behavior '{behavior}' is not defined by '{property.PropertyType.FullName}'.");
-                }
-                return new ColumnMappingsScope(setting, property, _gates.GetValue(setting, _ => new SemaphoreSlim(1, 1)));
-            }
-
-            /// <summary>
-            /// Sets the behavior of the column mappings on the setting, keeping the previous one so it can be restored.
-            /// </summary>
-            /// <param name="behavior">The behavior of the column mappings.</param>
-            /// <returns>The scope itself.</returns>
-            private ColumnMappingsScope Apply(Enum behavior)
-            {
-                try
-                {
-                    _previous = _property.GetValue(_setting);
-                    _property.SetValue(_setting, Enum.Parse(_property.PropertyType, behavior.ToString()));
-                    _applied = true;
-                }
-                catch
-                {
-                    _gate.Release();
-                    throw;
-                }
-                return this;
-            }
-
-            /// <summary>
-            /// Restores the behavior of the column mappings that the setting had.
-            /// </summary>
-            public void Dispose()
-            {
-                if (_applied)
-                {
-                    _property.SetValue(_setting, _previous);
-                    _applied = false;
-                    _gate.Release();
-                }
-            }
-
-            #endregion
-        }
-
-        #endregion
-
-        #region Helpers
 
         /// <summary>
         /// Finds the extension method that bulk inserts the rows of the reader into the connection (the result is cached).
@@ -412,11 +380,16 @@ namespace RepoDb.Data.Helpers
         {
             name = isAsync ? name + "Async" : name;
             var key = (connection.GetType(), reader.GetType(), isAsync, name);
-            if (_methods.TryGetValue(key, out var method))
+            if (_methods.TryGetValue(key,
+                out var method))
             {
                 return method;
             }
-            return _methods.GetOrAdd(key, _ => Search(key.Item1, key.Item2, key.Item4));
+
+            return _methods.GetOrAdd(key,
+                _ => Search(key.Item1,
+                    key.Item2,
+                    key.Item4));
         }
 
         /// <summary>
@@ -430,22 +403,12 @@ namespace RepoDb.Data.Helpers
             Type readerType,
             string name)
         {
-            return GetBulkOperationsTypes()
-                .SelectMany(type => type.GetMethods(BindingFlags.Public | BindingFlags.Static))
-                .Where(method => method.Name == name &&
-                    !method.IsGenericMethodDefinition &&
-                    method.IsDefined(typeof(ExtensionAttribute), false))
-                .Where(method =>
-                {
-                    var parameters = method.GetParameters();
-                    return parameters.Length >= 3 &&
-                        parameters[0].ParameterType.IsAssignableFrom(connectionType) &&
-                        parameters[1].ParameterType == typeof(string) &&
-                        parameters[2].ParameterType.IsAssignableFrom(readerType) &&
-                        parameters.Skip(3).All(parameter => parameter.IsOptional || parameter.ParameterType == typeof(CancellationToken));
-                })
-                .OrderBy(method => method.GetParameters()[0].ParameterType == connectionType ? 0 : 1)
-                .FirstOrDefault();
+            return GetBulkOperationsTypes().SelectMany(type => type.GetMethods(BindingFlags.Public | BindingFlags.Static)).Where(method => method.Name == name && !method.IsGenericMethodDefinition && method.IsDefined(typeof(ExtensionAttribute),
+                false)).Where(method =>
+            {
+                var parameters = method.GetParameters();
+                return parameters.Length >= 3 && parameters[0].ParameterType.IsAssignableFrom(connectionType) && parameters[1].ParameterType == typeof(string) && parameters[2].ParameterType.IsAssignableFrom(readerType) && parameters.Skip(3).All(parameter => parameter.IsOptional || parameter.ParameterType == typeof(CancellationToken));
+            }).OrderBy(method => method.GetParameters()[0].ParameterType == connectionType ? 0 : 1).FirstOrDefault();
         }
 
         /// <summary>
@@ -455,9 +418,12 @@ namespace RepoDb.Data.Helpers
         private static Type[] GetBulkOperationsTypes()
         {
             var loaded = AppDomain.CurrentDomain.GetAssemblies().Where(assembly => !assembly.IsDynamic).ToList();
-            foreach (var name in loaded.SelectMany(GetReferencedNames).Where(name => name.Name != null && name.Name.EndsWith(BulkOperationsSuffix, StringComparison.Ordinal)).ToList())
+            foreach (var name in loaded.SelectMany(GetReferencedNames).Where(name => name.Name != null && name.Name.EndsWith(BulkOperationsSuffix,
+                StringComparison.Ordinal)).ToList())
             {
-                if (!loaded.Any(assembly => string.Equals(assembly.GetName().Name, name.Name, StringComparison.Ordinal)))
+                if (!loaded.Any(assembly => string.Equals(assembly.GetName().Name,
+                    name.Name,
+                    StringComparison.Ordinal)))
                 {
                     try
                     {
@@ -468,10 +434,13 @@ namespace RepoDb.Data.Helpers
                     }
                 }
             }
+
             foreach (var file in GetBulkOperationsFiles())
             {
                 var name = System.IO.Path.GetFileNameWithoutExtension(file);
-                if (!loaded.Any(assembly => string.Equals(assembly.GetName().Name, name, StringComparison.Ordinal)))
+                if (!loaded.Any(assembly => string.Equals(assembly.GetName().Name,
+                    name,
+                    StringComparison.Ordinal)))
                 {
                     try
                     {
@@ -482,10 +451,9 @@ namespace RepoDb.Data.Helpers
                     }
                 }
             }
-            return loaded
-                .Where(assembly => assembly.GetName().Name.EndsWith(BulkOperationsSuffix, StringComparison.Ordinal))
-                .SelectMany(GetExportedTypes)
-                .ToArray();
+
+            return loaded.Where(assembly => assembly.GetName().Name.EndsWith(BulkOperationsSuffix,
+                StringComparison.Ordinal)).SelectMany(GetExportedTypes).ToArray();
         }
 
         /// <summary>
@@ -496,7 +464,8 @@ namespace RepoDb.Data.Helpers
         {
             try
             {
-                return System.IO.Directory.GetFiles(AppContext.BaseDirectory, "*" + BulkOperationsSuffix + ".dll");
+                return System.IO.Directory.GetFiles(AppContext.BaseDirectory,
+                    "*" + BulkOperationsSuffix + ".dll");
             }
             catch (Exception e) when (e is System.IO.IOException || e is UnauthorizedAccessException)
             {
@@ -575,42 +544,17 @@ namespace RepoDb.Data.Helpers
             for (var i = 3; i < parameters.Length; i++)
             {
                 var parameter = parameters[i];
-                switch (parameter.Name)
-                {
-                    case "batchSize":
-                        arguments[i] = batchSize;
-                        break;
-                    case "qualifiers":
-                        arguments[i] = qualifiers ?? GetDefault(parameter);
-                        break;
-                    case "bulkCopyTimeout":
-                    case "commandTimeout":
-                        arguments[i] = commandTimeout;
-                        break;
-                    case "options":
-                    case "bulkCopyOptions":
-                        arguments[i] = GetOptions(parameter, keepIdentity);
-                        break;
-                    case "identityBehavior":
-                        arguments[i] = GetIdentityBehavior(parameter, keepIdentity);
-                        break;
-                    case "transaction":
-                        arguments[i] = parameter.ParameterType.IsInstanceOfType(transaction) ? transaction : GetDefault(parameter);
-                        break;
-                    case "trace":
-                        arguments[i] = parameter.ParameterType.IsInstanceOfType(trace) ? trace : GetDefault(parameter);
-                        break;
-                    case "traceKey":
-                        arguments[i] = traceKey ?? GetDefault(parameter);
-                        break;
-                    case "cancellationToken":
-                        arguments[i] = cancellationToken;
-                        break;
-                    default:
-                        arguments[i] = GetDefault(parameter);
-                        break;
-                }
+                arguments[i] = ResolveArgument(parameter,
+                    qualifiers,
+                    batchSize,
+                    keepIdentity,
+                    commandTimeout,
+                    traceKey,
+                    trace,
+                    transaction,
+                    cancellationToken);
             }
+
             return arguments;
         }
 
@@ -625,13 +569,19 @@ namespace RepoDb.Data.Helpers
             bool keepIdentity)
         {
             var type = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
-            if (!keepIdentity || !type.IsEnum || !Enum.GetNames(type).Contains(KeepIdentityOption, StringComparer.Ordinal))
+            if (!keepIdentity || !type.IsEnum || !Enum.GetNames(type).Contains(KeepIdentityOption,
+                StringComparer.Ordinal))
             {
                 return GetDefault(parameter);
             }
-            var value = Convert.ToInt64(GetDefault(parameter) ?? 0, System.Globalization.CultureInfo.InvariantCulture);
-            var flag = Convert.ToInt64(Enum.Parse(type, KeepIdentityOption), System.Globalization.CultureInfo.InvariantCulture);
-            return Enum.ToObject(type, value | flag);
+
+            var value = Convert.ToInt64(GetDefault(parameter) ?? 0,
+                System.Globalization.CultureInfo.InvariantCulture);
+            var flag = Convert.ToInt64(Enum.Parse(type,
+                KeepIdentityOption),
+                System.Globalization.CultureInfo.InvariantCulture);
+            return Enum.ToObject(type,
+                value | flag);
         }
 
         /// <summary>
@@ -644,9 +594,9 @@ namespace RepoDb.Data.Helpers
             bool keepIdentity)
         {
             var type = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
-            return keepIdentity && type.IsEnum && Enum.GetNames(type).Contains(KeepIdentityOption, StringComparer.Ordinal)
-                ? Enum.Parse(type, KeepIdentityOption)
-                : GetDefault(parameter);
+            return keepIdentity && type.IsEnum && Enum.GetNames(type).Contains(KeepIdentityOption,
+                StringComparer.Ordinal) ? Enum.Parse(type,
+                    KeepIdentityOption) : GetDefault(parameter);
         }
 
         /// <summary>
@@ -659,10 +609,9 @@ namespace RepoDb.Data.Helpers
             var value = parameter.HasDefaultValue ? parameter.DefaultValue : null;
             if (value == null || value is DBNull || value is Missing)
             {
-                return parameter.ParameterType.IsValueType && Nullable.GetUnderlyingType(parameter.ParameterType) == null
-                    ? Activator.CreateInstance(parameter.ParameterType)
-                    : null;
+                return parameter.ParameterType.IsValueType && Nullable.GetUnderlyingType(parameter.ParameterType) == null ? Activator.CreateInstance(parameter.ParameterType) : null;
             }
+
             return value;
         }
 
@@ -675,6 +624,228 @@ namespace RepoDb.Data.Helpers
         private static InvalidOperationException CreateMissingException(IDbConnection connection,
             string name) =>
             new InvalidOperationException($"There is no '{name}' extension method for the connection '{connection.GetType().FullName}'. Please install and reference the 'BulkOperations' package of the provider.");
+
+        /// <summary>
+        /// Resolves one optional bulk method argument by its parameter name and supported type.
+        /// </summary>
+        /// <param name="parameter">The optional provider method parameter being supplied.</param>
+        /// <param name="qualifiers">The qualifiers of the bulk merge, or <c>null</c>.</param>
+        /// <param name="batchSize">The number of rows of a batch.</param>
+        /// <param name="keepIdentity">A value that indicates whether the values of the identity columns are kept (the default of the library) or generated by the database.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>The argument value, or the provider parameter's default.</returns>
+        private static object ResolveArgument(ParameterInfo parameter,
+            IEnumerable<Field> qualifiers,
+            int batchSize,
+            bool keepIdentity,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction,
+            CancellationToken cancellationToken)
+        {
+            switch (parameter.Name)
+            {
+                case "batchSize":
+                    return batchSize;
+                case "qualifiers":
+                    return qualifiers ?? GetDefault(parameter);
+                case "bulkCopyTimeout":
+                case "commandTimeout":
+                    return commandTimeout;
+                case "options":
+                case "bulkCopyOptions":
+                    return GetOptions(parameter,
+                        keepIdentity);
+                case "identityBehavior":
+                    return GetIdentityBehavior(parameter,
+                        keepIdentity);
+                case "transaction":
+                    return parameter.ParameterType.IsInstanceOfType(transaction) ? transaction : GetDefault(parameter);
+                case "trace":
+                    return parameter.ParameterType.IsInstanceOfType(trace) ? trace : GetDefault(parameter);
+                case "traceKey":
+                    return traceKey ?? GetDefault(parameter);
+                case "cancellationToken":
+                    return cancellationToken;
+                default:
+                    return GetDefault(parameter);
+            }
+        }
+
+        #endregion
+
+        #region Private Types
+
+        /// <summary>
+        /// Applies the column mappings behavior to the bulk insert for as long as the scope lives. The bulk operations package of a provider reads the behavior
+        /// from the setting of the connection (the <c>BulkColumnMappingsBehavior</c> property of its <c>&lt;Provider&gt;BulkOperationsDbSetting</c>, of the enumeration
+        /// <c>&lt;Provider&gt;BulkColumnMappingsBehavior</c> that has the same names and values as <see cref="ColumnMappingBehavior"/>), so the behavior is set on the
+        /// setting and then set back. The setting is shared by every connection of the same type, so the bulk inserts of the setting take turns while the behavior is applied.
+        /// </summary>
+        private sealed class ColumnMappingsScope : IDisposable
+        {
+            #region Private Variables
+
+            private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<object, SemaphoreSlim> _gates = new System.Runtime.CompilerServices.ConditionalWeakTable<object, SemaphoreSlim>();
+            private readonly object _setting;
+            private readonly PropertyInfo _property;
+            private readonly SemaphoreSlim _gate;
+            private object _previous;
+            private bool _applied;
+
+            #endregion
+
+            #region Constructors
+
+            /// <summary>
+            /// Creates a new instance of <see cref="ColumnMappingsScope"/> class.
+            /// </summary>
+            /// <param name="setting">The setting of the connection.</param>
+            /// <param name="property">The property of the setting that holds the behavior of the column mappings.</param>
+            /// <param name="gate">The lock that serializes the changes of the setting.</param>
+            private ColumnMappingsScope(object setting,
+                PropertyInfo property,
+                SemaphoreSlim gate)
+            {
+                _setting = setting;
+                _property = property;
+                _gate = gate;
+            }
+
+            #endregion
+
+            #region Public Methods
+
+            /// <summary>
+            /// Applies the behavior of the column mappings to the setting of the connection, until the scope is disposed.
+            /// </summary>
+            /// <param name="connection">The connection of the destination database.</param>
+            /// <param name="behavior">The behavior of the column mappings.</param>
+            /// <returns>The scope to be disposed to restore the setting.</returns>
+            internal static ColumnMappingsScope Enter(IDbConnection connection,
+                Enum behavior)
+            {
+                var scope = Create(connection,
+                    behavior);
+                if (scope?._gate == null)
+                {
+                    return scope;
+                }
+
+                scope._gate.Wait();
+                return scope.Apply(behavior);
+            }
+
+            /// <summary>
+            /// Applies the behavior of the column mappings to the setting of the connection asynchronously, until the scope is disposed.
+            /// </summary>
+            /// <param name="connection">The connection of the destination database.</param>
+            /// <param name="behavior">The behavior of the column mappings.</param>
+            /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+            /// <returns>A task that represents the asynchronous operation. The task result is the scope to be disposed to restore the setting.</returns>
+            internal static async Task<ColumnMappingsScope> EnterAsync(IDbConnection connection,
+                Enum behavior,
+                CancellationToken cancellationToken)
+            {
+                var scope = Create(connection,
+                    behavior);
+                if (scope?._gate == null)
+                {
+                    return scope;
+                }
+
+                await scope._gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+                return scope.Apply(behavior);
+            }
+
+            /// <summary>
+            /// Restores the behavior of the column mappings that the setting had.
+            /// </summary>
+            public void Dispose()
+            {
+                if (_applied)
+                {
+                    _property.SetValue(_setting,
+                        _previous);
+                    _applied = false;
+                    _gate.Release();
+                }
+            }
+
+            #endregion
+
+            #region Private Methods
+
+            /// <summary>
+            /// Finds the property of the setting of the connection that defines the behavior (<c>null</c> scope if the setting has none and the behavior is the default one).
+            /// </summary>
+            /// <param name="connection">The connection of the destination database.</param>
+            /// <param name="behavior">The behavior of the column mappings.</param>
+            /// <returns>The scope.</returns>
+            private static ColumnMappingsScope Create(IDbConnection connection,
+                Enum behavior)
+            {
+                var setting = DbSettingMapper.Get(connection);
+                var property = setting?.GetType().GetProperty(ColumnMappingsBehaviorProperty,
+                    BindingFlags.Public | BindingFlags.Instance);
+                if (property == null || !property.CanRead || !property.CanWrite || !property.PropertyType.IsEnum)
+                {
+                    if (string.Equals(behavior.ToString(),
+                        nameof(ColumnMappingBehavior.Automatic),
+                        StringComparison.Ordinal))
+                    {
+                        return new ColumnMappingsScope(null,
+                            null,
+                            null);
+                    }
+
+                    throw new InvalidOperationException($"The column mappings behavior '{behavior}' requires the setting of the bulk operations package of the provider " + $"(a setting with the '{ColumnMappingsBehaviorProperty}' property) to be mapped to the connection '{connection.GetType().FullName}'.");
+                }
+
+                if (!Enum.IsDefined(property.PropertyType,
+                    behavior.ToString()))
+                {
+                    throw new InvalidOperationException($"The column mappings behavior '{behavior}' is not defined by '{property.PropertyType.FullName}'.");
+                }
+
+                return new ColumnMappingsScope(setting,
+                    property,
+                    _gates.GetValue(setting,
+                        _ => new SemaphoreSlim(1,
+                            1)));
+            }
+
+            /// <summary>
+            /// Sets the behavior of the column mappings on the setting, keeping the previous one so it can be restored.
+            /// </summary>
+            /// <param name="behavior">The behavior of the column mappings.</param>
+            /// <returns>The scope itself.</returns>
+            private ColumnMappingsScope Apply(Enum behavior)
+            {
+                try
+                {
+                    _previous = _property.GetValue(_setting);
+                    _property.SetValue(_setting,
+                        Enum.Parse(_property.PropertyType,
+                            behavior.ToString()));
+                    _applied = true;
+                }
+                catch
+                {
+                    _gate.Release();
+                    throw;
+                }
+
+                return this;
+            }
+
+            #endregion
+        }
 
         #endregion
     }

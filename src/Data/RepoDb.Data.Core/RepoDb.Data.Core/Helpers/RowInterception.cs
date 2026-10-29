@@ -34,13 +34,16 @@ namespace RepoDb.Data.Helpers
             {
                 return null;
             }
+
             foreach (var interceptor in interceptors)
             {
                 if (interceptor == null)
                 {
-                    throw new ArgumentException("The data interceptors must not contain a null item.", "dataInterceptors");
+                    throw new ArgumentException("The data interceptors must not contain a null item.",
+                        "dataInterceptors");
                 }
             }
+
             return interceptors;
         }
 
@@ -54,8 +57,10 @@ namespace RepoDb.Data.Helpers
             var columns = new List<Column>(record.FieldCount);
             for (var i = 0; i < record.FieldCount; i++)
             {
-                columns.Add(new Column(record.GetName(i), record.GetFieldType(i)));
+                columns.Add(new Column(record.GetName(i),
+                    record.GetFieldType(i)));
             }
+
             return columns;
         }
 
@@ -77,7 +82,9 @@ namespace RepoDb.Data.Helpers
                     values[i] = null;
                 }
             }
-            return new Row(columns, values);
+
+            return new Row(columns,
+                values);
         }
 
         /// <summary>
@@ -94,6 +101,7 @@ namespace RepoDb.Data.Helpers
             {
                 row = interceptors[i].Transform(row) ?? throw new InvalidOperationException($"The data interceptor at the position {i} returned null: it must return the row that is copied.");
             }
+
             return row;
         }
 

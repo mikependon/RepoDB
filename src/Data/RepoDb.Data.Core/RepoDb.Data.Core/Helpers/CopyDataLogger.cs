@@ -36,6 +36,7 @@ namespace RepoDb.Data.Helpers
             {
                 return;
             }
+
             var log = new Log
             {
                 DatabaseType = destinationConnection.GetType(),
@@ -58,7 +59,10 @@ namespace RepoDb.Data.Helpers
             IDbConnection destinationConnection,
             string table,
             int inserted) =>
-            Add(progress, destinationConnection, LogLevel.Info, $"{inserted} row(s) were sent to the table '{table}' by the bulk insert.");
+            Add(progress,
+                destinationConnection,
+                LogLevel.Info,
+                $"{inserted} row(s) were sent to the table '{table}' by the bulk insert.");
 
         /// <summary>
         /// Logs the result of the bulk merge of a table. The rows of the target table are not compared, as the merge updates the rows that already exist instead of adding them.
@@ -71,7 +75,10 @@ namespace RepoDb.Data.Helpers
             IDbConnection destinationConnection,
             string table,
             int merged) =>
-            Add(progress, destinationConnection, LogLevel.Info, $"{merged} row(s) were merged into the table '{table}' by the bulk merge.");
+            Add(progress,
+                destinationConnection,
+                LogLevel.Info,
+                $"{merged} row(s) were merged into the table '{table}' by the bulk merge.");
 
         #endregion
     }

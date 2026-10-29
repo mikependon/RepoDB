@@ -18,7 +18,7 @@ namespace RepoDb.Data.Helpers
 {
     /// <summary>
     /// Reads the rows of an XML file forward only, without loading the file in memory: each child element of the root element is a row, and each child element of a row is a
-    /// column (its name is the name of the column and its text is the value). The attributes are not columns. A self-closing element (<c>&lt;Name /&gt;</c>) is a <c>null</c> value, an element that has no content between its start and end tags (<c>&lt;Name&gt;&lt;/Name&gt;</c>) is an empty text (the value is converted to <c>null</c> when the column is not a text), and an element that has
+    /// column (its name is the name of the column and its text is the value). The attributes are not columns. A self-closing element (<c>&lt;Name /&gt;</c>) is a <c>null</c> value, an element that has no content between its start and end tags (<c>&lt;Name&gt; &lt;/Name&gt;</c>) is an empty text (the value is converted to <c>null</c> when the column is not a text), and an element that has
     /// child elements has the XML of its content as the value.
     /// </summary>
     internal sealed class XmlRowReader : IImportRowReader
@@ -42,7 +42,6 @@ namespace RepoDb.Data.Helpers
         /// True once there is no other row.
         /// </summary>
         private bool _done;
-
         private long _rowNumber;
 
         #endregion
@@ -55,43 +54,61 @@ namespace RepoDb.Data.Helpers
         /// <param name="path">The path of the file.</param>
         public XmlRowReader(string path)
         {
-            _stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
-            _reader = XmlReader.Create(_stream, new XmlReaderSettings
-            {
-                Async = true,
-                IgnoreComments = true,
-                IgnoreProcessingInstructions = true,
-                IgnoreWhitespace = true,
-                DtdProcessing = DtdProcessing.Prohibit
-            });
+            _stream = new FileStream(path,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read,
+                4096,
+                FileOptions.Asynchronous | FileOptions.SequentialScan);
+            _reader = XmlReader.Create(_stream,
+                new XmlReaderSettings { Async = true, IgnoreComments = true, IgnoreProcessingInstructions = true, IgnoreWhitespace = true, DtdProcessing = DtdProcessing.Prohibit });
         }
 
         #endregion
 
         #region Properties
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the number of the row that was read last (the rows are counted from 1).
+        /// </summary>
         public long RowNumber => _rowNumber;
 
         #endregion
 
         #region Public Methods
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Reads the next row.
+        /// </summary>
+        /// <param name="index">The position of each column (by its name, without the case) in the array of the values. The columns that are not in it are left out.</param>
+        /// <param name="width">The number of columns in the array of the values.</param>
+        /// <returns>The values by the position of the columns (<c>null</c> for a missing value), or <c>null</c> if there is no other row.</returns>
+        /// <exception cref="FormatException">The file is not valid, or a row is not valid.</exception>
         public object[] Next(IDictionary<string, int> index,
             int width)
         {
             var cells = ReadCells();
-            return cells == null ? null : ToValues(cells, index, width);
+            return cells == null ? null : ToValues(cells,
+                index,
+                width);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Reads the next row in an asynchronous way.
+        /// </summary>
+        /// <param name="index">The position of each column (by its name, without the case) in the array of the values. The columns that are not in it are left out.</param>
+        /// <param name="width">The number of columns in the array of the values.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the values by the position of the columns, or <c>null</c> if there is no other row.</returns>
+        /// <exception cref="FormatException">The file is not valid, or a row is not valid.</exception>
         public async Task<object[]> NextAsync(IDictionary<string, int> index,
             int width,
             CancellationToken cancellationToken)
         {
             var cells = await ReadCellsAsync(cancellationToken).ConfigureAwait(false);
-            return cells == null ? null : ToValues(cells, index, width);
+            return cells == null ? null : ToValues(cells,
+                index,
+                width);
         }
 
         /// <summary>
@@ -107,6 +124,7 @@ namespace RepoDb.Data.Helpers
                 {
                     return null;
                 }
+
                 _rowNumber++;
                 var cells = new List<KeyValuePair<string, string>>();
                 using (var row = _reader.ReadSubtree())
@@ -119,11 +137,13 @@ namespace RepoDb.Data.Helpers
                             if (row.NodeType == XmlNodeType.Element && row.Depth == 1)
                             {
                                 var name = XmlConvert.DecodeName(row.LocalName);
-                                cells.Add(new KeyValuePair<string, string>(name, ReadCell(row)));
+                                cells.Add(new KeyValuePair<string, string>(name,
+                                    ReadCell(row)));
                             }
                         }
                     }
                 }
+
                 return cells;
             }
             catch (XmlException e)
@@ -146,6 +166,7 @@ namespace RepoDb.Data.Helpers
                 {
                     return null;
                 }
+
                 _rowNumber++;
                 var cells = new List<KeyValuePair<string, string>>();
                 using (var row = _reader.ReadSubtree())
@@ -158,11 +179,14 @@ namespace RepoDb.Data.Helpers
                             if (row.NodeType == XmlNodeType.Element && row.Depth == 1)
                             {
                                 var name = XmlConvert.DecodeName(row.LocalName);
-                                cells.Add(new KeyValuePair<string, string>(name, await ReadCellAsync(row, cancellationToken).ConfigureAwait(false)));
+                                cells.Add(new KeyValuePair<string, string>(name,
+                                    await ReadCellAsync(row,
+                                        cancellationToken).ConfigureAwait(false)));
                             }
                         }
                     }
                 }
+
                 return cells;
             }
             catch (XmlException e)
@@ -184,6 +208,7 @@ namespace RepoDb.Data.Helpers
                 {
                     return false;
                 }
+
                 _rowNumber++;
                 _reader.Skip();
                 _pendingRead = false;
@@ -209,6 +234,7 @@ namespace RepoDb.Data.Helpers
                 {
                     return false;
                 }
+
                 _rowNumber++;
                 await _reader.SkipAsync().ConfigureAwait(false);
                 _pendingRead = false;
@@ -220,7 +246,9 @@ namespace RepoDb.Data.Helpers
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Releases the row reader and its file resources.
+        /// </summary>
         public void Dispose()
         {
             _reader.Dispose();
@@ -243,12 +271,14 @@ namespace RepoDb.Data.Helpers
                 {
                     return Finish();
                 }
+
                 _pendingRead = true;
                 if (Examine())
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -266,12 +296,14 @@ namespace RepoDb.Data.Helpers
                 {
                     return Finish();
                 }
+
                 _pendingRead = true;
                 if (Examine())
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -291,16 +323,20 @@ namespace RepoDb.Data.Helpers
                         _done = true;
                     }
                 }
+
                 return false;
             }
+
             if (_reader.NodeType == XmlNodeType.Element && _reader.Depth == 1)
             {
                 return true;
             }
+
             if (_reader.NodeType == XmlNodeType.EndElement && _reader.Depth == 0)
             {
                 _done = true;
             }
+
             return false;
         }
 
@@ -316,6 +352,7 @@ namespace RepoDb.Data.Helpers
             {
                 throw new FormatException("The file is not valid XML: it has no root element.");
             }
+
             return false;
         }
 
@@ -330,6 +367,7 @@ namespace RepoDb.Data.Helpers
             {
                 return null;
             }
+
             var depth = row.Depth;
             var text = new StringBuilder();
             var more = row.Read();
@@ -339,17 +377,21 @@ namespace RepoDb.Data.Helpers
                 {
                     break;
                 }
+
                 if (row.NodeType == XmlNodeType.Element)
                 {
                     text.Append(row.ReadOuterXml());
                     continue;
                 }
+
                 if (row.NodeType == XmlNodeType.Text || row.NodeType == XmlNodeType.CDATA || row.NodeType == XmlNodeType.SignificantWhitespace || row.NodeType == XmlNodeType.Whitespace)
                 {
                     text.Append(row.Value);
                 }
+
                 more = row.Read();
             }
+
             return text.ToString();
         }
 
@@ -366,6 +408,7 @@ namespace RepoDb.Data.Helpers
             {
                 return null;
             }
+
             var depth = row.Depth;
             var text = new StringBuilder();
             var more = await row.ReadAsync().ConfigureAwait(false);
@@ -376,17 +419,21 @@ namespace RepoDb.Data.Helpers
                 {
                     break;
                 }
+
                 if (row.NodeType == XmlNodeType.Element)
                 {
                     text.Append(await row.ReadOuterXmlAsync().ConfigureAwait(false));
                     continue;
                 }
+
                 if (row.NodeType == XmlNodeType.Text || row.NodeType == XmlNodeType.CDATA || row.NodeType == XmlNodeType.SignificantWhitespace || row.NodeType == XmlNodeType.Whitespace)
                 {
                     text.Append(row.Value);
                 }
+
                 more = await row.ReadAsync().ConfigureAwait(false);
             }
+
             return text.ToString();
         }
 
@@ -404,16 +451,24 @@ namespace RepoDb.Data.Helpers
             var values = new object[width];
             foreach (var cell in cells)
             {
-                if (index.TryGetValue(cell.Key, out var position))
+                if (index.TryGetValue(cell.Key,
+                    out var position))
                 {
                     values[position] = cell.Value;
                 }
             }
+
             return values;
         }
 
+        /// <summary>
+        /// Creates an error describing invalid XML row content.
+        /// </summary>
+        /// <param name="e">The XML parser exception that caused the invalid input error.</param>
+        /// <returns>An exception describing the invalid content.</returns>
         private static FormatException Invalid(XmlException e) =>
-            new FormatException("The file is not valid XML: " + e.Message, e);
+            new FormatException("The file is not valid XML: " + e.Message,
+                e);
 
         #endregion
     }

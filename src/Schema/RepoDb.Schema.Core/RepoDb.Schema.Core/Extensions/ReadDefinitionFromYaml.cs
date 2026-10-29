@@ -37,7 +37,11 @@ namespace RepoDb.Schema
             string filename,
             string traceKey = SchemaTraceKeys.ReadDefinitionFromYaml,
             ITrace trace = null) =>
-            SchemaDefinitionFile.Read(connection, filename, traceKey, trace, SchemaDefinitionYamlReader.Parse);
+            SchemaDefinitionFile.Read(connection,
+                filename,
+                traceKey,
+                trace,
+                SchemaDefinitionYamlReader.Parse);
 
         /// <summary>
         /// Asynchronously reads a RepoDB YAML definition, including all tables and extraction metadata.
@@ -55,7 +59,12 @@ namespace RepoDb.Schema
             string traceKey = SchemaTraceKeys.ReadDefinitionFromYaml,
             ITrace trace = null,
             CancellationToken cancellationToken = default) =>
-            SchemaDefinitionFile.ReadAsync(connection, filename, traceKey, trace, SchemaDefinitionYamlReader.Parse, cancellationToken);
+            SchemaDefinitionFile.ReadAsync(connection,
+                filename,
+                traceKey,
+                trace,
+                SchemaDefinitionYamlReader.Parse,
+                cancellationToken);
 
         #endregion
     }

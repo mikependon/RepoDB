@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -27,7 +27,8 @@ namespace RepoDb.Schema.Models
         public TableSchema(string name,
             string schema)
         {
-            Table = new TableInfo(name, schema);
+            Table = new TableInfo(name,
+                schema);
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace RepoDb.Schema.Models
 
         #endregion
 
-        #region Overrides
+        #region Public Methods
 
         /// <summary>
         /// Gets the string that represents the instance of this <see cref="TableSchema"/> object.
@@ -89,10 +90,6 @@ namespace RepoDb.Schema.Models
         public override string ToString() =>
             Table?.Name;
 
-        #endregion
-
-        #region Equality and comparers
-
         /// <summary>
         /// Returns the hashcode for this <see cref="TableSchema"/>.
         /// </summary>
@@ -100,13 +97,18 @@ namespace RepoDb.Schema.Models
         public override int GetHashCode()
         {
             var hashCode = new HashCode();
-            foreach (var item in CheckConstraints) hashCode.Add(item);
-            foreach (var item in Columns) hashCode.Add(item);
-            foreach (var item in ForeignKeys) hashCode.Add(item);
-            foreach (var item in Indexes) hashCode.Add(item);
+            foreach (var item in CheckConstraints)
+                hashCode.Add(item);
+            foreach (var item in Columns)
+                hashCode.Add(item);
+            foreach (var item in ForeignKeys)
+                hashCode.Add(item);
+            foreach (var item in Indexes)
+                hashCode.Add(item);
             hashCode.Add(PrimaryKey);
             hashCode.Add(Table);
-            foreach (var item in UniqueConstraints) hashCode.Add(item);
+            foreach (var item in UniqueConstraints)
+                hashCode.Add(item);
             return hashCode.ToHashCode();
         }
 
@@ -125,16 +127,14 @@ namespace RepoDb.Schema.Models
         /// <returns>True if the instances are equal.</returns>
         public bool Equals(TableSchema other)
         {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return CheckConstraints.SequenceEqual(other.CheckConstraints)
-                && Columns.SequenceEqual(other.Columns)
-                && ForeignKeys.SequenceEqual(other.ForeignKeys)
-                && Indexes.SequenceEqual(other.Indexes)
-                && Equals(PrimaryKey, other.PrimaryKey)
-                && Equals(Table, other.Table)
-                && UniqueConstraints.SequenceEqual(other.UniqueConstraints);
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this,
+                other))
+                return true;
+            return CheckConstraints.SequenceEqual(other.CheckConstraints) && Columns.SequenceEqual(other.Columns) && ForeignKeys.SequenceEqual(other.ForeignKeys) && Indexes.SequenceEqual(other.Indexes) && Equals(PrimaryKey,
+                other.PrimaryKey) && Equals(Table,
+                    other.Table) && UniqueConstraints.SequenceEqual(other.UniqueConstraints);
         }
 
         /// <summary>
@@ -150,6 +150,7 @@ namespace RepoDb.Schema.Models
             {
                 return objB is null;
             }
+
             return objA.Equals(objB);
         }
 
@@ -160,7 +161,8 @@ namespace RepoDb.Schema.Models
         /// <param name="objB">The second <see cref="TableSchema"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(TableSchema objA,
-            TableSchema objB) => !(objA == objB);
+            TableSchema objB) =>
+            !(objA == objB);
 
         #endregion
     }

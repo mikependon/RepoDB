@@ -31,27 +31,53 @@ namespace RepoDb.Schema
             IDataRecord record)
         {
             var field = column.Field;
-            column.NativeType = Read(record, "NativeType") as string ?? Read(record, "ColumnType") as string;
-            var precision = Read(record, "Precision");
-            var scale = Read(record, "Scale");
-            if (precision != null) column.NumericPrecision = Convert.ToInt32(precision, CultureInfo.InvariantCulture);
-            if (scale != null) column.NumericScale = Convert.ToInt32(scale, CultureInfo.InvariantCulture);
+            column.NativeType = Read(record,
+                "NativeType") as string ?? Read(record,
+                    "ColumnType") as string;
+            var precision = Read(record,
+                "Precision");
+            var scale = Read(record,
+                "Scale");
+            if (precision != null)
+                column.NumericPrecision = Convert.ToInt32(precision,
+                    CultureInfo.InvariantCulture);
+            if (scale != null)
+                column.NumericScale = Convert.ToInt32(scale,
+                    CultureInfo.InvariantCulture);
             ReadNativeNumericType(column);
             var text = field.Type == typeof(string) || field.Type == typeof(char);
-            var charset = Read(record, "CharacterSet") as string;
-            column.Collation = column.Collation ?? Read(record, "Collation") as string;
+            var charset = Read(record,
+                "CharacterSet") as string;
+            column.Collation = column.Collation ?? Read(record,
+                "Collation") as string;
             column.CharacterSet = text ? charset : null;
             if (text && charset != null)
             {
-                var encoding = charset.ToLowerInvariant().Replace("-", "");
-                if (encoding.StartsWith("utf", StringComparison.Ordinal) || string.Equals(encoding, "ucs2", StringComparison.Ordinal)) column.IsUnicode = true;
-                else if (!string.Equals(encoding, "sql_ascii", StringComparison.Ordinal)) column.IsUnicode = false;
+                var encoding = charset.ToLowerInvariant().Replace("-",
+                    "");
+                if (encoding.StartsWith("utf",
+                    StringComparison.Ordinal) || string.Equals(encoding,
+                        "ucs2",
+                        StringComparison.Ordinal))
+                    column.IsUnicode = true;
+                else if (!string.Equals(encoding,
+                    "sql_ascii",
+                    StringComparison.Ordinal))
+                    column.IsUnicode = false;
                 column.LengthUnit = "characters";
             }
-            var temporal = Read(record, "TemporalPrecision");
-            if (temporal != null) column.TemporalPrecision = Convert.ToInt32(temporal, CultureInfo.InvariantCulture);
-            if (string.Equals(field.Provider, "SqlServer", StringComparison.OrdinalIgnoreCase))
-                ApplySqlServer(column, Read(record, "CodePage"));
+
+            var temporal = Read(record,
+                "TemporalPrecision");
+            if (temporal != null)
+                column.TemporalPrecision = Convert.ToInt32(temporal,
+                    CultureInfo.InvariantCulture);
+            if (string.Equals(field.Provider,
+                "SqlServer",
+                StringComparison.OrdinalIgnoreCase))
+                ApplySqlServer(column,
+                    Read(record,
+                        "CodePage"));
             return column;
         }
 
@@ -69,7 +95,9 @@ namespace RepoDb.Schema
             string name)
         {
             for (var i = 0; i < record.FieldCount; i++)
-                if (string.Equals(record.GetName(i), name, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(record.GetName(i),
+                    name,
+                    StringComparison.OrdinalIgnoreCase))
                     return record.IsDBNull(i) ? null : record.GetValue(i);
             return null;
         }
@@ -84,31 +112,58 @@ namespace RepoDb.Schema
         {
             var field = column.Field;
             var text = field.Type == typeof(string) || field.Type == typeof(char);
-            var native = field.DatabaseType?.ToLowerInvariant().Split('(', ' ')[0];
-            if (string.Equals(field.Provider, "SqlServer", StringComparison.OrdinalIgnoreCase))
+            var native = field.DatabaseType?.ToLowerInvariant().Split('(',
+                ' ')[0];
+            if (string.Equals(field.Provider,
+                "SqlServer",
+                StringComparison.OrdinalIgnoreCase))
             {
-                if (text && (string.Equals(native, "nvarchar", StringComparison.Ordinal) || string.Equals(native, "nchar", StringComparison.Ordinal) || string.Equals(native, "ntext", StringComparison.Ordinal)))
+                if (text && (string.Equals(native,
+                    "nvarchar",
+                    StringComparison.Ordinal) || string.Equals(native,
+                        "nchar",
+                        StringComparison.Ordinal) || string.Equals(native,
+                        "ntext",
+                        StringComparison.Ordinal)))
                 {
                     column.IsUnicode = true;
                     column.CharacterSet = "UTF-16";
                     column.LengthUnit = "utf16CodeUnits";
                 }
-                else if (text && (string.Equals(native, "varchar", StringComparison.Ordinal) || string.Equals(native, "char", StringComparison.Ordinal) || string.Equals(native, "text", StringComparison.Ordinal)))
+                else if (text && (string.Equals(native,
+                    "varchar",
+                    StringComparison.Ordinal) || string.Equals(native,
+                        "char",
+                        StringComparison.Ordinal) || string.Equals(native,
+                        "text",
+                        StringComparison.Ordinal)))
                 {
                     column.LengthUnit = "bytes";
-                    if (codePage != null && Convert.ToInt32(codePage, CultureInfo.InvariantCulture) > 0)
+                    if (codePage != null && Convert.ToInt32(codePage,
+                        CultureInfo.InvariantCulture) > 0)
                     {
-                        var number = Convert.ToInt32(codePage, CultureInfo.InvariantCulture);
+                        var number = Convert.ToInt32(codePage,
+                            CultureInfo.InvariantCulture);
                         column.IsUnicode = number == 65001;
                         column.CharacterSet = number == 65001 ? "UTF-8" : "CP" + number.ToString(CultureInfo.InvariantCulture);
                     }
                     else if (column.Collation != null)
                     {
-                        column.IsUnicode = column.Collation.EndsWith("_UTF8", StringComparison.OrdinalIgnoreCase);
-                        if (column.IsUnicode == true) column.CharacterSet = "UTF-8";
+                        column.IsUnicode = column.Collation.EndsWith("_UTF8",
+                            StringComparison.OrdinalIgnoreCase);
+                        if (column.IsUnicode == true)
+                            column.CharacterSet = "UTF-8";
                     }
                 }
-                if (string.Equals(native, "datetime2", StringComparison.Ordinal) || string.Equals(native, "datetimeoffset", StringComparison.Ordinal) || string.Equals(native, "time", StringComparison.Ordinal)) column.TemporalPrecision = field.Scale;
+
+                if (string.Equals(native,
+                    "datetime2",
+                    StringComparison.Ordinal) || string.Equals(native,
+                        "datetimeoffset",
+                        StringComparison.Ordinal) || string.Equals(native,
+                        "time",
+                        StringComparison.Ordinal))
+                    column.TemporalPrecision = field.Scale;
             }
         }
 
@@ -118,14 +173,18 @@ namespace RepoDb.Schema
         /// <param name="column">The column whose numeric metadata is updated.</param>
         private static void ReadNativeNumericType(ColumnInfo column)
         {
-            if (column.NativeType == null) return;
+            if (column.NativeType == null)
+                return;
             var numeric = Regex.Match(column.NativeType,
                 @"^(?:numeric|decimal)\s*\(\s*(?<precision>\d+)\s*,\s*(?<scale>-?\d+)\s*\)",
                 RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
                 TimeSpan.FromSeconds(1));
-            if (!numeric.Success) return;
-            column.NumericPrecision = int.Parse(numeric.Groups["precision"].Value, CultureInfo.InvariantCulture);
-            column.NumericScale = int.Parse(numeric.Groups["scale"].Value, CultureInfo.InvariantCulture);
+            if (!numeric.Success)
+                return;
+            column.NumericPrecision = int.Parse(numeric.Groups["precision"].Value,
+                CultureInfo.InvariantCulture);
+            column.NumericScale = int.Parse(numeric.Groups["scale"].Value,
+                CultureInfo.InvariantCulture);
         }
 
         #endregion

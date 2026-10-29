@@ -29,7 +29,8 @@ namespace RepoDb.Data.Helpers
         /// <returns>The reader of the rows, to be disposed by the caller.</returns>
         public static CsvRowReader Open(string filename,
             char separator) =>
-            new CsvRowReader(filename, separator);
+            new CsvRowReader(filename,
+                separator);
 
         /// <summary>
         /// Reads the header of the file: the names of the columns, without repeating a name (the case is ignored) or the names that are empty.
@@ -41,7 +42,8 @@ namespace RepoDb.Data.Helpers
         public static IList<string> ReadColumns(string filename,
             char separator)
         {
-            using (var reader = Open(filename, separator))
+            using (var reader = Open(filename,
+                separator))
             {
                 return Distinct(reader.ReadHeader());
             }
@@ -59,7 +61,8 @@ namespace RepoDb.Data.Helpers
             char separator,
             CancellationToken cancellationToken = default)
         {
-            using (var reader = Open(filename, separator))
+            using (var reader = Open(filename,
+                separator))
             {
                 return Distinct(await reader.ReadHeaderAsync(cancellationToken).ConfigureAwait(false));
             }
@@ -75,13 +78,15 @@ namespace RepoDb.Data.Helpers
             char separator)
         {
             var count = 0L;
-            using (var reader = Open(filename, separator))
+            using (var reader = Open(filename,
+                separator))
             {
                 while (reader.Skip())
                 {
                     count++;
                 }
             }
+
             return count;
         }
 
@@ -97,13 +102,15 @@ namespace RepoDb.Data.Helpers
             CancellationToken cancellationToken = default)
         {
             var count = 0L;
-            using (var reader = Open(filename, separator))
+            using (var reader = Open(filename,
+                separator))
             {
                 while (await reader.SkipAsync(cancellationToken).ConfigureAwait(false))
                 {
                     count++;
                 }
             }
+
             return count;
         }
 
@@ -125,16 +132,21 @@ namespace RepoDb.Data.Helpers
                 {
                     continue;
                 }
+
                 var found = false;
                 for (var i = 0; i < columns.Count && !found; i++)
                 {
-                    found = string.Equals(columns[i], name, StringComparison.OrdinalIgnoreCase);
+                    found = string.Equals(columns[i],
+                        name,
+                        StringComparison.OrdinalIgnoreCase);
                 }
+
                 if (!found)
                 {
                     columns.Add(name);
                 }
             }
+
             return columns;
         }
 
@@ -146,8 +158,14 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal sealed class CsvImportSource : IImportSource
     {
+        #region Private Variables
+
         private readonly string _filename;
         private readonly char _separator;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Creates a new instance of <see cref="CsvImportSource"/> class.
@@ -161,36 +179,76 @@ namespace RepoDb.Data.Helpers
             _separator = separator;
         }
 
-        /// <inheritdoc />
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a value indicating that the CSV header lists every source column.
+        /// </summary>
         public bool HasAllColumns => true;
 
-        /// <inheritdoc />
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Validates the options of the source (i.e.: the separator of a CSV file).
+        /// </summary>
+        /// <exception cref="ArgumentException">An option of the source is not valid.</exception>
         public void Validate()
         {
             if (_separator == '"' || _separator == '\r' || _separator == '\n')
             {
-                throw new ArgumentException("The separator must not be a quote or a line break.", "separator");
+                throw new ArgumentException("The separator must not be a quote or a line break.",
+                    "separator");
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Reads the file to find its columns: the names without repeating a name (the case is ignored), in the order that they were found.
+        /// </summary>
+        /// <returns>The names of the columns.</returns>
         public IList<string> ReadColumns() =>
-            CsvHelper.ReadColumns(_filename, _separator);
+            CsvHelper.ReadColumns(_filename,
+                _separator);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Reads the file to find its columns in an asynchronous way.
+        /// </summary>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the names of the columns.</returns>
         public Task<IList<string>> ReadColumnsAsync(CancellationToken cancellationToken) =>
-            CsvHelper.ReadColumnsAsync(_filename, _separator, cancellationToken);
+            CsvHelper.ReadColumnsAsync(_filename,
+                _separator,
+                cancellationToken);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Counts the rows of the file.
+        /// </summary>
+        /// <returns>The number of rows.</returns>
         public long CountRows() =>
-            CsvHelper.CountRows(_filename, _separator);
+            CsvHelper.CountRows(_filename,
+                _separator);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Counts the rows of the file in an asynchronous way.
+        /// </summary>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the number of rows.</returns>
         public Task<long> CountRowsAsync(CancellationToken cancellationToken) =>
-            CsvHelper.CountRowsAsync(_filename, _separator, cancellationToken);
+            CsvHelper.CountRowsAsync(_filename,
+                _separator,
+                cancellationToken);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Opens the file to read its rows.
+        /// </summary>
+        /// <returns>The reader of the rows, to be disposed by the caller.</returns>
         public IImportRowReader Open() =>
-            CsvHelper.Open(_filename, _separator);
+            CsvHelper.Open(_filename,
+                _separator);
+
+        #endregion
     }
 }

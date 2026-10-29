@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -68,10 +68,13 @@ namespace RepoDb.Schema.Models
         /// <returns>True if the instances are equal.</returns>
         public bool Equals(SchemaInfo other)
         {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return Equals(Name, other.Name);
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this,
+                other))
+                return true;
+            return Equals(Name,
+                other.Name);
         }
 
         /// <summary>
@@ -87,6 +90,7 @@ namespace RepoDb.Schema.Models
             {
                 return objB is null;
             }
+
             return objA.Equals(objB);
         }
 

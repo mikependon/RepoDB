@@ -101,7 +101,7 @@ namespace RepoDb.Schema.Models
 
         #endregion
 
-        #region Overrides
+        #region Public Methods
 
         /// <summary>
         /// Gets the string that represents the instance of this <see cref="ColumnInfo"/> object.
@@ -109,10 +109,6 @@ namespace RepoDb.Schema.Models
         /// <returns>The name of the field of this <see cref="ColumnInfo"/> object (<c>null</c> if it has no field).</returns>
         public override string ToString() =>
             Field?.Name;
-
-        #endregion
-
-        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="ColumnInfo"/>.
@@ -155,25 +151,28 @@ namespace RepoDb.Schema.Models
         /// <returns>True if the instances are equal.</returns>
         public bool Equals(ColumnInfo other)
         {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return Equals(Field, other.Field)
-                && Equals(Ordinal, other.Ordinal)
-                && Equals(DefaultExpression, other.DefaultExpression)
-                && Equals(DefaultValue, other.DefaultValue)
-                && Equals(IdentitySeed, other.IdentitySeed)
-                && Equals(IdentityIncrement, other.IdentityIncrement)
-                && Equals(ComputedExpression, other.ComputedExpression)
-                && Equals(Collation, other.Collation)
-                && Equals(NativeType, other.NativeType)
-                && Equals(NumericPrecision, other.NumericPrecision)
-                && Equals(NumericScale, other.NumericScale)
-                && Equals(Comment, other.Comment)
-                && Equals(CharacterSet, other.CharacterSet)
-                && Equals(IsUnicode, other.IsUnicode)
-                && Equals(LengthUnit, other.LengthUnit)
-                && Equals(TemporalPrecision, other.TemporalPrecision);
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this,
+                other))
+                return true;
+            return Equals(Field,
+                other.Field) && Equals(Ordinal,
+                    other.Ordinal) && Equals(DefaultExpression,
+                    other.DefaultExpression) && Equals(DefaultValue,
+                    other.DefaultValue) && Equals(IdentitySeed,
+                    other.IdentitySeed) && Equals(IdentityIncrement,
+                    other.IdentityIncrement) && Equals(ComputedExpression,
+                    other.ComputedExpression) && Equals(Collation,
+                    other.Collation) && Equals(NativeType,
+                    other.NativeType) && Equals(NumericPrecision,
+                    other.NumericPrecision) && Equals(NumericScale,
+                    other.NumericScale) && Equals(Comment,
+                    other.Comment) && Equals(CharacterSet,
+                    other.CharacterSet) && Equals(IsUnicode,
+                    other.IsUnicode) && Equals(LengthUnit,
+                    other.LengthUnit) && Equals(TemporalPrecision,
+                    other.TemporalPrecision);
         }
 
         /// <summary>
@@ -189,6 +188,7 @@ namespace RepoDb.Schema.Models
             {
                 return objB is null;
             }
+
             return objA.Equals(objB);
         }
 
@@ -199,7 +199,8 @@ namespace RepoDb.Schema.Models
         /// <param name="objB">The second <see cref="ColumnInfo"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(ColumnInfo objA,
-            ColumnInfo objB) => !(objA == objB);
+            ColumnInfo objB) =>
+            !(objA == objB);
 
         #endregion
     }

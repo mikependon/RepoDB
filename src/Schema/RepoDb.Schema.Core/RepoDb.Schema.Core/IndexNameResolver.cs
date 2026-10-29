@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -56,16 +56,31 @@ namespace RepoDb.Schema
             var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var table in tables)
             {
-                RemoveRenamedIndexes(table, behavior, composer, probe);
-                foreach (var index in GetIndexesToCreate(table, behavior))
+                RemoveRenamedIndexes(table,
+                    behavior,
+                    composer,
+                    probe);
+                foreach (var index in GetIndexesToCreate(table,
+                    behavior))
                 {
                     var name = index.Name;
                     var attempt = 0;
-                    while (attempt < MaxAttempts && (used.Contains(name) || (probe(composer.ComposeIndexNameExists(table.Name, name)) == true && !IsOwn(table, name, behavior, composer, probe))))
+                    while (attempt < MaxAttempts && (used.Contains(name) || (probe(composer.ComposeIndexNameExists(table.Name,
+                        name)) == true && !IsOwn(table,
+                            name,
+                            behavior,
+                            composer,
+                            probe))))
                     {
-                        name = GetName(table, index, ++attempt);
+                        name = GetName(table,
+                            index,
+                            ++attempt);
                     }
-                    Use(table, index, name, used);
+
+                    Use(table,
+                        index,
+                        name,
+                        used);
                 }
             }
         }
@@ -93,17 +108,31 @@ namespace RepoDb.Schema
             var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var table in tables)
             {
-                await RemoveRenamedIndexesAsync(table, behavior, composer, probe).ConfigureAwait(false);
-                foreach (var index in GetIndexesToCreate(table, behavior))
+                await RemoveRenamedIndexesAsync(table,
+                    behavior,
+                    composer,
+                    probe).ConfigureAwait(false);
+                foreach (var index in GetIndexesToCreate(table,
+                    behavior))
                 {
                     var name = index.Name;
                     var attempt = 0;
-                    while (attempt < MaxAttempts && (used.Contains(name) || (await probe(composer.ComposeIndexNameExists(table.Name, name)).ConfigureAwait(false) == true &&
-                        !await IsOwnAsync(table, name, behavior, composer, probe).ConfigureAwait(false))))
+                    while (attempt < MaxAttempts && (used.Contains(name) || (await probe(composer.ComposeIndexNameExists(table.Name,
+                        name)).ConfigureAwait(false) == true && !await IsOwnAsync(table,
+                            name,
+                            behavior,
+                            composer,
+                            probe).ConfigureAwait(false))))
                     {
-                        name = GetName(table, index, ++attempt);
+                        name = GetName(table,
+                            index,
+                            ++attempt);
                     }
-                    Use(table, index, name, used);
+
+                    Use(table,
+                        index,
+                        name,
+                        used);
                 }
             }
         }
@@ -135,18 +164,24 @@ namespace RepoDb.Schema
             {
                 for (var attempt = 1; attempt <= MaxAttempts; attempt++)
                 {
-                    var name = GetName(table, index, attempt);
-                    if (probe(composer.ComposeIndexExists(table.Name, name)) == true)
+                    var name = GetName(table,
+                        index,
+                        attempt);
+                    if (probe(composer.ComposeIndexExists(table.Name,
+                        name)) == true)
                     {
                         present.Add(index);
                         break;
                     }
-                    if (probe(composer.ComposeIndexNameExists(table.Name, name)) != true)
+
+                    if (probe(composer.ComposeIndexNameExists(table.Name,
+                        name)) != true)
                     {
                         break;
                     }
                 }
             }
+
             table.MissingIndexes = table.MissingIndexes.Where(index => !present.Contains(index)).ToList();
         }
 
@@ -173,18 +208,24 @@ namespace RepoDb.Schema
             {
                 for (var attempt = 1; attempt <= MaxAttempts; attempt++)
                 {
-                    var name = GetName(table, index, attempt);
-                    if (await probe(composer.ComposeIndexExists(table.Name, name)).ConfigureAwait(false) == true)
+                    var name = GetName(table,
+                        index,
+                        attempt);
+                    if (await probe(composer.ComposeIndexExists(table.Name,
+                        name)).ConfigureAwait(false) == true)
                     {
                         present.Add(index);
                         break;
                     }
-                    if (await probe(composer.ComposeIndexNameExists(table.Name, name)).ConfigureAwait(false) != true)
+
+                    if (await probe(composer.ComposeIndexNameExists(table.Name,
+                        name)).ConfigureAwait(false) != true)
                     {
                         break;
                     }
                 }
             }
+
             table.MissingIndexes = table.MissingIndexes.Where(index => !present.Contains(index)).ToList();
         }
 
@@ -210,6 +251,7 @@ namespace RepoDb.Schema
             {
                 indexes = Enumerable.Empty<IndexInfo>();
             }
+
             return indexes.Where(index => index.Name != null).ToList();
         }
 
@@ -227,7 +269,8 @@ namespace RepoDb.Schema
             TableExistsBehavior behavior,
             ISchemaComposer composer,
             Func<string, bool?> probe) =>
-            behavior == TableExistsBehavior.Drop && table.Exists == true && probe(composer.ComposeIndexExists(table.Name, name)) == true;
+            behavior == TableExistsBehavior.Drop && table.Exists == true && probe(composer.ComposeIndexExists(table.Name,
+                name)) == true;
 
         /// <summary>
         /// Checks whether the name is used by an index of the table that is dropped before it is created, so the name is free again (in an asynchronous way).
@@ -243,7 +286,8 @@ namespace RepoDb.Schema
             TableExistsBehavior behavior,
             ISchemaComposer composer,
             Func<string, Task<bool?>> probe) =>
-            behavior == TableExistsBehavior.Drop && table.Exists == true && await probe(composer.ComposeIndexExists(table.Name, name)).ConfigureAwait(false) == true;
+            behavior == TableExistsBehavior.Drop && table.Exists == true && await probe(composer.ComposeIndexExists(table.Name,
+                name)).ConfigureAwait(false) == true;
 
         /// <summary>
         /// Gets the name of the index for the attempt: the name of the table is the prefix, and the number of the attempt is the suffix when the prefixed name is used too.
@@ -255,9 +299,7 @@ namespace RepoDb.Schema
         private static string GetName(PlanTable table,
             IndexInfo index,
             int attempt) =>
-            attempt == 1
-                ? $"{table.Schema.Table.Name}_{index.Name}"
-                : $"{table.Schema.Table.Name}_{index.Name}_{attempt}";
+            attempt == 1 ? $"{table.Schema.Table.Name}_{index.Name}" : $"{table.Schema.Table.Name}_{index.Name}_{attempt}";
 
         /// <summary>
         /// Uses the name for the index: the index of the table is replaced by a copy of it that has the name (the indexes of the source schema are not changed).
@@ -272,7 +314,9 @@ namespace RepoDb.Schema
             ISet<string> used)
         {
             used.Add(name);
-            if (string.Equals(name, index.Name, StringComparison.Ordinal))
+            if (string.Equals(name,
+                index.Name,
+                StringComparison.Ordinal))
             {
                 return;
             }
@@ -286,7 +330,8 @@ namespace RepoDb.Schema
                 IsClustered = index.IsClustered,
                 Filter = index.Filter
             };
-            if (ReferenceEquals(table.Schema, table.Source))
+            if (ReferenceEquals(table.Schema,
+                table.Source))
             {
                 // The schema of the source is not moved to another schema, so it is copied before the indexes are replaced
                 table.Schema = new TableSchema(table.Source.Table)
@@ -299,8 +344,11 @@ namespace RepoDb.Schema
                     UniqueConstraints = table.Source.UniqueConstraints
                 };
             }
-            table.Schema.Indexes = table.Schema.Indexes.Select(item => ReferenceEquals(item, index) ? renamed : item).ToList();
-            table.MissingIndexes = table.MissingIndexes.Select(item => ReferenceEquals(item, index) ? renamed : item).ToList();
+
+            table.Schema.Indexes = table.Schema.Indexes.Select(item => ReferenceEquals(item,
+                index) ? renamed : item).ToList();
+            table.MissingIndexes = table.MissingIndexes.Select(item => ReferenceEquals(item,
+                index) ? renamed : item).ToList();
         }
 
         #endregion

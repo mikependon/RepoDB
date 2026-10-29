@@ -27,8 +27,6 @@ namespace RepoDb.Data
     {
         #region Public Methods
 
-        #region ImportDataFromCsv (Sync)
-
         /// <summary>
         /// Loads the rows of a CSV file into a table without loading the file in memory. The rows are buffered, and every <paramref name="bufferSize"/> rows they are inserted with the bulk insert of the provider (in batches of plain inserts if it has none). The first line is the header (the names of the columns), and the fields of a line are separated by the <paramref name="separator"/> and can be quoted (as RFC 4180): an empty field is <c>null</c>, and an empty quoted field is an empty text. The columns that the table does not have are ignored, and the values are converted into the types of the columns of the table.
         /// </summary>
@@ -73,12 +71,24 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            return ImportPipeline.Run(connection, tableName, filename, new CsvImportSource(filename, separator), bufferSize, bypassExistingRows, qualifiers, mappings, columnMappingBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            return ImportPipeline.Run(connection,
+                tableName,
+                filename,
+                new CsvImportSource(filename,
+                    separator),
+                bufferSize,
+                bypassExistingRows,
+                qualifiers,
+                mappings,
+                columnMappingBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
         }
-
-        #endregion
-
-        #region ImportDataFromCsv (Async)
 
         /// <summary>
         /// Loads the rows of a CSV file into a table in an asynchronous way. See <see cref="ImportDataFromCsv"/> for how the rows are read, buffered and inserted.
@@ -126,12 +136,26 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return ImportPipeline.RunAsync(connection, tableName, filename, new CsvImportSource(filename, separator), bufferSize, bypassExistingRows, qualifiers, mappings, columnMappingBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            return ImportPipeline.RunAsync(connection,
+                tableName,
+                filename,
+                new CsvImportSource(filename,
+                    separator),
+                bufferSize,
+                bypassExistingRows,
+                qualifiers,
+                mappings,
+                columnMappingBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
         }
 
         #endregion
-
-        #endregion
-
     }
 }

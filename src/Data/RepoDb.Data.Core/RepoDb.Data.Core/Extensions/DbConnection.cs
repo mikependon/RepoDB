@@ -33,11 +33,11 @@ namespace RepoDb.Data
     /// </summary>
     internal static class DbConnection
     {
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Gets the tables whose rows are to be copied, in the order that they must be copied (a table comes after the tables that it references).
-        /// If the schema is requested (see <see cref="IsSchemaRequested"/>), it is copied first, with <see cref="CopyTableSchemaToExtension.CopyTableSchemaTo(IDbConnection, IEnumerable{string}, IDbConnection, string, TableExistsBehavior, RelatedTableBehavior, Action{CopyTableSchemaResultItem}, Action{ExecutionError}, int?, string, ITrace, IDbTransaction)"/>.
+        /// If the schema is requested (see <see cref="IsSchemaRequested"/>), it is copied first, with <see cref="CopyTableSchemaToExtension.CopyTableSchemaTo(IDbConnection, IEnumerable{string}, IDbConnection, string, TableExistsBehavior, RelatedTableBehavior, Action{CopyTableSchemaResultItem}, Action{ExecutionError}, int? , string, ITrace, IDbTransaction)"/>.
         /// </summary>
         /// <param name="connection">The source connection.</param>
         /// <param name="destinationConnection">The connection of the destination database.</param>
@@ -65,48 +65,47 @@ namespace RepoDb.Data
             IDbTransaction transaction,
             IList<ColumnMapping> mappings = null)
         {
-            var requested = new List<(string, string, QueryGroup)> { (sourceTable, targetTable, where) };
-            if (!IsSchemaRequested(relationshipBehavior, tableExistenceBehavior, targetSchema))
+            var requested = new List<(string, string, QueryGroup)>
+            {
+                (sourceTable, targetTable, where)
+            };
+            if (!IsSchemaRequested(relationshipBehavior,
+                tableExistenceBehavior,
+                targetSchema))
             {
                 return requested;
             }
-            var results = new List<CopyTableSchemaResultItem>();
+
             var schemaBehavior = ToSchemaBehavior(relationshipBehavior);
-            var schemaMappings = ToSchemaMappings(mappings);
-            var renamedTable = GetRenamedTable(sourceTable, targetTable);
-            if (schemaMappings == null)
-            {
-                connection.CopyTableSchemaTo(sourceTable,
-                    destinationConnection,
-                    targetSchema: targetSchema,
-                    targetTable: renamedTable,
-                    tableExistenceBehavior: tableExistenceBehavior,
-                    relationshipBehavior: schemaBehavior,
-                    createdCallback: results.Add,
-                    commandTimeout: commandTimeout,
-                    trace: trace,
-                    transaction: transaction);
-            }
-            else
-            {
-                connection.CopyTableSchemaTo(new[] { sourceTable },
-                    destinationConnection,
-                    new[] { new TableMapping(sourceTable, renamedTable, schemaMappings) },
-                    targetSchema: targetSchema,
-                    tableExistenceBehavior: tableExistenceBehavior,
-                    relationshipBehavior: schemaBehavior,
-                    createdCallback: results.Add,
-                    commandTimeout: commandTimeout,
-                    trace: trace,
-                    transaction: transaction);
-            }
+            var results = CopyRequestedSchema(connection,
+                destinationConnection,
+                sourceTable,
+                targetTable,
+                targetSchema,
+                tableExistenceBehavior,
+                schemaBehavior,
+                commandTimeout,
+                trace,
+                transaction,
+                mappings);
             if (relationshipBehavior == RelationshipBehavior.TableOnly)
             {
-                return new List<(string, string, QueryGroup)> { (sourceTable, GetName(destinationConnection, results.Single()), where) };
+                return new List<(string, string, QueryGroup)>
+                {
+                    (sourceTable, GetName(destinationConnection,
+                        results.Single()), where)
+                };
             }
+
             var reader = SchemaReaderMapper.Get(connection);
-            var relationships = reader.GetDependencyOrder(reader.GetRelatedTables(new[] { sourceTable }, schemaBehavior));
-            return ToTables(relationships, reader.GetTableSchema(sourceTable).Table, requested[0], results, connection, destinationConnection);
+            var relationships = reader.GetDependencyOrder(reader.GetRelatedTables(new[] { sourceTable },
+                schemaBehavior));
+            return ToTables(relationships,
+                reader.GetTableSchema(sourceTable).Table,
+                requested[0],
+                results,
+                connection,
+                destinationConnection);
         }
 
         /// <summary>
@@ -140,52 +139,53 @@ namespace RepoDb.Data
             CancellationToken cancellationToken,
             IList<ColumnMapping> mappings = null)
         {
-            var requested = new List<(string, string, QueryGroup)> { (sourceTable, targetTable, where) };
-            if (!IsSchemaRequested(relationshipBehavior, tableExistenceBehavior, targetSchema))
+            var requested = new List<(string, string, QueryGroup)>
+            {
+                (sourceTable, targetTable, where)
+            };
+            if (!IsSchemaRequested(relationshipBehavior,
+                tableExistenceBehavior,
+                targetSchema))
             {
                 return requested;
             }
-            var results = new List<CopyTableSchemaResultItem>();
+
             var schemaBehavior = ToSchemaBehavior(relationshipBehavior);
-            var schemaMappings = ToSchemaMappings(mappings);
-            var renamedTable = GetRenamedTable(sourceTable, targetTable);
-            if (schemaMappings == null)
-            {
-                await connection.CopyTableSchemaToAsync(sourceTable,
-                    destinationConnection,
-                    targetSchema: targetSchema,
-                    targetTable: renamedTable,
-                    tableExistenceBehavior: tableExistenceBehavior,
-                    relationshipBehavior: schemaBehavior,
-                    createdCallback: results.Add,
-                    commandTimeout: commandTimeout,
-                    trace: trace,
-                    transaction: transaction,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
-            }
-            else
-            {
-                await connection.CopyTableSchemaToAsync(new[] { sourceTable },
-                    destinationConnection,
-                    new[] { new TableMapping(sourceTable, renamedTable, schemaMappings) },
-                    targetSchema: targetSchema,
-                    tableExistenceBehavior: tableExistenceBehavior,
-                    relationshipBehavior: schemaBehavior,
-                    createdCallback: results.Add,
-                    commandTimeout: commandTimeout,
-                    trace: trace,
-                    transaction: transaction,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
-            }
+            var results = await CopyRequestedSchemaAsync(connection,
+                destinationConnection,
+                sourceTable,
+                targetTable,
+                targetSchema,
+                tableExistenceBehavior,
+                schemaBehavior,
+                commandTimeout,
+                trace,
+                transaction,
+                mappings,
+                cancellationToken).ConfigureAwait(false);
             if (relationshipBehavior == RelationshipBehavior.TableOnly)
             {
-                return new List<(string, string, QueryGroup)> { (sourceTable, GetName(destinationConnection, results.Single()), where) };
+                return new List<(string, string, QueryGroup)>
+                {
+                    (sourceTable, GetName(destinationConnection,
+                        results.Single()), where)
+                };
             }
+
             var reader = SchemaReaderMapper.Get(connection);
-            var names = await reader.GetRelatedTablesAsync(new[] { sourceTable }, schemaBehavior, cancellationToken).ConfigureAwait(false);
-            var relationships = await reader.GetDependencyOrderAsync(names, cancellationToken).ConfigureAwait(false);
-            var table = (await reader.GetTableSchemaAsync(sourceTable, cancellationToken).ConfigureAwait(false)).Table;
-            return ToTables(relationships, table, requested[0], results, connection, destinationConnection);
+            var names = await reader.GetRelatedTablesAsync(new[] { sourceTable },
+                schemaBehavior,
+                cancellationToken).ConfigureAwait(false);
+            var relationships = await reader.GetDependencyOrderAsync(names,
+                cancellationToken).ConfigureAwait(false);
+            var table = (await reader.GetTableSchemaAsync(sourceTable,
+                cancellationToken).ConfigureAwait(false)).Table;
+            return ToTables(relationships,
+                table,
+                requested[0],
+                results,
+                connection,
+                destinationConnection);
         }
 
         /// <summary>
@@ -205,16 +205,14 @@ namespace RepoDb.Data
             IEnumerable<CopyTableSchemaResultItem> results,
             IDbConnection connection,
             IDbConnection destinationConnection) =>
-            relationships
-                .Select(relationship => relationship.Schema.Table)
-                .Select(table =>
-                {
-                    var target = GetName(destinationConnection, results.First(result => result.Source.Table.Table.Name == table.Name && result.Source.Table.Table.Schema == table.Schema));
-                    return table.Equals(requested)
-                        ? (requestedTable.Source, target, requestedTable.Where)
-                        : (GetName(connection, table.Schema, table.Name), target, (QueryGroup)null);
-                })
-                .ToList();
+            relationships.Select(relationship => relationship.Schema.Table).Select(table =>
+        {
+            var target = GetName(destinationConnection,
+                results.First(result => result.Source.Table.Table.Name == table.Name && result.Source.Table.Table.Schema == table.Schema));
+            return table.Equals(requested) ? (requestedTable.Source, target, requestedTable.Where) : (GetName(connection,
+                table.Schema,
+                table.Name), target, (QueryGroup)null);
+        }).ToList();
 
         /// <summary>
         /// Gets the name of the table that was created in the destination database, quoted for the database of the connection.
@@ -224,7 +222,9 @@ namespace RepoDb.Data
         /// <returns>The quoted name of the table.</returns>
         internal static string GetName(IDbConnection connection,
             CopyTableSchemaResultItem result) =>
-            GetName(connection, result.Target.Table.Table.Schema, result.Target.Table.Table.Name);
+            GetName(connection,
+                result.Target.Table.Table.Schema,
+                result.Target.Table.Table.Name);
 
         /// <summary>
         /// Gets the name that the table is created with in the destination database, if it is not the name of the source table.
@@ -235,11 +235,14 @@ namespace RepoDb.Data
         internal static string GetRenamedTable(string sourceTable,
             string targetTable)
         {
-            static string Simple(string name) =>
-                name.Split('.').Last().Trim().Trim('[', ']', '"', '`');
-
+            static string Simple(string name) => name.Split('.').Last().Trim().Trim('[',
+                ']',
+                '"',
+                '`');
             var target = string.IsNullOrWhiteSpace(targetTable) ? null : Simple(targetTable);
-            return target == null || string.Equals(target, Simple(sourceTable), StringComparison.OrdinalIgnoreCase) ? null : target;
+            return target == null || string.Equals(target,
+                Simple(sourceTable),
+                StringComparison.OrdinalIgnoreCase) ? null : target;
         }
 
         /// <summary>
@@ -254,8 +257,12 @@ namespace RepoDb.Data
             string table)
         {
             var setting = connection.GetDbSetting();
-            var name = table.AsQuoted(false, true, setting);
-            return string.IsNullOrWhiteSpace(schema) ? name : $"{schema.AsQuoted(false, true, setting)}.{name}";
+            var name = table.AsQuoted(false,
+                true,
+                setting);
+            return string.IsNullOrWhiteSpace(schema) ? name : $"{schema.AsQuoted(false,
+                true,
+                setting)}.{name}";
         }
 
         /// <summary>
@@ -268,11 +275,16 @@ namespace RepoDb.Data
             string targetTable)
         {
             var setting = destinationConnection == null || string.IsNullOrWhiteSpace(targetTable) ? null : DbSettingMapper.Get(destinationConnection);
-            if (setting == null || string.Equals(DataEntityExtension.GetTableName(targetTable, setting), targetTable, StringComparison.Ordinal))
+            if (setting == null || string.Equals(DataEntityExtension.GetTableName(targetTable,
+                setting),
+                targetTable,
+                StringComparison.Ordinal))
             {
                 return null;
             }
-            return DataEntityExtension.GetSchema(targetTable, setting).AsUnquoted(setting);
+
+            return DataEntityExtension.GetSchema(targetTable,
+                setting).AsUnquoted(setting);
         }
 
         /// <summary>
@@ -285,7 +297,8 @@ namespace RepoDb.Data
             string table)
         {
             var setting = DbSettingMapper.Get(connection);
-            return setting == null ? table : DataEntityExtension.GetTableName(table, setting).AsUnquoted(setting);
+            return setting == null ? table : DataEntityExtension.GetTableName(table,
+                setting).AsUnquoted(setting);
         }
 
         /// <summary>
@@ -299,9 +312,7 @@ namespace RepoDb.Data
         internal static bool IsSchemaRequested(RelationshipBehavior relationshipBehavior,
             TableExistsBehavior tableExistenceBehavior,
             string targetSchema) =>
-            relationshipBehavior != RelationshipBehavior.TableOnly ||
-            tableExistenceBehavior != TableExistsBehavior.Skip ||
-            !string.IsNullOrWhiteSpace(targetSchema);
+            relationshipBehavior != RelationshipBehavior.TableOnly || tableExistenceBehavior != TableExistsBehavior.Skip || !string.IsNullOrWhiteSpace(targetSchema);
 
         /// <summary>
         /// Gets the relationship behavior of the schema copy that is equivalent to the one of the data copy.
@@ -343,7 +354,10 @@ namespace RepoDb.Data
         {
             foreach (var table in tables)
             {
-                var count = connection.Count(table.Source, table.Where, commandTimeout: commandTimeout, trace: trace);
+                var count = connection.Count(table.Source,
+                    table.Where,
+                    commandTimeout: commandTimeout,
+                    trace: trace);
                 progress.SourceRowCounts[table.Source] = count;
                 progress.TotalRowCount += count;
                 progress.EndTime = DateTime.UtcNow;
@@ -373,8 +387,11 @@ namespace RepoDb.Data
             foreach (var table in tables)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var count = await connection.CountAsync(table.Source, table.Where, commandTimeout: commandTimeout,
-                    trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
+                var count = await connection.CountAsync(table.Source,
+                    table.Where,
+                    commandTimeout: commandTimeout,
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
                 progress.SourceRowCounts[table.Source] = count;
                 progress.TotalRowCount += count;
                 progress.EndTime = DateTime.UtcNow;
@@ -424,66 +441,57 @@ namespace RepoDb.Data
             ITrace trace,
             IDbTransaction transaction)
         {
-            var item = Begin(options, connection, destinationConnection, sourceTable, targetTable);
-            ValidateMappings(connection, destinationConnection, sourceTable, targetTable, mappings);
-            var excluded = GetIdentityColumns(destinationConnection, targetTable, identityBehavior, transaction);
-            var qualifiers = mergeExistingRows ? GetQualifiers(destinationConnection, targetTable, qualifierNames, excluded, transaction) : null;
-            var (commandText, param) = CreateSelect(connection, sourceTable, where, mappings);
+            var item = Begin(options,
+                connection,
+                destinationConnection,
+                sourceTable,
+                targetTable);
+            ValidateMappings(connection,
+                destinationConnection,
+                sourceTable,
+                targetTable,
+                mappings);
+            var excluded = GetIdentityColumns(destinationConnection,
+                targetTable,
+                identityBehavior,
+                transaction);
+            var qualifiers = mergeExistingRows ? GetQualifiers(destinationConnection,
+                targetTable,
+                qualifierNames,
+                excluded,
+                transaction) : null;
+            var (commandText, param) = CreateSelect(connection,
+                sourceTable,
+                where,
+                mappings);
             var interceptors = RowInterception.Normalize(dataInterceptors);
-            using (var reader = connection.ExecuteReader(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace))
-            using (var buffer = new BatchBuffer(reader, bufferSize, excluded, interceptors))
+            using (var reader = connection.ExecuteReader(commandText,
+                param,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey ?? TraceKeys.ExecuteReader,
+                trace: trace))
             {
-                if (IsBulkAvailable(destinationConnection, buffer, false, mergeExistingRows))
-                {
-                    var total = 0;
-                    while (buffer.Fill())
-                    {
-                        EnsureQualifiers(buffer, qualifiers, interceptors != null && item.Batches.Count == 0);
-                        using (var batchReader = buffer.CreateReader())
-                        {
-                            _ = mergeExistingRows
-                                ? BulkInsertInvoker.BulkMerge(destinationConnection, targetTable, batchReader, qualifiers, bufferSize, columnMappingsBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction)
-                                : BulkInsertInvoker.BulkInsert(destinationConnection, targetTable, batchReader, bufferSize, columnMappingsBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction);
-                        }
-                        var copied = buffer.Count;
-                        var bytes = buffer.CopiedBytes;
-                        total += copied;
-                        buffer.Clear();
-                        Report(options, copied, progressCallback, bytes);
-                    }
-                    if (item.Batches.Count == 0)
-                    {
-                        Report(options, 0, progressCallback);
-                    }
-                    RecordCopy(options, destinationConnection, targetTable, mergeExistingRows, total);
-                }
-                else
-                {
-                    var action = new Action<IList<object>>((IList<object> b) =>
-                    {
-                        _ = mergeExistingRows
-                            ? RowInserter.Merge(destinationConnection, targetTable, b, qualifiers, commandTimeout, traceKey, trace, transaction)
-                            : RowInserter.Insert(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction);
-                        Report(options, b.Count, progressCallback, CopySize.OfRows(b));
-                    });
-                    var batch = new List<object>(bufferSize);
-                    var columns = interceptors == null ? null : RowInterception.GetColumns(reader);
-                    while (reader.Read())
-                    {
-                        batch.Add(ToRow(reader, excluded, interceptors, columns));
-                        if (batch.Count == bufferSize)
-                        {
-                            action(batch);
-                            batch.Clear();
-                        }
-                    }
-                    if (batch.Count > 0)
-                    {
-                        action(batch);
-                    }
-                }
+                CopyBufferedRows(reader,
+                    destinationConnection,
+                    targetTable,
+                    excluded,
+                    interceptors,
+                    qualifiers,
+                    bufferSize,
+                    mergeExistingRows,
+                    columnMappingsBehavior,
+                    identityBehavior,
+                    commandTimeout,
+                    traceKey,
+                    trace,
+                    transaction,
+                    options,
+                    progressCallback,
+                    item);
             }
-            Complete(options, item);
+
+            Complete(options,
+                item);
         }
 
         /// <summary>
@@ -530,108 +538,59 @@ namespace RepoDb.Data
             IDbTransaction transaction,
             CancellationToken cancellationToken)
         {
-            var item = Begin(options, connection, destinationConnection, sourceTable, targetTable);
-            ValidateMappings(connection, destinationConnection, sourceTable, targetTable, mappings);
-            var excluded = GetIdentityColumns(destinationConnection, targetTable, identityBehavior, transaction);
-            var qualifiers = mergeExistingRows ? GetQualifiers(destinationConnection, targetTable, qualifierNames, excluded, transaction) : null;
-            var (commandText, param) = CreateSelect(connection, sourceTable, where, mappings);
+            var item = Begin(options,
+                connection,
+                destinationConnection,
+                sourceTable,
+                targetTable);
+            ValidateMappings(connection,
+                destinationConnection,
+                sourceTable,
+                targetTable,
+                mappings);
+            var excluded = GetIdentityColumns(destinationConnection,
+                targetTable,
+                identityBehavior,
+                transaction);
+            var qualifiers = mergeExistingRows ? GetQualifiers(destinationConnection,
+                targetTable,
+                qualifierNames,
+                excluded,
+                transaction) : null;
+            var (commandText, param) = CreateSelect(connection,
+                sourceTable,
+                where,
+                mappings);
             var interceptors = RowInterception.Normalize(dataInterceptors);
-            using (var reader = await connection.ExecuteReaderAsync(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false))
-            using (var buffer = new BatchBuffer(reader, bufferSize, excluded, interceptors))
+            using (var reader = await connection.ExecuteReaderAsync(commandText,
+                param,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey ?? TraceKeys.ExecuteReader,
+                trace: trace,
+                cancellationToken: cancellationToken).ConfigureAwait(false))
             {
-                if (IsBulkAvailable(destinationConnection, buffer, true, mergeExistingRows))
-                {
-                    var total = 0;
-                    while (await buffer.FillAsync(cancellationToken).ConfigureAwait(false))
-                    {
-                        EnsureQualifiers(buffer, qualifiers, interceptors != null && item.Batches.Count == 0);
-                        using (var batchReader = buffer.CreateReader())
-                        {
-                            _ = mergeExistingRows
-                                ? await BulkInsertInvoker.BulkMergeAsync(destinationConnection, targetTable, batchReader, qualifiers, bufferSize, columnMappingsBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false)
-                                : await BulkInsertInvoker.BulkInsertAsync(destinationConnection, targetTable, batchReader, bufferSize, columnMappingsBehavior, identityBehavior == IdentityBehavior.KeepIdentity, commandTimeout, null, trace, transaction, cancellationToken).ConfigureAwait(false);
-                        }
-                        var copied = buffer.Count;
-                        var bytes = buffer.CopiedBytes;
-                        total += copied;
-                        buffer.Clear();
-                        Report(options, copied, progressCallback, bytes);
-                    }
-                    if (item.Batches.Count == 0)
-                    {
-                        Report(options, 0, progressCallback);
-                    }
-                    RecordCopy(options, destinationConnection, targetTable, mergeExistingRows, total);
-                }
-                else
-                {
-                    var action = new Func<IList<object>, Task>(async (IList<object> b) =>
-                    {
-                        _ = mergeExistingRows
-                            ? await RowInserter.MergeAsync(destinationConnection, targetTable, b, qualifiers, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false)
-                            : await RowInserter.InsertAsync(destinationConnection, targetTable, b, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
-                        Report(options, b.Count, progressCallback, CopySize.OfRows(b));
-                    });
-                    var batch = new List<object>(bufferSize);
-                    var columns = interceptors == null ? null : RowInterception.GetColumns(reader);
-                    while (await ReadAsync(reader, cancellationToken).ConfigureAwait(false))
-                    {
-                        batch.Add(ToRow(reader, excluded, interceptors, columns));
-                        if (batch.Count == bufferSize)
-                        {
-                            await action(batch).ConfigureAwait(false);
-                            batch.Clear();
-                        }
-                    }
-                    if (batch.Count > 0)
-                    {
-                        await action(batch).ConfigureAwait(false);
-                    }
-                }
+                await CopyBufferedRowsAsync(reader,
+                    destinationConnection,
+                    targetTable,
+                    excluded,
+                    interceptors,
+                    qualifiers,
+                    bufferSize,
+                    mergeExistingRows,
+                    columnMappingsBehavior,
+                    identityBehavior,
+                    commandTimeout,
+                    traceKey,
+                    trace,
+                    transaction,
+                    options,
+                    progressCallback,
+                    item,
+                    cancellationToken).ConfigureAwait(false);
             }
-            Complete(options, item);
-        }
 
-        /// <summary>
-        /// Logs the in-memory row total without querying the destination.
-        /// </summary>
-        /// <param name="options">The progress of the copy that holds the logs.</param>
-        /// <param name="destinationConnection">The destination connection.</param>
-        /// <param name="targetTable">The target table.</param>
-        /// <param name="mergeExistingRows">Whether the rows were merged (<c>true</c>) or inserted (<c>false</c>).</param>
-        /// <param name="total">The number of rows that were sent.</param>
-        private static void RecordCopy(CopyProgress options,
-            IDbConnection destinationConnection,
-            string targetTable,
-            bool mergeExistingRows,
-            int total)
-        {
-            if (mergeExistingRows)
-            {
-                CopyDataLogger.LogBulkMerge(options, destinationConnection, targetTable, total);
-            }
-            else
-            {
-                CopyDataLogger.LogBulkInsert(options, destinationConnection, targetTable, total);
-            }
-        }
-
-        /// <summary>
-        /// Gets the mappings of the columns for the schema copy, so the schema of the target table is created with only the mapped columns, by their destination names.
-        /// </summary>
-        /// <param name="mappings">The column mappings of the copy of the data.</param>
-        /// <returns>The mappings of the schema copy (<c>null</c> if there are no mappings, which creates all the columns). A source column that is mapped more than once is created with its first destination column.</returns>
-        private static IList<RepoDb.Schema.Models.ColumnMapping> ToSchemaMappings(IList<ColumnMapping> mappings)
-        {
-            if (mappings == null || mappings.Count == 0)
-            {
-                return null;
-            }
-            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            return mappings
-                .Where(mapping => seen.Add(mapping.SourceColumn))
-                .Select(mapping => new RepoDb.Schema.Models.ColumnMapping(mapping.SourceColumn, mapping.DestinationColumn))
-                .ToList();
+            Complete(options,
+                item);
         }
 
         /// <summary>
@@ -650,139 +609,21 @@ namespace RepoDb.Data
         {
             var statementBuilder = StatementBuilderMapper.Get(connection) ?? throw new InvalidOperationException($"No statement builder is mapped to the connection '{connection.GetType().FullName}'.");
             var hasMappings = mappings?.Count > 0;
-            var fields = hasMappings
-                ? mappings.Select(mapping => mapping.SourceColumn).Distinct(StringComparer.OrdinalIgnoreCase).Select(column => new Field(column)).ToList()
-                : DbFieldCache.Get(connection, sourceTable, null)?.GetAsFields();
+            var fields = hasMappings ? mappings.Select(mapping => mapping.SourceColumn).Distinct(StringComparer.OrdinalIgnoreCase).Select(column => new Field(column)).ToList() : DbFieldCache.Get(connection,
+                sourceTable,
+                null)?.GetAsFields();
             where?.Fix();
-            var commandText = statementBuilder.CreateQuery(sourceTable, fields, where);
+            var commandText = statementBuilder.CreateQuery(sourceTable,
+                fields,
+                where);
             if (hasMappings)
             {
-                commandText = Alias(connection, commandText, mappings);
+                commandText = Alias(connection,
+                    commandText,
+                    mappings);
             }
+
             return (commandText, where == null ? null : ToParameters(where));
-        }
-
-        /// <summary>
-        /// Replaces the list of the columns of the <c>SELECT</c> statement with the mapped columns, each one aliased with the name of its destination column.
-        /// </summary>
-        /// <param name="connection">The source connection.</param>
-        /// <param name="commandText">The <c>SELECT</c> statement.</param>
-        /// <param name="mappings">The column mappings.</param>
-        /// <returns>The statement.</returns>
-        private static string Alias(IDbConnection connection,
-            string commandText,
-            IList<ColumnMapping> mappings)
-        {
-            const string select = "SELECT ";
-            const string from = " FROM ";
-            var dbSetting = DbSettingMapper.Get(connection);
-            var start = commandText.IndexOf(select, StringComparison.OrdinalIgnoreCase);
-            var end = commandText.IndexOf(from, StringComparison.OrdinalIgnoreCase);
-            if (start < 0 || end < start)
-            {
-                throw new InvalidOperationException($"The column mappings cannot be applied to the statement '{commandText}'.");
-            }
-            var columns = string.Join(", ", mappings.Select(mapping => $"{mapping.SourceColumn.AsQuoted(dbSetting)} AS {mapping.DestinationColumn.AsQuoted(dbSetting)}"));
-            return string.Concat(commandText.Substring(0, start + select.Length), columns, commandText.Substring(end));
-        }
-
-        /// <summary>
-        /// Ensures that the source columns of the mappings exist on the source table and that the destination columns exist on the target table.
-        /// </summary>
-        /// <param name="connection">The source connection.</param>
-        /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="sourceTable">The name of the source table.</param>
-        /// <param name="targetTable">The name of the target table.</param>
-        /// <param name="mappings">The column mappings.</param>
-        /// <exception cref="ArgumentException"></exception>
-        private static void ValidateMappings(IDbConnection connection,
-            IDbConnection destinationConnection,
-            string sourceTable,
-            string targetTable,
-            IList<ColumnMapping> mappings)
-        {
-            if (mappings == null || mappings.Count == 0)
-            {
-                return;
-            }
-            var sourceColumns = new HashSet<string>(DbFieldCache.Get(connection, sourceTable, null).GetAsFields().Select(field => field.Name), StringComparer.OrdinalIgnoreCase);
-            var targetColumns = new HashSet<string>(DbFieldCache.Get(destinationConnection, targetTable, null).GetAsFields().Select(field => field.Name), StringComparer.OrdinalIgnoreCase);
-            foreach (var mapping in mappings)
-            {
-                if (!sourceColumns.Contains(mapping.SourceColumn))
-                {
-                    throw new ArgumentException($"The source column '{mapping.SourceColumn}' does not exist on the source table '{sourceTable}'.", nameof(mappings));
-                }
-                if (!targetColumns.Contains(mapping.DestinationColumn))
-                {
-                    throw new ArgumentException($"The destination column '{mapping.DestinationColumn}' does not exist on the target table '{targetTable}'.", nameof(mappings));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the parameters of the filter, by the names that the statement builder gives to them.
-        /// </summary>
-        /// <param name="where">The filter.</param>
-        /// <returns>The parameters.</returns>
-        private static IDictionary<string, object> ToParameters(QueryGroup where)
-        {
-            var parameters = new Dictionary<string, object>(StringComparer.Ordinal);
-            foreach (var field in where.GetFields(true))
-            {
-                var name = field.Parameter.Name;
-                if (field.Operation == Operation.Between || field.Operation == Operation.NotBetween)
-                {
-                    var values = ToList(field.Parameter.Value);
-                    parameters[$"{name}_Left"] = values.Count > 0 ? values[0] : null;
-                    parameters[$"{name}_Right"] = values.Count > 1 ? values[1] : null;
-                }
-                else if (field.Operation == Operation.In || field.Operation == Operation.NotIn)
-                {
-                    var values = ToList(field.Parameter.Value);
-                    for (var i = 0; i < values.Count; i++)
-                    {
-                        parameters[$"{name}_In_{i.ToString(System.Globalization.CultureInfo.InvariantCulture)}"] = values[i];
-                    }
-                }
-                else
-                {
-                    parameters[name] = field.Parameter.Value;
-                }
-            }
-            return parameters;
-        }
-
-        /// <summary>
-        /// Converts the value into a list: a collection is converted to its items, any other value is the only item of the list.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The list of the values.</returns>
-        private static IList<object> ToList(object value) =>
-            value is System.Collections.IEnumerable enumerable && !(value is string)
-                ? enumerable.Cast<object>().ToList()
-                : new List<object> { value };
-
-        /// <summary>
-        /// Checks whether the bulk insert (or the bulk merge, if the existing rows are bypassed) of the provider of the destination connection accepts the batches of the buffer
-        /// (the data reader of the buffered rows).
-        /// </summary>
-        /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="buffer">The buffer of the rows to be copied.</param>
-        /// <param name="isAsync">A value that indicates whether the asynchronous bulk operation is searched.</param>
-        /// <param name="mergeExistingRows">A value that indicates whether the bulk merge is searched instead of the bulk insert.</param>
-        /// <returns><c>true</c> if the provider has the bulk operation for the batches; otherwise, <c>false</c>.</returns>
-        private static bool IsBulkAvailable(IDbConnection destinationConnection,
-            BatchBuffer buffer,
-            bool isAsync,
-            bool mergeExistingRows)
-        {
-            using (var probe = buffer.CreateReader())
-            {
-                return mergeExistingRows
-                    ? BulkInsertInvoker.IsMergeAvailable(destinationConnection, probe, isAsync)
-                    : BulkInsertInvoker.IsAvailable(destinationConnection, probe, isAsync);
-            }
         }
 
         /// <summary>
@@ -803,7 +644,9 @@ namespace RepoDb.Data
             IDbTransaction transaction)
         {
             var dbSetting = destinationConnection.GetDbSetting();
-            var dbFields = DbFieldCache.Get(destinationConnection, targetTable, transaction);
+            var dbFields = DbFieldCache.Get(destinationConnection,
+                targetTable,
+                transaction);
             List<string> columns;
             if (names != null && names.Count > 0)
             {
@@ -812,15 +655,22 @@ namespace RepoDb.Data
                 {
                     if (string.IsNullOrWhiteSpace(name))
                     {
-                        throw new ArgumentException("The qualifiers must not have an empty name.", "qualifiers");
+                        throw new ArgumentException("The qualifiers must not have an empty name.",
+                            "qualifiers");
                     }
-                    var dbField = dbFields?.GetByUnquotedName(name.AsUnquoted(true, dbSetting));
+
+                    var dbField = dbFields?.GetByUnquotedName(name.AsUnquoted(true,
+                        dbSetting));
                     if (dbField == null)
                     {
-                        throw new ArgumentException($"The qualifier '{name}' is not a column of the table '{targetTable}'.", "qualifiers");
+                        throw new ArgumentException($"The qualifier '{name}' is not a column of the table '{targetTable}'.",
+                            "qualifiers");
                     }
-                    var unquoted = dbField.Name.AsUnquoted(true, dbSetting);
-                    if (!columns.Contains(unquoted, StringComparer.OrdinalIgnoreCase))
+
+                    var unquoted = dbField.Name.AsUnquoted(true,
+                        dbSetting);
+                    if (!columns.Contains(unquoted,
+                        StringComparer.OrdinalIgnoreCase))
                     {
                         columns.Add(unquoted);
                     }
@@ -834,101 +684,22 @@ namespace RepoDb.Data
                 {
                     qualifiers = items?.Where(field => field.IsIdentity).ToList();
                 }
+
                 if (qualifiers == null || qualifiers.Count == 0)
                 {
                     throw new InvalidOperationException($"The existing rows can only be bypassed if the target table '{targetTable}' has a primary key or an identity column, as they are the qualifiers of the merge.");
                 }
-                columns = qualifiers.Select(field => field.Name.AsUnquoted(true, dbSetting)).ToList();
+
+                columns = qualifiers.Select(field => field.Name.AsUnquoted(true,
+                    dbSetting)).ToList();
             }
+
             if (excludedColumns != null && columns.Any(excludedColumns.Contains))
             {
                 throw new InvalidOperationException($"The existing rows cannot be bypassed while the identity values are generated by the database, as a qualifier of the target table '{targetTable}' is its identity column.");
             }
+
             return columns.Select(name => new Field(name)).ToList();
-        }
-
-        /// <summary>
-        /// Converts the current row of the reader into an object, to be inserted: the row goes through the interceptors first, if there are any.
-        /// </summary>
-        /// <param name="record">The record.</param>
-        /// <param name="excludedColumns">The names of the columns that are left out of the row, or <c>null</c> to have all of them.</param>
-        /// <param name="interceptors">The interceptors that the row goes through, in order, or <c>null</c>.</param>
-        /// <param name="columns">The columns of the record (see <see cref="RowInterception.GetColumns"/>), when there are interceptors.</param>
-        /// <returns>The row, as an object that has a property for each column.</returns>
-        private static object ToRow(IDataRecord record,
-            ISet<string> excludedColumns,
-            IList<IDataInterceptor<Row>> interceptors,
-            List<Column> columns)
-        {
-            var row = new System.Dynamic.ExpandoObject() as IDictionary<string, object>;
-            if (interceptors != null)
-            {
-                var intercepted = RowInterception.Apply(RowInterception.Read(record, columns), interceptors);
-                for (var i = 0; i < intercepted.Count; i++)
-                {
-                    var name = intercepted.Columns[i].Name;
-                    if (excludedColumns == null || !excludedColumns.Contains(name))
-                    {
-                        row[name] = intercepted[i];
-                    }
-                }
-                return row;
-            }
-            for (var i = 0; i < record.FieldCount; i++)
-            {
-                var name = record.GetName(i);
-                if (excludedColumns == null || !excludedColumns.Contains(name))
-                {
-                    row[name] = record.IsDBNull(i) ? null : record.GetValue(i);
-                }
-            }
-            return row;
-        }
-
-        /// <summary>
-        /// Ensures that the columns of the batches have the qualifiers of the merge (the interceptors may have removed one of them).
-        /// </summary>
-        /// <param name="buffer">The buffer of the rows to be copied.</param>
-        /// <param name="qualifiers">The qualifiers of the merge, or <c>null</c> if the rows are inserted.</param>
-        /// <param name="check">A value that indicates whether the columns are checked (they are the same for every row).</param>
-        /// <exception cref="InvalidOperationException">A qualifier is not a column of the batches.</exception>
-        private static void EnsureQualifiers(BatchBuffer buffer,
-            IList<Field> qualifiers,
-            bool check)
-        {
-            if (!check || qualifiers == null)
-            {
-                return;
-            }
-            var missing = qualifiers.FirstOrDefault(qualifier => !buffer.HasColumn(qualifier.Name));
-            if (missing != null)
-            {
-                throw new InvalidOperationException($"The existing rows cannot be bypassed as the qualifier '{missing.Name}' is not a column of the rows that the data interceptors give.");
-            }
-        }
-
-        /// <summary>
-        /// Gets the names of the columns of the target table that are not copied: its identity columns, if the database of the target table generates their values.
-        /// </summary>
-        /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="targetTable">The name of the target table.</param>
-        /// <param name="identityBehavior">The behavior that defines whether the values of the identity columns are copied as they are, or generated by the database of the target table.</param>
-        /// <param name="transaction">The transaction to be used on the destination connection.</param>
-        /// <returns>The names of the columns (without the case), or <c>null</c> if all the columns are copied.</returns>
-        private static ISet<string> GetIdentityColumns(IDbConnection destinationConnection,
-            string targetTable,
-            IdentityBehavior identityBehavior,
-            IDbTransaction transaction)
-        {
-            if (identityBehavior != IdentityBehavior.Ignore)
-            {
-                return null;
-            }
-            var dbSetting = destinationConnection.GetDbSetting();
-            var columns = DbFieldCache.Get(destinationConnection, targetTable, transaction)?
-                .GetItems().Where(field => field.IsIdentity)
-                .Select(field => field.Name.AsUnquoted(true, dbSetting));
-            return columns == null ? null : new HashSet<string>(columns, StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -941,113 +712,7 @@ namespace RepoDb.Data
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return reader is System.Data.Common.DbDataReader dbReader
-                ? dbReader.ReadAsync(cancellationToken)
-                : Task.FromResult(reader.Read());
-        }
-
-        /// <summary>
-        /// Starts the copy of a table: adds the item of the table (its source and target tables) to the progress, and makes it the current one.
-        /// </summary>
-        /// <param name="options">The progress of the copy.</param>
-        /// <param name="connection">The source connection.</param>
-        /// <param name="destinationConnection">The connection of the destination database.</param>
-        /// <param name="sourceTable">The name of the source table.</param>
-        /// <param name="targetTable">The name of the target table.</param>
-        /// <returns>The item of the table, or <c>null</c> if there is no progress.</returns>
-        private static CopyProgressItem Begin(CopyProgress options,
-            IDbConnection connection,
-            IDbConnection destinationConnection,
-            string sourceTable,
-            string targetTable)
-        {
-            if (options == null)
-            {
-                return null;
-            }
-            var now = DateTime.UtcNow;
-            var item = new CopyProgressItem
-            {
-                StartTime = now,
-                EndTime = now,
-                NextBatchStart = now,
-                Source = CreateEndpoint(connection, sourceTable),
-                Target = CreateEndpoint(destinationConnection, targetTable)
-            };
-            item.TotalRowCount = options.SourceRowCounts.TryGetValue(sourceTable, out var count) ? count : 0;
-            item.Source.RowCount = 0;
-            options.Items.Add(item);
-            options.Current = item;
-            options.EndTime = now;
-            return item;
-        }
-
-        /// <summary>
-        /// Creates the details of a table of a connection.
-        /// </summary>
-        /// <param name="connection">The connection of the database that the table belongs to.</param>
-        /// <param name="table">The name of the table.</param>
-        /// <returns>The details of the table.</returns>
-        private static Endpoint CreateEndpoint(IDbConnection connection,
-            string table) =>
-            new Endpoint
-            {
-                Server = (connection as System.Data.Common.DbConnection)?.DataSource,
-                Database = connection.Database,
-                DatabaseType = connection.GetType().Name,
-                Table = new TableInfo(GetTableName(connection, table), GetTargetSchema(connection, table), connection.Database)
-            };
-
-        /// <summary>
-        /// Reports the progress of the copy: a batch of rows was copied.
-        /// </summary>
-        /// <param name="options">The progress of the copy.</param>
-        /// <param name="inserted">The number of rows that were inserted by the batch.</param>
-        /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
-        /// <param name="copiedBytes">The estimated bytes of the values that were copied by the batch.</param>
-        private static void Report(CopyProgress options,
-            int inserted,
-            Action<CopyProgress> progressCallback,
-            long copiedBytes = 0)
-        {
-            var item = options.Current;
-            var now = DateTime.UtcNow;
-            item.Batches.Add(new CopyBatch
-            {
-                Number = item.Batches.Count + 1,
-                RowCount = inserted,
-                CopiedBytes = copiedBytes,
-                StartTime = item.NextBatchStart,
-                EndTime = now
-            });
-            item.RowCount += inserted;
-            item.CopiedBytes += copiedBytes;
-            options.CopiedBytes += copiedBytes;
-            item.Source.RowCount = (item.Source.RowCount ?? 0) + inserted;
-            item.EndTime = now;
-            options.BatchCount++;
-            options.RowCount += inserted;
-            options.EndTime = now;
-            progressCallback?.Invoke(options);
-            item.NextBatchStart = DateTime.UtcNow;
-        }
-
-        /// <summary>
-        /// Completes the copy of a table: marks its end.
-        /// </summary>
-        /// <param name="options">The progress of the copy.</param>
-        /// <param name="item">The item of the table.</param>
-        private static void Complete(CopyProgress options,
-            CopyProgressItem item)
-        {
-            if (item == null)
-            {
-                return;
-            }
-            var now = DateTime.UtcNow;
-            item.EndTime = now;
-            options.EndTime = now;
-            options.CompletedTableCount++;
+            return reader is System.Data.Common.DbDataReader dbReader ? dbReader.ReadAsync(cancellationToken) : Task.FromResult(reader.Read());
         }
 
         /// <summary>
@@ -1082,57 +747,1261 @@ namespace RepoDb.Data
             {
                 throw new ArgumentNullException(nameof(connection));
             }
+
             if (string.IsNullOrWhiteSpace(sourceTable))
             {
                 throw new ArgumentNullException(nameof(sourceTable));
             }
+
             if (string.IsNullOrWhiteSpace(targetTable))
             {
                 throw new ArgumentNullException(nameof(targetTable));
             }
+
             if (destinationConnection == null)
             {
                 throw new ArgumentNullException(nameof(destinationConnection));
             }
+
             if (bufferSize <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(bufferSize), "The buffer size must be greater than zero.");
+                throw new ArgumentOutOfRangeException(nameof(bufferSize),
+                    "The buffer size must be greater than zero.");
             }
-            if (!Enum.IsDefined(typeof(ColumnMappingBehavior), columnMappingsBehavior))
-            {
-                throw new ArgumentOutOfRangeException(nameof(columnMappingsBehavior), "The column mappings behavior is not defined.");
-            }
-            if (!Enum.IsDefined(typeof(IdentityBehavior), identityBehavior))
-            {
-                throw new ArgumentOutOfRangeException(nameof(identityBehavior), "The identity behavior is not defined.");
-            }
+
+            ValidateCopyBehaviors(columnMappingsBehavior,
+                identityBehavior);
             if (identityBehavior == IdentityBehavior.Ignore && relationshipBehavior != RelationshipBehavior.TableOnly)
             {
-                throw new ArgumentException("The identity values can only be generated again when only the table is copied, as the rows of the related tables would no longer reference the rows that they referenced.", nameof(identityBehavior));
+                throw new ArgumentException("The identity values can only be generated again when only the table is copied, as the rows of the related tables would no longer reference the rows that they referenced.",
+                    nameof(identityBehavior));
             }
+
             if (mappings != null)
             {
-                foreach (var mapping in mappings)
-                {
-                    if (mapping == null)
-                    {
-                        throw new ArgumentException("The column mappings must not contain a null item.", nameof(mappings));
-                    }
-                    if (string.IsNullOrWhiteSpace(mapping.SourceColumn) || string.IsNullOrWhiteSpace(mapping.DestinationColumn))
-                    {
-                        throw new ArgumentException("The source and the destination columns of a column mapping must not be empty.", nameof(mappings));
-                    }
-                }
-                var duplicate = mappings.GroupBy(mapping => mapping.DestinationColumn, StringComparer.OrdinalIgnoreCase).FirstOrDefault(group => group.Count() > 1);
-                if (duplicate != null)
-                {
-                    throw new ArgumentException($"The destination column '{duplicate.Key}' is mapped more than once.", nameof(mappings));
-                }
+                ValidateCopyMappings(mappings);
             }
-            if (relationshipBehavior != RelationshipBehavior.TableOnly && !string.Equals(GetTableName(connection, sourceTable), GetTableName(destinationConnection, targetTable), StringComparison.Ordinal))
+
+            if (relationshipBehavior != RelationshipBehavior.TableOnly && !string.Equals(GetTableName(connection,
+                sourceTable),
+                GetTableName(destinationConnection,
+                    targetTable),
+                StringComparison.Ordinal))
             {
-                throw new ArgumentException("The related tables are copied with the names of the source tables, so the source and the target tables must have the same name (the schema of the target table can be different) when the relationship behavior is not 'TableOnly'.", nameof(targetTable));
+                throw new ArgumentException("The related tables are copied with the names of the source tables, so the source and the target tables must have the same name (the schema of the target table can be different) when the relationship behavior is not 'TableOnly'.",
+                    nameof(targetTable));
             }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Copies rows through the insert fallback in bounded batches.
+        /// </summary>
+        /// <param name="reader">The source rows.</param>
+        /// <param name="excluded">The identity columns excluded from copied rows.</param>
+        /// <param name="interceptors">The ordered row interceptors, or null.</param>
+        /// <param name="bufferSize">The maximum number of rows per batch.</param>
+        /// <param name="action">Inserts or merges and reports a completed batch.</param>
+        private static void CopyRowBatches(IDataReader reader,
+            ISet<string> excluded,
+            IList<IDataInterceptor<Row>> interceptors,
+            int bufferSize,
+            Action<IList<object>> action)
+        {
+            var batch = new List<object>(bufferSize);
+            var columns = interceptors == null ? null : RowInterception.GetColumns(reader);
+            while (reader.Read())
+            {
+                batch.Add(ToRow(reader,
+                    excluded,
+                    interceptors,
+                    columns));
+                if (batch.Count == bufferSize)
+                {
+                    action(batch);
+                    batch.Clear();
+                }
+            }
+
+            if (batch.Count > 0)
+            {
+                action(batch);
+            }
+        }
+
+        /// <summary>
+        /// Copies rows through the insert fallback in bounded batches asynchronously.
+        /// </summary>
+        /// <param name="reader">The source rows.</param>
+        /// <param name="excluded">The identity columns excluded from copied rows.</param>
+        /// <param name="interceptors">The ordered row interceptors, or null.</param>
+        /// <param name="bufferSize">The maximum number of rows per batch.</param>
+        /// <param name="action">Inserts or merges and reports a completed batch.</param>
+        /// <param name="cancellationToken">The token used to cancel reads and writes.</param>
+        /// <returns>A task representing completion of all row batches.</returns>
+        private static async Task CopyRowBatchesAsync(IDataReader reader,
+            ISet<string> excluded,
+            IList<IDataInterceptor<Row>> interceptors,
+            int bufferSize,
+            Func<IList<object>, Task> action,
+            CancellationToken cancellationToken)
+        {
+            var batch = new List<object>(bufferSize);
+            var columns = interceptors == null ? null : RowInterception.GetColumns(reader);
+            while (await ReadAsync(reader,
+                cancellationToken).ConfigureAwait(false))
+            {
+                batch.Add(ToRow(reader,
+                    excluded,
+                    interceptors,
+                    columns));
+                if (batch.Count == bufferSize)
+                {
+                    await action(batch).ConfigureAwait(false);
+                    batch.Clear();
+                }
+            }
+
+            if (batch.Count > 0)
+            {
+                await action(batch).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Logs the in-memory row total without querying the destination.
+        /// </summary>
+        /// <param name="options">The progress of the copy that holds the logs.</param>
+        /// <param name="destinationConnection">The destination connection.</param>
+        /// <param name="targetTable">The target table.</param>
+        /// <param name="mergeExistingRows">Whether the rows were merged (<c>true</c>) or inserted (<c>false</c>).</param>
+        /// <param name="total">The number of rows that were sent.</param>
+        private static void RecordCopy(CopyProgress options,
+            IDbConnection destinationConnection,
+            string targetTable,
+            bool mergeExistingRows,
+            int total)
+        {
+            if (mergeExistingRows)
+            {
+                CopyDataLogger.LogBulkMerge(options,
+                    destinationConnection,
+                    targetTable,
+                    total);
+            }
+            else
+            {
+                CopyDataLogger.LogBulkInsert(options,
+                    destinationConnection,
+                    targetTable,
+                    total);
+            }
+        }
+
+        /// <summary>
+        /// Gets the mappings of the columns for the schema copy, so the schema of the target table is created with only the mapped columns, by their destination names.
+        /// </summary>
+        /// <param name="mappings">The column mappings of the copy of the data.</param>
+        /// <returns>The mappings of the schema copy (<c>null</c> if there are no mappings, which creates all the columns). A source column that is mapped more than once is created with its first destination column.</returns>
+        private static IList<RepoDb.Schema.Models.ColumnMapping> ToSchemaMappings(IList<ColumnMapping> mappings)
+        {
+            if (mappings == null || mappings.Count == 0)
+            {
+                return null;
+            }
+
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            return mappings.Where(mapping => seen.Add(mapping.SourceColumn)).Select(mapping => new RepoDb.Schema.Models.ColumnMapping(mapping.SourceColumn,
+                mapping.DestinationColumn)).ToList();
+        }
+
+        /// <summary>
+        /// Replaces the list of the columns of the <c>SELECT</c> statement with the mapped columns, each one aliased with the name of its destination column.
+        /// </summary>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="commandText">The <c>SELECT</c> statement.</param>
+        /// <param name="mappings">The column mappings.</param>
+        /// <returns>The statement.</returns>
+        private static string Alias(IDbConnection connection,
+            string commandText,
+            IList<ColumnMapping> mappings)
+        {
+            const string select = "SELECT ";
+            const string from = " FROM ";
+            var dbSetting = DbSettingMapper.Get(connection);
+            var start = commandText.IndexOf(select,
+                StringComparison.OrdinalIgnoreCase);
+            var end = commandText.IndexOf(from,
+                StringComparison.OrdinalIgnoreCase);
+            if (start < 0 || end < start)
+            {
+                throw new InvalidOperationException($"The column mappings cannot be applied to the statement '{commandText}'.");
+            }
+
+            var columns = string.Join(", ",
+                mappings.Select(mapping => $"{mapping.SourceColumn.AsQuoted(dbSetting)} AS {mapping.DestinationColumn.AsQuoted(dbSetting)}"));
+            return string.Concat(commandText.Substring(0,
+                start + select.Length),
+                columns,
+                commandText.Substring(end));
+        }
+
+        /// <summary>
+        /// Ensures that the source columns of the mappings exist on the source table and that the destination columns exist on the target table.
+        /// </summary>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="mappings">The column mappings.</param>
+        /// <exception cref="ArgumentException"></exception>
+        private static void ValidateMappings(IDbConnection connection,
+            IDbConnection destinationConnection,
+            string sourceTable,
+            string targetTable,
+            IList<ColumnMapping> mappings)
+        {
+            if (mappings == null || mappings.Count == 0)
+            {
+                return;
+            }
+
+            var sourceColumns = new HashSet<string>(DbFieldCache.Get(connection,
+                sourceTable,
+                null).GetAsFields().Select(field => field.Name),
+                StringComparer.OrdinalIgnoreCase);
+            var targetColumns = new HashSet<string>(DbFieldCache.Get(destinationConnection,
+                targetTable,
+                null).GetAsFields().Select(field => field.Name),
+                StringComparer.OrdinalIgnoreCase);
+            foreach (var mapping in mappings)
+            {
+                if (!sourceColumns.Contains(mapping.SourceColumn))
+                {
+                    throw new ArgumentException($"The source column '{mapping.SourceColumn}' does not exist on the source table '{sourceTable}'.",
+                        nameof(mappings));
+                }
+
+                if (!targetColumns.Contains(mapping.DestinationColumn))
+                {
+                    throw new ArgumentException($"The destination column '{mapping.DestinationColumn}' does not exist on the target table '{targetTable}'.",
+                        nameof(mappings));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the parameters of the filter, by the names that the statement builder gives to them.
+        /// </summary>
+        /// <param name="where">The filter.</param>
+        /// <returns>The parameters.</returns>
+        private static IDictionary<string, object> ToParameters(QueryGroup where)
+        {
+            var parameters = new Dictionary<string, object>(StringComparer.Ordinal);
+            foreach (var field in where.GetFields(true))
+            {
+                var name = field.Parameter.Name;
+                if (field.Operation == Operation.Between || field.Operation == Operation.NotBetween)
+                {
+                    var values = ToList(field.Parameter.Value);
+                    parameters[$"{name}_Left"] = values.Count > 0 ? values[0] : null;
+                    parameters[$"{name}_Right"] = values.Count > 1 ? values[1] : null;
+                }
+                else if (field.Operation == Operation.In || field.Operation == Operation.NotIn)
+                {
+                    var values = ToList(field.Parameter.Value);
+                    for (var i = 0; i < values.Count; i++)
+                    {
+                        parameters[$"{name}_In_{i.ToString(System.Globalization.CultureInfo.InvariantCulture)}"] = values[i];
+                    }
+                }
+                else
+                {
+                    parameters[name] = field.Parameter.Value;
+                }
+            }
+
+            return parameters;
+        }
+
+        /// <summary>
+        /// Converts the value into a list: a collection is converted to its items, any other value is the only item of the list.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The list of the values.</returns>
+        private static IList<object> ToList(object value) =>
+            value is System.Collections.IEnumerable enumerable && !(value is string) ? enumerable.Cast<object>().ToList() : new List<object>
+        {
+            value
+        };
+
+        /// <summary>
+        /// Checks whether the bulk insert (or the bulk merge, if the existing rows are bypassed) of the provider of the destination connection accepts the batches of the buffer
+        /// (the data reader of the buffered rows).
+        /// </summary>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="buffer">The buffer of the rows to be copied.</param>
+        /// <param name="isAsync">A value that indicates whether the asynchronous bulk operation is searched.</param>
+        /// <param name="mergeExistingRows">A value that indicates whether the bulk merge is searched instead of the bulk insert.</param>
+        /// <returns><c>true</c> if the provider has the bulk operation for the batches; otherwise, <c>false</c>.</returns>
+        private static bool IsBulkAvailable(IDbConnection destinationConnection,
+            BatchBuffer buffer,
+            bool isAsync,
+            bool mergeExistingRows)
+        {
+            using (var probe = buffer.CreateReader())
+            {
+                return mergeExistingRows ? BulkInsertInvoker.IsMergeAvailable(destinationConnection,
+                    probe,
+                    isAsync) : BulkInsertInvoker.IsAvailable(destinationConnection,
+                        probe,
+                        isAsync);
+            }
+        }
+
+        /// <summary>
+        /// Converts the current row of the reader into an object, to be inserted: the row goes through the interceptors first, if there are any.
+        /// </summary>
+        /// <param name="record">The record.</param>
+        /// <param name="excludedColumns">The names of the columns that are left out of the row, or <c>null</c> to have all of them.</param>
+        /// <param name="interceptors">The interceptors that the row goes through, in order, or <c>null</c>.</param>
+        /// <param name="columns">The columns of the record (see <see cref="RowInterception.GetColumns"/>), when there are interceptors.</param>
+        /// <returns>The row, as an object that has a property for each column.</returns>
+        private static object ToRow(IDataRecord record,
+            ISet<string> excludedColumns,
+            IList<IDataInterceptor<Row>> interceptors,
+            List<Column> columns)
+        {
+            var row = new System.Dynamic.ExpandoObject() as IDictionary<string, object>;
+            if (interceptors != null)
+            {
+                var intercepted = RowInterception.Apply(RowInterception.Read(record,
+                    columns),
+                    interceptors);
+                for (var i = 0; i < intercepted.Count; i++)
+                {
+                    var name = intercepted.Columns[i].Name;
+                    if (excludedColumns == null || !excludedColumns.Contains(name))
+                    {
+                        row[name] = intercepted[i];
+                    }
+                }
+
+                return row;
+            }
+
+            for (var i = 0; i < record.FieldCount; i++)
+            {
+                var name = record.GetName(i);
+                if (excludedColumns == null || !excludedColumns.Contains(name))
+                {
+                    row[name] = record.IsDBNull(i) ? null : record.GetValue(i);
+                }
+            }
+
+            return row;
+        }
+
+        /// <summary>
+        /// Ensures that the columns of the batches have the qualifiers of the merge (the interceptors may have removed one of them).
+        /// </summary>
+        /// <param name="buffer">The buffer of the rows to be copied.</param>
+        /// <param name="qualifiers">The qualifiers of the merge, or <c>null</c> if the rows are inserted.</param>
+        /// <param name="check">A value that indicates whether the columns are checked (they are the same for every row).</param>
+        /// <exception cref="InvalidOperationException">A qualifier is not a column of the batches.</exception>
+        private static void EnsureQualifiers(BatchBuffer buffer,
+            IList<Field> qualifiers,
+            bool check)
+        {
+            if (!check || qualifiers == null)
+            {
+                return;
+            }
+
+            var missing = qualifiers.FirstOrDefault(qualifier => !buffer.HasColumn(qualifier.Name));
+            if (missing != null)
+            {
+                throw new InvalidOperationException($"The existing rows cannot be bypassed as the qualifier '{missing.Name}' is not a column of the rows that the data interceptors give.");
+            }
+        }
+
+        /// <summary>
+        /// Gets the names of the columns of the target table that are not copied: its identity columns, if the database of the target table generates their values.
+        /// </summary>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="identityBehavior">The behavior that defines whether the values of the identity columns are copied as they are, or generated by the database of the target table.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <returns>The names of the columns (without the case), or <c>null</c> if all the columns are copied.</returns>
+        private static ISet<string> GetIdentityColumns(IDbConnection destinationConnection,
+            string targetTable,
+            IdentityBehavior identityBehavior,
+            IDbTransaction transaction)
+        {
+            if (identityBehavior != IdentityBehavior.Ignore)
+            {
+                return null;
+            }
+
+            var dbSetting = destinationConnection.GetDbSetting();
+            var columns = DbFieldCache.Get(destinationConnection,
+                targetTable,
+                transaction)?.GetItems().Where(field => field.IsIdentity).Select(field => field.Name.AsUnquoted(true,
+                    dbSetting));
+            return columns == null ? null : new HashSet<string>(columns,
+                StringComparer.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Starts the copy of a table: adds the item of the table (its source and target tables) to the progress, and makes it the current one.
+        /// </summary>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <returns>The item of the table, or <c>null</c> if there is no progress.</returns>
+        private static CopyProgressItem Begin(CopyProgress options,
+            IDbConnection connection,
+            IDbConnection destinationConnection,
+            string sourceTable,
+            string targetTable)
+        {
+            if (options == null)
+            {
+                return null;
+            }
+
+            var now = DateTime.UtcNow;
+            var item = new CopyProgressItem
+            {
+                StartTime = now,
+                EndTime = now,
+                NextBatchStart = now,
+                Source = CreateEndpoint(connection,
+                    sourceTable),
+                Target = CreateEndpoint(destinationConnection,
+                    targetTable)
+            };
+            item.TotalRowCount = options.SourceRowCounts.TryGetValue(sourceTable,
+                out var count) ? count : 0;
+            item.Source.RowCount = 0;
+            options.Items.Add(item);
+            options.Current = item;
+            options.EndTime = now;
+            return item;
+        }
+
+        /// <summary>
+        /// Creates the details of a table of a connection.
+        /// </summary>
+        /// <param name="connection">The connection of the database that the table belongs to.</param>
+        /// <param name="table">The name of the table.</param>
+        /// <returns>The details of the table.</returns>
+        private static Endpoint CreateEndpoint(IDbConnection connection,
+            string table) =>
+            new Endpoint
+        {
+            Server = (connection as System.Data.Common.DbConnection)?.DataSource,
+            Database = connection.Database,
+            DatabaseType = connection.GetType().Name,
+            Table = new TableInfo(GetTableName(connection,
+                table),
+                GetTargetSchema(connection,
+                    table),
+                connection.Database)
+        };
+
+        /// <summary>
+        /// Reports the progress of the copy: a batch of rows was copied.
+        /// </summary>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="inserted">The number of rows that were inserted by the batch.</param>
+        /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
+        /// <param name="copiedBytes">The estimated bytes of the values that were copied by the batch.</param>
+        private static void Report(CopyProgress options,
+            int inserted,
+            Action<CopyProgress> progressCallback,
+            long copiedBytes = 0)
+        {
+            var item = options.Current;
+            var now = DateTime.UtcNow;
+            item.Batches.Add(new CopyBatch { Number = item.Batches.Count + 1, RowCount = inserted, CopiedBytes = copiedBytes, StartTime = item.NextBatchStart, EndTime = now });
+            item.RowCount += inserted;
+            item.CopiedBytes += copiedBytes;
+            options.CopiedBytes += copiedBytes;
+            item.Source.RowCount = (item.Source.RowCount ?? 0) + inserted;
+            item.EndTime = now;
+            options.BatchCount++;
+            options.RowCount += inserted;
+            options.EndTime = now;
+            progressCallback?.Invoke(options);
+            item.NextBatchStart = DateTime.UtcNow;
+        }
+
+        /// <summary>
+        /// Completes the copy of a table: marks its end.
+        /// </summary>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="item">The item of the table.</param>
+        private static void Complete(CopyProgress options,
+            CopyProgressItem item)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            var now = DateTime.UtcNow;
+            item.EndTime = now;
+            options.EndTime = now;
+            options.CompletedTableCount++;
+        }
+
+        /// <summary>
+        /// Validates explicit data-copy mappings and rejects duplicate destination columns.
+        /// </summary>
+        /// <param name="mappings">The column mappings, or <c>null</c>.</param>
+        private static void ValidateCopyMappings(IList<ColumnMapping> mappings)
+        {
+            foreach (var mapping in mappings)
+            {
+                if (mapping == null)
+                {
+                    throw new ArgumentException("The column mappings must not contain a null item.",
+                        nameof(mappings));
+                }
+
+                if (string.IsNullOrWhiteSpace(mapping.SourceColumn) || string.IsNullOrWhiteSpace(mapping.DestinationColumn))
+                {
+                    throw new ArgumentException("The source and the destination columns of a column mapping must not be empty.",
+                        nameof(mappings));
+                }
+            }
+
+            var duplicate = mappings.GroupBy(mapping => mapping.DestinationColumn,
+                StringComparer.OrdinalIgnoreCase).FirstOrDefault(group => group.Count() > 1);
+            if (duplicate != null)
+            {
+                throw new ArgumentException($"The destination column '{duplicate.Key}' is mapped more than once.",
+                    nameof(mappings));
+            }
+        }
+
+        /// <summary>
+        /// Copies the requested table schemas with optional column mappings and destination names.
+        /// </summary>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="targetSchema">The schema of the target table, or <c>null</c>.</param>
+        /// <param name="tableExistenceBehavior">The behavior that defines what happens to the tables that already exist.</param>
+        /// <param name="schemaBehavior">The schema relationship traversal requested for the copy.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="mappings">The column mappings of the requested table: only the mapped columns of the source table are created in the target table when the schema is copied.</param>
+        /// <returns>The completed schema-copy items used to resolve destination table names.</returns>
+        private static List<CopyTableSchemaResultItem> CopyRequestedSchema(IDbConnection connection,
+            IDbConnection destinationConnection,
+            string sourceTable,
+            string targetTable,
+            string targetSchema,
+            TableExistsBehavior tableExistenceBehavior,
+            RelatedTableBehavior schemaBehavior,
+            int? commandTimeout,
+            ITrace trace,
+            IDbTransaction transaction,
+            IList<ColumnMapping> mappings)
+        {
+            var results = new List<CopyTableSchemaResultItem>();
+            var schemaMappings = ToSchemaMappings(mappings);
+            var renamedTable = GetRenamedTable(sourceTable,
+                targetTable);
+            if (schemaMappings == null)
+            {
+                connection.CopyTableSchemaTo(sourceTable,
+                    destinationConnection,
+                    targetSchema: targetSchema,
+                    targetTable: renamedTable,
+                    tableExistenceBehavior: tableExistenceBehavior,
+                    relationshipBehavior: schemaBehavior,
+                    createdCallback: results.Add,
+                    commandTimeout: commandTimeout,
+                    trace: trace,
+                    transaction: transaction);
+            }
+            else
+            {
+                connection.CopyTableSchemaTo(new[] { sourceTable },
+                    destinationConnection,
+                    new[] { new TableMapping(sourceTable,
+                        renamedTable,
+                        schemaMappings) },
+                    targetSchema: targetSchema,
+                    tableExistenceBehavior: tableExistenceBehavior,
+                    relationshipBehavior: schemaBehavior,
+                    createdCallback: results.Add,
+                    commandTimeout: commandTimeout,
+                    trace: trace,
+                    transaction: transaction);
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Copies the requested table schemas with optional column mappings and destination names.
+        /// </summary>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="targetSchema">The schema of the target table, or <c>null</c>.</param>
+        /// <param name="tableExistenceBehavior">The behavior that defines what happens to the tables that already exist.</param>
+        /// <param name="schemaBehavior">The schema relationship traversal requested for the copy.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="mappings">The column mappings of the requested table: only the mapped columns of the source table are created in the target table when the schema is copied.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>The completed schema-copy items used to resolve destination table names.</returns>
+        private static async Task<List<CopyTableSchemaResultItem>> CopyRequestedSchemaAsync(IDbConnection connection,
+            IDbConnection destinationConnection,
+            string sourceTable,
+            string targetTable,
+            string targetSchema,
+            TableExistsBehavior tableExistenceBehavior,
+            RelatedTableBehavior schemaBehavior,
+            int? commandTimeout,
+            ITrace trace,
+            IDbTransaction transaction,
+            IList<ColumnMapping> mappings,
+            CancellationToken cancellationToken)
+        {
+            var results = new List<CopyTableSchemaResultItem>();
+            var schemaMappings = ToSchemaMappings(mappings);
+            var renamedTable = GetRenamedTable(sourceTable,
+                targetTable);
+            if (schemaMappings == null)
+            {
+                await connection.CopyTableSchemaToAsync(sourceTable,
+                    destinationConnection,
+                    targetSchema: targetSchema,
+                    targetTable: renamedTable,
+                    tableExistenceBehavior: tableExistenceBehavior,
+                    relationshipBehavior: schemaBehavior,
+                    createdCallback: results.Add,
+                    commandTimeout: commandTimeout,
+                    trace: trace,
+                    transaction: transaction,
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                await connection.CopyTableSchemaToAsync(new[] { sourceTable },
+                    destinationConnection,
+                    new[] { new TableMapping(sourceTable,
+                        renamedTable,
+                        schemaMappings) },
+                    targetSchema: targetSchema,
+                    tableExistenceBehavior: tableExistenceBehavior,
+                    relationshipBehavior: schemaBehavior,
+                    createdCallback: results.Add,
+                    commandTimeout: commandTimeout,
+                    trace: trace,
+                    transaction: transaction,
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Copies buffered rows with bulk operations and reports each committed batch.
+        /// </summary>
+        /// <param name="buffer">The source rows buffered for bulk operations.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="qualifiers">The destination merge key columns, or null.</param>
+        /// <param name="bufferSize">The number of rows of a batch.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns of the source table are aligned with the columns of the target table.</param>
+        /// <param name="identityBehavior">The behavior that defines whether the values of the identity columns are copied as they are, or generated by the database of the target table.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="mergeExistingRows">A value that indicates whether the bulk merge is used instead of the bulk insert, with the primary key (or the identity) of the target table as the qualifiers.</param>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="progressCallback">The callback that receives the progress after every batch, or <c>null</c>.</param>
+        /// <param name="item">The current table's copy progress.</param>
+        /// <param name="hasInterceptors">Whether row interceptors can change the copied column shape.</param>
+        private static void CopyBulkRows(BatchBuffer buffer,
+            IDbConnection destinationConnection,
+            string targetTable,
+            IList<Field> qualifiers,
+            int bufferSize,
+            ColumnMappingBehavior columnMappingsBehavior,
+            IdentityBehavior identityBehavior,
+            int? commandTimeout,
+            ITrace trace,
+            IDbTransaction transaction,
+            bool mergeExistingRows,
+            CopyProgress options,
+            Action<CopyProgress> progressCallback,
+            CopyProgressItem item,
+            bool hasInterceptors)
+        {
+            var total = 0;
+            while (buffer.Fill())
+            {
+                EnsureQualifiers(buffer,
+                    qualifiers,
+                    hasInterceptors && item.Batches.Count == 0);
+                WriteBulkBatch(buffer,
+                    destinationConnection,
+                    targetTable,
+                    qualifiers,
+                    bufferSize,
+                    columnMappingsBehavior,
+                    identityBehavior,
+                    commandTimeout,
+                    trace,
+                    transaction,
+                    mergeExistingRows);
+                var copied = buffer.Count;
+                var bytes = buffer.CopiedBytes;
+                total += copied;
+                buffer.Clear();
+                Report(options,
+                    copied,
+                    progressCallback,
+                    bytes);
+            }
+
+            if (item.Batches.Count == 0)
+            {
+                Report(options,
+                    0,
+                    progressCallback);
+            }
+
+            RecordCopy(options,
+                destinationConnection,
+                targetTable,
+                mergeExistingRows,
+                total);
+        }
+
+        /// <summary>
+        /// Writes one buffered batch through the provider's bulk insert or merge operation.
+        /// </summary>
+        /// <param name="buffer">The source rows buffered for bulk operations.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="qualifiers">The destination merge key columns, or null.</param>
+        /// <param name="bufferSize">The number of rows of a batch.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns of the source table are aligned with the columns of the target table.</param>
+        /// <param name="identityBehavior">The behavior that defines whether the values of the identity columns are copied as they are, or generated by the database of the target table.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="mergeExistingRows">A value that indicates whether the bulk merge is used instead of the bulk insert, with the primary key (or the identity) of the target table as the qualifiers.</param>
+        private static void WriteBulkBatch(BatchBuffer buffer,
+            IDbConnection destinationConnection,
+            string targetTable,
+            IList<Field> qualifiers,
+            int bufferSize,
+            ColumnMappingBehavior columnMappingsBehavior,
+            IdentityBehavior identityBehavior,
+            int? commandTimeout,
+            ITrace trace,
+            IDbTransaction transaction,
+            bool mergeExistingRows)
+        {
+            using (var batchReader = buffer.CreateReader())
+            {
+                _ = mergeExistingRows ? BulkInsertInvoker.BulkMerge(destinationConnection,
+                    targetTable,
+                    batchReader,
+                    qualifiers,
+                    bufferSize,
+                    columnMappingsBehavior,
+                    identityBehavior == IdentityBehavior.KeepIdentity,
+                    commandTimeout,
+                    null,
+                    trace,
+                    transaction) : BulkInsertInvoker.BulkInsert(destinationConnection,
+                        targetTable,
+                        batchReader,
+                        bufferSize,
+                        columnMappingsBehavior,
+                        identityBehavior == IdentityBehavior.KeepIdentity,
+                        commandTimeout,
+                        null,
+                        trace,
+                        transaction);
+            }
+        }
+
+        /// <summary>
+        /// Copies buffered rows with bulk operations and reports each committed batch.
+        /// </summary>
+        /// <param name="buffer">The source rows buffered for bulk operations.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="qualifiers">The destination merge key columns, or null.</param>
+        /// <param name="bufferSize">The number of rows of a batch.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns of the source table are aligned with the columns of the target table.</param>
+        /// <param name="identityBehavior">The behavior that defines whether the values of the identity columns are copied as they are, or generated by the database of the target table.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="mergeExistingRows">A value that indicates whether the bulk merge is used instead of the bulk insert, with the primary key (or the identity) of the target table as the qualifiers.</param>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="progressCallback">The callback that receives the progress after every batch, or <c>null</c>.</param>
+        /// <param name="item">The current table's copy progress.</param>
+        /// <param name="hasInterceptors">Whether row interceptors can change the copied column shape.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task representing completion of the bulk writes.</returns>
+        private static async Task CopyBulkRowsAsync(BatchBuffer buffer,
+            IDbConnection destinationConnection,
+            string targetTable,
+            IList<Field> qualifiers,
+            int bufferSize,
+            ColumnMappingBehavior columnMappingsBehavior,
+            IdentityBehavior identityBehavior,
+            int? commandTimeout,
+            ITrace trace,
+            IDbTransaction transaction,
+            bool mergeExistingRows,
+            CopyProgress options,
+            Action<CopyProgress> progressCallback,
+            CopyProgressItem item,
+            bool hasInterceptors,
+            CancellationToken cancellationToken)
+        {
+            var total = 0;
+            while (await buffer.FillAsync(cancellationToken).ConfigureAwait(false))
+            {
+                EnsureQualifiers(buffer,
+                    qualifiers,
+                    hasInterceptors && item.Batches.Count == 0);
+                await WriteBulkBatchAsync(buffer,
+                    destinationConnection,
+                    targetTable,
+                    qualifiers,
+                    bufferSize,
+                    columnMappingsBehavior,
+                    identityBehavior,
+                    commandTimeout,
+                    trace,
+                    transaction,
+                    mergeExistingRows,
+                    cancellationToken).ConfigureAwait(false);
+                var copied = buffer.Count;
+                var bytes = buffer.CopiedBytes;
+                total += copied;
+                buffer.Clear();
+                Report(options,
+                    copied,
+                    progressCallback,
+                    bytes);
+            }
+
+            if (item.Batches.Count == 0)
+            {
+                Report(options,
+                    0,
+                    progressCallback);
+            }
+
+            RecordCopy(options,
+                destinationConnection,
+                targetTable,
+                mergeExistingRows,
+                total);
+        }
+
+        /// <summary>
+        /// Writes one buffered batch through the provider's bulk insert or merge operation.
+        /// </summary>
+        /// <param name="buffer">The source rows buffered for bulk operations.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="qualifiers">The destination merge key columns, or null.</param>
+        /// <param name="bufferSize">The number of rows of a batch.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns of the source table are aligned with the columns of the target table.</param>
+        /// <param name="identityBehavior">The behavior that defines whether the values of the identity columns are copied as they are, or generated by the database of the target table.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="mergeExistingRows">A value that indicates whether the bulk merge is used instead of the bulk insert, with the primary key (or the identity) of the target table as the qualifiers.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task representing completion of the bulk writes.</returns>
+        private static async Task WriteBulkBatchAsync(BatchBuffer buffer,
+            IDbConnection destinationConnection,
+            string targetTable,
+            IList<Field> qualifiers,
+            int bufferSize,
+            ColumnMappingBehavior columnMappingsBehavior,
+            IdentityBehavior identityBehavior,
+            int? commandTimeout,
+            ITrace trace,
+            IDbTransaction transaction,
+            bool mergeExistingRows,
+            CancellationToken cancellationToken)
+        {
+            using (var batchReader = buffer.CreateReader())
+            {
+                _ = mergeExistingRows ? await BulkInsertInvoker.BulkMergeAsync(destinationConnection,
+                    targetTable,
+                    batchReader,
+                    qualifiers,
+                    bufferSize,
+                    columnMappingsBehavior,
+                    identityBehavior == IdentityBehavior.KeepIdentity,
+                    commandTimeout,
+                    null,
+                    trace,
+                    transaction,
+                    cancellationToken).ConfigureAwait(false) : await BulkInsertInvoker.BulkInsertAsync(destinationConnection,
+                        targetTable,
+                        batchReader,
+                        bufferSize,
+                        columnMappingsBehavior,
+                        identityBehavior == IdentityBehavior.KeepIdentity,
+                        commandTimeout,
+                        null,
+                        trace,
+                        transaction,
+                        cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Rejects unsupported column mapping and identity behavior values.
+        /// </summary>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns are aligned.</param>
+        /// <param name="identityBehavior">The behavior that defines whether the values of the identity columns are copied as they are, or generated by the database of the target table.</param>
+        private static void ValidateCopyBehaviors(ColumnMappingBehavior columnMappingsBehavior,
+            IdentityBehavior identityBehavior)
+        {
+            if (!Enum.IsDefined(typeof(ColumnMappingBehavior),
+                columnMappingsBehavior))
+            {
+                throw new ArgumentOutOfRangeException(nameof(columnMappingsBehavior),
+                    "The column mappings behavior is not defined.");
+            }
+
+            if (!Enum.IsDefined(typeof(IdentityBehavior),
+                identityBehavior))
+            {
+                throw new ArgumentOutOfRangeException(nameof(identityBehavior),
+                    "The identity behavior is not defined.");
+            }
+        }
+
+        /// <summary>
+        /// Selects bulk or row insertion and disposes the source batch buffer when copying completes.
+        /// </summary>
+        /// <param name="reader">The forward-only source rows.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="excluded">The identity columns excluded from copied rows.</param>
+        /// <param name="interceptors">The ordered row interceptors, or null.</param>
+        /// <param name="qualifiers">The destination merge key columns, or null.</param>
+        /// <param name="bufferSize">The number of rows of a batch.</param>
+        /// <param name="mergeExistingRows">A value that indicates whether the bulk merge is used instead of the bulk insert, with the primary key (or the identity) of the target table as the qualifiers.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns of the source table are aligned with the columns of the target table.</param>
+        /// <param name="identityBehavior">The behavior that defines whether the values of the identity columns are copied as they are, or generated by the database of the target table.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="progressCallback">The callback that receives the progress after every batch, or <c>null</c>.</param>
+        /// <param name="item">The current table copy progress.</param>
+        private static void CopyBufferedRows(IDataReader reader,
+            IDbConnection destinationConnection,
+            string targetTable,
+            ISet<string> excluded,
+            IList<IDataInterceptor<Row>> interceptors,
+            IList<Field> qualifiers,
+            int bufferSize,
+            bool mergeExistingRows,
+            ColumnMappingBehavior columnMappingsBehavior,
+            IdentityBehavior identityBehavior,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction,
+            CopyProgress options,
+            Action<CopyProgress> progressCallback,
+            CopyProgressItem item)
+        {
+            using (var buffer = new BatchBuffer(reader,
+                bufferSize,
+                excluded,
+                interceptors))
+            {
+                if (IsBulkAvailable(destinationConnection,
+                    buffer,
+                    false,
+                    mergeExistingRows))
+                {
+                    CopyBulkRows(buffer,
+                        destinationConnection,
+                        targetTable,
+                        qualifiers,
+                        bufferSize,
+                        columnMappingsBehavior,
+                        identityBehavior,
+                        commandTimeout,
+                        trace,
+                        transaction,
+                        mergeExistingRows,
+                        options,
+                        progressCallback,
+                        item,
+                        interceptors != null);
+                }
+                else
+                {
+                    CopyFallbackRows(reader,
+                        destinationConnection,
+                        targetTable,
+                        excluded,
+                        interceptors,
+                        qualifiers,
+                        bufferSize,
+                        mergeExistingRows,
+                        commandTimeout,
+                        traceKey,
+                        trace,
+                        transaction,
+                        options,
+                        progressCallback);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copies rows with insert or merge commands when the provider has no suitable bulk operation.
+        /// </summary>
+        /// <param name="reader">The forward-only source rows.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="excluded">The identity columns excluded from copied rows.</param>
+        /// <param name="interceptors">The ordered row interceptors, or null.</param>
+        /// <param name="qualifiers">The destination merge key columns, or null.</param>
+        /// <param name="bufferSize">The number of rows of a batch.</param>
+        /// <param name="mergeExistingRows">A value that indicates whether the bulk merge is used instead of the bulk insert, with the primary key (or the identity) of the target table as the qualifiers.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="progressCallback">The callback that receives the progress after every batch, or <c>null</c>.</param>
+        private static void CopyFallbackRows(IDataReader reader,
+            IDbConnection destinationConnection,
+            string targetTable,
+            ISet<string> excluded,
+            IList<IDataInterceptor<Row>> interceptors,
+            IList<Field> qualifiers,
+            int bufferSize,
+            bool mergeExistingRows,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction,
+            CopyProgress options,
+            Action<CopyProgress> progressCallback)
+        {
+            var action = new Action<IList<object>>((IList<object> b) =>
+            {
+                _ = mergeExistingRows ? RowInserter.Merge(destinationConnection,
+                    targetTable,
+                    b,
+                    qualifiers,
+                    commandTimeout,
+                    traceKey,
+                    trace,
+                    transaction) : RowInserter.Insert(destinationConnection,
+                        targetTable,
+                        b,
+                        commandTimeout,
+                        traceKey,
+                        trace,
+                        transaction);
+                Report(options,
+                    b.Count,
+                    progressCallback,
+                    CopySize.OfRows(b));
+            });
+            CopyRowBatches(reader,
+                excluded,
+                interceptors,
+                bufferSize,
+                action);
+        }
+
+        /// <summary>
+        /// Selects bulk or row insertion and disposes the source batch buffer when copying completes.
+        /// </summary>
+        /// <param name="reader">The forward-only source rows.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="excluded">The identity columns excluded from copied rows.</param>
+        /// <param name="interceptors">The ordered row interceptors, or null.</param>
+        /// <param name="qualifiers">The destination merge key columns, or null.</param>
+        /// <param name="bufferSize">The number of rows of a batch.</param>
+        /// <param name="mergeExistingRows">A value that indicates whether the bulk merge is used instead of the bulk insert, with the primary key (or the identity) of the target table as the qualifiers.</param>
+        /// <param name="columnMappingsBehavior">The behavior that defines how the columns of the source table are aligned with the columns of the target table.</param>
+        /// <param name="identityBehavior">The behavior that defines whether the values of the identity columns are copied as they are, or generated by the database of the target table.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="progressCallback">The callback that receives the progress after every batch, or <c>null</c>.</param>
+        /// <param name="item">The current table copy progress.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task representing the copied batches.</returns>
+        private static async Task CopyBufferedRowsAsync(IDataReader reader,
+            IDbConnection destinationConnection,
+            string targetTable,
+            ISet<string> excluded,
+            IList<IDataInterceptor<Row>> interceptors,
+            IList<Field> qualifiers,
+            int bufferSize,
+            bool mergeExistingRows,
+            ColumnMappingBehavior columnMappingsBehavior,
+            IdentityBehavior identityBehavior,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction,
+            CopyProgress options,
+            Action<CopyProgress> progressCallback,
+            CopyProgressItem item,
+            CancellationToken cancellationToken)
+        {
+            using (var buffer = new BatchBuffer(reader,
+                bufferSize,
+                excluded,
+                interceptors))
+            {
+                if (IsBulkAvailable(destinationConnection,
+                    buffer,
+                    true,
+                    mergeExistingRows))
+                {
+                    await CopyBulkRowsAsync(buffer,
+                        destinationConnection,
+                        targetTable,
+                        qualifiers,
+                        bufferSize,
+                        columnMappingsBehavior,
+                        identityBehavior,
+                        commandTimeout,
+                        trace,
+                        transaction,
+                        mergeExistingRows,
+                        options,
+                        progressCallback,
+                        item,
+                        interceptors != null,
+                        cancellationToken).ConfigureAwait(false);
+                }
+                else
+                {
+                    await CopyFallbackRowsAsync(reader,
+                        destinationConnection,
+                        targetTable,
+                        excluded,
+                        interceptors,
+                        qualifiers,
+                        bufferSize,
+                        mergeExistingRows,
+                        commandTimeout,
+                        traceKey,
+                        trace,
+                        transaction,
+                        options,
+                        progressCallback,
+                        cancellationToken).ConfigureAwait(false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copies rows with insert or merge commands when the provider has no suitable bulk operation.
+        /// </summary>
+        /// <param name="reader">The forward-only source rows.</param>
+        /// <param name="destinationConnection">The connection of the destination database.</param>
+        /// <param name="targetTable">The name of the target table.</param>
+        /// <param name="excluded">The identity columns excluded from copied rows.</param>
+        /// <param name="interceptors">The ordered row interceptors, or null.</param>
+        /// <param name="qualifiers">The destination merge key columns, or null.</param>
+        /// <param name="bufferSize">The number of rows of a batch.</param>
+        /// <param name="mergeExistingRows">A value that indicates whether the bulk merge is used instead of the bulk insert, with the primary key (or the identity) of the target table as the qualifiers.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracking key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection.</param>
+        /// <param name="options">The progress of the copy.</param>
+        /// <param name="progressCallback">The callback that receives the progress after every batch, or <c>null</c>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task representing the copied batches.</returns>
+        private static async Task CopyFallbackRowsAsync(IDataReader reader,
+            IDbConnection destinationConnection,
+            string targetTable,
+            ISet<string> excluded,
+            IList<IDataInterceptor<Row>> interceptors,
+            IList<Field> qualifiers,
+            int bufferSize,
+            bool mergeExistingRows,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction,
+            CopyProgress options,
+            Action<CopyProgress> progressCallback,
+            CancellationToken cancellationToken)
+        {
+            var action = new Func<IList<object>, Task>(async (IList<object> b) =>
+            {
+                _ = mergeExistingRows ? await RowInserter.MergeAsync(destinationConnection,
+                    targetTable,
+                    b,
+                    qualifiers,
+                    commandTimeout,
+                    traceKey,
+                    trace,
+                    transaction,
+                    cancellationToken).ConfigureAwait(false) : await RowInserter.InsertAsync(destinationConnection,
+                        targetTable,
+                        b,
+                        commandTimeout,
+                        traceKey,
+                        trace,
+                        transaction,
+                        cancellationToken).ConfigureAwait(false);
+                Report(options,
+                    b.Count,
+                    progressCallback,
+                    CopySize.OfRows(b));
+            });
+            await CopyRowBatchesAsync(reader,
+                excluded,
+                interceptors,
+                bufferSize,
+                action,
+                cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

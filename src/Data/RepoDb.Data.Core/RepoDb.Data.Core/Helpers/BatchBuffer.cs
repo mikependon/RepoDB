@@ -100,14 +100,19 @@ namespace RepoDb.Data.Helpers
             {
                 throw new ArgumentNullException(nameof(source));
             }
+
             if (batchSize < 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(batchSize), "The batch size must be at least 1.");
+                throw new ArgumentOutOfRangeException(nameof(batchSize),
+                    "The batch size must be at least 1.");
             }
+
             _source = source;
             _batchSize = batchSize;
-            _ordinals = GetOrdinals(source, excludedColumns);
-            _table = CreateTable(source, _ordinals);
+            _ordinals = GetOrdinals(source,
+                excludedColumns);
+            _table = CreateTable(source,
+                _ordinals);
             _values = new object[source.FieldCount];
             _row = new object[_ordinals.Length];
             _excludedColumns = excludedColumns;
@@ -121,11 +126,6 @@ namespace RepoDb.Data.Helpers
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets the number of rows that are buffered.
-        /// </summary>
-        public int Count => _table.Rows.Count;
 
         /// <summary>
         /// Gets the estimated bytes of the buffered values.
@@ -142,9 +142,19 @@ namespace RepoDb.Data.Helpers
                         bytes += CopySize.OfValue(row[i]);
                     }
                 }
+
                 return bytes;
             }
         }
+
+        /// <summary>
+        /// Gets the number of rows that are buffered.
+        /// </summary>
+        public int Count => _table.Rows.Count;
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Checks whether the batches have a column with the specified name (the case is ignored). With interceptors, the columns are known when the first row is buffered.
@@ -153,10 +163,6 @@ namespace RepoDb.Data.Helpers
         /// <returns><c>true</c> if the batches have the column; otherwise, <c>false</c>.</returns>
         public bool HasColumn(string name) =>
             _table.Columns.Contains(name);
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// Clears the buffer, then buffers the next rows of the source until the number of rows reaches the batch size, or the source has no more rows.
@@ -169,6 +175,7 @@ namespace RepoDb.Data.Helpers
             {
                 Add();
             }
+
             return _table.Rows.Count > 0;
         }
 
@@ -184,6 +191,7 @@ namespace RepoDb.Data.Helpers
             {
                 Add();
             }
+
             return _table.Rows.Count > 0;
         }
 
@@ -222,8 +230,10 @@ namespace RepoDb.Data.Helpers
             var table = new DataTable();
             foreach (var ordinal in ordinals)
             {
-                table.Columns.Add(source.GetName(ordinal), source.GetFieldType(ordinal) ?? typeof(object));
+                table.Columns.Add(source.GetName(ordinal),
+                    source.GetFieldType(ordinal) ?? typeof(object));
             }
+
             return table;
         }
 
@@ -235,9 +245,8 @@ namespace RepoDb.Data.Helpers
         /// <returns>The positions of the columns, in order.</returns>
         private static int[] GetOrdinals(IDataReader source,
             ISet<string> excludedColumns) =>
-            Enumerable.Range(0, source.FieldCount)
-                .Where(ordinal => excludedColumns == null || !excludedColumns.Contains(source.GetName(ordinal)))
-                .ToArray();
+            Enumerable.Range(0,
+                source.FieldCount).Where(ordinal => excludedColumns == null || !excludedColumns.Contains(source.GetName(ordinal))).ToArray();
 
         /// <summary>
         /// Adds the current row of the source to the buffer.
@@ -249,11 +258,13 @@ namespace RepoDb.Data.Helpers
                 AddIntercepted();
                 return;
             }
+
             _source.GetValues(_values);
             for (var i = 0; i < _ordinals.Length; i++)
             {
                 _row[i] = _values[_ordinals[i]];
             }
+
             _table.Rows.Add(_row);
         }
 
@@ -263,7 +274,9 @@ namespace RepoDb.Data.Helpers
         /// <exception cref="InvalidOperationException">An interceptor returned <c>null</c>, or the row has other columns than the rows before it, or a value does not fit its column.</exception>
         private void AddIntercepted()
         {
-            var row = RowInterception.Apply(RowInterception.Read(_source, _columns), _interceptors);
+            var row = RowInterception.Apply(RowInterception.Read(_source,
+                _columns),
+                _interceptors);
             var included = new List<int>(row.Count);
             for (var i = 0; i < row.Count; i++)
             {
@@ -272,26 +285,32 @@ namespace RepoDb.Data.Helpers
                     included.Add(i);
                 }
             }
+
             if (_shape == null)
             {
-                Reshape(row, included);
+                Reshape(row,
+                    included);
             }
-            else if (!IsShape(row, included))
+            else if (!IsShape(row,
+                included))
             {
                 throw new InvalidOperationException("The data interceptors must give every row the same columns, in the same order.");
             }
+
             var values = new object[included.Count];
             for (var i = 0; i < values.Length; i++)
             {
                 values[i] = row[included[i]] ?? DBNull.Value;
             }
+
             try
             {
                 _table.Rows.Add(values);
             }
             catch (Exception e) when (e is ArgumentException || e is InvalidCastException || e is FormatException)
             {
-                throw new InvalidOperationException($"A value that a data interceptor gave does not fit the type of its column: {e.Message}", e);
+                throw new InvalidOperationException($"A value that a data interceptor gave does not fit the type of its column: {e.Message}",
+                    e);
             }
         }
 
@@ -307,8 +326,10 @@ namespace RepoDb.Data.Helpers
             foreach (var ordinal in included)
             {
                 var column = row.Columns[ordinal];
-                table.Columns.Add(column.Name, column.Type == null ? typeof(object) : Nullable.GetUnderlyingType(column.Type) ?? column.Type);
+                table.Columns.Add(column.Name,
+                    column.Type == null ? typeof(object) : Nullable.GetUnderlyingType(column.Type) ?? column.Type);
             }
+
             _table.Dispose();
             _table = table;
             _shape = included.Select(ordinal => row.Columns[ordinal].Name).ToArray();
@@ -327,13 +348,17 @@ namespace RepoDb.Data.Helpers
             {
                 return false;
             }
+
             for (var i = 0; i < _shape.Length; i++)
             {
-                if (!string.Equals(row.Columns[included[i]].Name, _shape[i], StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(row.Columns[included[i]].Name,
+                    _shape[i],
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -345,9 +370,7 @@ namespace RepoDb.Data.Helpers
         private Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return _source is System.Data.Common.DbDataReader reader
-                ? reader.ReadAsync(cancellationToken)
-                : Task.FromResult(_source.Read());
+            return _source is System.Data.Common.DbDataReader reader ? reader.ReadAsync(cancellationToken) : Task.FromResult(_source.Read());
         }
 
         #endregion

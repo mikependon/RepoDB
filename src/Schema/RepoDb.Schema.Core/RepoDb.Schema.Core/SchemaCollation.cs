@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -37,14 +37,15 @@ namespace RepoDb.Schema
             {
                 return null;
             }
+
             var provider = column.Field?.Provider;
             if (string.IsNullOrWhiteSpace(provider))
             {
                 return column.Collation;
             }
-            return compatibleProviders != null && compatibleProviders.Contains(provider, StringComparer.OrdinalIgnoreCase)
-                ? column.Collation
-                : null;
+
+            return compatibleProviders != null && compatibleProviders.Contains(provider,
+                StringComparer.OrdinalIgnoreCase) ? column.Collation : null;
         }
 
         #endregion

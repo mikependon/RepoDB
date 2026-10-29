@@ -16,7 +16,7 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal static class CopySize
     {
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Estimates the payload bytes of the values of the rows.
@@ -33,6 +33,7 @@ namespace RepoDb.Data.Helpers
                     bytes += OfValue(value);
                 }
             }
+
             return bytes;
         }
 
@@ -43,15 +44,24 @@ namespace RepoDb.Data.Helpers
         /// <returns>The estimated bytes of the value.</returns>
         internal static long OfValue(object value)
         {
-            if (value == null || value == DBNull.Value) return 0;
-            if (value is string text) return (long)text.Length * 2;
-            if (value is byte[] bytes) return bytes.LongLength;
-            if (value is char[] chars) return chars.LongLength * 2;
-            if (value is Guid || value is decimal || value is DateTimeOffset) return 16;
-            if (value is DateTime || value is TimeSpan || value is long || value is ulong || value is double) return 8;
-            if (value is int || value is uint || value is float) return 4;
-            if (value is short || value is ushort || value is char) return 2;
-            if (value is byte || value is sbyte || value is bool) return 1;
+            if (value == null || value == DBNull.Value)
+                return 0;
+            if (value is string text)
+                return (long)text.Length * 2;
+            if (value is byte[] bytes)
+                return bytes.LongLength;
+            if (value is char[] chars)
+                return chars.LongLength * 2;
+            if (value is Guid || value is decimal || value is DateTimeOffset)
+                return 16;
+            if (value is DateTime || value is TimeSpan || value is long || value is ulong || value is double)
+                return 8;
+            if (value is int || value is uint || value is float)
+                return 4;
+            if (value is short || value is ushort || value is char)
+                return 2;
+            if (value is byte || value is sbyte || value is bool)
+                return 1;
             return 0;
         }
 

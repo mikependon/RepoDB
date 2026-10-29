@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -32,14 +32,14 @@ namespace RepoDb.Data.Models
         #region Properties
 
         /// <summary>
-        /// Gets the name of the column of the source table.
-        /// </summary>
-        public string SourceColumn { get; }
-
-        /// <summary>
         /// Gets the name of the column of the target table.
         /// </summary>
         public string DestinationColumn { get; }
+
+        /// <summary>
+        /// Gets the name of the column of the source table.
+        /// </summary>
+        public string SourceColumn { get; }
 
         #endregion
     }

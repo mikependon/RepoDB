@@ -34,24 +34,9 @@ namespace RepoDb.Schema.Models
         #region Properties
 
         /// <summary>
-        /// Gets or sets the name of the index.
-        /// </summary>
-        public string Name { get; internal set; }
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether the index is unique.
-        /// </summary>
-        public bool IsUnique { get; internal set; }
-
-        /// <summary>
         /// Gets or sets the ordered names of the key columns of the index.
         /// </summary>
         public IList<string> Columns { get; internal set; } = new List<string>();
-
-        /// <summary>
-        /// Gets or sets the names of the non-key (included) columns of the index.
-        /// </summary>
-        public IList<string> IncludedColumns { get; internal set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the names of the key columns that are sorted in descending order. The other key columns are sorted in ascending order.
@@ -60,18 +45,33 @@ namespace RepoDb.Schema.Models
         public IList<string> DescendingColumns { get; internal set; } = new List<string>();
 
         /// <summary>
+        /// Gets or sets the filter expression of the index, or <c>null</c> if the index is not filtered.
+        /// </summary>
+        public string Filter { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the names of the non-key (included) columns of the index.
+        /// </summary>
+        public IList<string> IncludedColumns { get; internal set; } = new List<string>();
+
+        /// <summary>
         /// Gets or sets a value that indicates whether the index is clustered.
         /// </summary>
         public bool IsClustered { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the filter expression of the index, or <c>null</c> if the index is not filtered.
+        /// Gets or sets a value that indicates whether the index is unique.
         /// </summary>
-        public string Filter { get; internal set; }
+        public bool IsUnique { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the name of the index.
+        /// </summary>
+        public string Name { get; internal set; }
 
         #endregion
 
-        #region Overrides
+        #region Public Methods
 
         /// <summary>
         /// Gets the string that represents the instance of this <see cref="IndexInfo"/> object.
@@ -79,10 +79,6 @@ namespace RepoDb.Schema.Models
         /// <returns>The name of this <see cref="IndexInfo"/> object.</returns>
         public override string ToString() =>
             Name;
-
-        #endregion
-
-        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="IndexInfo"/>.
@@ -93,9 +89,12 @@ namespace RepoDb.Schema.Models
             var hashCode = new HashCode();
             hashCode.Add(Name);
             hashCode.Add(IsUnique);
-            foreach (var item in Columns) hashCode.Add(item);
-            foreach (var item in IncludedColumns) hashCode.Add(item);
-            foreach (var item in DescendingColumns) hashCode.Add(item);
+            foreach (var item in Columns)
+                hashCode.Add(item);
+            foreach (var item in IncludedColumns)
+                hashCode.Add(item);
+            foreach (var item in DescendingColumns)
+                hashCode.Add(item);
             hashCode.Add(IsClustered);
             hashCode.Add(Filter);
             return hashCode.ToHashCode();
@@ -116,16 +115,16 @@ namespace RepoDb.Schema.Models
         /// <returns>True if the instances are equal.</returns>
         public bool Equals(IndexInfo other)
         {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return Equals(Name, other.Name)
-                && Equals(IsUnique, other.IsUnique)
-                && Columns.SequenceEqual(other.Columns)
-                && IncludedColumns.SequenceEqual(other.IncludedColumns)
-                && DescendingColumns.SequenceEqual(other.DescendingColumns)
-                && Equals(IsClustered, other.IsClustered)
-                && Equals(Filter, other.Filter);
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this,
+                other))
+                return true;
+            return Equals(Name,
+                other.Name) && Equals(IsUnique,
+                    other.IsUnique) && Columns.SequenceEqual(other.Columns) && IncludedColumns.SequenceEqual(other.IncludedColumns) && DescendingColumns.SequenceEqual(other.DescendingColumns) && Equals(IsClustered,
+                    other.IsClustered) && Equals(Filter,
+                    other.Filter);
         }
 
         /// <summary>
@@ -141,6 +140,7 @@ namespace RepoDb.Schema.Models
             {
                 return objB is null;
             }
+
             return objA.Equals(objB);
         }
 
@@ -151,7 +151,8 @@ namespace RepoDb.Schema.Models
         /// <param name="objB">The second <see cref="IndexInfo"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(IndexInfo objA,
-            IndexInfo objB) => !(objA == objB);
+            IndexInfo objB) =>
+            !(objA == objB);
 
         #endregion
     }

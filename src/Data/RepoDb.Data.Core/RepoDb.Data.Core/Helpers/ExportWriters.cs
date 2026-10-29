@@ -25,6 +25,8 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal interface IExportWriter : IDisposable
     {
+        #region Public Methods
+
         /// <summary>
         /// Starts the file.
         /// </summary>
@@ -61,6 +63,8 @@ namespace RepoDb.Data.Helpers
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         Task FlushAsync(CancellationToken cancellationToken);
+
+        #endregion
     }
 
     /// <summary>
@@ -68,34 +72,81 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal sealed class JsonExportWriter : IExportWriter
     {
+        #region Private Variables
+
         private readonly Utf8JsonWriter _writer;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Creates a new instance of <see cref="JsonExportWriter"/>.
+        /// </summary>
+        /// <param name="stream">The destination stream, which remains open when the writer is disposed.</param>
         public JsonExportWriter(Stream stream)
         {
-            _writer = new Utf8JsonWriter(stream, JsonRowWriter.Options);
+            _writer = new Utf8JsonWriter(stream,
+                JsonRowWriter.Options);
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Starts the JSON array that contains the exported rows.
+        /// </summary>
+        /// <param name="names">The names of the columns that are selected.</param>
         public void Begin(string[] names) =>
             _writer.WriteStartArray();
 
+        /// <summary>
+        /// Writes the current data record as a JSON row.
+        /// </summary>
+        /// <param name="record">The reader (or the record) that is on the row.</param>
+        /// <param name="names">The names of the columns of the reader.</param>
         public void WriteRow(IDataRecord record,
             string[] names) =>
-            JsonRowWriter.WriteRow(_writer, record, names);
+            JsonRowWriter.WriteRow(_writer,
+                record,
+                names);
 
+        /// <summary>
+        /// Writes an intercepted row as a JSON row.
+        /// </summary>
+        /// <param name="row">The row.</param>
         public void WriteRow(Row row) =>
-            JsonRowWriter.WriteRow(_writer, row);
+            JsonRowWriter.WriteRow(_writer,
+                row);
 
+        /// <summary>
+        /// Closes the JSON array after the exported rows.
+        /// </summary>
         public void End() =>
             _writer.WriteEndArray();
 
+        /// <summary>
+        /// Writes buffered output to the destination stream.
+        /// </summary>
         public void Flush() =>
             _writer.Flush();
 
+        /// <summary>
+        /// Asynchronously writes buffered output to the destination stream.
+        /// </summary>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public Task FlushAsync(CancellationToken cancellationToken) =>
             _writer.FlushAsync(cancellationToken);
 
+        /// <summary>
+        /// Releases the output writer while leaving its destination stream open.
+        /// </summary>
         public void Dispose() =>
             _writer.Dispose();
+
+        #endregion
     }
 
     /// <summary>
@@ -104,6 +155,14 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal sealed class XmlExportWriter : IExportWriter
     {
+        #region Private Variables
+
+        private readonly XmlWriter _writer;
+
+        #endregion
+
+        #region Constants
+
         /// <summary>
         /// The name of the root element.
         /// </summary>
@@ -114,64 +173,109 @@ namespace RepoDb.Data.Helpers
         /// </summary>
         public const string RowName = "row";
 
-        private readonly XmlWriter _writer;
+        #endregion
 
+        #region Constructors
+
+        /// <summary>
+        /// Creates a new instance of <see cref="XmlExportWriter"/>.
+        /// </summary>
+        /// <param name="stream">The destination stream, which remains open when the writer is disposed.</param>
         public XmlExportWriter(Stream stream)
         {
-            _writer = XmlWriter.Create(stream, new XmlWriterSettings
-            {
-                Async = true,
-                Indent = true,
-                Encoding = new UTF8Encoding(false),
-                CloseOutput = false
-            });
+            _writer = XmlWriter.Create(stream,
+                new XmlWriterSettings { Async = true, Indent = true, Encoding = new UTF8Encoding(false), CloseOutput = false });
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Writes the XML declaration and opens the rows root element.
+        /// </summary>
+        /// <param name="names">The names of the columns that are selected.</param>
         public void Begin(string[] names)
         {
             _writer.WriteStartDocument();
             _writer.WriteStartElement(RootName);
         }
 
+        /// <summary>
+        /// Writes the current data record as a XML row.
+        /// </summary>
+        /// <param name="record">The reader (or the record) that is on the row.</param>
+        /// <param name="names">The names of the columns of the reader.</param>
         public void WriteRow(IDataRecord record,
             string[] names)
         {
             _writer.WriteStartElement(RowName);
             for (var i = 0; i < names.Length; i++)
             {
-                WriteCell(names[i], record.IsDBNull(i) ? null : record.GetValue(i));
+                WriteCell(names[i],
+                    record.IsDBNull(i) ? null : record.GetValue(i));
             }
+
             _writer.WriteEndElement();
         }
 
+        /// <summary>
+        /// Writes an intercepted row as a XML row.
+        /// </summary>
+        /// <param name="row">The row.</param>
         public void WriteRow(Row row)
         {
             _writer.WriteStartElement(RowName);
             for (var i = 0; i < row.Count; i++)
             {
-                WriteCell(row.Columns[i].Name, row[i]);
+                WriteCell(row.Columns[i].Name,
+                    row[i]);
             }
+
             _writer.WriteEndElement();
         }
 
+        /// <summary>
+        /// Closes the rows root element and completes the XML document.
+        /// </summary>
         public void End()
         {
             _writer.WriteEndElement();
             _writer.WriteEndDocument();
         }
 
+        /// <summary>
+        /// Writes buffered output to the destination stream.
+        /// </summary>
         public void Flush() =>
             _writer.Flush();
 
+        /// <summary>
+        /// Asynchronously writes buffered output to the destination stream.
+        /// </summary>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public Task FlushAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             return _writer.FlushAsync();
         }
 
+        /// <summary>
+        /// Releases the output writer while leaving its destination stream open.
+        /// </summary>
         public void Dispose() =>
             _writer.Dispose();
 
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Writes a named XML cell, preserving the distinction between null and empty text.
+        /// </summary>
+        /// <param name="name">The column name to encode as an XML element name.</param>
+        /// <param name="value">The cell value, or null for an empty XML element.</param>
         private void WriteCell(string name,
             object value)
         {
@@ -183,6 +287,7 @@ namespace RepoDb.Data.Helpers
                 _writer.WriteEndElement();
                 return;
             }
+
             if (text.Length > 0)
             {
                 _writer.WriteString(text);
@@ -191,6 +296,8 @@ namespace RepoDb.Data.Helpers
             // An empty text keeps its start and end tags
             _writer.WriteFullEndElement();
         }
+
+        #endregion
     }
 
     /// <summary>
@@ -199,34 +306,66 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal sealed class CsvExportWriter : IExportWriter
     {
-        private const string LineBreak = "\r\n";
+        #region Private Variables
 
+        private const string LineBreak = "\r\n";
         private readonly StreamWriter _writer;
         private readonly char _separator;
         private string[] _header;
         private string[] _names;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Creates a new instance of <see cref="CsvExportWriter"/>.
+        /// </summary>
+        /// <param name="stream">The destination stream, which remains open when the writer is disposed.</param>
+        /// <param name="separator">The character separating CSV fields.</param>
         public CsvExportWriter(Stream stream,
             char separator)
         {
             _separator = separator;
-            _writer = new StreamWriter(stream, new UTF8Encoding(false), 4096, true);
+            _writer = new StreamWriter(stream,
+                new UTF8Encoding(false),
+                4096,
+                true);
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Remembers the selected column names for the CSV header, including an empty export.
+        /// </summary>
+        /// <param name="names">The names of the columns that are selected.</param>
         public void Begin(string[] names) =>
             _names = names;
 
+        /// <summary>
+        /// Writes the current data record as a CSV row.
+        /// </summary>
+        /// <param name="record">The reader (or the record) that is on the row.</param>
+        /// <param name="names">The names of the columns of the reader.</param>
         public void WriteRow(IDataRecord record,
             string[] names)
         {
             WriteHeader(names);
             for (var i = 0; i < names.Length; i++)
             {
-                WriteField(i, record.IsDBNull(i) ? null : ExportValueFormatter.ToText(record.GetValue(i)));
+                WriteField(i,
+                    record.IsDBNull(i) ? null : ExportValueFormatter.ToText(record.GetValue(i)));
             }
+
             _writer.Write(LineBreak);
         }
 
+        /// <summary>
+        /// Writes an intercepted row as a CSV row.
+        /// </summary>
+        /// <param name="row">The row.</param>
         public void WriteRow(Row row)
         {
             var names = new string[row.Count];
@@ -234,63 +373,106 @@ namespace RepoDb.Data.Helpers
             {
                 names[i] = row.Columns[i].Name;
             }
+
             WriteHeader(names);
             if (!IsHeader(names))
             {
                 throw new InvalidOperationException("The data interceptors must give every row the same columns, in the same order: the CSV file has one header.");
             }
+
             for (var i = 0; i < row.Count; i++)
             {
-                WriteField(i, ExportValueFormatter.ToText(row[i]));
+                WriteField(i,
+                    ExportValueFormatter.ToText(row[i]));
             }
+
             _writer.Write(LineBreak);
         }
 
+        /// <summary>
+        /// Ensures the CSV header is written even when no rows were exported.
+        /// </summary>
         public void End() =>
             WriteHeader(_names);
 
+        /// <summary>
+        /// Writes buffered output to the destination stream.
+        /// </summary>
         public void Flush() =>
             _writer.Flush();
 
+        /// <summary>
+        /// Asynchronously writes buffered output to the destination stream.
+        /// </summary>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public Task FlushAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             return _writer.FlushAsync();
         }
 
+        /// <summary>
+        /// Releases the output writer while leaving its destination stream open.
+        /// </summary>
         public void Dispose() =>
             _writer.Dispose();
 
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Writes the CSV column names once before any data rows.
+        /// </summary>
+        /// <param name="names">The row's column names in order.</param>
         private void WriteHeader(string[] names)
         {
             if (_header != null)
             {
                 return;
             }
+
             _header = names;
             for (var i = 0; i < names.Length; i++)
             {
-                WriteField(i, names[i]);
+                WriteField(i,
+                    names[i]);
             }
+
             _writer.Write(LineBreak);
         }
 
+        /// <summary>
+        /// Checks whether the row columns match the CSV header in order, ignoring case.
+        /// </summary>
+        /// <param name="names">The row's column names in order.</param>
+        /// <returns>Whether every column matches the header at the same position.</returns>
         private bool IsHeader(string[] names)
         {
             if (names.Length != _header.Length)
             {
                 return false;
             }
+
             for (var i = 0; i < names.Length; i++)
             {
-                if (!string.Equals(names[i], _header[i], StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(names[i],
+                    _header[i],
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
+        /// <summary>
+        /// Writes one CSV field with separators and RFC 4180 quoting.
+        /// </summary>
+        /// <param name="position">The zero-based field position within the record.</param>
+        /// <param name="text">The field text; null and empty strings retain distinct representations.</param>
         private void WriteField(int position,
             string text)
         {
@@ -298,14 +480,17 @@ namespace RepoDb.Data.Helpers
             {
                 _writer.Write(_separator);
             }
+
             if (text == null)
             {
                 return;
             }
+
             if (text.Length == 0 || text.IndexOf(_separator) >= 0 || text.IndexOf('"') >= 0 || text.IndexOf('\r') >= 0 || text.IndexOf('\n') >= 0)
             {
                 _writer.Write('"');
-                _writer.Write(text.Replace("\"", "\"\""));
+                _writer.Write(text.Replace("\"",
+                    "\"\""));
                 _writer.Write('"');
             }
             else
@@ -313,6 +498,8 @@ namespace RepoDb.Data.Helpers
                 _writer.Write(text);
             }
         }
+
+        #endregion
     }
 
     /// <summary>
@@ -320,6 +507,8 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal static class ExportValueFormatter
     {
+        #region Public Methods
+
         /// <summary>
         /// Gets the text of a value.
         /// </summary>
@@ -337,17 +526,23 @@ namespace RepoDb.Data.Helpers
                 case bool flag:
                     return flag ? "true" : "false";
                 case DateTime date:
-                    return date.ToString("o", CultureInfo.InvariantCulture);
+                    return date.ToString("o",
+                        CultureInfo.InvariantCulture);
                 case DateTimeOffset date:
-                    return date.ToString("o", CultureInfo.InvariantCulture);
+                    return date.ToString("o",
+                        CultureInfo.InvariantCulture);
                 case TimeSpan time:
-                    return time.ToString("c", CultureInfo.InvariantCulture);
+                    return time.ToString("c",
+                        CultureInfo.InvariantCulture);
                 case Guid guid:
-                    return guid.ToString("D", CultureInfo.InvariantCulture);
+                    return guid.ToString("D",
+                        CultureInfo.InvariantCulture);
                 case double real:
-                    return real.ToString("R", CultureInfo.InvariantCulture);
+                    return real.ToString("R",
+                        CultureInfo.InvariantCulture);
                 case float real:
-                    return real.ToString("R", CultureInfo.InvariantCulture);
+                    return real.ToString("R",
+                        CultureInfo.InvariantCulture);
                 case byte[] bytes:
                     return Convert.ToBase64String(bytes);
                 case Stream stream:
@@ -356,11 +551,16 @@ namespace RepoDb.Data.Helpers
                         stream.CopyTo(memory);
                         return Convert.ToBase64String(memory.ToArray());
                     }
+
                 case Enum enumeration:
-                    return Convert.ToInt64(enumeration, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture);
+                    return Convert.ToInt64(enumeration,
+                        CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture);
                 default:
-                    return Convert.ToString(value, CultureInfo.InvariantCulture);
+                    return Convert.ToString(value,
+                        CultureInfo.InvariantCulture);
             }
         }
+
+        #endregion
     }
 }

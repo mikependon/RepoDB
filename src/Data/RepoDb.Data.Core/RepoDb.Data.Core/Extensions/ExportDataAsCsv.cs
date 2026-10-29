@@ -27,8 +27,6 @@ namespace RepoDb.Data
     {
         #region Public Methods
 
-        #region ExportDataAsCsv (Sync)
-
         /// <summary>
         /// Exports the rows of a table into a CSV file without holding them in memory: the rows are counted first (with the filter), then they are read forward only and every row
         /// is written into the file as soon as it is read. The first line of the file is the header (the names of the columns), then there is a line for each row, so <c>ImportDataFromCsv</c> can load it back: a field is quoted only when it has to be, a <c>null</c> is an empty field and an empty text is a quoted empty field (<c>""</c>).
@@ -62,12 +60,19 @@ namespace RepoDb.Data
             ITrace trace = null)
         {
             ValidateSeparator(separator);
-            return ExportPipeline.Run(connection, tableName, filename, mappings, where, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, stream => new CsvExportWriter(stream, separator));
+            return ExportPipeline.Run(connection,
+                tableName,
+                filename,
+                mappings,
+                where,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                stream => new CsvExportWriter(stream,
+                    separator));
         }
-
-        #endregion
-
-        #region ExportDataAsCsv (Async)
 
         /// <summary>
         /// Exports the rows of a table into a CSV file in an asynchronous way. See <see cref="ExportDataAsCsv"/> for how the rows are counted, read and written.
@@ -102,15 +107,23 @@ namespace RepoDb.Data
             CancellationToken cancellationToken = default)
         {
             ValidateSeparator(separator);
-            return await ExportPipeline.RunAsync(connection, tableName, filename, mappings, where, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, stream => new CsvExportWriter(stream, separator), cancellationToken).ConfigureAwait(false);
+            return await ExportPipeline.RunAsync(connection,
+                tableName,
+                filename,
+                mappings,
+                where,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                stream => new CsvExportWriter(stream,
+                    separator),
+                cancellationToken).ConfigureAwait(false);
         }
 
-        #endregion
-
-        #region ExportDataAsCsv (TEntity, Sync)
-
         /// <summary>
-        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a CSV file. See <see cref="ExportDataAsCsv(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a CSV file. See <see cref="ExportDataAsCsv(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int? , string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
@@ -138,10 +151,19 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.ExportDataAsCsv,
             ITrace trace = null)
             where TEntity : class =>
-            connection.ExportDataAsCsv(ClassMappedNameCache.Get<TEntity>(), filename, mappings, separator, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace);
+            connection.ExportDataAsCsv(ClassMappedNameCache.Get<TEntity>(),
+                filename,
+                mappings,
+                separator,
+                where == null ? null : QueryGroup.Parse(where),
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace);
 
         /// <summary>
-        /// Exports the rows of a table into a CSV file, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsCsv(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of a table into a CSV file, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsCsv(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int? , string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that the expression is of.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
@@ -171,14 +193,19 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.ExportDataAsCsv,
             ITrace trace = null)
             where TEntity : class =>
-            connection.ExportDataAsCsv(tableName, filename, mappings, separator, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace);
-
-        #endregion
-
-        #region ExportDataAsCsv (TEntity, Async)
+            connection.ExportDataAsCsv(tableName,
+                filename,
+                mappings,
+                separator,
+                where == null ? null : QueryGroup.Parse(where),
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace);
 
         /// <summary>
-        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a CSV file in an asynchronous way. See <see cref="ExportDataAsCsv(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a CSV file in an asynchronous way. See <see cref="ExportDataAsCsv(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int? , string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
@@ -208,10 +235,20 @@ namespace RepoDb.Data
             ITrace trace = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.ExportDataAsCsvAsync(ClassMappedNameCache.Get<TEntity>(), filename, mappings, separator, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace, cancellationToken);
+            connection.ExportDataAsCsvAsync(ClassMappedNameCache.Get<TEntity>(),
+                filename,
+                mappings,
+                separator,
+                where == null ? null : QueryGroup.Parse(where),
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                cancellationToken);
 
         /// <summary>
-        /// Exports the rows of a table into a CSV file in an asynchronous way, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsCsv(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of a table into a CSV file in an asynchronous way, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsCsv(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int? , string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that the expression is of.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
@@ -243,9 +280,17 @@ namespace RepoDb.Data
             ITrace trace = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.ExportDataAsCsvAsync(tableName, filename, mappings, separator, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace, cancellationToken);
-
-        #endregion
+            connection.ExportDataAsCsvAsync(tableName,
+                filename,
+                mappings,
+                separator,
+                where == null ? null : QueryGroup.Parse(where),
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                cancellationToken);
 
         #endregion
 
@@ -260,7 +305,8 @@ namespace RepoDb.Data
         {
             if (separator == '"' || separator == '\r' || separator == '\n')
             {
-                throw new ArgumentException("The separator must not be a quote or a line break.", nameof(separator));
+                throw new ArgumentException("The separator must not be a quote or a line break.",
+                    nameof(separator));
             }
         }
 

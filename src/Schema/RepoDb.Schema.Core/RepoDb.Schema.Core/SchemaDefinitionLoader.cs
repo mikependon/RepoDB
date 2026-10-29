@@ -24,7 +24,7 @@ namespace RepoDb.Schema
     /// </summary>
     internal static class SchemaDefinitionLoader
     {
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Validates arguments before reading the file or accessing the destination.
@@ -40,12 +40,20 @@ namespace RepoDb.Schema
             int? commandTimeout,
             IDbTransaction transaction)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
-            if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException("A filename is required.", nameof(filename));
-            if (!Enum.IsDefined(typeof(TableExistsBehavior), tableExistenceBehavior)) throw new ArgumentOutOfRangeException(nameof(tableExistenceBehavior));
-            if (commandTimeout < 0) throw new ArgumentOutOfRangeException(nameof(commandTimeout));
-            if (transaction != null && !ReferenceEquals(transaction.Connection, connection))
-                throw new ArgumentException("The transaction must belong to the destination connection.", nameof(transaction));
+            if (connection == null)
+                throw new ArgumentNullException(nameof(connection));
+            if (string.IsNullOrWhiteSpace(filename))
+                throw new ArgumentException("A filename is required.",
+                    nameof(filename));
+            if (!Enum.IsDefined(typeof(TableExistsBehavior),
+                tableExistenceBehavior))
+                throw new ArgumentOutOfRangeException(nameof(tableExistenceBehavior));
+            if (commandTimeout < 0)
+                throw new ArgumentOutOfRangeException(nameof(commandTimeout));
+            if (transaction != null && !ReferenceEquals(transaction.Connection,
+                connection))
+                throw new ArgumentException("The transaction must belong to the destination connection.",
+                    nameof(transaction));
         }
 
         /// <summary>
@@ -69,13 +77,29 @@ namespace RepoDb.Schema
             ITrace trace,
             IDbTransaction transaction)
         {
-            if (definition == null) return null;
+            if (definition == null)
+                return null;
             var startTime = DateTime.UtcNow;
             var composer = Composer(connection);
-            var tables = CreateTables(definition, composer);
-            var copy = SchemaPlanExecutor.Execute(startTime, tables, composer, null, connection,
-                tableExistenceBehavior, createdCallback, null, commandTimeout, traceKey, trace, transaction);
-            return new LoadDefinitionResult { Definition = definition, CopyResult = copy };
+            var tables = CreateTables(definition,
+                composer);
+            var copy = SchemaPlanExecutor.Execute(startTime,
+                tables,
+                composer,
+                null,
+                connection,
+                tableExistenceBehavior,
+                createdCallback,
+                null,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
+            return new LoadDefinitionResult
+            {
+                Definition = definition,
+                CopyResult = copy
+            };
         }
 
         /// <summary>
@@ -102,14 +126,35 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            if (definition == null) return null;
+            if (definition == null)
+                return null;
             var startTime = DateTime.UtcNow;
             var composer = Composer(connection);
-            var tables = CreateTables(definition, composer);
-            var copy = await SchemaPlanExecutor.ExecuteAsync(startTime, tables, composer, null, connection,
-                tableExistenceBehavior, createdCallback, null, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
-            return new LoadDefinitionResult { Definition = definition, CopyResult = copy };
+            var tables = CreateTables(definition,
+                composer);
+            var copy = await SchemaPlanExecutor.ExecuteAsync(startTime,
+                tables,
+                composer,
+                null,
+                connection,
+                tableExistenceBehavior,
+                createdCallback,
+                null,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken).ConfigureAwait(false);
+            return new LoadDefinitionResult
+            {
+                Definition = definition,
+                CopyResult = copy
+            };
         }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Gets the registered destination composer; a source schema reader is not required.
@@ -117,8 +162,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The connection of the destination database.</param>
         /// <returns>The schema composer that is mapped to the connection.</returns>
         private static ISchemaComposer Composer(IDbConnection connection) =>
-            SchemaComposerMapper.Get(connection) ?? throw new MissingMappingException(
-                $"There is no schema composer mapping found for '{connection.GetType().FullName}'. Register one via SchemaComposerMapper.");
+            SchemaComposerMapper.Get(connection) ?? throw new MissingMappingException($"There is no schema composer mapping found for '{connection.GetType().FullName}'. Register one via SchemaComposerMapper.");
 
         /// <summary>
         /// Uses the shared cycle-aware dependency orderer and preserves the schema identities saved in the file.
@@ -130,13 +174,16 @@ namespace RepoDb.Schema
         private static System.Collections.Generic.IList<PlanTable> CreateTables(SchemaDefinitionResult definition,
             ISchemaComposer composer)
         {
-            var keys = definition.Tables.Select((table, position) => new
-            {
-                table.Table, Key = position.ToString(CultureInfo.InvariantCulture)
-            }).ToDictionary(item => item.Table, item => item.Key);
-            var ordered = TableOrderer.Order(definition.Tables, table => keys[table.Table],
-                table => table != null && keys.TryGetValue(table, out var key) ? key : "external");
-            return Plan.CreateTables(ordered.Select(item => item.Schema), null, composer);
+            var keys = definition.Tables.Select((table,
+                position) => new { table.Table, Key = position.ToString(CultureInfo.InvariantCulture) }).ToDictionary(item => item.Table,
+                    item => item.Key);
+            var ordered = TableOrderer.Order(definition.Tables,
+                table => keys[table.Table],
+                table => table != null && keys.TryGetValue(table,
+                    out var key) ? key : "external");
+            return Plan.CreateTables(ordered.Select(item => item.Schema),
+                null,
+                composer);
         }
 
         #endregion

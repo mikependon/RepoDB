@@ -19,11 +19,17 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal interface IImportSource
     {
+        #region Properties
+
         /// <summary>
         /// Gets a value that indicates whether <see cref="ReadColumns"/> gives every column of the file (a CSV header does, while the columns of the rows of a JSON or XML file
         /// are found by looking at the first rows only). A column that a mapping names must be one of them only if they are every column.
         /// </summary>
         bool HasAllColumns { get; }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Validates the options of the source (i.e.: the separator of a CSV file).
@@ -62,6 +68,8 @@ namespace RepoDb.Data.Helpers
         /// </summary>
         /// <returns>The reader of the rows, to be disposed by the caller.</returns>
         IImportRowReader Open();
+
+        #endregion
     }
 
     /// <summary>
@@ -69,10 +77,16 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal interface IImportRowReader : IDisposable
     {
+        #region Properties
+
         /// <summary>
         /// Gets the number of the row that was read last (the rows are counted from 1).
         /// </summary>
         long RowNumber { get; }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Reads the next row.
@@ -95,5 +109,7 @@ namespace RepoDb.Data.Helpers
         Task<object[]> NextAsync(IDictionary<string, int> index,
             int width,
             CancellationToken cancellationToken);
+
+        #endregion
     }
 }

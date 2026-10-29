@@ -37,18 +37,20 @@ namespace RepoDb.Schema
             {
                 return null;
             }
+
             if (columns.Length == 0)
             {
-                throw new ArgumentException("At least one column must be given: a table can not be created without columns.", nameof(columns));
+                throw new ArgumentException("At least one column must be given: a table can not be created without columns.",
+                    nameof(columns));
             }
+
             if (columns.Any(string.IsNullOrWhiteSpace))
             {
-                throw new ArgumentException("The names of the columns can not be null or white space.", nameof(columns));
+                throw new ArgumentException("The names of the columns can not be null or white space.",
+                    nameof(columns));
             }
-            return columns
-                .Select(column => column.Trim())
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();
+
+            return columns.Select(column => column.Trim()).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
         }
 
         /// <summary>
@@ -67,33 +69,46 @@ namespace RepoDb.Schema
             {
                 throw new ArgumentNullException(nameof(mappings));
             }
+
             if (mappings.Count == 0)
             {
-                throw new ArgumentException("At least one column mapping must be given: a table can not be created without columns.", nameof(mappings));
+                throw new ArgumentException("At least one column mapping must be given: a table can not be created without columns.",
+                    nameof(mappings));
             }
+
             var sources = new List<string>();
             var targets = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             foreach (var mapping in mappings)
             {
                 if (mapping == null)
                 {
-                    throw new ArgumentException("The column mappings can not contain a null item.", nameof(mappings));
+                    throw new ArgumentException("The column mappings can not contain a null item.",
+                        nameof(mappings));
                 }
+
                 if (string.IsNullOrWhiteSpace(mapping.Source))
                 {
-                    throw new ArgumentException("The source column of a column mapping can not be null or white space.", nameof(mappings));
+                    throw new ArgumentException("The source column of a column mapping can not be null or white space.",
+                        nameof(mappings));
                 }
+
                 var source = mapping.Source.Trim();
-                if (sources.Contains(source, StringComparer.OrdinalIgnoreCase))
+                if (sources.Contains(source,
+                    StringComparer.OrdinalIgnoreCase))
                 {
-                    throw new ArgumentException($"The source column '{source}' is mapped more than once.", nameof(mappings));
+                    throw new ArgumentException($"The source column '{source}' is mapped more than once.",
+                        nameof(mappings));
                 }
+
                 sources.Add(source);
-                if (!string.IsNullOrWhiteSpace(mapping.Target) && !string.Equals(mapping.Target.Trim(), source, StringComparison.Ordinal))
+                if (!string.IsNullOrWhiteSpace(mapping.Target) && !string.Equals(mapping.Target.Trim(),
+                    source,
+                    StringComparison.Ordinal))
                 {
                     targets[source] = mapping.Target.Trim();
                 }
             }
+
             columns = sources;
             renamed = targets.Count == 0 ? null : targets;
         }
@@ -111,41 +126,60 @@ namespace RepoDb.Schema
             {
                 throw new ArgumentNullException("mappings");
             }
+
             if (tables.Count == 0)
             {
-                throw new ArgumentException("At least one table must be given.", "mappings");
+                throw new ArgumentException("At least one table must be given.",
+                    "mappings");
             }
+
             var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var table in tables)
             {
                 if (table == null)
                 {
-                    throw new ArgumentException("The tables can not contain a null item.", "mappings");
+                    throw new ArgumentException("The tables can not contain a null item.",
+                        "mappings");
                 }
+
                 if (string.IsNullOrWhiteSpace(table.Source))
                 {
-                    throw new ArgumentException("The name of a table can not be null or white space.", "mappings");
+                    throw new ArgumentException("The name of a table can not be null or white space.",
+                        "mappings");
                 }
+
                 if (!names.Add(Unquote(table.Source)))
                 {
-                    throw new ArgumentException($"The table '{table.Source}' is given more than once.", "mappings");
+                    throw new ArgumentException($"The table '{table.Source}' is given more than once.",
+                        "mappings");
                 }
+
                 if (table.Columns == null || table.Columns.Count == 0)
                 {
-                    throw new ArgumentException($"At least one column mapping must be given for the table '{table.Source}': a table can not be created without columns.", "mappings");
+                    throw new ArgumentException($"At least one column mapping must be given for the table '{table.Source}': a table can not be created without columns.",
+                        "mappings");
                 }
+
                 if (table.Destination != null && string.IsNullOrWhiteSpace(Unquote(table.Destination)))
                 {
-                    throw new ArgumentException($"The new name of the table '{table.Source}' can not be white space.", "mappings");
+                    throw new ArgumentException($"The new name of the table '{table.Source}' can not be white space.",
+                        "mappings");
                 }
-                Normalize(table.Columns, out _, out _);
+
+                Normalize(table.Columns,
+                    out _,
+                    out _);
             }
+
             var targets = tables.Where(table => table.Destination != null).Select(table => Unquote(table.Destination)).ToList();
-            var repeated = targets.GroupBy(name => name, StringComparer.OrdinalIgnoreCase).FirstOrDefault(group => group.Count() > 1);
+            var repeated = targets.GroupBy(name => name,
+                StringComparer.OrdinalIgnoreCase).FirstOrDefault(group => group.Count() > 1);
             if (repeated != null)
             {
-                throw new ArgumentException($"More than one table is renamed to '{repeated.Key}'.", "mappings");
+                throw new ArgumentException($"More than one table is renamed to '{repeated.Key}'.",
+                    "mappings");
             }
+
             return tables;
         }
 
@@ -163,23 +197,36 @@ namespace RepoDb.Schema
             foreach (var table in tables)
             {
                 var name = Unquote(table.Source);
-                var matches = schemas.Select(schema => schema.Table).Where(info => Matches(name, info)).Distinct().ToList();
+                var matches = schemas.Select(schema => schema.Table).Where(info => Matches(name,
+                    info)).Distinct().ToList();
                 if (matches.Count == 0)
                 {
-                    var found = string.Join(", ", schemas.Select(schema => $"'{GetName(schema.Table)}'").Distinct());
-                    throw new ArgumentException($"The table '{table.Source}' is not one of the tables that are copied. The tables found are: {(found.Length == 0 ? "(none)" : found)}. The name must be the one of the table in the source database, not the new name of the table.", "mappings");
+                    var found = string.Join(", ",
+                        schemas.Select(schema => $"'{GetName(schema.Table)}'").Distinct());
+                    throw new ArgumentException($"The table '{table.Source}' is not one of the tables that are copied. The tables found are: {(found.Length == 0 ? "(none)" : found)}. The name must be the one of the table in the source database, not the new name of the table.",
+                        "mappings");
                 }
+
                 if (matches.Count > 1)
                 {
-                    throw new ArgumentException($"The table '{table.Source}' is more than one of the tables that are copied: give the name of its schema, i.e.: 'dbo.{name}'.", "mappings");
+                    throw new ArgumentException($"The table '{table.Source}' is more than one of the tables that are copied: give the name of its schema, i.e.: 'dbo.{name}'.",
+                        "mappings");
                 }
+
                 if (selections.ContainsKey(matches[0]))
                 {
-                    throw new ArgumentException($"The table '{GetName(matches[0])}' is given more than once.", "mappings");
+                    throw new ArgumentException($"The table '{GetName(matches[0])}' is given more than once.",
+                        "mappings");
                 }
-                Normalize(table.Columns, out var columns, out var renamed);
-                selections[matches[0]] = new Selection(columns, renamed, table.Destination == null ? null : Unquote(table.Destination));
+
+                Normalize(table.Columns,
+                    out var columns,
+                    out var renamed);
+                selections[matches[0]] = new Selection(columns,
+                    renamed,
+                    table.Destination == null ? null : Unquote(table.Destination));
             }
+
             return selections;
         }
 
@@ -198,9 +245,13 @@ namespace RepoDb.Schema
             var selections = new Dictionary<TableInfo, Selection>();
             foreach (var schema in requested)
             {
-                selections[schema.Table] = new Selection(columns, null, null);
+                selections[schema.Table] = new Selection(columns,
+                    null,
+                    null);
             }
-            return Apply(schemas, selections);
+
+            return Apply(schemas,
+                selections);
         }
 
         /// <summary>
@@ -219,18 +270,24 @@ namespace RepoDb.Schema
             foreach (var pair in selections)
             {
                 var schema = schemas.First(item => item.Table.Equals(pair.Key));
-                var names = new HashSet<string>(schema.Columns.Select(column => column.Field.Name), StringComparer.OrdinalIgnoreCase);
+                var names = new HashSet<string>(schema.Columns.Select(column => column.Field.Name),
+                    StringComparer.OrdinalIgnoreCase);
                 var missing = pair.Value.Columns?.FirstOrDefault(column => !names.Contains(column));
                 if (missing != null)
                 {
-                    throw new ArgumentException($"The column '{missing}' is not a column of the table '{GetName(schema.Table)}'.", "columns");
+                    throw new ArgumentException($"The column '{missing}' is not a column of the table '{GetName(schema.Table)}'.",
+                        "columns");
                 }
+
                 missing = pair.Value.Renamed?.Keys.FirstOrDefault(column => !names.Contains(column));
                 if (missing != null)
                 {
-                    throw new ArgumentException($"The column '{missing}' is not a column of the table '{GetName(schema.Table)}'.", "mappings");
+                    throw new ArgumentException($"The column '{missing}' is not a column of the table '{GetName(schema.Table)}'.",
+                        "mappings");
                 }
-                kept[pair.Key] = pair.Value.Columns == null ? names : new HashSet<string>(pair.Value.Columns, StringComparer.OrdinalIgnoreCase);
+
+                kept[pair.Key] = pair.Value.Columns == null ? names : new HashSet<string>(pair.Value.Columns,
+                    StringComparer.OrdinalIgnoreCase);
                 if (pair.Value.Renamed != null)
                 {
                     renamedByTable[pair.Key] = pair.Value.Renamed;
@@ -238,17 +295,17 @@ namespace RepoDb.Schema
             }
 
             // The tables are filtered, then the foreign keys that reference the columns that are left out are left out
-            var filtered = schemas
-                .Select(schema => kept.TryGetValue(schema.Table, out var names) ? Filter(schema, names) : schema)
-                .ToList();
-            var removed = schemas
-                .Where(schema => kept.ContainsKey(schema.Table))
-                .ToDictionary(schema => schema.Table, schema => (ISet<string>)new HashSet<string>(
-                    schema.Columns.Select(column => column.Field.Name).Where(name => !kept[schema.Table].Contains(name)), StringComparer.OrdinalIgnoreCase));
-            var result = filtered.Select(schema => RemoveForeignKeys(schema, removed)).ToList();
-
+            var filtered = schemas.Select(schema => kept.TryGetValue(schema.Table,
+                out var names) ? Filter(schema,
+                    names) : schema).ToList();
+            var removed = schemas.Where(schema => kept.ContainsKey(schema.Table)).ToDictionary(schema => schema.Table,
+                schema => (ISet<string>)new HashSet<string>(schema.Columns.Select(column => column.Field.Name).Where(name => !kept[schema.Table].Contains(name)),
+                    StringComparer.OrdinalIgnoreCase));
+            var result = filtered.Select(schema => RemoveForeignKeys(schema,
+                removed)).ToList();
             // The columns are renamed, and what uses them follows the new names
-            return renamedByTable.Count == 0 ? result : result.Select(schema => Rename(schema, renamedByTable)).ToList();
+            return renamedByTable.Count == 0 ? result : result.Select(schema => Rename(schema,
+                renamedByTable)).ToList();
         }
 
         /// <summary>
@@ -266,33 +323,35 @@ namespace RepoDb.Schema
                 return schemas;
             }
 
-            TableInfo Map(TableInfo table) =>
-                renamed.TryGetValue(table, out var name) && !string.Equals(name, table.Name, StringComparison.Ordinal) ?
-                    new TableInfo(name, table.Schema, table.Database, table.Provider) : table;
-
-            var result = schemas.Select(schema => new TableSchema(Map(schema.Table))
-            {
-                Columns = schema.Columns,
-                PrimaryKey = schema.PrimaryKey,
-                Indexes = schema.Indexes,
-                UniqueConstraints = schema.UniqueConstraints,
-                CheckConstraints = schema.CheckConstraints,
-                ForeignKeys = schema.ForeignKeys.Select(foreignKey => new ForeignKeyInfo(foreignKey.Name)
-                {
-                    Columns = foreignKey.Columns,
-                    ReferencedTable = Map(foreignKey.ReferencedTable),
-                    ReferencedColumns = foreignKey.ReferencedColumns,
-                    UpdateRule = foreignKey.UpdateRule,
-                    DeleteRule = foreignKey.DeleteRule
-                }).ToList()
-            }).ToList();
+            TableInfo Map(TableInfo table) => renamed.TryGetValue(table,
+                out var name) && !string.Equals(name,
+                    table.Name,
+                    StringComparison.Ordinal) ? new TableInfo(name,
+                    table.Schema,
+                    table.Database,
+                    table.Provider) : table;
+            var result = schemas.Select(schema => new TableSchema(Map(schema.Table)) { Columns = schema.Columns, PrimaryKey = schema.PrimaryKey, Indexes = schema.Indexes, UniqueConstraints = schema.UniqueConstraints, CheckConstraints = schema.CheckConstraints, ForeignKeys = schema.ForeignKeys.Select(foreignKey => new ForeignKeyInfo(foreignKey.Name) { Columns = foreignKey.Columns, ReferencedTable = Map(foreignKey.ReferencedTable), ReferencedColumns = foreignKey.ReferencedColumns, UpdateRule = foreignKey.UpdateRule, DeleteRule = foreignKey.DeleteRule }).ToList() }).ToList();
             var duplicate = result.GroupBy(schema => schema.Table).FirstOrDefault(group => group.Count() > 1);
             if (duplicate != null)
             {
-                throw new ArgumentException($"More than one table is created as '{GetName(duplicate.Key)}'.", "mappings");
+                throw new ArgumentException($"More than one table is created as '{GetName(duplicate.Key)}'.",
+                    "mappings");
             }
+
             return result;
         }
+
+        /// <summary>
+        /// Removes the quotes of the name of a table (i.e.: <c>[dbo].[Person]</c> is <c>dbo.Person</c>).
+        /// </summary>
+        /// <param name="name">The name of the table.</param>
+        /// <returns>The name without the quotes.</returns>
+        internal static string Unquote(string name) =>
+            name.Trim().Replace("[",
+                string.Empty).Replace("]",
+                string.Empty).Replace("\"",
+                string.Empty).Replace("`",
+                string.Empty);
 
         #endregion
 
@@ -315,10 +374,7 @@ namespace RepoDb.Schema
         private static TableSchema Filter(TableSchema source,
             ISet<string> kept)
         {
-            var removed = source.Columns
-                .Select(column => column.Field.Name)
-                .Where(name => !kept.Contains(name))
-                .ToList();
+            var removed = source.Columns.Select(column => column.Field.Name).Where(name => !kept.Contains(name)).ToList();
             if (removed.Count == 0)
             {
                 return source;
@@ -330,7 +386,8 @@ namespace RepoDb.Schema
                 PrimaryKey = source.PrimaryKey != null && source.PrimaryKey.Columns.All(kept.Contains) ? source.PrimaryKey : null,
                 Indexes = source.Indexes.Where(index => index.Columns.Concat(index.IncludedColumns).All(kept.Contains)).ToList(),
                 UniqueConstraints = source.UniqueConstraints.Where(constraint => constraint.Columns.All(kept.Contains)).ToList(),
-                CheckConstraints = source.CheckConstraints.Where(constraint => !Mentions(constraint.Expression, removed)).ToList(),
+                CheckConstraints = source.CheckConstraints.Where(constraint => !Mentions(constraint.Expression,
+                    removed)).ToList(),
                 ForeignKeys = source.ForeignKeys.Where(foreignKey => foreignKey.Columns.All(kept.Contains)).ToList()
             };
         }
@@ -344,9 +401,8 @@ namespace RepoDb.Schema
         private static TableSchema RemoveForeignKeys(TableSchema schema,
             IDictionary<TableInfo, ISet<string>> removed)
         {
-            bool References(ForeignKeyInfo foreignKey) =>
-                removed.TryGetValue(foreignKey.ReferencedTable, out var names) && foreignKey.ReferencedColumns.Any(names.Contains);
-
+            bool References(ForeignKeyInfo foreignKey) => removed.TryGetValue(foreignKey.ReferencedTable,
+                out var names) && foreignKey.ReferencedColumns.Any(names.Contains);
             if (!schema.ForeignKeys.Any(References))
             {
                 return schema;
@@ -373,48 +429,53 @@ namespace RepoDb.Schema
         private static TableSchema Rename(TableSchema source,
             IDictionary<TableInfo, IDictionary<string, string>> renamedByTable)
         {
-            renamedByTable.TryGetValue(source.Table, out var own);
+            renamedByTable.TryGetValue(source.Table,
+                out var own);
             var hasOwn = own != null && own.Count > 0;
-            var referencesRenamed = source.ForeignKeys.Any(foreignKey =>
-                renamedByTable.TryGetValue(foreignKey.ReferencedTable, out var referenced) && foreignKey.ReferencedColumns.Any(referenced.ContainsKey));
+            var referencesRenamed = source.ForeignKeys.Any(foreignKey => renamedByTable.TryGetValue(foreignKey.ReferencedTable,
+                out var referenced) && foreignKey.ReferencedColumns.Any(referenced.ContainsKey));
             if (!hasOwn && !referencesRenamed)
             {
                 return source;
             }
 
-            IList<string> Names(IList<string> names) =>
-                hasOwn ? names.Select(name => Name(name, own)).ToList() : names;
-
+            IList<string> Names(IList<string> names) => hasOwn ? names.Select(name => Name(name,
+                own)).ToList() : names;
             var columns = source.Columns;
             if (hasOwn)
             {
-                columns = source.Columns.Select(column => RenameColumn(column, Name(column.Field.Name, own))).ToList();
-                var duplicate = columns.GroupBy(column => column.Field.Name, StringComparer.OrdinalIgnoreCase).FirstOrDefault(group => group.Count() > 1);
+                columns = source.Columns.Select(column => RenameColumn(column,
+                    Name(column.Field.Name,
+                        own))).ToList();
+                var duplicate = columns.GroupBy(column => column.Field.Name,
+                    StringComparer.OrdinalIgnoreCase).FirstOrDefault(group => group.Count() > 1);
                 if (duplicate != null)
                 {
-                    throw new ArgumentException($"The column '{duplicate.Key}' exists more than once in the table '{GetName(source.Table)}' after the columns are renamed.", "mappings");
+                    throw new ArgumentException($"The column '{duplicate.Key}' exists more than once in the table '{GetName(source.Table)}' after the columns are renamed.",
+                        "mappings");
                 }
             }
 
             return new TableSchema(source.Table)
             {
                 Columns = columns,
-                PrimaryKey = source.PrimaryKey == null || !hasOwn ? source.PrimaryKey : new PrimaryKeyInfo(source.PrimaryKey.Name) { Columns = Names(source.PrimaryKey.Columns), IsClustered = source.PrimaryKey.IsClustered },
-                Indexes = !hasOwn ? source.Indexes : source.Indexes.Select(index => new IndexInfo(index.Name)
+                PrimaryKey = source.PrimaryKey == null || !hasOwn ? source.PrimaryKey : new PrimaryKeyInfo(source.PrimaryKey.Name)
                 {
-                    IsUnique = index.IsUnique,
-                    Columns = Names(index.Columns),
-                    IncludedColumns = Names(index.IncludedColumns),
-                    DescendingColumns = Names(index.DescendingColumns),
-                    IsClustered = index.IsClustered,
-                    Filter = RenameInExpression(index.Filter, own)
-                }).ToList(),
+                    Columns = Names(source.PrimaryKey.Columns),
+                    IsClustered = source.PrimaryKey.IsClustered
+                },
+                Indexes = !hasOwn ? source.Indexes : source.Indexes.Select(index => new IndexInfo(index.Name) { IsUnique = index.IsUnique, Columns = Names(index.Columns), IncludedColumns = Names(index.IncludedColumns), DescendingColumns = Names(index.DescendingColumns), IsClustered = index.IsClustered, Filter = RenameInExpression(index.Filter,
+                    own) }).ToList(),
                 UniqueConstraints = !hasOwn ? source.UniqueConstraints : source.UniqueConstraints.Select(constraint => new UniqueConstraintInfo(constraint.Name) { Columns = Names(constraint.Columns) }).ToList(),
-                CheckConstraints = !hasOwn ? source.CheckConstraints : source.CheckConstraints.Select(constraint => new CheckConstraintInfo(constraint.Name) { Expression = RenameInExpression(constraint.Expression, own) }).ToList(),
+                CheckConstraints = !hasOwn ? source.CheckConstraints : source.CheckConstraints.Select(constraint => new CheckConstraintInfo(constraint.Name) { Expression = RenameInExpression(constraint.Expression,
+                    own) }).ToList(),
                 ForeignKeys = source.ForeignKeys.Select(foreignKey =>
                 {
-                    renamedByTable.TryGetValue(foreignKey.ReferencedTable, out var referenced);
-                    return RenameForeignKey(foreignKey, hasOwn ? own : null, referenced);
+                    renamedByTable.TryGetValue(foreignKey.ReferencedTable,
+                        out var referenced);
+                    return RenameForeignKey(foreignKey,
+                        hasOwn ? own : null,
+                        referenced);
                 }).ToList()
             };
         }
@@ -427,7 +488,8 @@ namespace RepoDb.Schema
         /// <returns>The new name, or the same name if the column is not renamed.</returns>
         private static string Name(string name,
             IDictionary<string, string> renamed) =>
-            renamed.TryGetValue(name, out var newName) ? newName : name;
+            renamed.TryGetValue(name,
+                out var newName) ? newName : name;
 
         /// <summary>
         /// Gets a copy of the column with another name.
@@ -441,7 +503,17 @@ namespace RepoDb.Schema
             var field = column.Field;
             return new ColumnInfo
             {
-                Field = new DbField(name, field.IsPrimary, field.IsIdentity, field.IsNullable, field.Type, field.Size, field.Precision, field.Scale, field.DatabaseType, field.HasDefaultValue, field.Provider),
+                Field = new DbField(name,
+                    field.IsPrimary,
+                    field.IsIdentity,
+                    field.IsNullable,
+                    field.Type,
+                    field.Size,
+                    field.Precision,
+                    field.Scale,
+                    field.DatabaseType,
+                    field.HasDefaultValue,
+                    field.Provider),
                 Ordinal = column.Ordinal,
                 DefaultExpression = column.DefaultExpression,
                 DefaultValue = column.DefaultValue,
@@ -471,13 +543,15 @@ namespace RepoDb.Schema
             IDictionary<string, string> own,
             IDictionary<string, string> referenced) =>
             new ForeignKeyInfo(foreignKey.Name)
-            {
-                Columns = own == null ? foreignKey.Columns : foreignKey.Columns.Select(name => Name(name, own)).ToList(),
-                ReferencedTable = foreignKey.ReferencedTable,
-                ReferencedColumns = referenced == null ? foreignKey.ReferencedColumns : foreignKey.ReferencedColumns.Select(name => Name(name, referenced)).ToList(),
-                UpdateRule = foreignKey.UpdateRule,
-                DeleteRule = foreignKey.DeleteRule
-            };
+        {
+            Columns = own == null ? foreignKey.Columns : foreignKey.Columns.Select(name => Name(name,
+                own)).ToList(),
+            ReferencedTable = foreignKey.ReferencedTable,
+            ReferencedColumns = referenced == null ? foreignKey.ReferencedColumns : foreignKey.ReferencedColumns.Select(name => Name(name,
+                referenced)).ToList(),
+            UpdateRule = foreignKey.UpdateRule,
+            DeleteRule = foreignKey.DeleteRule
+        };
 
         /// <summary>
         /// Replaces the names of the renamed columns that the expression mentions (as whole words) with their new names, all at once (so two columns can swap their names).
@@ -492,8 +566,15 @@ namespace RepoDb.Schema
             {
                 return expression;
             }
-            var pattern = $@"(?<![\w])({string.Join("|", renamed.Keys.Select(Regex.Escape))})(?![\w])";
-            return Regex.Replace(expression, pattern, match => Name(match.Value, renamed), RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+
+            var pattern = $@"(?<![\w])({string.Join("|",
+                renamed.Keys.Select(Regex.Escape))})(?![\w])";
+            return Regex.Replace(expression,
+                pattern,
+                match => Name(match.Value,
+                    renamed),
+                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
+                TimeSpan.FromSeconds(1));
         }
 
         /// <summary>
@@ -504,17 +585,11 @@ namespace RepoDb.Schema
         /// <returns><c>true</c> if the name is the one of the table.</returns>
         private static bool Matches(string name,
             TableInfo table) =>
-            name.IndexOf('.') >= 0
-                ? string.Equals(name, GetName(table), StringComparison.OrdinalIgnoreCase)
-                : string.Equals(name, table.Name, StringComparison.OrdinalIgnoreCase);
-
-        /// <summary>
-        /// Removes the quotes of the name of a table (i.e.: <c>[dbo].[Person]</c> is <c>dbo.Person</c>).
-        /// </summary>
-        /// <param name="name">The name of the table.</param>
-        /// <returns>The name without the quotes.</returns>
-        internal static string Unquote(string name) =>
-            name.Trim().Replace("[", string.Empty).Replace("]", string.Empty).Replace("\"", string.Empty).Replace("`", string.Empty);
+            name.IndexOf('.') >= 0 ? string.Equals(name,
+                GetName(table),
+                StringComparison.OrdinalIgnoreCase) : string.Equals(name,
+                table.Name,
+                StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Checks whether the expression of a check constraint mentions one of the columns (as a whole word).
@@ -524,12 +599,14 @@ namespace RepoDb.Schema
         /// <returns><c>true</c> if the expression mentions a column; otherwise, <c>false</c>.</returns>
         private static bool Mentions(string expression,
             IEnumerable<string> columns) =>
-            !string.IsNullOrWhiteSpace(expression) &&
-            columns.Any(column => Regex.IsMatch(expression, $@"(?<![\w]){Regex.Escape(column)}(?![\w])", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1)));
+            !string.IsNullOrWhiteSpace(expression) && columns.Any(column => Regex.IsMatch(expression,
+                $@"(?<![\w]){Regex.Escape(column)}(?![\w])",
+                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
+                TimeSpan.FromSeconds(1)));
 
         #endregion
 
-        #region Nested Types
+        #region Private Types
 
         /// <summary>
         /// The columns that are created in a table: the source columns, and the new names of the ones that are renamed.

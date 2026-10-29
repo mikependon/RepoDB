@@ -36,7 +36,11 @@ namespace RepoDb.Schema
             string filename,
             string traceKey = SchemaTraceKeys.ReadDefinitionFromXml,
             ITrace trace = null) =>
-            SchemaDefinitionFile.Read(connection, filename, traceKey, trace, SchemaDefinitionXmlReader.Parse);
+            SchemaDefinitionFile.Read(connection,
+                filename,
+                traceKey,
+                trace,
+                SchemaDefinitionXmlReader.Parse);
 
         /// <summary>
         /// Asynchronously reads a RepoDB XML definition, including all tables and extraction metadata.
@@ -53,7 +57,12 @@ namespace RepoDb.Schema
             string traceKey = SchemaTraceKeys.ReadDefinitionFromXml,
             ITrace trace = null,
             CancellationToken cancellationToken = default) =>
-            SchemaDefinitionFile.ReadAsync(connection, filename, traceKey, trace, SchemaDefinitionXmlReader.Parse, cancellationToken);
+            SchemaDefinitionFile.ReadAsync(connection,
+                filename,
+                traceKey,
+                trace,
+                SchemaDefinitionXmlReader.Parse,
+                cancellationToken);
 
         #endregion
     }

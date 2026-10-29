@@ -129,6 +129,7 @@ namespace RepoDb.Schema
         /// The trace key for loading a YAML definition into a database.
         /// </summary>
         public const string LoadDefinitionFromYaml = "LoadDefinitionFromYaml";
+
         #endregion
     }
 }

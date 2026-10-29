@@ -38,20 +38,23 @@ namespace RepoDb.Schema
             RelatedTableBehavior relationshipBehavior,
             Func<TableInfo, string> tableKey)
         {
-            if (!Enum.IsDefined(typeof(RelatedTableBehavior), relationshipBehavior))
+            if (!Enum.IsDefined(typeof(RelatedTableBehavior),
+                relationshipBehavior))
             {
                 throw new ArgumentOutOfRangeException(nameof(relationshipBehavior));
             }
 
             var result = tables.GroupBy(tableKey).Select(g => g.First()).ToList();
-            return relationshipBehavior == RelatedTableBehavior.TableOnly
-                ? result
-                : Walk(result, GetNeighbors(foreignKeys, relationshipBehavior, tableKey), tableKey);
+            return relationshipBehavior == RelatedTableBehavior.TableOnly ? result : Walk(result,
+                GetNeighbors(foreignKeys,
+                    relationshipBehavior,
+                    tableKey),
+                tableKey);
         }
 
         #endregion
 
-        #region Helpers
+        #region Private Methods
 
         /// <summary>
         /// Gets the neighbors of each table, by the key of the table: its parents and/or its children, depending on the behavior.
@@ -70,13 +73,19 @@ namespace RepoDb.Schema
             {
                 if (FollowsParents(relationshipBehavior))
                 {
-                    Add(neighbors, tableKey(child), parent);
+                    Add(neighbors,
+                        tableKey(child),
+                        parent);
                 }
+
                 if (FollowsChildren(relationshipBehavior))
                 {
-                    Add(neighbors, tableKey(parent), child);
+                    Add(neighbors,
+                        tableKey(parent),
+                        child);
                 }
             }
+
             return neighbors;
         }
 
@@ -95,9 +104,11 @@ namespace RepoDb.Schema
             var seen = new HashSet<string>(result.Select(tableKey));
             for (var i = 0; i < result.Count; i++)
             {
-                var related = neighbors.TryGetValue(tableKey(result[i]), out var list) ? list : Enumerable.Empty<TableInfo>();
+                var related = neighbors.TryGetValue(tableKey(result[i]),
+                    out var list) ? list : Enumerable.Empty<TableInfo>();
                 result.AddRange(related.Where(table => seen.Add(tableKey(table))).ToList());
             }
+
             return result;
         }
 
@@ -107,8 +118,7 @@ namespace RepoDb.Schema
         /// <param name="relationshipBehavior">The behavior.</param>
         /// <returns><c>true</c> if the behavior follows the parents; otherwise, <c>false</c>.</returns>
         private static bool FollowsParents(RelatedTableBehavior relationshipBehavior) =>
-            relationshipBehavior == RelatedTableBehavior.Parents ||
-            relationshipBehavior == RelatedTableBehavior.ParentsAndChildren;
+            relationshipBehavior == RelatedTableBehavior.Parents || relationshipBehavior == RelatedTableBehavior.ParentsAndChildren;
 
         /// <summary>
         /// Checks whether the behavior follows the children of a table.
@@ -116,8 +126,7 @@ namespace RepoDb.Schema
         /// <param name="relationshipBehavior">The behavior.</param>
         /// <returns><c>true</c> if the behavior follows the children; otherwise, <c>false</c>.</returns>
         private static bool FollowsChildren(RelatedTableBehavior relationshipBehavior) =>
-            relationshipBehavior == RelatedTableBehavior.Children ||
-            relationshipBehavior == RelatedTableBehavior.ParentsAndChildren;
+            relationshipBehavior == RelatedTableBehavior.Children || relationshipBehavior == RelatedTableBehavior.ParentsAndChildren;
 
         /// <summary>
         /// Adds the table to the neighbors of the key.
@@ -129,10 +138,12 @@ namespace RepoDb.Schema
             string key,
             TableInfo table)
         {
-            if (!neighbors.TryGetValue(key, out var list))
+            if (!neighbors.TryGetValue(key,
+                out var list))
             {
                 neighbors[key] = list = new List<TableInfo>();
             }
+
             list.Add(table);
         }
 

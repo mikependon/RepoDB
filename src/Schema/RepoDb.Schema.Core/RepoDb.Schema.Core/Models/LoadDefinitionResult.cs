@@ -16,15 +16,15 @@ namespace RepoDb.Schema.Models
         #region Properties
 
         /// <summary>
+        /// Gets the creation, skip, or alignment outcomes, executed scripts, and warnings for the destination tables.
+        /// </summary>
+        public CopyTableSchemaResult CopyResult { get; internal set; }
+
+        /// <summary>
         /// Gets the definition read from the file, including tables and extraction metadata.
         /// This describes the file; destination adjustments and unsupported features are reported in the copy result.
         /// </summary>
         public SchemaDefinitionResult Definition { get; internal set; }
-
-        /// <summary>
-        /// Gets the creation, skip, or alignment outcomes, executed scripts, and warnings for the destination tables.
-        /// </summary>
-        public CopyTableSchemaResult CopyResult { get; internal set; }
 
         #endregion
     }

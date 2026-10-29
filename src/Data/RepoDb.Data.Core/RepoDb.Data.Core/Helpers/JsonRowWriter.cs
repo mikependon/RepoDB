@@ -22,7 +22,7 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal static class JsonRowWriter
     {
-        #region Public Methods
+        #region Properties
 
         /// <summary>
         /// Gets the options of the writer of the file: indented, and without escaping the characters that JSON does not require to escape.
@@ -32,6 +32,10 @@ namespace RepoDb.Data.Helpers
             Indented = true,
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Writes the current row of the reader as a JSON object.
@@ -47,8 +51,10 @@ namespace RepoDb.Data.Helpers
             for (var i = 0; i < names.Length; i++)
             {
                 writer.WritePropertyName(names[i]);
-                WriteValue(writer, record.IsDBNull(i) ? null : record.GetValue(i));
+                WriteValue(writer,
+                    record.IsDBNull(i) ? null : record.GetValue(i));
             }
+
             writer.WriteEndObject();
         }
 
@@ -64,8 +70,10 @@ namespace RepoDb.Data.Helpers
             for (var i = 0; i < row.Count; i++)
             {
                 writer.WritePropertyName(row.Columns[i].Name);
-                WriteValue(writer, row[i]);
+                WriteValue(writer,
+                    row[i]);
             }
+
             writer.WriteEndObject();
         }
 
@@ -77,6 +85,9 @@ namespace RepoDb.Data.Helpers
         public static void WriteValue(Utf8JsonWriter writer,
             object value)
         {
+            if (TryWriteNumber(writer,
+                value))
+                return;
             switch (value)
             {
                 case null:
@@ -89,46 +100,6 @@ namespace RepoDb.Data.Helpers
                 case bool flag:
                     writer.WriteBooleanValue(flag);
                     break;
-                case byte number:
-                    writer.WriteNumberValue(number);
-                    break;
-                case sbyte number:
-                    writer.WriteNumberValue(number);
-                    break;
-                case short number:
-                    writer.WriteNumberValue(number);
-                    break;
-                case ushort number:
-                    writer.WriteNumberValue(number);
-                    break;
-                case int number:
-                    writer.WriteNumberValue(number);
-                    break;
-                case uint number:
-                    writer.WriteNumberValue(number);
-                    break;
-                case long number:
-                    writer.WriteNumberValue(number);
-                    break;
-                case ulong number:
-                    writer.WriteNumberValue(number);
-                    break;
-                case decimal number:
-                    writer.WriteNumberValue(number);
-                    break;
-                case double number:
-                    WriteReal(writer, number);
-                    break;
-                case float number:
-                    if (float.IsNaN(number) || float.IsInfinity(number))
-                    {
-                        writer.WriteStringValue(number.ToString("R", CultureInfo.InvariantCulture));
-                    }
-                    else
-                    {
-                        writer.WriteNumberValue(number);
-                    }
-                    break;
                 case DateTime date:
                     writer.WriteStringValue(date);
                     break;
@@ -139,7 +110,8 @@ namespace RepoDb.Data.Helpers
                     writer.WriteStringValue(guid);
                     break;
                 case TimeSpan time:
-                    writer.WriteStringValue(time.ToString("c", CultureInfo.InvariantCulture));
+                    writer.WriteStringValue(time.ToString("c",
+                        CultureInfo.InvariantCulture));
                     break;
                 case byte[] bytes:
                     writer.WriteBase64StringValue(bytes);
@@ -152,10 +124,12 @@ namespace RepoDb.Data.Helpers
                     writer.WriteStringValue(character.ToString());
                     break;
                 case Enum enumeration:
-                    writer.WriteNumberValue(Convert.ToInt64(enumeration, CultureInfo.InvariantCulture));
+                    writer.WriteNumberValue(Convert.ToInt64(enumeration,
+                        CultureInfo.InvariantCulture));
                     break;
                 default:
-                    writer.WriteStringValue(Convert.ToString(value, CultureInfo.InvariantCulture));
+                    writer.WriteStringValue(Convert.ToString(value,
+                        CultureInfo.InvariantCulture));
                     break;
             }
         }
@@ -163,6 +137,65 @@ namespace RepoDb.Data.Helpers
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Writes a numeric value while preserving its numeric type and nonfinite representation.
+        /// </summary>
+        /// <param name="writer">The JSON writer.</param>
+        /// <param name="value">The value to check for a supported numeric type.</param>
+        /// <returns>Whether the value was numeric and was written.</returns>
+        private static bool TryWriteNumber(Utf8JsonWriter writer,
+            object value)
+        {
+            switch (value)
+            {
+                case byte number:
+                    writer.WriteNumberValue(number);
+                    return true;
+                case sbyte number:
+                    writer.WriteNumberValue(number);
+                    return true;
+                case short number:
+                    writer.WriteNumberValue(number);
+                    return true;
+                case ushort number:
+                    writer.WriteNumberValue(number);
+                    return true;
+                case int number:
+                    writer.WriteNumberValue(number);
+                    return true;
+                case uint number:
+                    writer.WriteNumberValue(number);
+                    return true;
+                case long number:
+                    writer.WriteNumberValue(number);
+                    return true;
+                case ulong number:
+                    writer.WriteNumberValue(number);
+                    return true;
+                case decimal number:
+                    writer.WriteNumberValue(number);
+                    return true;
+                case double number:
+                    WriteReal(writer,
+                        number);
+                    return true;
+                case float number:
+                    if (float.IsNaN(number) || float.IsInfinity(number))
+                    {
+                        writer.WriteStringValue(number.ToString("R",
+                            CultureInfo.InvariantCulture));
+                    }
+                    else
+                    {
+                        writer.WriteNumberValue(number);
+                    }
+
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
         /// <summary>
         /// Reads the bytes of a stream from where it is.
@@ -175,6 +208,7 @@ namespace RepoDb.Data.Helpers
             {
                 stream.Position = 0;
             }
+
             using (var memory = new MemoryStream())
             {
                 stream.CopyTo(memory);
@@ -192,7 +226,8 @@ namespace RepoDb.Data.Helpers
         {
             if (double.IsNaN(number) || double.IsInfinity(number))
             {
-                writer.WriteStringValue(number.ToString("R", CultureInfo.InvariantCulture));
+                writer.WriteStringValue(number.ToString("R",
+                    CultureInfo.InvariantCulture));
             }
             else
             {

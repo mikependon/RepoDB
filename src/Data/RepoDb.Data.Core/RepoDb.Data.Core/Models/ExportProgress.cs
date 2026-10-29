@@ -19,19 +19,9 @@ namespace RepoDb.Data.Models
         #region Properties
 
         /// <summary>
-        /// Gets the position of the data reader: the number of rows that it has read so far (0 before the first row, then the position of the row that was just written).
-        /// </summary>
-        public long Position { get; internal set; }
-
-        /// <summary>
         /// Gets the number of rows that were written into the file so far.
         /// </summary>
         public long CurrentRowCount { get; internal set; }
-
-        /// <summary>
-        /// Gets the time (in UTC) when the export has started.
-        /// </summary>
-        public DateTime Start { get; internal set; }
 
         /// <summary>
         /// Gets the time that has passed since the export has started.
@@ -42,6 +32,16 @@ namespace RepoDb.Data.Models
         /// Gets the time (in UTC) when the export has ended, or <c>null</c> while it is running.
         /// </summary>
         public DateTime? End { get; internal set; }
+
+        /// <summary>
+        /// Gets the position of the data reader: the number of rows that it has read so far (0 before the first row, then the position of the row that was just written).
+        /// </summary>
+        public long Position { get; internal set; }
+
+        /// <summary>
+        /// Gets the time (in UTC) when the export has started.
+        /// </summary>
+        public DateTime Start { get; internal set; }
 
         /// <summary>
         /// Gets the number of rows that the table has (the ones that the filter selects), which is counted before any row is written.

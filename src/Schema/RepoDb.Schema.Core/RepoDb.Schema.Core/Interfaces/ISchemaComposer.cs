@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -17,6 +17,8 @@ namespace RepoDb.Schema
     /// </summary>
     public interface ISchemaComposer
     {
+        #region Public Methods
+
         /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.
         /// </summary>
@@ -50,7 +52,8 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <param name="index">The index to be created.</param>
         /// <returns>The SQL statement.</returns>
-        string ComposeCreateIndex(string tableName, IndexInfo index);
+        string ComposeCreateIndex(string tableName,
+            IndexInfo index);
 
         /// <summary>
         /// Composes the statement that adds a foreign key.
@@ -58,7 +61,8 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <param name="foreignKey">The foreign key to be added.</param>
         /// <returns>The SQL statement.</returns>
-        string ComposeAddForeignKey(string tableName, ForeignKeyInfo foreignKey);
+        string ComposeAddForeignKey(string tableName,
+            ForeignKeyInfo foreignKey);
 
         /// <summary>
         /// Composes the statement that adds a column to an existing table.
@@ -66,7 +70,8 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table.</param>
         /// <param name="column">The column to be added.</param>
         /// <returns>The SQL statement.</returns>
-        string ComposeAddColumn(string tableName, ColumnInfo column);
+        string ComposeAddColumn(string tableName,
+            ColumnInfo column);
 
         /// <summary>
         /// Composes the statement that drops the table.
@@ -95,7 +100,8 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table (see <see cref="ComposeName"/>).</param>
         /// <param name="columnName">The name of the column.</param>
         /// <returns>The SQL statement, that returns <c>1</c> if the column exists, and <c>0</c> if not.</returns>
-        string ComposeColumnExists(string tableName, string columnName);
+        string ComposeColumnExists(string tableName,
+            string columnName);
 
         /// <summary>
         /// Composes the statement that checks whether an index exists in a table of the destination database.
@@ -103,7 +109,8 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table (see <see cref="ComposeName"/>).</param>
         /// <param name="indexName">The name of the index.</param>
         /// <returns>The SQL statement, that returns <c>1</c> if the index exists, and <c>0</c> if not.</returns>
-        string ComposeIndexExists(string tableName, string indexName);
+        string ComposeIndexExists(string tableName,
+            string indexName);
 
         /// <summary>
         /// Composes the statement that checks whether the name of an index is already used in the destination database, by any table of the schema (or of the database) of the given table.
@@ -112,7 +119,8 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table (see <see cref="ComposeName"/>) that the index is going to be created in.</param>
         /// <param name="indexName">The name of the index.</param>
         /// <returns>The SQL statement, that returns <c>1</c> if the name is used, and <c>0</c> if not (<c>null</c> if the database does not need it).</returns>
-        string ComposeIndexNameExists(string tableName, string indexName);
+        string ComposeIndexNameExists(string tableName,
+            string indexName);
 
         /// <summary>
         /// Composes the statement that checks whether a foreign key exists in a table of the destination database.
@@ -121,7 +129,8 @@ namespace RepoDb.Schema
         /// <param name="tableName">The name of the table (see <see cref="ComposeName"/>).</param>
         /// <param name="foreignKeyName">The name of the foreign key.</param>
         /// <returns>The SQL statement, that returns <c>1</c> if the foreign key exists, and <c>0</c> if not (<c>null</c> if the database does not compose it).</returns>
-        string ComposeForeignKeyExists(string tableName, string foreignKeyName);
+        string ComposeForeignKeyExists(string tableName,
+            string foreignKeyName);
 
         /// <summary>
         /// Composes the data type of a column (including its size, precision and scale) in the dialect of the destination database.
@@ -129,5 +138,7 @@ namespace RepoDb.Schema
         /// <param name="column">The column (as read from the source database) to be mapped.</param>
         /// <returns>The destination data type, i.e.: <c>VARCHAR(128)</c>.</returns>
         string ComposeTypeName(ColumnInfo column);
+
+        #endregion
     }
 }

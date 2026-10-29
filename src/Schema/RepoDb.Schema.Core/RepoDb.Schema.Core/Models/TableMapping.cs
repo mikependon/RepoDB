@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -38,9 +38,9 @@ namespace RepoDb.Schema.Models
         #region Properties
 
         /// <summary>
-        /// Gets the name of the table of the source database, with or without its schema (i.e.: <c>Person</c> or <c>dbo.Person</c>).
+        /// Gets the mappings of the columns of the table that are created in the destination database (see <see cref="ColumnMapping"/>).
         /// </summary>
-        public string Source { get; }
+        public IList<ColumnMapping> Columns { get; }
 
         /// <summary>
         /// Gets the name of the table that is created in the destination database (<c>null</c> if the table keeps its name). The foreign keys that reference the table follow the new name.
@@ -48,9 +48,9 @@ namespace RepoDb.Schema.Models
         public string Destination { get; }
 
         /// <summary>
-        /// Gets the mappings of the columns of the table that are created in the destination database (see <see cref="ColumnMapping"/>).
+        /// Gets the name of the table of the source database, with or without its schema (i.e.: <c>Person</c> or <c>dbo.Person</c>).
         /// </summary>
-        public IList<ColumnMapping> Columns { get; }
+        public string Source { get; }
 
         #endregion
     }

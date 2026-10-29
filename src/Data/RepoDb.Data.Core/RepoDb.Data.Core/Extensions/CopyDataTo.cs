@@ -6,10 +6,10 @@
 
 #endregion
 
-using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -22,8 +22,8 @@ using RepoDb.Interfaces;
 using RepoDb.Schema;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
-using ColumnMapping = RepoDb.Data.Models.ColumnMapping;
 using static RepoDb.Data.DbConnection;
+using ColumnMapping = RepoDb.Data.Models.ColumnMapping;
 
 namespace RepoDb.Data
 {
@@ -34,8 +34,6 @@ namespace RepoDb.Data
     {
         #region Public Methods
 
-        #region CopyDataTo (Registered Connection, Sync)
-
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the same-named table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
         /// </summary>
@@ -74,7 +72,21 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ConnectionManager.Get(destinationConnection), where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ConnectionManager.Get(destinationConnection),
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -116,7 +128,22 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(targetTable, ConnectionManager.Get(destinationConnection), where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(targetTable,
+                ConnectionManager.Get(destinationConnection),
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -156,7 +183,22 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(tableName, ConnectionManager.Get(destinationConnection), where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(tableName,
+                ConnectionManager.Get(destinationConnection),
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -198,11 +240,23 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
-
-        #endregion
-
-        #region CopyDataTo (IDbConnection, Sync)
+            connection.CopyDataTo(sourceTable,
+                targetTable,
+                ConnectionManager.Get(destinationConnection),
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the same-named table of the destination connection. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -242,7 +296,22 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(),
+                destinationConnection,
+                where == null ? null : QueryGroup.Parse(where),
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -284,7 +353,23 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(),
+                targetTable,
+                destinationConnection,
+                where == null ? null : QueryGroup.Parse(where),
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -324,7 +409,23 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(tableName, tableName, destinationConnection, where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(tableName,
+                tableName,
+                destinationConnection,
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -367,23 +468,54 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            var targetSchema = GetTargetSchema(destinationConnection, targetTable);
-            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, null);
-            var options = new CopyProgress { StartTime = DateTime.UtcNow };
-            var tables = GetTables(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction);
-            options.TableCount = tables.Count;
-            CountSourceRows(connection, tables, options, progressCallback, commandTimeout, trace);
-            foreach (var (source, target, filter) in tables)
+            var targetSchema = GetTargetSchema(destinationConnection,
+                targetTable);
+            Validate(connection,
+                sourceTable,
+                targetTable,
+                destinationConnection,
+                targetSchema,
+                bufferSize,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                null);
+            var options = new CopyProgress
             {
-                CopyRows(connection, destinationConnection, source, target, filter, bufferSize, mergeExistingRows, qualifiers, columnMappingsBehavior, identityBehavior, null, dataInterceptors, options, progressCallback, commandTimeout, traceKey, trace, transaction);
-            }
+                StartTime = DateTime.UtcNow
+            };
+            var tables = GetTables(connection,
+                destinationConnection,
+                sourceTable,
+                targetTable,
+                targetSchema,
+                where,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                commandTimeout,
+                trace,
+                transaction);
+            CopySelectedTables(connection,
+                destinationConnection,
+                tables,
+                options,
+                sourceTable,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                columnMappingsBehavior,
+                identityBehavior,
+                null,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
             options.EndTime = DateTime.UtcNow;
             return options;
         }
-
-        #endregion
-
-        #region CopyDataTo (Registered Connection, Async)
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the same-named table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -425,7 +557,22 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ConnectionManager.Get(destinationConnection), where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ConnectionManager.Get(destinationConnection),
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -469,7 +616,23 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(targetTable, ConnectionManager.Get(destinationConnection), where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(targetTable,
+                ConnectionManager.Get(destinationConnection),
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -511,7 +674,23 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(tableName, ConnectionManager.Get(destinationConnection), where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(tableName,
+                ConnectionManager.Get(destinationConnection),
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -555,11 +734,24 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
-
-        #endregion
-
-        #region CopyDataTo (IDbConnection, Async)
+            connection.CopyDataToAsync(sourceTable,
+                targetTable,
+                ConnectionManager.Get(destinationConnection),
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the same-named table of the destination connection. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -601,7 +793,23 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, where == null ? null : QueryGroup.Parse(where), bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(),
+                destinationConnection,
+                where == null ? null : QueryGroup.Parse(where),
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -645,7 +853,24 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, where == null ? null : QueryGroup.Parse(where), bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(),
+                targetTable,
+                destinationConnection,
+                where == null ? null : QueryGroup.Parse(where),
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -687,7 +912,24 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(tableName, tableName, destinationConnection, where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(tableName,
+                tableName,
+                destinationConnection,
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -732,23 +974,56 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var targetSchema = GetTargetSchema(destinationConnection, targetTable);
-            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, bufferSize, relationshipBehavior, tableExistenceBehavior, columnMappingsBehavior, identityBehavior, null);
-            var options = new CopyProgress { StartTime = DateTime.UtcNow };
-            var tables = await GetTablesAsync(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, cancellationToken).ConfigureAwait(false);
-            options.TableCount = tables.Count;
-            await CountSourceRowsAsync(connection, tables, options, progressCallback, commandTimeout, trace, cancellationToken).ConfigureAwait(false);
-            foreach (var (source, target, filter) in tables)
+            var targetSchema = GetTargetSchema(destinationConnection,
+                targetTable);
+            Validate(connection,
+                sourceTable,
+                targetTable,
+                destinationConnection,
+                targetSchema,
+                bufferSize,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                columnMappingsBehavior,
+                identityBehavior,
+                null);
+            var options = new CopyProgress
             {
-                await CopyRowsAsync(connection, destinationConnection, source, target, filter, bufferSize, mergeExistingRows, qualifiers, columnMappingsBehavior, identityBehavior, null, dataInterceptors, options, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
-            }
+                StartTime = DateTime.UtcNow
+            };
+            var tables = await GetTablesAsync(connection,
+                destinationConnection,
+                sourceTable,
+                targetTable,
+                targetSchema,
+                where,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                commandTimeout,
+                trace,
+                transaction,
+                cancellationToken).ConfigureAwait(false);
+            await CopySelectedTablesAsync(connection,
+                destinationConnection,
+                tables,
+                options,
+                sourceTable,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                columnMappingsBehavior,
+                identityBehavior,
+                null,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken).ConfigureAwait(false);
             options.EndTime = DateTime.UtcNow;
             return options;
         }
-
-        #endregion
-
-        #region CopyDataTo With Mappings (Registered Connection, Sync)
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the same-named table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -788,7 +1063,21 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ConnectionManager.Get(destinationConnection),
+                mappings,
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -830,7 +1119,22 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(targetTable, ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(targetTable,
+                ConnectionManager.Get(destinationConnection),
+                mappings,
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -870,7 +1174,22 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(tableName, ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(tableName,
+                ConnectionManager.Get(destinationConnection),
+                mappings,
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -912,11 +1231,23 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
-
-        #endregion
-
-        #region CopyDataTo With Mappings (IDbConnection, Sync)
+            connection.CopyDataTo(sourceTable,
+                targetTable,
+                ConnectionManager.Get(destinationConnection),
+                mappings,
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the same-named table of the destination connection. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -956,7 +1287,22 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(),
+                destinationConnection,
+                mappings,
+                where == null ? null : QueryGroup.Parse(where),
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -998,7 +1344,23 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(ClassMappedNameCache.Get<TEntity>(),
+                targetTable,
+                destinationConnection,
+                mappings,
+                where == null ? null : QueryGroup.Parse(where),
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1038,7 +1400,23 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.CopyDataTo,
             ITrace trace = null,
             IDbTransaction transaction = null) =>
-            connection.CopyDataTo(tableName, tableName, destinationConnection, mappings, where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyDataTo(tableName,
+                tableName,
+                destinationConnection,
+                mappings,
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1081,23 +1459,55 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            var targetSchema = GetTargetSchema(destinationConnection, targetTable);
-            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, bufferSize, relationshipBehavior, tableExistenceBehavior, ColumnMappingBehavior.Automatic, identityBehavior, mappings);
-            var options = new CopyProgress { StartTime = DateTime.UtcNow };
-            var tables = GetTables(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, mappings);
-            options.TableCount = tables.Count;
-            CountSourceRows(connection, tables, options, progressCallback, commandTimeout, trace);
-            foreach (var (source, target, filter) in tables)
+            var targetSchema = GetTargetSchema(destinationConnection,
+                targetTable);
+            Validate(connection,
+                sourceTable,
+                targetTable,
+                destinationConnection,
+                targetSchema,
+                bufferSize,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                ColumnMappingBehavior.Automatic,
+                identityBehavior,
+                mappings);
+            var options = new CopyProgress
             {
-                CopyRows(connection, destinationConnection, source, target, filter, bufferSize, mergeExistingRows, qualifiers, ColumnMappingBehavior.Automatic, identityBehavior, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, dataInterceptors, options, progressCallback, commandTimeout, traceKey, trace, transaction);
-            }
+                StartTime = DateTime.UtcNow
+            };
+            var tables = GetTables(connection,
+                destinationConnection,
+                sourceTable,
+                targetTable,
+                targetSchema,
+                where,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                commandTimeout,
+                trace,
+                transaction,
+                mappings);
+            CopySelectedTables(connection,
+                destinationConnection,
+                tables,
+                options,
+                sourceTable,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                ColumnMappingBehavior.Automatic,
+                identityBehavior,
+                mappings,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
             options.EndTime = DateTime.UtcNow;
             return options;
         }
-
-        #endregion
-
-        #region CopyDataTo With Mappings (Registered Connection, Async)
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the same-named table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1139,7 +1549,22 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ConnectionManager.Get(destinationConnection),
+                mappings,
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1183,7 +1608,23 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(targetTable, ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(targetTable,
+                ConnectionManager.Get(destinationConnection),
+                mappings,
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1225,7 +1666,23 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(tableName, ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(tableName,
+                ConnectionManager.Get(destinationConnection),
+                mappings,
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection that is registered in the <see cref="ConnectionManager"/>. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1269,11 +1726,24 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(sourceTable, targetTable, ConnectionManager.Get(destinationConnection), mappings, where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
-
-        #endregion
-
-        #region CopyDataTo With Mappings (IDbConnection, Async)
+            connection.CopyDataToAsync(sourceTable,
+                targetTable,
+                ConnectionManager.Get(destinationConnection),
+                mappings,
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the same-named table of the destination connection. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1315,7 +1785,23 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(),
+                destinationConnection,
+                mappings,
+                where == null ? null : QueryGroup.Parse(where),
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the table mapped to <typeparamref name="TEntity"/> to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1359,7 +1845,24 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(), targetTable, destinationConnection, mappings, where == null ? null : QueryGroup.Parse(where), bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(ClassMappedNameCache.Get<TEntity>(),
+                targetTable,
+                destinationConnection,
+                mappings,
+                where == null ? null : QueryGroup.Parse(where),
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the same-named table of the destination connection. The destination table must already exist, unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1401,7 +1904,24 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            connection.CopyDataToAsync(tableName, tableName, destinationConnection, mappings, where, bufferSize, mergeExistingRows, qualifiers, relationshipBehavior, tableExistenceBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyDataToAsync(tableName,
+                tableName,
+                destinationConnection,
+                mappings,
+                where,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the rows of the source table to the target table of the destination connection. The target table must already exist (with the same column names), unless the schema is copied first (see <paramref name="relationshipBehavior"/> and <paramref name="tableExistenceBehavior"/>).
@@ -1446,21 +1966,206 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var targetSchema = GetTargetSchema(destinationConnection, targetTable);
-            Validate(connection, sourceTable, targetTable, destinationConnection, targetSchema, bufferSize, relationshipBehavior, tableExistenceBehavior, ColumnMappingBehavior.Automatic, identityBehavior, mappings);
-            var options = new CopyProgress { StartTime = DateTime.UtcNow };
-            var tables = await GetTablesAsync(connection, destinationConnection, sourceTable, targetTable, targetSchema, where, relationshipBehavior, tableExistenceBehavior, commandTimeout, trace, transaction, cancellationToken, mappings).ConfigureAwait(false);
-            options.TableCount = tables.Count;
-            await CountSourceRowsAsync(connection, tables, options, progressCallback, commandTimeout, trace, cancellationToken).ConfigureAwait(false);
-            foreach (var (source, target, filter) in tables)
+            var targetSchema = GetTargetSchema(destinationConnection,
+                targetTable);
+            Validate(connection,
+                sourceTable,
+                targetTable,
+                destinationConnection,
+                targetSchema,
+                bufferSize,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                ColumnMappingBehavior.Automatic,
+                identityBehavior,
+                mappings);
+            var options = new CopyProgress
             {
-                await CopyRowsAsync(connection, destinationConnection, source, target, filter, bufferSize, mergeExistingRows, qualifiers, ColumnMappingBehavior.Automatic, identityBehavior, string.Equals(source, sourceTable, StringComparison.Ordinal) ? mappings : null, dataInterceptors, options, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
-            }
+                StartTime = DateTime.UtcNow
+            };
+            var tables = await GetTablesAsync(connection,
+                destinationConnection,
+                sourceTable,
+                targetTable,
+                targetSchema,
+                where,
+                relationshipBehavior,
+                tableExistenceBehavior,
+                commandTimeout,
+                trace,
+                transaction,
+                cancellationToken,
+                mappings).ConfigureAwait(false);
+            await CopySelectedTablesAsync(connection,
+                destinationConnection,
+                tables,
+                options,
+                sourceTable,
+                bufferSize,
+                mergeExistingRows,
+                qualifiers,
+                ColumnMappingBehavior.Automatic,
+                identityBehavior,
+                mappings,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken).ConfigureAwait(false);
             options.EndTime = DateTime.UtcNow;
             return options;
         }
 
         #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Counts selected source tables, then copies their rows in dependency order with per-table mappings.
+        /// </summary>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The destination connection.</param>
+        /// <param name="tables">The dependency-ordered source tables, destination names, and filters.</param>
+        /// <param name="options">The shared data-copy progress.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="mergeExistingRows">Defines whether matching rows in the target table are updated and missing rows are inserted: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
+        /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="mergeExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
+        /// <param name="columnMappingsBehavior">The provider's column alignment behavior.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after each source table is counted (before items or logs are added), then after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
+        /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
+        private static void CopySelectedTables(IDbConnection connection,
+            IDbConnection destinationConnection,
+            IList<(string Source, string Target, QueryGroup Where)> tables,
+            CopyProgress options,
+            string sourceTable,
+            int bufferSize,
+            bool mergeExistingRows,
+            IList<string> qualifiers,
+            ColumnMappingBehavior columnMappingsBehavior,
+            IdentityBehavior identityBehavior,
+            IList<ColumnMapping> mappings,
+            IList<IDataInterceptor<Row>> dataInterceptors,
+            Action<CopyProgress> progressCallback,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction)
+        {
+            options.TableCount = tables.Count;
+            CountSourceRows(connection,
+                tables,
+                options,
+                progressCallback,
+                commandTimeout,
+                trace);
+            foreach (var (source, target, filter) in tables)
+            {
+                CopyRows(connection,
+                    destinationConnection,
+                    source,
+                    target,
+                    filter,
+                    bufferSize,
+                    mergeExistingRows,
+                    qualifiers,
+                    columnMappingsBehavior,
+                    identityBehavior,
+                    string.Equals(source,
+                        sourceTable,
+                        StringComparison.Ordinal) ? mappings : null,
+                    dataInterceptors,
+                    options,
+                    progressCallback,
+                    commandTimeout,
+                    traceKey,
+                    trace,
+                    transaction);
+            }
+        }
+
+        /// <summary>
+        /// Counts selected source tables, then copies their rows in dependency order with per-table mappings.
+        /// </summary>
+        /// <param name="connection">The source connection.</param>
+        /// <param name="destinationConnection">The destination connection.</param>
+        /// <param name="tables">The dependency-ordered source tables, destination names, and filters.</param>
+        /// <param name="options">The shared data-copy progress.</param>
+        /// <param name="sourceTable">The name of the source table.</param>
+        /// <param name="bufferSize">The number of rows that are buffered and inserted per batch. The default is 10000.</param>
+        /// <param name="mergeExistingRows">Defines whether matching rows in the target table are updated and missing rows are inserted: the rows are bulk merged instead of bulk inserted, with the primary key columns of the target table as the qualifiers (its identity column if it has no primary key), unless <paramref name="qualifiers"/> are given. An <see cref="InvalidOperationException"/> is thrown if there are no qualifiers. If the provider has no bulk merge, the rows are merged one by one (an update by the qualifiers, then an insert if no row was updated). The default is <c>false</c>.</param>
+        /// <param name="qualifiers">The names of the columns that identify the existing rows, which are the qualifiers of the merge. They are used only if <paramref name="mergeExistingRows"/> is enabled, and they must be columns of the target table that are copied. The default is <c>null</c>, which uses the primary key columns of the target table (its identity column if it has no primary key).</param>
+        /// <param name="columnMappingsBehavior">The provider's column alignment behavior.</param>
+        /// <param name="identityBehavior">Defines whether the identity values of the source are kept, or ignored so the target database generates them (which requires <see cref="RelationshipBehavior.TableOnly"/>). The default is <see cref="IdentityBehavior.KeepIdentity"/>.</param>
+        /// <param name="mappings">The mappings of the source columns to the target columns (see <see cref="ColumnMapping"/>). Only the mapped columns are copied, and only for the requested table; the related tables are copied by their matching column names.</param>
+        /// <param name="dataInterceptors">The interceptors that every row of the source goes through before it is copied, in the order that they are given: each one receives the <see cref="Row"/> that the previous one returned, and the row that the last one returns is the one that is copied (with the identity behavior applied). The columns are the ones that the source table is selected with (named by the destination columns of the <c>mappings</c>, if there are any), and every row must end with the same columns. The default is <c>null</c>.</param>
+        /// <param name="progressCallback">The callback that receives the <see cref="CopyProgress"/> after each source table is counted (before items or logs are added), then after every batch is inserted (the same instance every time). The default is <c>null</c>.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used. The default is <c>null</c>.</param>
+        /// <param name="traceKey">The tracking key to be used. The default is <see cref="DataTraceKeys.CopyDataTo"/>.</param>
+        /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
+        /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task representing source counting and row copying.</returns>
+        private static async Task CopySelectedTablesAsync(IDbConnection connection,
+            IDbConnection destinationConnection,
+            IList<(string Source, string Target, QueryGroup Where)> tables,
+            CopyProgress options,
+            string sourceTable,
+            int bufferSize,
+            bool mergeExistingRows,
+            IList<string> qualifiers,
+            ColumnMappingBehavior columnMappingsBehavior,
+            IdentityBehavior identityBehavior,
+            IList<ColumnMapping> mappings,
+            IList<IDataInterceptor<Row>> dataInterceptors,
+            Action<CopyProgress> progressCallback,
+            int? commandTimeout,
+            string traceKey,
+            ITrace trace,
+            IDbTransaction transaction,
+            CancellationToken cancellationToken)
+        {
+            options.TableCount = tables.Count;
+            await CountSourceRowsAsync(connection,
+                tables,
+                options,
+                progressCallback,
+                commandTimeout,
+                trace,
+                cancellationToken).ConfigureAwait(false);
+            foreach (var (source, target, filter) in tables)
+            {
+                await CopyRowsAsync(connection,
+                    destinationConnection,
+                    source,
+                    target,
+                    filter,
+                    bufferSize,
+                    mergeExistingRows,
+                    qualifiers,
+                    columnMappingsBehavior,
+                    identityBehavior,
+                    string.Equals(source,
+                        sourceTable,
+                        StringComparison.Ordinal) ? mappings : null,
+                    dataInterceptors,
+                    options,
+                    progressCallback,
+                    commandTimeout,
+                    traceKey,
+                    trace,
+                    transaction,
+                    cancellationToken).ConfigureAwait(false);
+            }
+        }
 
         #endregion
     }

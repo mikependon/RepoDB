@@ -27,8 +27,6 @@ namespace RepoDb.Data
     {
         #region Public Methods
 
-        #region ImportDataFromJson (Sync)
-
         /// <summary>
         /// Loads the rows of a JSON file into a table without loading the file in memory. The rows are buffered, and every <paramref name="bufferSize"/> rows they are inserted with the bulk insert of the provider (in batches of plain inserts if it has none). The file is an array of objects, an object whose first array property holds the rows, or a sequence of objects. The columns that the table does not have are ignored, and the values are converted into the types of the columns of the table.
         /// </summary>
@@ -70,12 +68,23 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            return ImportPipeline.Run(connection, tableName, filename, new JsonImportSource(filename), bufferSize, bypassExistingRows, qualifiers, mappings, columnMappingBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            return ImportPipeline.Run(connection,
+                tableName,
+                filename,
+                new JsonImportSource(filename),
+                bufferSize,
+                bypassExistingRows,
+                qualifiers,
+                mappings,
+                columnMappingBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
         }
-
-        #endregion
-
-        #region ImportDataFromJson (Async)
 
         /// <summary>
         /// Loads the rows of a JSON file into a table in an asynchronous way. See <see cref="ImportDataFromJson"/> for how the rows are read, buffered and inserted.
@@ -120,12 +129,25 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return ImportPipeline.RunAsync(connection, tableName, filename, new JsonImportSource(filename), bufferSize, bypassExistingRows, qualifiers, mappings, columnMappingBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            return ImportPipeline.RunAsync(connection,
+                tableName,
+                filename,
+                new JsonImportSource(filename),
+                bufferSize,
+                bypassExistingRows,
+                qualifiers,
+                mappings,
+                columnMappingBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
         }
 
         #endregion
-
-        #endregion
-
     }
 }

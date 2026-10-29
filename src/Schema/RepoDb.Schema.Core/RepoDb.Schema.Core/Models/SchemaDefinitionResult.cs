@@ -8,9 +8,8 @@
 
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
-using RepoDb.Schema.Enumerations;
-
 using RepoDb.Schema.Attributes;
+using RepoDb.Schema.Enumerations;
 
 namespace RepoDb.Schema.Models
 {
@@ -20,6 +19,24 @@ namespace RepoDb.Schema.Models
     public sealed class SchemaDefinitionResult
     {
         #region Properties
+
+        /// <summary>
+        /// Gets the source database name.
+        /// </summary>
+        public string Database { get; internal set; }
+
+        /// <summary>
+        /// Gets the complete parsed document, including portable metadata without an equivalent schema model property.
+        /// CLR types are reconstructed from portable logical types; unknown types have a null CLR type.
+        /// </summary>
+        [DefinitionIgnore]
+        public JsonObject Definition { get; internal set; }
+
+        /// <summary>
+        /// Gets the identities of referenced tables whose definitions are outside the file.
+        /// </summary>
+        [DefinitionIgnore]
+        public IList<TableInfo> ExternalDependencies { get; internal set; }
 
         /// <summary>
         /// Gets the definition format version.
@@ -32,9 +49,9 @@ namespace RepoDb.Schema.Models
         public string Provider { get; internal set; }
 
         /// <summary>
-        /// Gets the source database name.
+        /// Gets the relationship behavior used when the definition was saved.
         /// </summary>
-        public string Database { get; internal set; }
+        public RelatedTableBehavior RelationshipBehavior { get; internal set; }
 
         /// <summary>
         /// Gets the identity of the table requested when the definition was saved.
@@ -42,27 +59,9 @@ namespace RepoDb.Schema.Models
         public TableInfo RootTable { get; internal set; }
 
         /// <summary>
-        /// Gets the relationship behavior used when the definition was saved.
-        /// </summary>
-        public RelatedTableBehavior RelationshipBehavior { get; internal set; }
-
-        /// <summary>
         /// Gets every table definition included in the file, in file order.
         /// </summary>
         public IList<TableSchema> Tables { get; internal set; }
-
-        /// <summary>
-        /// Gets the identities of referenced tables whose definitions are outside the file.
-        /// </summary>
-        [DefinitionIgnore]
-        public IList<TableInfo> ExternalDependencies { get; internal set; }
-
-        /// <summary>
-        /// Gets the complete parsed document, including portable metadata without an equivalent schema model property.
-        /// CLR types are reconstructed from portable logical types; unknown types have a null CLR type.
-        /// </summary>
-        [DefinitionIgnore]
-        public JsonObject Definition { get; internal set; }
 
         #endregion
     }

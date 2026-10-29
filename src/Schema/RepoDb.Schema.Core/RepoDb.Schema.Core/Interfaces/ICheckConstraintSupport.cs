@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -17,11 +17,15 @@ namespace RepoDb.Schema
     /// </summary>
     public interface ICheckConstraintSupport
     {
+        #region Public Methods
+
         /// <summary>
         /// Gets the reason why the destination database refuses the check constraint.
         /// </summary>
         /// <param name="checkConstraint">The check constraint of the source table.</param>
         /// <returns>The reason (i.e.: <c>its expression uses NOW(), which MySQL does not allow in a CHECK constraint</c>), or <c>null</c> if the check constraint can be created.</returns>
         string GetUnsupportedReason(CheckConstraintInfo checkConstraint);
+
+        #endregion
     }
 }

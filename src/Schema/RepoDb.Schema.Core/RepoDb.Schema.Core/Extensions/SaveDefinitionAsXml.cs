@@ -77,6 +77,7 @@ namespace RepoDb.Schema
                 trace,
                 "xml",
                 cancellationToken);
+
         #endregion
     }
 }

@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -26,39 +26,56 @@ namespace RepoDb.Schema
         /// <summary>
         /// A number.
         /// </summary>
-        private static readonly Regex Number = new Regex(@"^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$", Options);
+        private static readonly Regex Number = new Regex(@"^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$",
+            Options);
 
         /// <summary>
         /// A text between quotes (a doubled quote is fine), with the prefix of its national character set or its charset (<c>N'x'</c>, <c>_utf8mb4'x'</c>) and the type cast
         /// of PostgreSQL (<c>'x'::character varying</c>).
         /// </summary>
-        private static readonly Regex Text = new Regex(@"^(N|_[a-z0-9]+)?'(?<value>([^']|'')*)'(\s*::\s*[\w\s\.""]+(\(\d+(,\s*\d+)?\))?)?$", Options);
+        private static readonly Regex Text = new Regex(@"^(N|_[a-z0-9]+)?'(?<value>([^']|'')*)'(\s*::\s*[\w\s\.""]+(\(\d+(,\s*\d+)?\))?)?$",
+            Options);
 
         /// <summary>
         /// The function whose call (or special register) is the default value, by the kind of default value. The first pattern that matches is the kind.
         /// </summary>
         private static readonly (ColumnDefaultValue Kind, Regex Pattern)[] Patterns =
         {
-            (ColumnDefaultValue.Null, new Regex(@"^null$", Options)),
-            (ColumnDefaultValue.BooleanTrue, new Regex(@"^true$", Options)),
-            (ColumnDefaultValue.BooleanFalse, new Regex(@"^false$", Options)),
-            (ColumnDefaultValue.CurrentDate, new Regex(@"^(current_date(\s*\(\s*\))?|curdate\s*\(\s*\)|today\s*\(\s*\)|current\s+date|date\s*\(\s*'now'(\s*,\s*'localtime')?\s*\)|trunc\s*\(\s*sysdate\s*\)|(cast\s*\(\s*(getdate|sysdatetime|now|current_timestamp)\s*(\(\s*\))?\s+as\s+date\s*\))|(convert\s*\(\s*date\s*,\s*(getdate|sysdatetime)\s*\(\s*\)\s*(,\s*\d+\s*)?\)))(\s*::\s*date)?$", Options)),
-            (ColumnDefaultValue.CurrentTime, new Regex(@"^(current_time|localtime)(\s*\(\s*\d*\s*\))?$|^curtime\s*\(\s*\d*\s*\)$|^current\s+time$", Options)),
-            (ColumnDefaultValue.CurrentTimestampUtc, new Regex(@"^((getutcdate|sysutcdatetime|utc_timestamp)\s*\(\s*\d*\s*\)|sys_extract_utc\s*\(\s*(systimestamp|current_timestamp)\s*\)|timezone\s*\(\s*'utc'\s*,\s*(now\s*\(\s*\)|current_timestamp)\s*\)|now\s*\(\s*\)\s+at\s+time\s+zone\s+'utc'|current_timestamp\s+at\s+time\s+zone\s+'utc'|datetime\s*\(\s*'now'\s*\))(\s*::\s*[\w\s]+)?$", Options)),
-            (ColumnDefaultValue.CurrentTimestampWithOffset, new Regex(@"^(sysdatetimeoffset\s*\(\s*\)|systimestamp(\s*\(\s*\d*\s*\))?)$", Options)),
-            (ColumnDefaultValue.CurrentTimestamp, new Regex(@"^((getdate|sysdatetime|now|transaction_timestamp|statement_timestamp|clock_timestamp)\s*\(\s*\)|now64\s*\(\s*\d*\s*\)|(current_timestamp|localtimestamp)(\s*\(\s*\d*\s*\))?|sysdate|current\s+timestamp|datetime\s*\(\s*'now'\s*,\s*'localtime'\s*\))(\s*::\s*[\w\s]+)?$", Options)),
-            (ColumnDefaultValue.NewSequentialGuid, new Regex(@"^newsequentialid\s*\(\s*\)$", Options)),
-            (ColumnDefaultValue.NewGuid, new Regex(@"^(newid|uuid|gen_random_uuid|uuid_generate_v4|sys_guid|random_uuid|generateuuidv4)\s*\(\s*\)(\s*::\s*[\w\s]+)?$", Options)),
-            (ColumnDefaultValue.RandomNumber, new Regex(@"^(rand|random)\s*\(\s*[\d\.]*\s*\)$", Options)),
-            (ColumnDefaultValue.CurrentUser, new Regex(@"^((suser_sname|suser_name|system_user|session_user|user_name|current_user|user)(\s*\(\s*\))?|sys_context\s*\(\s*'userenv'\s*,\s*'(session_user|current_user)'\s*\))$", Options)),
-            (ColumnDefaultValue.CurrentDatabase, new Regex(@"^((db_name|database|current_database)\s*\(\s*\)|current_catalog)$", Options)),
-            (ColumnDefaultValue.SequenceNextValue, new Regex(@"^(nextval\s*\(.*\)|next\s+value\s+for\s+.+|[\w\.""]+\.nextval|gen_id\s*\(.*\))(\s*::\s*[\w\s]+)?$", Options))
+            (ColumnDefaultValue.Null, new Regex(@"^null$",
+                Options)),
+            (ColumnDefaultValue.BooleanTrue, new Regex(@"^true$",
+                Options)),
+            (ColumnDefaultValue.BooleanFalse, new Regex(@"^false$",
+                Options)),
+            (ColumnDefaultValue.CurrentDate, new Regex(@"^(current_date(\s*\(\s*\))?|curdate\s*\(\s*\)|today\s*\(\s*\)|current\s+date|date\s*\(\s*'now'(\s*,\s*'localtime')?\s*\)|trunc\s*\(\s*sysdate\s*\)|(cast\s*\(\s*(getdate|sysdatetime|now|current_timestamp)\s*(\(\s*\))?\s+as\s+date\s*\))|(convert\s*\(\s*date\s*,\s*(getdate|sysdatetime)\s*\(\s*\)\s*(,\s*\d+\s*)?\)))(\s*::\s*date)?$",
+                Options)),
+            (ColumnDefaultValue.CurrentTime, new Regex(@"^(current_time|localtime)(\s*\(\s*\d*\s*\))?$|^curtime\s*\(\s*\d*\s*\)$|^current\s+time$",
+                Options)),
+            (ColumnDefaultValue.CurrentTimestampUtc, new Regex(@"^((getutcdate|sysutcdatetime|utc_timestamp)\s*\(\s*\d*\s*\)|sys_extract_utc\s*\(\s*(systimestamp|current_timestamp)\s*\)|timezone\s*\(\s*'utc'\s*,\s*(now\s*\(\s*\)|current_timestamp)\s*\)|now\s*\(\s*\)\s+at\s+time\s+zone\s+'utc'|current_timestamp\s+at\s+time\s+zone\s+'utc'|datetime\s*\(\s*'now'\s*\))(\s*::\s*[\w\s]+)?$",
+                Options)),
+            (ColumnDefaultValue.CurrentTimestampWithOffset, new Regex(@"^(sysdatetimeoffset\s*\(\s*\)|systimestamp(\s*\(\s*\d*\s*\))?)$",
+                Options)),
+            (ColumnDefaultValue.CurrentTimestamp, new Regex(@"^((getdate|sysdatetime|now|transaction_timestamp|statement_timestamp|clock_timestamp)\s*\(\s*\)|now64\s*\(\s*\d*\s*\)|(current_timestamp|localtimestamp)(\s*\(\s*\d*\s*\))?|sysdate|current\s+timestamp|datetime\s*\(\s*'now'\s*,\s*'localtime'\s*\))(\s*::\s*[\w\s]+)?$",
+                Options)),
+            (ColumnDefaultValue.NewSequentialGuid, new Regex(@"^newsequentialid\s*\(\s*\)$",
+                Options)),
+            (ColumnDefaultValue.NewGuid, new Regex(@"^(newid|uuid|gen_random_uuid|uuid_generate_v4|sys_guid|random_uuid|generateuuidv4)\s*\(\s*\)(\s*::\s*[\w\s]+)?$",
+                Options)),
+            (ColumnDefaultValue.RandomNumber, new Regex(@"^(rand|random)\s*\(\s*[\d\.]*\s*\)$",
+                Options)),
+            (ColumnDefaultValue.CurrentUser, new Regex(@"^((suser_sname|suser_name|system_user|session_user|user_name|current_user|user)(\s*\(\s*\))?|sys_context\s*\(\s*'userenv'\s*,\s*'(session_user|current_user)'\s*\))$",
+                Options)),
+            (ColumnDefaultValue.CurrentDatabase, new Regex(@"^((db_name|database|current_database)\s*\(\s*\)|current_catalog)$",
+                Options)),
+            (ColumnDefaultValue.SequenceNextValue, new Regex(@"^(nextval\s*\(.*\)|next\s+value\s+for\s+.+|[\w\.""]+\.nextval|gen_id\s*\(.*\))(\s*::\s*[\w\s]+)?$",
+                Options))
         };
 
         /// <summary>
         /// A word (the name of a function or of a column): an expression that has one is not known.
         /// </summary>
-        private static readonly Regex Word = new Regex(@"[a-z_][a-z0-9_]*", Options);
+        private static readonly Regex Word = new Regex(@"[a-z_][a-z0-9_]*",
+            Options);
 
         #endregion
 
@@ -77,10 +94,12 @@ namespace RepoDb.Schema
             {
                 return ColumnDefaultValue.None;
             }
+
             if (Number.IsMatch(text) || Text.IsMatch(text))
             {
                 return ColumnDefaultValue.Literal;
             }
+
             var name = Unbracket(text);
             foreach (var (kind, pattern) in Patterns)
             {
@@ -116,8 +135,10 @@ namespace RepoDb.Schema
             var text = expression?.Trim() ?? string.Empty;
             while (text.Length >= 2 && text[0] == '(' && text[text.Length - 1] == ')' && IsWrapped(text))
             {
-                text = text.Substring(1, text.Length - 2).Trim();
+                text = text.Substring(1,
+                    text.Length - 2).Trim();
             }
+
             return text;
         }
 
@@ -154,6 +175,7 @@ namespace RepoDb.Schema
                     }
                 }
             }
+
             return depth == 0;
         }
 
@@ -163,7 +185,10 @@ namespace RepoDb.Schema
         /// <param name="text">The text.</param>
         /// <returns>The text without the quotes of the names.</returns>
         private static string Unbracket(string text) =>
-            text.Replace("[", string.Empty).Replace("]", string.Empty).Replace("`", string.Empty);
+            text.Replace("[",
+                string.Empty).Replace("]",
+                string.Empty).Replace("`",
+                string.Empty);
 
         /// <summary>
         /// Removes the texts between quotes, so the words that they have are not taken for names.
@@ -171,7 +196,11 @@ namespace RepoDb.Schema
         /// <param name="text">The text.</param>
         /// <returns>The text without the texts between quotes.</returns>
         private static string StripTexts(string text) =>
-            Regex.Replace(text, @"'([^']|'')*'", string.Empty, RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+            Regex.Replace(text,
+                @"'([^']|'')*'",
+                string.Empty,
+                RegexOptions.CultureInvariant,
+                TimeSpan.FromSeconds(1));
 
         #endregion
     }

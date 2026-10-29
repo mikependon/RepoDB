@@ -27,8 +27,6 @@ namespace RepoDb.Data
     {
         #region Public Methods
 
-        #region ExportDataAsXml (Sync)
-
         /// <summary>
         /// Exports the rows of a table into a XML file without holding them in memory: the rows are counted first (with the filter), then they are read forward only and every row
         /// is written into the file as soon as it is read. The file is an XML document: a <c>rows</c> root element that has a <c>row</c> element for each row, and each one has an element for each column (named by the column, encoded if it is not a valid XML name), so <c>ImportDataFromXml</c> can load it back. A <c>null</c> is a self-closing element, and an empty text is an element with its start and end tags.
@@ -59,12 +57,18 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.ExportDataAsXml,
             ITrace trace = null)
         {
-            return ExportPipeline.Run(connection, tableName, filename, mappings, where, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, stream => new XmlExportWriter(stream));
+            return ExportPipeline.Run(connection,
+                tableName,
+                filename,
+                mappings,
+                where,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                stream => new XmlExportWriter(stream));
         }
-
-        #endregion
-
-        #region ExportDataAsXml (Async)
 
         /// <summary>
         /// Exports the rows of a table into a XML file in an asynchronous way. See <see cref="ExportDataAsXml"/> for how the rows are counted, read and written.
@@ -96,15 +100,22 @@ namespace RepoDb.Data
             ITrace trace = null,
             CancellationToken cancellationToken = default)
         {
-            return ExportPipeline.RunAsync(connection, tableName, filename, mappings, where, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, stream => new XmlExportWriter(stream), cancellationToken);
+            return ExportPipeline.RunAsync(connection,
+                tableName,
+                filename,
+                mappings,
+                where,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                stream => new XmlExportWriter(stream),
+                cancellationToken);
         }
 
-        #endregion
-
-        #region ExportDataAsXml (TEntity, Sync)
-
         /// <summary>
-        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a XML file. See <see cref="ExportDataAsXml(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a XML file. See <see cref="ExportDataAsXml(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int? , string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
@@ -130,10 +141,18 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.ExportDataAsXml,
             ITrace trace = null)
             where TEntity : class =>
-            connection.ExportDataAsXml(ClassMappedNameCache.Get<TEntity>(), filename, mappings, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace);
+            connection.ExportDataAsXml(ClassMappedNameCache.Get<TEntity>(),
+                filename,
+                mappings,
+                where == null ? null : QueryGroup.Parse(where),
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace);
 
         /// <summary>
-        /// Exports the rows of a table into a XML file, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsXml(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of a table into a XML file, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsXml(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int? , string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that the expression is of.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
@@ -161,14 +180,18 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.ExportDataAsXml,
             ITrace trace = null)
             where TEntity : class =>
-            connection.ExportDataAsXml(tableName, filename, mappings, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace);
-
-        #endregion
-
-        #region ExportDataAsXml (TEntity, Async)
+            connection.ExportDataAsXml(tableName,
+                filename,
+                mappings,
+                where == null ? null : QueryGroup.Parse(where),
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace);
 
         /// <summary>
-        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a XML file in an asynchronous way. See <see cref="ExportDataAsXml(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a XML file in an asynchronous way. See <see cref="ExportDataAsXml(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int? , string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
@@ -196,10 +219,19 @@ namespace RepoDb.Data
             ITrace trace = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.ExportDataAsXmlAsync(ClassMappedNameCache.Get<TEntity>(), filename, mappings, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace, cancellationToken);
+            connection.ExportDataAsXmlAsync(ClassMappedNameCache.Get<TEntity>(),
+                filename,
+                mappings,
+                where == null ? null : QueryGroup.Parse(where),
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                cancellationToken);
 
         /// <summary>
-        /// Exports the rows of a table into a XML file in an asynchronous way, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsXml(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of a table into a XML file in an asynchronous way, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsXml(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int? , string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that the expression is of.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
@@ -229,9 +261,16 @@ namespace RepoDb.Data
             ITrace trace = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.ExportDataAsXmlAsync(tableName, filename, mappings, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace, cancellationToken);
-
-        #endregion
+            connection.ExportDataAsXmlAsync(tableName,
+                filename,
+                mappings,
+                where == null ? null : QueryGroup.Parse(where),
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                cancellationToken);
 
         #endregion
     }

@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -30,6 +30,12 @@ namespace RepoDb.Data.Models
         /// Gets the number of tables whose copy has ended.
         /// </summary>
         public int CompletedTableCount { get; internal set; }
+
+        /// <summary>
+        /// Gets the estimated cumulative bytes of copied values, excluding object overhead and wire encoding.
+        /// Strings use two bytes per character; nulls and unsupported provider-specific values contribute zero.
+        /// </summary>
+        public long CopiedBytes { get; internal set; }
 
         /// <summary>
         /// Gets the table that is being copied (or the last one that was copied, once the operation has ended).
@@ -68,26 +74,14 @@ namespace RepoDb.Data.Models
         public int RowCount { get; internal set; }
 
         /// <summary>
-        /// Gets the estimated cumulative bytes of copied values, excluding object overhead and wire encoding.
-        /// Strings use two bytes per character; nulls and unsupported provider-specific values contribute zero.
+        /// Gets the number of rows that were copied per second so far, or <c>0</c> if no time has passed.
         /// </summary>
-        public long CopiedBytes { get; internal set; }
-
-        /// <summary>
-        /// Gets the source rows to copy, measured before copying with the source filter applied.
-        /// During counting callbacks this total accumulates after each source table is counted.
-        /// </summary>
-        public long TotalRowCount { get; internal set; }
+        public double RowsPerSecond => Elapsed.TotalSeconds > 0 ? RowCount / Elapsed.TotalSeconds : 0;
 
         /// <summary>
         /// Gets the number of source rows per source table, as measured before copying.
         /// </summary>
         internal IDictionary<string, long> SourceRowCounts { get; } = new Dictionary<string, long>();
-
-        /// <summary>
-        /// Gets the number of rows that were copied per second so far, or <c>0</c> if no time has passed.
-        /// </summary>
-        public double RowsPerSecond => Elapsed.TotalSeconds > 0 ? RowCount / Elapsed.TotalSeconds : 0;
 
         /// <summary>
         /// Gets the time (in UTC) when the operation has started.
@@ -98,6 +92,12 @@ namespace RepoDb.Data.Models
         /// Gets the number of tables that are to be copied (the requested table and, depending on the relationship behavior, its related tables).
         /// </summary>
         public int TableCount { get; internal set; }
+
+        /// <summary>
+        /// Gets the source rows to copy, measured before copying with the source filter applied.
+        /// During counting callbacks this total accumulates after each source table is counted.
+        /// </summary>
+        public long TotalRowCount { get; internal set; }
 
         #endregion
     }

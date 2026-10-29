@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -20,7 +20,7 @@ namespace RepoDb.Schema
     /// </summary>
     public interface ISchemaReader
     {
-        #region Sync
+        #region Public Methods
 
         /// <summary>
         /// Gets the whole schema of the table (columns, primary key, indexes and constraints) in one call.
@@ -116,10 +116,6 @@ namespace RepoDb.Schema
         /// <returns>The names of the given tables (in the order that they were given), followed by the names of their related tables.</returns>
         IEnumerable<string> GetRelatedTables(IEnumerable<string> tableNames,
             RelatedTableBehavior relationshipBehavior);
-
-        #endregion
-
-        #region Async
 
         /// <summary>
         /// Gets the whole schema of the table (columns, primary key, indexes and constraints) in one call.

@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -33,18 +33,18 @@ namespace RepoDb.Schema.Models
         #region Properties
 
         /// <summary>
-        /// Gets or sets the name of the unique constraint.
-        /// </summary>
-        public string Name { get; internal set; }
-
-        /// <summary>
         /// Gets or sets the ordered names of the columns of the constraint.
         /// </summary>
         public IList<string> Columns { get; internal set; } = new List<string>();
 
+        /// <summary>
+        /// Gets or sets the name of the unique constraint.
+        /// </summary>
+        public string Name { get; internal set; }
+
         #endregion
 
-        #region Overrides
+        #region Public Methods
 
         /// <summary>
         /// Gets the string that represents the instance of this <see cref="UniqueConstraintInfo"/> object.
@@ -52,10 +52,6 @@ namespace RepoDb.Schema.Models
         /// <returns>The name of this <see cref="UniqueConstraintInfo"/> object.</returns>
         public override string ToString() =>
             Name;
-
-        #endregion
-
-        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="UniqueConstraintInfo"/>.
@@ -65,7 +61,8 @@ namespace RepoDb.Schema.Models
         {
             var hashCode = new HashCode();
             hashCode.Add(Name);
-            foreach (var item in Columns) hashCode.Add(item);
+            foreach (var item in Columns)
+                hashCode.Add(item);
             return hashCode.ToHashCode();
         }
 
@@ -84,11 +81,13 @@ namespace RepoDb.Schema.Models
         /// <returns>True if the instances are equal.</returns>
         public bool Equals(UniqueConstraintInfo other)
         {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return Equals(Name, other.Name)
-                && Columns.SequenceEqual(other.Columns);
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this,
+                other))
+                return true;
+            return Equals(Name,
+                other.Name) && Columns.SequenceEqual(other.Columns);
         }
 
         /// <summary>
@@ -104,6 +103,7 @@ namespace RepoDb.Schema.Models
             {
                 return objB is null;
             }
+
             return objA.Equals(objB);
         }
 
@@ -114,7 +114,8 @@ namespace RepoDb.Schema.Models
         /// <param name="objB">The second <see cref="UniqueConstraintInfo"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(UniqueConstraintInfo objA,
-            UniqueConstraintInfo objB) => !(objA == objB);
+            UniqueConstraintInfo objB) =>
+            !(objA == objB);
 
         #endregion
     }

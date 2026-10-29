@@ -6,11 +6,11 @@
 
 #endregion
 
-using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,8 +29,6 @@ namespace RepoDb.Schema
     {
         #region Public Methods
 
-        #region CopyTableSchemaTo (IDbConnection, Sync)
-
         /// <summary>
         /// Copies the schema of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
         /// into the same-named table of the destination connection.
@@ -63,7 +61,18 @@ namespace RepoDb.Schema
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetTable, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(),
+                destinationConnection,
+                targetTable,
+                targetSchema,
+                columns,
+                tableExistenceBehavior,
+                relationshipBehavior,
+                createdCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -97,15 +106,26 @@ namespace RepoDb.Schema
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            Validate(connection, tableName, destinationConnection);
-
+            Validate(connection,
+                tableName,
+                destinationConnection);
             // Copy the table as a set of one table
-            return CopyTableSchemasCore(connection, new[] { tableName }, destinationConnection, targetSchema, ColumnSelector.Normalize(columns), null, targetTable, tableExistenceBehavior, relationshipBehavior, createdCallback, null, commandTimeout, traceKey, trace, transaction);
+            return CopyTableSchemasCore(connection,
+                new[] { tableName },
+                destinationConnection,
+                targetSchema,
+                ColumnSelector.Normalize(columns),
+                null,
+                targetTable,
+                tableExistenceBehavior,
+                relationshipBehavior,
+                createdCallback,
+                null,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
         }
-
-        #endregion
-
-        #region CopyTableSchemaTo (IDbConnection, Sync, Multiple Tables)
 
         /// <summary>
         /// Copies the schema of the tables of the current connection into the same-named tables of the destination connection.
@@ -126,7 +146,9 @@ namespace RepoDb.Schema
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The <see cref="CopyTableSchemaResult"/> that describes the schema copy operation: the time that it took, the tables that were copied (see <see cref="CopyTableSchemaResult.Items"/>), and the errors and warnings.</returns>
-        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        [UnconditionalSuppressMessage("Trimming",
+            "IL2026:RequiresUnreferencedCode",
+            Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static CopyTableSchemaResult CopyTableSchemaTo(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
@@ -140,12 +162,22 @@ namespace RepoDb.Schema
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            return CopyTableSchemasCore(connection, tableNames, destinationConnection, targetSchema, null, null, null, tableExistenceBehavior, relationshipBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction);
+            return CopyTableSchemasCore(connection,
+                tableNames,
+                destinationConnection,
+                targetSchema,
+                null,
+                null,
+                null,
+                tableExistenceBehavior,
+                relationshipBehavior,
+                createdCallback,
+                errorCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
         }
-
-        #endregion
-
-        #region CopyTableSchemaTo (IDbConnection, Async)
 
         /// <summary>
         /// Copies the schema of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -181,7 +213,19 @@ namespace RepoDb.Schema
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, targetTable, targetSchema, columns, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(),
+                destinationConnection,
+                targetTable,
+                targetSchema,
+                columns,
+                tableExistenceBehavior,
+                relationshipBehavior,
+                createdCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -217,13 +261,26 @@ namespace RepoDb.Schema
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            Validate(connection, tableName, destinationConnection);
-            return await CopyTableSchemasCoreAsync(connection, new[] { tableName }, destinationConnection, targetSchema, ColumnSelector.Normalize(columns), null, targetTable, tableExistenceBehavior, relationshipBehavior, createdCallback, null, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+            Validate(connection,
+                tableName,
+                destinationConnection);
+            return await CopyTableSchemasCoreAsync(connection,
+                new[] { tableName },
+                destinationConnection,
+                targetSchema,
+                ColumnSelector.Normalize(columns),
+                null,
+                targetTable,
+                tableExistenceBehavior,
+                relationshipBehavior,
+                createdCallback,
+                null,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken).ConfigureAwait(false);
         }
-
-        #endregion
-
-        #region CopyTableSchemaTo (IDbConnection, Async, Multiple Tables)
 
         /// <summary>
         /// Copies the schema of the tables of the current connection into the same-named tables of the destination connection.
@@ -245,7 +302,9 @@ namespace RepoDb.Schema
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyTableSchemaResult"/> that describes the schema copy operation: the time that it took, the tables that were copied (see <see cref="CopyTableSchemaResult.Items"/>), and the errors and warnings.</returns>
-        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        [UnconditionalSuppressMessage("Trimming",
+            "IL2026:RequiresUnreferencedCode",
+            Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<CopyTableSchemaResult> CopyTableSchemaToAsync(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
@@ -260,12 +319,23 @@ namespace RepoDb.Schema
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return await CopyTableSchemasCoreAsync(connection, tableNames, destinationConnection, targetSchema, null, null, null, tableExistenceBehavior, relationshipBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+            return await CopyTableSchemasCoreAsync(connection,
+                tableNames,
+                destinationConnection,
+                targetSchema,
+                null,
+                null,
+                null,
+                tableExistenceBehavior,
+                relationshipBehavior,
+                createdCallback,
+                errorCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken).ConfigureAwait(false);
         }
-
-        #endregion
-
-        #region CopyTableSchemaTo With Column Mappings (IDbConnection, Sync)
 
         /// <summary>
         /// Copies the schema of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -299,7 +369,18 @@ namespace RepoDb.Schema
             ITrace trace = null,
             IDbTransaction transaction = null)
             where TEntity : class =>
-            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, targetTable, targetSchema, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction);
+            connection.CopyTableSchemaTo(ClassMappedNameCache.Get<TEntity>(),
+                destinationConnection,
+                mappings,
+                targetTable,
+                targetSchema,
+                tableExistenceBehavior,
+                relationshipBehavior,
+                createdCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -333,13 +414,18 @@ namespace RepoDb.Schema
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            Validate(connection, tableName, destinationConnection);
-            ColumnSelector.Normalize(mappings, out _, out _);
-
+            Validate(connection,
+                tableName,
+                destinationConnection);
+            ColumnSelector.Normalize(mappings,
+                out _,
+                out _);
             // Copy the table as a set of one table
             return connection.CopyTableSchemaTo(new[] { tableName },
                 destinationConnection,
-                new[] { new TableMapping(tableName, targetTable, mappings) },
+                new[] { new TableMapping(tableName,
+                    targetTable,
+                    mappings) },
                 targetSchema,
                 tableExistenceBehavior,
                 relationshipBehavior,
@@ -349,10 +435,6 @@ namespace RepoDb.Schema
                 trace: trace,
                 transaction: transaction);
         }
-
-        #endregion
-
-        #region CopyTableSchemaTo With Column Mappings (IDbConnection, Sync, Multiple Tables)
 
         /// <summary>
         /// Copies the schema of the tables of the current connection into the same-named tables of the destination connection.
@@ -374,7 +456,9 @@ namespace RepoDb.Schema
         /// <param name="trace">The trace object to be used. The default is <c>null</c>.</param>
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <returns>The <see cref="CopyTableSchemaResult"/> that describes the schema copy operation: the time that it took, the tables that were copied (see <see cref="CopyTableSchemaResult.Items"/>), and the errors and warnings.</returns>
-        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        [UnconditionalSuppressMessage("Trimming",
+            "IL2026:RequiresUnreferencedCode",
+            Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static CopyTableSchemaResult CopyTableSchemaTo(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
@@ -390,12 +474,22 @@ namespace RepoDb.Schema
             IDbTransaction transaction = null)
         {
             ColumnSelector.Normalize(mappings);
-            return CopyTableSchemasCore(connection, tableNames, destinationConnection, targetSchema, null, mappings, null, tableExistenceBehavior, relationshipBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction);
+            return CopyTableSchemasCore(connection,
+                tableNames,
+                destinationConnection,
+                targetSchema,
+                null,
+                mappings,
+                null,
+                tableExistenceBehavior,
+                relationshipBehavior,
+                createdCallback,
+                errorCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
         }
-
-        #endregion
-
-        #region CopyTableSchemaTo With Column Mappings (IDbConnection, Async)
 
         /// <summary>
         /// Copies the schema of the table mapped to the <typeparamref name="TEntity"/> type of the current connection
@@ -431,7 +525,19 @@ namespace RepoDb.Schema
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(), destinationConnection, mappings, targetTable, targetSchema, tableExistenceBehavior, relationshipBehavior, createdCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            connection.CopyTableSchemaToAsync(ClassMappedNameCache.Get<TEntity>(),
+                destinationConnection,
+                mappings,
+                targetTable,
+                targetSchema,
+                tableExistenceBehavior,
+                relationshipBehavior,
+                createdCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// Copies the schema of the source table of the current connection into the same-named table of the destination connection.
@@ -467,11 +573,17 @@ namespace RepoDb.Schema
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            Validate(connection, tableName, destinationConnection);
-            ColumnSelector.Normalize(mappings, out _, out _);
+            Validate(connection,
+                tableName,
+                destinationConnection);
+            ColumnSelector.Normalize(mappings,
+                out _,
+                out _);
             return await connection.CopyTableSchemaToAsync(new[] { tableName },
                 destinationConnection,
-                new[] { new TableMapping(tableName, targetTable, mappings) },
+                new[] { new TableMapping(tableName,
+                    targetTable,
+                    mappings) },
                 targetSchema,
                 tableExistenceBehavior,
                 relationshipBehavior,
@@ -483,10 +595,6 @@ namespace RepoDb.Schema
                 cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        #endregion
-
-        #region CopyTableSchemaTo With Column Mappings (IDbConnection, Async, Multiple Tables)
-
         /// <summary>
         /// Copies the schema of the tables of the current connection into the same-named tables of the destination connection.
         /// The tables are created together: all the tables first, then all the indexes and then all the foreign keys, so the tables can
@@ -508,7 +616,9 @@ namespace RepoDb.Schema
         /// <param name="transaction">The transaction to be used on the destination connection. The default is <c>null</c>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the <see cref="CopyTableSchemaResult"/> that describes the schema copy operation: the time that it took, the tables that were copied (see <see cref="CopyTableSchemaResult.Items"/>), and the errors and warnings.</returns>
-        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        [UnconditionalSuppressMessage("Trimming",
+            "IL2026:RequiresUnreferencedCode",
+            Justification = "No parameter object is passed to the RepoDB execute methods.")]
         public static async Task<CopyTableSchemaResult> CopyTableSchemaToAsync(this IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
@@ -525,10 +635,23 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken = default)
         {
             ColumnSelector.Normalize(mappings);
-            return await CopyTableSchemasCoreAsync(connection, tableNames, destinationConnection, targetSchema, null, mappings, null, tableExistenceBehavior, relationshipBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+            return await CopyTableSchemasCoreAsync(connection,
+                tableNames,
+                destinationConnection,
+                targetSchema,
+                null,
+                mappings,
+                null,
+                tableExistenceBehavior,
+                relationshipBehavior,
+                createdCallback,
+                errorCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken).ConfigureAwait(false);
         }
-
-        #endregion
 
         #endregion
 
@@ -554,7 +677,9 @@ namespace RepoDb.Schema
         /// <param name="transaction">The transaction to be used on the destination connection.</param>
         /// <returns>The result of the schema copy operation.</returns>
         /// <remarks>See the overloads of <c>CopyTableSchemaTo</c> for the description of the other arguments.</remarks>
-        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        [UnconditionalSuppressMessage("Trimming",
+            "IL2026:RequiresUnreferencedCode",
+            Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static CopyTableSchemaResult CopyTableSchemasCore(IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
@@ -572,56 +697,58 @@ namespace RepoDb.Schema
             IDbTransaction transaction)
         {
             // Validate
-            var names = Validate(connection, tableNames, destinationConnection);
-            if (targetTable != null && (string.IsNullOrWhiteSpace(ColumnSelector.Unquote(targetTable)) || names.Count != 1))
-            {
-                throw new ArgumentException("The name of the table in the destination database can only be given for a single table, and it can not be white space.", "targetTable");
-            }
+            var names = Validate(connection,
+                tableNames,
+                destinationConnection);
+            ValidateTargetTable(targetTable,
+                names.Count);
             var requestedNames = names;
             var startTime = DateTime.UtcNow;
             if (names.Count == 0)
             {
-                return CreateResult(startTime, new List<CopyTableSchemaResultItem>(), new List<ExecutionError>());
+                return CreateResult(startTime,
+                    new List<CopyTableSchemaResultItem>(),
+                    new List<ExecutionError>());
             }
 
             // Variables
-            var schemaReader = SchemaReaderMapper.Get(connection) ??
-                throw new MissingMappingException($"There is no schema reader mapping found for '{connection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaReaderMapper)}'.");
-            var schemaComposer = SchemaComposerMapper.Get(destinationConnection) ??
-                throw new MissingMappingException($"There is no schema composer mapping found for '{destinationConnection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaComposerMapper)}'.");
+            var schemaReader = SchemaReaderMapper.Get(connection) ?? throw new MissingMappingException($"There is no schema reader mapping found for '{connection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaReaderMapper)}'.");
+            var schemaComposer = SchemaComposerMapper.Get(destinationConnection) ?? throw new MissingMappingException($"There is no schema composer mapping found for '{destinationConnection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaComposerMapper)}'.");
             if (relationshipBehavior != RelatedTableBehavior.TableOnly)
             {
-                names = schemaReader.GetRelatedTables(names, relationshipBehavior).ToList();
+                names = schemaReader.GetRelatedTables(names,
+                    relationshipBehavior).ToList();
             }
+
             var schemas = schemaReader.GetDependencyOrder(names).Select(r => r.Schema).ToList();
             var originals = schemas;
-            var renames = new Dictionary<TableInfo, string>();
-            if (tableMappings != null)
-            {
-                var selections = ColumnSelector.Resolve(tableMappings, schemas);
-                foreach (var pair in selections.Where(item => item.Value.TargetName != null))
-                {
-                    renames[pair.Key] = pair.Value.TargetName;
-                }
-                schemas = ColumnSelector.Apply(schemas, selections).ToList();
-            }
-            else if (selectedColumns != null)
-            {
-                var requestedSchemas = requestedNames.Select(schemaReader.GetTableSchema).ToList();
-                schemas = ColumnSelector.Apply(schemas, requestedSchemas, selectedColumns).ToList();
-            }
-            if (targetTable != null)
-            {
-                renames[schemaReader.GetTableSchema(requestedNames[0]).Table] = ColumnSelector.Unquote(targetTable);
-            }
-            schemas = ColumnSelector.RenameTables(schemas, renames).ToList();
-            var tables = Plan.CreateTables(schemas, GetTargetSchema(targetSchema, destinationConnection), schemaComposer);
+            schemas = SelectAndRenameSchemas(schemas,
+                schemaReader,
+                tableMappings,
+                selectedColumns,
+                requestedNames,
+                targetTable);
+            var tables = Plan.CreateTables(schemas,
+                GetTargetSchema(targetSchema,
+                    destinationConnection),
+                schemaComposer);
             for (var i = 0; i < tables.Count; i++)
             {
                 tables[i].Original = originals[i];
             }
-            return SchemaPlanExecutor.Execute(startTime, tables, schemaComposer, connection, destinationConnection,
-                tableExistenceBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction);
+
+            return SchemaPlanExecutor.Execute(startTime,
+                tables,
+                schemaComposer,
+                connection,
+                destinationConnection,
+                tableExistenceBehavior,
+                createdCallback,
+                errorCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
         }
 
         /// <summary>
@@ -645,7 +772,9 @@ namespace RepoDb.Schema
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the result of the schema copy operation.</returns>
         /// <remarks>See the overloads of <c>CopyTableSchemaTo</c> for the description of the other arguments.</remarks>
-        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        [UnconditionalSuppressMessage("Trimming",
+            "IL2026:RequiresUnreferencedCode",
+            Justification = "No parameter object is passed to the RepoDB execute methods.")]
         private static async Task<CopyTableSchemaResult> CopyTableSchemasCoreAsync(IDbConnection connection,
             IEnumerable<string> tableNames,
             IDbConnection destinationConnection,
@@ -664,61 +793,182 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken)
         {
             // Validate
-            var names = Validate(connection, tableNames, destinationConnection);
-            if (targetTable != null && (string.IsNullOrWhiteSpace(ColumnSelector.Unquote(targetTable)) || names.Count != 1))
-            {
-                throw new ArgumentException("The name of the table in the destination database can only be given for a single table, and it can not be white space.", "targetTable");
-            }
+            var names = Validate(connection,
+                tableNames,
+                destinationConnection);
+            ValidateTargetTable(targetTable,
+                names.Count);
             var requestedNames = names;
             var startTime = DateTime.UtcNow;
             if (names.Count == 0)
             {
-                return CreateResult(startTime, new List<CopyTableSchemaResultItem>(), new List<ExecutionError>());
+                return CreateResult(startTime,
+                    new List<CopyTableSchemaResultItem>(),
+                    new List<ExecutionError>());
             }
 
             // Variables
-            var schemaReader = SchemaReaderMapper.Get(connection) ??
-                throw new MissingMappingException($"There is no schema reader mapping found for '{connection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaReaderMapper)}'.");
-            var schemaComposer = SchemaComposerMapper.Get(destinationConnection) ??
-                throw new MissingMappingException($"There is no schema composer mapping found for '{destinationConnection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaComposerMapper)}'.");
+            var schemaReader = SchemaReaderMapper.Get(connection) ?? throw new MissingMappingException($"There is no schema reader mapping found for '{connection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaReaderMapper)}'.");
+            var schemaComposer = SchemaComposerMapper.Get(destinationConnection) ?? throw new MissingMappingException($"There is no schema composer mapping found for '{destinationConnection.GetType().FullName}'. Make sure to register one via the '{nameof(SchemaComposerMapper)}'.");
             if (relationshipBehavior != RelatedTableBehavior.TableOnly)
             {
-                names = (await schemaReader.GetRelatedTablesAsync(names, relationshipBehavior, cancellationToken).ConfigureAwait(false)).ToList();
+                names = (await schemaReader.GetRelatedTablesAsync(names,
+                    relationshipBehavior,
+                    cancellationToken).ConfigureAwait(false)).ToList();
             }
-            var relationships = await schemaReader.GetDependencyOrderAsync(names, cancellationToken).ConfigureAwait(false);
+
+            var relationships = await schemaReader.GetDependencyOrderAsync(names,
+                cancellationToken).ConfigureAwait(false);
             var schemas = relationships.Select(r => r.Schema).ToList();
             var originals = schemas;
+            schemas = await SelectAndRenameSchemasAsync(schemas,
+                schemaReader,
+                tableMappings,
+                selectedColumns,
+                requestedNames,
+                targetTable,
+                cancellationToken).ConfigureAwait(false);
+            var tables = Plan.CreateTables(schemas,
+                GetTargetSchema(targetSchema,
+                    destinationConnection),
+                schemaComposer);
+            for (var i = 0; i < tables.Count; i++)
+            {
+                tables[i].Original = originals[i];
+            }
+
+            return await SchemaPlanExecutor.ExecuteAsync(startTime,
+                tables,
+                schemaComposer,
+                connection,
+                destinationConnection,
+                tableExistenceBehavior,
+                createdCallback,
+                errorCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Applies requested column selections and table renames to the dependency-ordered schemas.
+        /// </summary>
+        /// <param name="schemas">The dependency-ordered source schemas.</param>
+        /// <param name="schemaReader">The source schema reader.</param>
+        /// <param name="tableMappings">The columns to be created table by table (<c>null</c> if the columns are the same for every requested table).</param>
+        /// <param name="selectedColumns">The distinct names of the columns to be created (<c>null</c> if all the columns are created).</param>
+        /// <param name="requestedNames">The originally requested table names, before relationship expansion.</param>
+        /// <param name="targetTable">The name of the table in the destination database (<c>null</c> if the name of the source table is used). It is only allowed for a single table.</param>
+        /// <returns>The selected schemas with destination table names applied.</returns>
+        private static List<TableSchema> SelectAndRenameSchemas(List<TableSchema> schemas,
+            ISchemaReader schemaReader,
+            IList<TableMapping> tableMappings,
+            IList<string> selectedColumns,
+            IList<string> requestedNames,
+            string targetTable)
+        {
             var renames = new Dictionary<TableInfo, string>();
             if (tableMappings != null)
             {
-                var selections = ColumnSelector.Resolve(tableMappings, schemas);
+                var selections = ColumnSelector.Resolve(tableMappings,
+                    schemas);
                 foreach (var pair in selections.Where(item => item.Value.TargetName != null))
                 {
                     renames[pair.Key] = pair.Value.TargetName;
                 }
-                schemas = ColumnSelector.Apply(schemas, selections).ToList();
+
+                schemas = ColumnSelector.Apply(schemas,
+                    selections).ToList();
+            }
+            else if (selectedColumns != null)
+            {
+                var requestedSchemas = requestedNames.Select(schemaReader.GetTableSchema).ToList();
+                schemas = ColumnSelector.Apply(schemas,
+                    requestedSchemas,
+                    selectedColumns).ToList();
+            }
+
+            if (targetTable != null)
+            {
+                renames[schemaReader.GetTableSchema(requestedNames[0]).Table] = ColumnSelector.Unquote(targetTable);
+            }
+
+            schemas = ColumnSelector.RenameTables(schemas,
+                renames).ToList();
+            return schemas;
+        }
+
+        /// <summary>
+        /// Applies requested column selections and table renames to the dependency-ordered schemas.
+        /// </summary>
+        /// <param name="schemas">The dependency-ordered source schemas.</param>
+        /// <param name="schemaReader">The source schema reader.</param>
+        /// <param name="tableMappings">The columns to be created table by table (<c>null</c> if the columns are the same for every requested table).</param>
+        /// <param name="selectedColumns">The distinct names of the columns to be created (<c>null</c> if all the columns are created).</param>
+        /// <param name="requestedNames">The originally requested table names, before relationship expansion.</param>
+        /// <param name="targetTable">The name of the table in the destination database (<c>null</c> if the name of the source table is used). It is only allowed for a single table.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>The selected schemas with destination table names applied.</returns>
+        private static async Task<List<TableSchema>> SelectAndRenameSchemasAsync(List<TableSchema> schemas,
+            ISchemaReader schemaReader,
+            IList<TableMapping> tableMappings,
+            IList<string> selectedColumns,
+            IList<string> requestedNames,
+            string targetTable,
+            CancellationToken cancellationToken)
+        {
+            var renames = new Dictionary<TableInfo, string>();
+            if (tableMappings != null)
+            {
+                var selections = ColumnSelector.Resolve(tableMappings,
+                    schemas);
+                foreach (var pair in selections.Where(item => item.Value.TargetName != null))
+                {
+                    renames[pair.Key] = pair.Value.TargetName;
+                }
+
+                schemas = ColumnSelector.Apply(schemas,
+                    selections).ToList();
             }
             else if (selectedColumns != null)
             {
                 var requestedSchemas = new List<TableSchema>();
                 foreach (var name in requestedNames)
                 {
-                    requestedSchemas.Add(await schemaReader.GetTableSchemaAsync(name, cancellationToken).ConfigureAwait(false));
+                    requestedSchemas.Add(await schemaReader.GetTableSchemaAsync(name,
+                        cancellationToken).ConfigureAwait(false));
                 }
-                schemas = ColumnSelector.Apply(schemas, requestedSchemas, selectedColumns).ToList();
+
+                schemas = ColumnSelector.Apply(schemas,
+                    requestedSchemas,
+                    selectedColumns).ToList();
             }
+
             if (targetTable != null)
             {
                 renames[schemaReader.GetTableSchema(requestedNames[0]).Table] = ColumnSelector.Unquote(targetTable);
             }
-            schemas = ColumnSelector.RenameTables(schemas, renames).ToList();
-            var tables = Plan.CreateTables(schemas, GetTargetSchema(targetSchema, destinationConnection), schemaComposer);
-            for (var i = 0; i < tables.Count; i++)
+
+            schemas = ColumnSelector.RenameTables(schemas,
+                renames).ToList();
+            return schemas;
+        }
+
+        /// <summary>
+        /// Validates that an optional destination table name is nonblank and applies to one requested table.
+        /// </summary>
+        /// <param name="targetTable">The name of the table in the destination database (<c>null</c> if the name of the source table is used). It is only allowed for a single table.</param>
+        /// <param name="count">The number of originally requested tables.</param>
+        private static void ValidateTargetTable(string targetTable,
+            int count)
+        {
+            if (targetTable != null && (string.IsNullOrWhiteSpace(ColumnSelector.Unquote(targetTable)) || count != 1))
             {
-                tables[i].Original = originals[i];
+                throw new ArgumentException("The name of the table in the destination database can only be given for a single table, and it can not be white space.",
+                    "targetTable");
             }
-            return await SchemaPlanExecutor.ExecuteAsync(startTime, tables, schemaComposer, connection, destinationConnection,
-                tableExistenceBehavior, createdCallback, errorCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

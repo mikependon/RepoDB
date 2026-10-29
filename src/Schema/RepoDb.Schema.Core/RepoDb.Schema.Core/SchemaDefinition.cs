@@ -37,10 +37,22 @@ namespace RepoDb.Schema
             {
                 ["format"] = "RepoDB.Schema",
                 ["formatVersion"] = 2,
-                ["source"] = new JsonObject { ["provider"] = root.Provider, ["database"] = root.Database },
-                ["extraction"] = new JsonObject { ["rootTable"] = Table(root, root), ["relationshipBehavior"] = behavior.ToString() },
-                ["tables"] = Array(tables.OrderBy(t => t.Table.Schema, StringComparer.Ordinal)
-                    .ThenBy(t => t.Table.Name, StringComparer.Ordinal).Select(t => TableDefinition(t, behavior, root)))
+                ["source"] = new JsonObject
+                {
+                    ["provider"] = root.Provider,
+                    ["database"] = root.Database
+                },
+                ["extraction"] = new JsonObject
+                {
+                    ["rootTable"] = Table(root,
+                        root),
+                    ["relationshipBehavior"] = behavior.ToString()
+                },
+                ["tables"] = Array(tables.OrderBy(t => t.Table.Schema,
+                    StringComparer.Ordinal).ThenBy(t => t.Table.Name,
+                        StringComparer.Ordinal).Select(t => TableDefinition(t,
+                            behavior,
+                            root)))
             };
         }
 
@@ -70,13 +82,21 @@ namespace RepoDb.Schema
         /// <param name="table">The table identity, or null.</param>
         /// <param name="source">The common source identity metadata.</param>
         /// <returns>The table identity definition, or null.</returns>
-        private static JsonObject Table(TableInfo table, TableInfo source)
+        private static JsonObject Table(TableInfo table,
+            TableInfo source)
         {
-            if (table == null) return null;
-            var result = new JsonObject { ["schema"] = table.Schema, ["name"] = table.Name };
+            if (table == null)
+                return null;
+            var result = new JsonObject
+            {
+                ["schema"] = table.Schema,
+                ["name"] = table.Name
+            };
             // Retain overrides for identities outside the common source context.
-            if (table.Database != source.Database) result["database"] = table.Database;
-            if (table.Provider != source.Provider) result["provider"] = table.Provider;
+            if (table.Database != source.Database)
+                result["database"] = table.Database;
+            if (table.Provider != source.Provider)
+                result["provider"] = table.Provider;
             return result;
         }
 
@@ -89,36 +109,27 @@ namespace RepoDb.Schema
         /// <returns>The complete table definition.</returns>
         private static JsonObject TableDefinition(TableSchema table,
             RelatedTableBehavior behavior,
-            TableInfo source) => new JsonObject
+            TableInfo source) =>
+            new JsonObject
         {
-            ["table"] = Table(table.Table, source),
+            ["table"] = Table(table.Table,
+                source),
             ["columns"] = Array(table.Columns.OrderBy(c => c.Ordinal).Select(Column)),
             ["primaryKey"] = table.PrimaryKey == null ? null : new JsonObject
             {
-                ["name"] = table.PrimaryKey.Name, ["columns"] = Strings(table.PrimaryKey.Columns),
+                ["name"] = table.PrimaryKey.Name,
+                ["columns"] = Strings(table.PrimaryKey.Columns),
                 ["clustered"] = table.PrimaryKey.IsClustered
             },
-            ["uniqueConstraints"] = Array(table.UniqueConstraints.OrderBy(c => c.Name, StringComparer.Ordinal).Select(c => new JsonObject
-            { ["name"] = c.Name, ["columns"] = Strings(c.Columns) })),
-            ["indexes"] = Array(table.Indexes.OrderBy(i => i.Name, StringComparer.Ordinal).Select(i => new JsonObject
-            {
-                ["name"] = i.Name, ["unique"] = i.IsUnique, ["clustered"] = i.IsClustered,
-                ["columns"] = Array(i.Columns.Select(c => new JsonObject
-                { ["name"] = c, ["direction"] = i.DescendingColumns.Contains(c) ? "descending" : "ascending" })),
-                ["includedColumns"] = Strings(i.IncludedColumns), ["filter"] = Expression(i.Filter)
-            })),
-            ["checkConstraints"] = Array(table.CheckConstraints.OrderBy(c => c.Name, StringComparer.Ordinal).Select(c => new JsonObject
-            { ["name"] = c.Name, ["expression"] = Expression(c.Expression) })),
-            ["foreignKeys"] = behavior == RelatedTableBehavior.TableOnly ? new JsonArray() : Array(
-                table.ForeignKeys.OrderBy(f => f.Name, StringComparer.Ordinal).Select(f => new JsonObject
-                {
-                    ["name"] = f.Name, ["columns"] = Strings(f.Columns),
-                    ["references"] = new JsonObject
-                    {
-                        ["table"] = Table(f.ReferencedTable, source), ["columns"] = Strings(f.ReferencedColumns)
-                    },
-                    ["onDelete"] = f.DeleteRule.ToString(), ["onUpdate"] = f.UpdateRule.ToString()
-                }))
+            ["uniqueConstraints"] = Array(table.UniqueConstraints.OrderBy(c => c.Name,
+                StringComparer.Ordinal).Select(c => new JsonObject { ["name"] = c.Name, ["columns"] = Strings(c.Columns) })),
+            ["indexes"] = Array(table.Indexes.OrderBy(i => i.Name,
+                StringComparer.Ordinal).Select(i => new JsonObject { ["name"] = i.Name, ["unique"] = i.IsUnique, ["clustered"] = i.IsClustered, ["columns"] = Array(i.Columns.Select(c => new JsonObject { ["name"] = c, ["direction"] = i.DescendingColumns.Contains(c) ? "descending" : "ascending" })), ["includedColumns"] = Strings(i.IncludedColumns), ["filter"] = Expression(i.Filter) })),
+            ["checkConstraints"] = Array(table.CheckConstraints.OrderBy(c => c.Name,
+                StringComparer.Ordinal).Select(c => new JsonObject { ["name"] = c.Name, ["expression"] = Expression(c.Expression) })),
+            ["foreignKeys"] = behavior == RelatedTableBehavior.TableOnly ? new JsonArray() : Array(table.ForeignKeys.OrderBy(f => f.Name,
+                StringComparer.Ordinal).Select(f => new JsonObject { ["name"] = f.Name, ["columns"] = Strings(f.Columns), ["references"] = new JsonObject { ["table"] = Table(f.ReferencedTable,
+                    source), ["columns"] = Strings(f.ReferencedColumns) }, ["onDelete"] = f.DeleteRule.ToString(), ["onUpdate"] = f.UpdateRule.ToString() }))
         };
 
         /// <summary>
@@ -126,8 +137,11 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="sql">The SQL expression, or null.</param>
         /// <returns>The expression definition, or null.</returns>
-        private static JsonObject Expression(string sql) => sql == null ? null : new JsonObject
-        { ["sql"] = sql };
+        private static JsonObject Expression(string sql) =>
+            sql == null ? null : new JsonObject
+        {
+            ["sql"] = sql
+        };
 
         /// <summary>
         /// Creates a column definition while preserving its type and provider metadata.
@@ -137,44 +151,26 @@ namespace RepoDb.Schema
         private static JsonObject Column(ColumnInfo column)
         {
             var field = column.Field ?? throw new InvalidOperationException("A schema column has no field metadata.");
-            var native = field.DatabaseType?.ToLowerInvariant();
-            var baseType = native?.Split('(', ' ')[0];
-            var text = field.Type == typeof(string) || field.Type == typeof(char);
-            bool? unicode = column.IsUnicode;
-            var charset = column.CharacterSet;
-            var unit = column.LengthUnit;
-            if (text && string.Equals(field.Provider, "SqlServer", StringComparison.OrdinalIgnoreCase))
-            {
-                if (string.Equals(baseType, "nvarchar", StringComparison.Ordinal) || string.Equals(baseType, "nchar", StringComparison.Ordinal) || string.Equals(baseType, "ntext", StringComparison.Ordinal))
-                {
-                    unicode = unicode ?? true;
-                    charset = charset ?? "UTF-16";
-                    unit = unit ?? "utf16CodeUnits";
-                }
-                else if (string.Equals(baseType, "varchar", StringComparison.Ordinal) || string.Equals(baseType, "char", StringComparison.Ordinal) || string.Equals(baseType, "text", StringComparison.Ordinal))
-                {
-                    // A UTF-8 collation changes varchar's character repertoire.
-                    if (column.Collation != null) unicode = unicode ?? column.Collation.EndsWith("_UTF8", StringComparison.OrdinalIgnoreCase);
-                    if (unicode == true) charset = charset ?? "UTF-8";
-                    unit = unit ?? "bytes";
-                }
-            }
             return new JsonObject
             {
-                ["name"] = field.Name, ["ordinal"] = column.Ordinal,
-                ["type"] = new JsonObject
-                {
-                    ["logical"] = LogicalType(field.Type), ["native"] = column.NativeType ?? field.DatabaseType, ["provider"] = field.Provider,
-                    ["length"] = field.Size, ["lengthUnit"] = unit,
-                    ["precision"] = column.NumericPrecision ?? field.Precision, ["scale"] = column.NumericScale ?? field.Scale, ["temporalPrecision"] = column.TemporalPrecision,
-                    ["unicode"] = unicode, ["characterSet"] = charset
-                },
+                ["name"] = field.Name,
+                ["ordinal"] = column.Ordinal,
+                ["type"] = ColumnType(column,
+                    field),
                 ["nullable"] = field.IsNullable,
-                ["identity"] = !field.IsIdentity ? null : new JsonObject { ["seed"] = column.IdentitySeed, ["increment"] = column.IdentityIncrement },
+                ["identity"] = !field.IsIdentity ? null : new JsonObject
+                {
+                    ["seed"] = column.IdentitySeed,
+                    ["increment"] = column.IdentityIncrement
+                },
                 ["default"] = !field.HasDefaultValue && column.DefaultExpression == null ? null : new JsonObject
-                { ["kind"] = column.DefaultValue.ToString(), ["expression"] = Expression(column.DefaultExpression) },
+                {
+                    ["kind"] = column.DefaultValue.ToString(),
+                    ["expression"] = Expression(column.DefaultExpression)
+                },
                 ["computed"] = Expression(column.ComputedExpression),
-                ["collation"] = column.Collation, ["comment"] = column.Comment
+                ["collation"] = column.Collation,
+                ["comment"] = column.Comment
             };
         }
 
@@ -185,30 +181,115 @@ namespace RepoDb.Schema
         /// <returns>The portable type name, or unknown if no mapping exists.</returns>
         private static string LogicalType(Type type)
         {
-            if (type == null) return "unknown";
+            if (type == null)
+                return "unknown";
             type = Nullable.GetUnderlyingType(type) ?? type;
-            if (type == typeof(string) || type == typeof(char)) return "string";
-            if (type == typeof(byte[])) return "binary";
-            if (type == typeof(Guid)) return "uuid";
-            if (type == typeof(DateTimeOffset)) return "datetimeOffset";
-            if (type == typeof(TimeSpan)) return "time";
+            if (type == typeof(string) || type == typeof(char))
+                return "string";
+            if (type == typeof(byte[]))
+                return "binary";
+            if (type == typeof(Guid))
+                return "uuid";
+            if (type == typeof(DateTimeOffset))
+                return "datetimeOffset";
+            if (type == typeof(TimeSpan))
+                return "time";
             switch (Type.GetTypeCode(type))
             {
-                case TypeCode.Boolean: return "boolean";
-                case TypeCode.Byte: return "uint8";
-                case TypeCode.SByte: return "int8";
-                case TypeCode.Int16: return "int16";
-                case TypeCode.UInt16: return "uint16";
-                case TypeCode.Int32: return "int32";
-                case TypeCode.UInt32: return "uint32";
-                case TypeCode.Int64: return "int64";
-                case TypeCode.UInt64: return "uint64";
-                case TypeCode.Decimal: return "decimal";
-                case TypeCode.Single: return "float32";
-                case TypeCode.Double: return "float64";
-                case TypeCode.DateTime: return "datetime";
-                default: return "unknown";
+                case TypeCode.Boolean:
+                    return "boolean";
+                case TypeCode.Byte:
+                    return "uint8";
+                case TypeCode.SByte:
+                    return "int8";
+                case TypeCode.Int16:
+                    return "int16";
+                case TypeCode.UInt16:
+                    return "uint16";
+                case TypeCode.Int32:
+                    return "int32";
+                case TypeCode.UInt32:
+                    return "uint32";
+                case TypeCode.Int64:
+                    return "int64";
+                case TypeCode.UInt64:
+                    return "uint64";
+                case TypeCode.Decimal:
+                    return "decimal";
+                case TypeCode.Single:
+                    return "float32";
+                case TypeCode.Double:
+                    return "float64";
+                case TypeCode.DateTime:
+                    return "datetime";
+                default:
+                    return "unknown";
             }
+        }
+
+        /// <summary>
+        /// Builds portable column type metadata and resolves provider-specific text encoding defaults.
+        /// </summary>
+        /// <param name="column">The column metadata to describe.</param>
+        /// <param name="field">The runtime column field metadata.</param>
+        /// <returns>The portable logical and native type metadata.</returns>
+        private static JsonObject ColumnType(ColumnInfo column,
+            DbField field)
+        {
+            var native = field.DatabaseType?.ToLowerInvariant();
+            var baseType = native?.Split('(',
+                ' ')[0];
+            var text = field.Type == typeof(string) || field.Type == typeof(char);
+            bool? unicode = column.IsUnicode;
+            var charset = column.CharacterSet;
+            var unit = column.LengthUnit;
+            if (text && string.Equals(field.Provider,
+                "SqlServer",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                if (string.Equals(baseType,
+                    "nvarchar",
+                    StringComparison.Ordinal) || string.Equals(baseType,
+                        "nchar",
+                        StringComparison.Ordinal) || string.Equals(baseType,
+                        "ntext",
+                        StringComparison.Ordinal))
+                {
+                    unicode = unicode ?? true;
+                    charset = charset ?? "UTF-16";
+                    unit = unit ?? "utf16CodeUnits";
+                }
+                else if (string.Equals(baseType,
+                    "varchar",
+                    StringComparison.Ordinal) || string.Equals(baseType,
+                        "char",
+                        StringComparison.Ordinal) || string.Equals(baseType,
+                        "text",
+                        StringComparison.Ordinal))
+                {
+                    // A UTF-8 collation changes varchar's character repertoire.
+                    if (column.Collation != null)
+                        unicode = unicode ?? column.Collation.EndsWith("_UTF8",
+                            StringComparison.OrdinalIgnoreCase);
+                    if (unicode == true)
+                        charset = charset ?? "UTF-8";
+                    unit = unit ?? "bytes";
+                }
+            }
+
+            return new JsonObject
+            {
+                ["logical"] = LogicalType(field.Type),
+                ["native"] = column.NativeType ?? field.DatabaseType,
+                ["provider"] = field.Provider,
+                ["length"] = field.Size,
+                ["lengthUnit"] = unit,
+                ["precision"] = column.NumericPrecision ?? field.Precision,
+                ["scale"] = column.NumericScale ?? field.Scale,
+                ["temporalPrecision"] = column.TemporalPrecision,
+                ["unicode"] = unicode,
+                ["characterSet"] = charset
+            };
         }
 
         #endregion

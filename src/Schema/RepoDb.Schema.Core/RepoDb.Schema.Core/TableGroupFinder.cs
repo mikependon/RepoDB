@@ -56,12 +56,13 @@ namespace RepoDb.Schema
             {
                 Visit(key);
             }
+
             return _groupOf;
         }
 
         #endregion
 
-        #region Helpers
+        #region Private Methods
 
         /// <summary>
         /// Visits the table that is identified by the key, and the tables that it references (the depth-first search of the algorithm).
@@ -74,8 +75,10 @@ namespace RepoDb.Schema
             _onStack.Add(key);
             foreach (var parent in _parentKeys[key])
             {
-                VisitParent(key, parent);
+                VisitParent(key,
+                    parent);
             }
+
             if (_lowLinks[key] == _indexes[key])
             {
                 TakeGroup(key);
@@ -93,11 +96,13 @@ namespace RepoDb.Schema
             if (!_indexes.ContainsKey(parent))
             {
                 Visit(parent);
-                _lowLinks[key] = Math.Min(_lowLinks[key], _lowLinks[parent]);
+                _lowLinks[key] = Math.Min(_lowLinks[key],
+                    _lowLinks[parent]);
             }
             else if (_onStack.Contains(parent))
             {
-                _lowLinks[key] = Math.Min(_lowLinks[key], _indexes[parent]);
+                _lowLinks[key] = Math.Min(_lowLinks[key],
+                    _indexes[parent]);
             }
         }
 

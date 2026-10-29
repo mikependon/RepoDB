@@ -35,16 +35,26 @@ namespace RepoDb.Schema
             Func<TableInfo, string> referenceKey)
         {
             var keys = schemas.Select(tableKey).Distinct().ToList();
-            var relationships = CreateRelationships(schemas, tableKey);
-            var position = keys.Select((key, index) => new { key, index }).ToDictionary(x => x.key, x => x.index);
-            var parentKeys = GetParentKeys(keys, relationships, position, referenceKey);
-            Link(keys, parentKeys, relationships);
-            return OrderKeys(keys, parentKeys, position).Select(key => relationships[key]).ToList();
+            var relationships = CreateRelationships(schemas,
+                tableKey);
+            var position = keys.Select((key,
+                index) => new { key, index }).ToDictionary(x => x.key,
+                    x => x.index);
+            var parentKeys = GetParentKeys(keys,
+                relationships,
+                position,
+                referenceKey);
+            Link(keys,
+                parentKeys,
+                relationships);
+            return OrderKeys(keys,
+                parentKeys,
+                position).Select(key => relationships[key]).ToList();
         }
 
         #endregion
 
-        #region Helpers
+        #region Private Methods
 
         // Relationships
 
@@ -56,7 +66,8 @@ namespace RepoDb.Schema
         /// <returns>The relationships, by the key of the table.</returns>
         private static Dictionary<string, RelationshipInfo> CreateRelationships(IEnumerable<TableSchema> schemas,
             Func<TableSchema, string> tableKey) =>
-            schemas.GroupBy(tableKey).ToDictionary(g => g.Key, g => new RelationshipInfo { Schema = g.First() });
+            schemas.GroupBy(tableKey).ToDictionary(g => g.Key,
+                g => new RelationshipInfo { Schema = g.First() });
 
         /// <summary>
         /// Gets the parents of each table: the (other) given tables that its foreign keys reference.
@@ -70,14 +81,8 @@ namespace RepoDb.Schema
             IDictionary<string, RelationshipInfo> relationships,
             IDictionary<string, int> position,
             Func<TableInfo, string> referenceKey) =>
-            keys.ToDictionary(
-                key => key,
-                key => relationships[key].Schema.ForeignKeys
-                    .Select(fk => referenceKey(fk.ReferencedTable))
-                    .Where(parent => parent != key && relationships.ContainsKey(parent))
-                    .Distinct()
-                    .OrderBy(parent => position[parent])
-                    .ToList());
+            keys.ToDictionary(key => key,
+                key => relationships[key].Schema.ForeignKeys.Select(fk => referenceKey(fk.ReferencedTable)).Where(parent => parent != key && relationships.ContainsKey(parent)).Distinct().OrderBy(parent => position[parent]).ToList());
 
         /// <summary>
         /// Links each relationship with its parents, and each parent with its children.
@@ -96,6 +101,7 @@ namespace RepoDb.Schema
                     relationships[key].Parents.Add(relationships[parent]);
                 }
             }
+
             foreach (var key in keys)
             {
                 foreach (var parent in parentKeys[key])
@@ -118,13 +124,19 @@ namespace RepoDb.Schema
             IDictionary<string, List<string>> parentKeys,
             IDictionary<string, int> position)
         {
-            var groupOf = FindGroups(keys, parentKeys);
-            var groups = keys.GroupBy(key => groupOf[key]).ToDictionary(g => g.Key, g => g.ToList());
-            var pending = GetPendingGroups(groups, parentKeys, groupOf);
+            var groupOf = FindGroups(keys,
+                parentKeys);
+            var groups = keys.GroupBy(key => groupOf[key]).ToDictionary(g => g.Key,
+                g => g.ToList());
+            var pending = GetPendingGroups(groups,
+                parentKeys,
+                groupOf);
             var ordered = new List<string>();
             while (pending.Count > 0)
             {
-                var next = NextGroup(pending, groups, position);
+                var next = NextGroup(pending,
+                    groups,
+                    position);
                 ordered.AddRange(groups[next].OrderBy(key => position[key]));
                 pending.Remove(next);
                 foreach (var parents in pending.Values)
@@ -132,6 +144,7 @@ namespace RepoDb.Schema
                     parents.Remove(next);
                 }
             }
+
             return ordered;
         }
 
@@ -145,12 +158,8 @@ namespace RepoDb.Schema
         private static Dictionary<int, HashSet<int>> GetPendingGroups(IDictionary<int, List<string>> groups,
             IDictionary<string, List<string>> parentKeys,
             IDictionary<string, int> groupOf) =>
-            groups.ToDictionary(
-                group => group.Key,
-                group => new HashSet<int>(group.Value
-                    .SelectMany(key => parentKeys[key])
-                    .Select(parent => groupOf[parent])
-                    .Where(parent => parent != group.Key)));
+            groups.ToDictionary(group => group.Key,
+                group => new HashSet<int>(group.Value.SelectMany(key => parentKeys[key]).Select(parent => groupOf[parent]).Where(parent => parent != group.Key)));
 
         /// <summary>
         /// Gets the next group to take: the one that is not waiting for any group, and that has the table that was given first.
@@ -162,11 +171,7 @@ namespace RepoDb.Schema
         private static int NextGroup(IDictionary<int, HashSet<int>> pending,
             IDictionary<int, List<string>> groups,
             IDictionary<string, int> position) =>
-            pending
-                .Where(p => p.Value.Count == 0)
-                .OrderBy(p => groups[p.Key].Min(key => position[key]))
-                .First()
-                .Key;
+            pending.Where(p => p.Value.Count == 0).OrderBy(p => groups[p.Key].Min(key => position[key])).First().Key;
 
         /// <summary>
         /// Finds the groups of the tables that can reach each other.

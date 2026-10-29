@@ -27,8 +27,6 @@ namespace RepoDb.Data
     {
         #region Public Methods
 
-        #region ExportDataAsJson (Sync)
-
         /// <summary>
         /// Exports the rows of a table into a JSON file without holding them in memory: the rows are counted first (with the filter), then they are read forward only and every row
         /// is written into the file as soon as it is read. The file is an array of objects, one object per row with a property for each column, so <c>ImportDataFromJson</c> can load it back.
@@ -59,12 +57,18 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.ExportDataAsJson,
             ITrace trace = null)
         {
-            return ExportPipeline.Run(connection, tableName, filename, mappings, where, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, stream => new JsonExportWriter(stream));
+            return ExportPipeline.Run(connection,
+                tableName,
+                filename,
+                mappings,
+                where,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                stream => new JsonExportWriter(stream));
         }
-
-        #endregion
-
-        #region ExportDataAsJson (Async)
 
         /// <summary>
         /// Exports the rows of a table into a JSON file in an asynchronous way. See <see cref="ExportDataAsJson"/> for how the rows are counted, read and written.
@@ -96,15 +100,22 @@ namespace RepoDb.Data
             ITrace trace = null,
             CancellationToken cancellationToken = default)
         {
-            return ExportPipeline.RunAsync(connection, tableName, filename, mappings, where, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, stream => new JsonExportWriter(stream), cancellationToken);
+            return ExportPipeline.RunAsync(connection,
+                tableName,
+                filename,
+                mappings,
+                where,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                stream => new JsonExportWriter(stream),
+                cancellationToken);
         }
 
-        #endregion
-
-        #region ExportDataAsJson (TEntity, Sync)
-
         /// <summary>
-        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a JSON file. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a JSON file. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int? , string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
@@ -130,10 +141,18 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.ExportDataAsJson,
             ITrace trace = null)
             where TEntity : class =>
-            connection.ExportDataAsJson(ClassMappedNameCache.Get<TEntity>(), filename, mappings, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace);
+            connection.ExportDataAsJson(ClassMappedNameCache.Get<TEntity>(),
+                filename,
+                mappings,
+                where == null ? null : QueryGroup.Parse(where),
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace);
 
         /// <summary>
-        /// Exports the rows of a table into a JSON file, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of a table into a JSON file, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int? , string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that the expression is of.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
@@ -161,14 +180,18 @@ namespace RepoDb.Data
             string traceKey = DataTraceKeys.ExportDataAsJson,
             ITrace trace = null)
             where TEntity : class =>
-            connection.ExportDataAsJson(tableName, filename, mappings, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace);
-
-        #endregion
-
-        #region ExportDataAsJson (TEntity, Async)
+            connection.ExportDataAsJson(tableName,
+                filename,
+                mappings,
+                where == null ? null : QueryGroup.Parse(where),
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace);
 
         /// <summary>
-        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a JSON file in an asynchronous way. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of the table mapped to <typeparamref name="TEntity"/> into a JSON file in an asynchronous way. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int? , string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that is mapped to the table.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
@@ -196,10 +219,19 @@ namespace RepoDb.Data
             ITrace trace = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.ExportDataAsJsonAsync(ClassMappedNameCache.Get<TEntity>(), filename, mappings, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace, cancellationToken);
+            connection.ExportDataAsJsonAsync(ClassMappedNameCache.Get<TEntity>(),
+                filename,
+                mappings,
+                where == null ? null : QueryGroup.Parse(where),
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                cancellationToken);
 
         /// <summary>
-        /// Exports the rows of a table into a JSON file in an asynchronous way, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int?, string, ITrace)"/> for how the rows are counted, read and written.
+        /// Exports the rows of a table into a JSON file in an asynchronous way, filtered by an expression of <typeparamref name="TEntity"/>. See <see cref="ExportDataAsJson(IDbConnection, string, string, IList{ColumnMapping}, QueryGroup, IList{IDataInterceptor{Row}}, Action{ExportProgress}, int? , string, ITrace)"/> for how the rows are counted, read and written.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that the expression is of.</typeparam>
         /// <param name="connection">The connection of the database that has the table.</param>
@@ -229,9 +261,16 @@ namespace RepoDb.Data
             ITrace trace = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            connection.ExportDataAsJsonAsync(tableName, filename, mappings, where == null ? null : QueryGroup.Parse(where), dataInterceptors, progressCallback, commandTimeout, traceKey, trace, cancellationToken);
-
-        #endregion
+            connection.ExportDataAsJsonAsync(tableName,
+                filename,
+                mappings,
+                where == null ? null : QueryGroup.Parse(where),
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                cancellationToken);
 
         #endregion
     }

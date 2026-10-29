@@ -43,11 +43,6 @@ namespace RepoDb.Schema
         #region Properties
 
         /// <summary>
-        /// Gets the statements to be executed, in order.
-        /// </summary>
-        public IList<PlanStep> Steps { get; }
-
-        /// <summary>
         /// Gets the tables that are completed by each step (by the index of the step). The key <c>-1</c> has the tables whose steps are not known,
         /// as the script that was composed does not have the expected number of statements.
         /// </summary>
@@ -57,6 +52,11 @@ namespace RepoDb.Schema
         /// Gets the tables that have nothing to be executed, so they are complete from the start.
         /// </summary>
         public IList<PlanTable> Immediate { get; }
+
+        /// <summary>
+        /// Gets the statements to be executed, in order.
+        /// </summary>
+        public IList<PlanStep> Steps { get; }
 
         #endregion
 
@@ -74,9 +74,10 @@ namespace RepoDb.Schema
             string targetSchema,
             ISchemaComposer composer)
         {
-            var tables = schemas
-                .Select(source => CreateTable(source, MoveTo(source, targetSchema), composer))
-                .ToList();
+            var tables = schemas.Select(source => CreateTable(source,
+                MoveTo(source,
+                    targetSchema),
+                composer)).ToList();
             EnsureUniqueNames(tables);
             return tables;
         }
@@ -93,25 +94,36 @@ namespace RepoDb.Schema
             TableExistsBehavior behavior,
             ISchemaComposer composer)
         {
-            SetOutcomes(tables, behavior);
+            SetOutcomes(tables,
+                behavior);
             var created = tables.Where(table => table.Exists != true || behavior == TableExistsBehavior.Drop).ToList();
-            var steps = GetDropSteps(tables, composer).Concat(GetAlignSteps(tables, composer)).ToList();
-            var createSteps = GetCreateSteps(created, composer);
+            var steps = GetDropSteps(tables,
+                composer).Concat(GetAlignSteps(tables,
+                    composer)).ToList();
+            var createSteps = GetCreateSteps(created,
+                composer);
             var foreignKeyOffset = steps.Count + createSteps.Count;
-            var completions = GetAlignCompletions(tables, foreignKeyOffset)
-                .Concat(GetCreateCompletions(created, createSteps.Count, steps.Count))
-                .ToLookup(x => x.Key, x => x.Table);
-            var owners = GetCreateOwners(created, createSteps.Count);
-            steps.AddRange(createSteps.Select((statement, i) => new PlanStep(statement, owners[i])));
-            steps.AddRange(GetAlignForeignKeySteps(tables, composer).ToList());
-            var immediate = tables.Where(table => table.Outcome == TableOutcome.Skipped ||
-                (table.Outcome == TableOutcome.Aligned && !table.MissingColumns.Any() && !table.MissingIndexes.Any() && !table.MissingForeignKeys.Any())).ToList();
-            return new Plan(steps, completions, immediate);
+            var completions = GetAlignCompletions(tables,
+                foreignKeyOffset).Concat(GetCreateCompletions(created,
+                    createSteps.Count,
+                    steps.Count)).ToLookup(x => x.Key,
+                        x => x.Table);
+            var owners = GetCreateOwners(created,
+                createSteps.Count);
+            steps.AddRange(createSteps.Select((statement,
+                i) => new PlanStep(statement,
+                    owners[i])));
+            steps.AddRange(GetAlignForeignKeySteps(tables,
+                composer).ToList());
+            var immediate = tables.Where(table => table.Outcome == TableOutcome.Skipped || (table.Outcome == TableOutcome.Aligned && !table.MissingColumns.Any() && !table.MissingIndexes.Any() && !table.MissingForeignKeys.Any())).ToList();
+            return new Plan(steps,
+                completions,
+                immediate);
         }
 
         #endregion
 
-        #region Helpers
+        #region Private Methods
 
         /// <summary>
         /// Creates the state of a table.
@@ -123,7 +135,9 @@ namespace RepoDb.Schema
         private static PlanTable CreateTable(TableSchema source,
             TableSchema schema,
             ISchemaComposer composer) =>
-            new PlanTable(source, schema, composer.ComposeName(schema.Table));
+            new PlanTable(source,
+                schema,
+                composer.ComposeName(schema.Table));
 
         /// <summary>
         /// Gets the schema of the table as it is created in the target schema: its name, and the foreign keys that reference the other tables, are in that schema.
@@ -135,19 +149,25 @@ namespace RepoDb.Schema
         private static TableSchema MoveTo(TableSchema source,
             string targetSchema)
         {
-            if (string.IsNullOrWhiteSpace(targetSchema) || (IsIn(source.Table, targetSchema) && source.ForeignKeys.All(foreignKey => IsIn(foreignKey.ReferencedTable, targetSchema))))
+            if (string.IsNullOrWhiteSpace(targetSchema) || (IsIn(source.Table,
+                targetSchema) && source.ForeignKeys.All(foreignKey => IsIn(foreignKey.ReferencedTable,
+                    targetSchema))))
             {
                 return source;
             }
 
-            return new TableSchema(new TableInfo(source.Table.Name, targetSchema, source.Table.Database, source.Table.Provider))
+            return new TableSchema(new TableInfo(source.Table.Name,
+                targetSchema,
+                source.Table.Database,
+                source.Table.Provider))
             {
                 CheckConstraints = source.CheckConstraints,
                 Columns = source.Columns,
                 Indexes = source.Indexes,
                 PrimaryKey = source.PrimaryKey,
                 UniqueConstraints = source.UniqueConstraints,
-                ForeignKeys = source.ForeignKeys.Select(foreignKey => MoveTo(foreignKey, targetSchema)).ToList()
+                ForeignKeys = source.ForeignKeys.Select(foreignKey => MoveTo(foreignKey,
+                    targetSchema)).ToList()
             };
         }
 
@@ -159,7 +179,9 @@ namespace RepoDb.Schema
         /// <returns><c>true</c> if the table is in the schema; otherwise, <c>false</c>.</returns>
         private static bool IsIn(TableInfo table,
             string schema) =>
-            string.Equals(table.Schema, schema, StringComparison.Ordinal);
+            string.Equals(table.Schema,
+                schema,
+                StringComparison.Ordinal);
 
         /// <summary>
         /// Gets the foreign key that references the table in the target schema.
@@ -170,13 +192,16 @@ namespace RepoDb.Schema
         private static ForeignKeyInfo MoveTo(ForeignKeyInfo foreignKey,
             string targetSchema) =>
             new ForeignKeyInfo(foreignKey.Name)
-            {
-                Columns = foreignKey.Columns,
-                ReferencedTable = new TableInfo(foreignKey.ReferencedTable.Name, targetSchema, foreignKey.ReferencedTable.Database, foreignKey.ReferencedTable.Provider),
-                ReferencedColumns = foreignKey.ReferencedColumns,
-                UpdateRule = foreignKey.UpdateRule,
-                DeleteRule = foreignKey.DeleteRule
-            };
+        {
+            Columns = foreignKey.Columns,
+            ReferencedTable = new TableInfo(foreignKey.ReferencedTable.Name,
+                targetSchema,
+                foreignKey.ReferencedTable.Database,
+                foreignKey.ReferencedTable.Provider),
+            ReferencedColumns = foreignKey.ReferencedColumns,
+            UpdateRule = foreignKey.UpdateRule,
+            DeleteRule = foreignKey.DeleteRule
+        };
 
         /// <summary>
         /// Throws if two of the tables would have the same name in the destination database (i.e.: the tables of different schemas that are copied into one schema).
@@ -184,13 +209,12 @@ namespace RepoDb.Schema
         /// <param name="tables">The state of the tables.</param>
         private static void EnsureUniqueNames(IEnumerable<PlanTable> tables)
         {
-            var duplicate = tables
-                .Where(table => table.Name != null)
-                .GroupBy(table => table.Name, StringComparer.Ordinal)
-                .FirstOrDefault(group => group.Count() > 1);
+            var duplicate = tables.Where(table => table.Name != null).GroupBy(table => table.Name,
+                StringComparer.Ordinal).FirstOrDefault(group => group.Count() > 1);
             if (duplicate != null)
             {
-                throw new InvalidOperationException($"The tables '{string.Join("', '", duplicate.Select(table => $"{table.Source.Table.Schema}.{table.Source.Table.Name}"))}' would have the same name '{duplicate.Key}' in the destination database.");
+                throw new InvalidOperationException($"The tables '{string.Join("', '",
+                    duplicate.Select(table => $"{table.Source.Table.Schema}.{table.Source.Table.Name}"))}' would have the same name '{duplicate.Key}' in the destination database.");
             }
         }
 
@@ -229,10 +253,8 @@ namespace RepoDb.Schema
         /// <returns>The steps.</returns>
         private static IEnumerable<PlanStep> GetDropSteps(IEnumerable<PlanTable> tables,
             ISchemaComposer composer) =>
-            tables
-                .Where(table => table.Outcome == TableOutcome.Dropped)
-                .Reverse()
-                .Select(table => new PlanStep(table.DropStatement = composer.ComposeDropTable(table.Name), table));
+            tables.Where(table => table.Outcome == TableOutcome.Dropped).Reverse().Select(table => new PlanStep(table.DropStatement = composer.ComposeDropTable(table.Name),
+                table));
 
         /// <summary>
         /// Gets the steps that add the missing columns and indexes to the tables.
@@ -245,13 +267,14 @@ namespace RepoDb.Schema
         {
             foreach (var table in tables.Where(table => table.Outcome == TableOutcome.Aligned))
             {
-                var statements = table.MissingColumns.Select(column => composer.ComposeAddColumn(table.Name, column))
-                    .Concat(table.MissingIndexes.Select(index => composer.ComposeCreateIndex(table.Name, index)))
-                    .ToList();
+                var statements = table.MissingColumns.Select(column => composer.ComposeAddColumn(table.Name,
+                    column)).Concat(table.MissingIndexes.Select(index => composer.ComposeCreateIndex(table.Name,
+                        index))).ToList();
                 table.AlignStatements = statements;
                 foreach (var statement in statements)
                 {
-                    yield return new PlanStep(statement, table);
+                    yield return new PlanStep(statement,
+                        table);
                 }
             }
         }
@@ -268,11 +291,13 @@ namespace RepoDb.Schema
         {
             foreach (var table in tables.Where(table => table.Outcome == TableOutcome.Aligned))
             {
-                var statements = table.MissingForeignKeys.Select(foreignKey => composer.ComposeAddForeignKey(table.Name, foreignKey)).ToList();
+                var statements = table.MissingForeignKeys.Select(foreignKey => composer.ComposeAddForeignKey(table.Name,
+                    foreignKey)).ToList();
                 table.AlignStatements = table.AlignStatements.Concat(statements).ToList();
                 foreach (var statement in statements)
                 {
-                    yield return new PlanStep(statement, table);
+                    yield return new PlanStep(statement,
+                        table);
                 }
             }
         }
@@ -285,9 +310,7 @@ namespace RepoDb.Schema
         /// <returns>The statements.</returns>
         private static IList<string> GetCreateSteps(IList<PlanTable> created,
             ISchemaComposer composer) =>
-            created.Count == 0
-                ? new List<string>()
-                : composer.ComposeSchemas(created.Select(table => table.Schema)).ToList();
+            created.Count == 0 ? new List<string>() : composer.ComposeSchemas(created.Select(table => table.Schema)).ToList();
 
         /// <summary>
         /// Gets the table that completes at the last statement of an align step: the tables are aligned one after the other (the columns and the indexes), and then
@@ -311,6 +334,7 @@ namespace RepoDb.Schema
                 {
                     last = foreignKeyCursor - 1;
                 }
+
                 if (last >= 0)
                 {
                     yield return (last, table);
@@ -333,16 +357,26 @@ namespace RepoDb.Schema
         {
             var last = new int[created.Count];
             var cursor = 0;
-            for (var i = 0; i < created.Count; i++) last[i] = cursor++;
-            foreach (var group in new Func<TableSchema, int>[] { s => s.Indexes.Count, s => s.ForeignKeys.Count })
+            for (var i = 0; i < created.Count; i++)
+                last[i] = cursor++;
+            foreach (var group in new Func<TableSchema, int>[]
+            {
+                s => s.Indexes.Count,
+                s => s.ForeignKeys.Count
+            }
+
+            )
             {
                 for (var i = 0; i < created.Count; i++)
                 {
-                    for (var j = 0; j < group(created[i].Schema); j++) last[i] = cursor++;
+                    for (var j = 0; j < group(created[i].Schema); j++)
+                        last[i] = cursor++;
                 }
             }
+
             var known = cursor == statementCount;
-            return created.Select((table, i) => (known ? offset + last[i] : -1, table));
+            return created.Select((table,
+                i) => (known ? offset + last[i] : -1, table));
         }
 
         /// <summary>
@@ -357,9 +391,7 @@ namespace RepoDb.Schema
             var owners = new List<PlanTable>(created);
             owners.AddRange(created.SelectMany(table => table.Schema.Indexes.Select(_ => table)));
             owners.AddRange(created.SelectMany(table => table.Schema.ForeignKeys.Select(_ => table)));
-            return owners.Count == statementCount
-                ? owners.ToArray()
-                : new PlanTable[statementCount];
+            return owners.Count == statementCount ? owners.ToArray() : new PlanTable[statementCount];
         }
 
         #endregion

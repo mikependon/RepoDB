@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -45,19 +45,24 @@ namespace RepoDb.Data.Models
             {
                 throw new ArgumentNullException(nameof(columns));
             }
+
             if (values == null)
             {
                 throw new ArgumentNullException(nameof(values));
             }
+
             _columns = new List<Column>(columns);
             _values = new List<object>(values);
             if (_columns.Contains(null))
             {
-                throw new ArgumentException("The columns must not contain a null item.", nameof(columns));
+                throw new ArgumentException("The columns must not contain a null item.",
+                    nameof(columns));
             }
+
             if (_columns.Count != _values.Count)
             {
-                throw new ArgumentException("The number of values must be the number of columns.", nameof(values));
+                throw new ArgumentException("The number of values must be the number of columns.",
+                    nameof(values));
             }
         }
 
@@ -84,14 +89,14 @@ namespace RepoDb.Data.Models
         public IReadOnlyList<Column> Columns => _columns;
 
         /// <summary>
-        /// Gets the values of the columns, in the same order.
-        /// </summary>
-        public IReadOnlyList<object> Values => _values;
-
-        /// <summary>
         /// Gets the number of columns of the row.
         /// </summary>
         public int Count => _columns.Count;
+
+        /// <summary>
+        /// Gets the values of the columns, in the same order.
+        /// </summary>
+        public IReadOnlyList<object> Values => _values;
 
         /// <summary>
         /// Gets or sets the value of the column at the specified position.
@@ -99,11 +104,7 @@ namespace RepoDb.Data.Models
         /// <param name="ordinal">The position of the column.</param>
         /// <returns>The value (<c>null</c> if it has none).</returns>
         /// <exception cref="ArgumentOutOfRangeException">The position is not the position of a column.</exception>
-        public object this[int ordinal]
-        {
-            get => _values[ordinal];
-            set => _values[ordinal] = value;
-        }
+        public object this[int ordinal] { get => _values[ordinal]; set => _values[ordinal] = value; }
 
         /// <summary>
         /// Gets or sets the value of the column with the specified name (the case is ignored).
@@ -111,11 +112,7 @@ namespace RepoDb.Data.Models
         /// <param name="name">The name of the column.</param>
         /// <returns>The value (<c>null</c> if it has none).</returns>
         /// <exception cref="ArgumentException">The row has no column with the name.</exception>
-        public object this[string name]
-        {
-            get => _values[GetOrdinal(name)];
-            set => _values[GetOrdinal(name)] = value;
-        }
+        public object this[string name] { get => _values[GetOrdinal(name)]; set => _values[GetOrdinal(name)] = value; }
 
         #endregion
 
@@ -130,11 +127,14 @@ namespace RepoDb.Data.Models
         {
             for (var i = 0; i < _columns.Count; i++)
             {
-                if (string.Equals(_columns[i].Name, name, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(_columns[i].Name,
+                    name,
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     return i;
                 }
             }
+
             return -1;
         }
 
@@ -161,10 +161,13 @@ namespace RepoDb.Data.Models
             {
                 throw new ArgumentNullException(nameof(column));
             }
+
             if (Contains(column.Name))
             {
-                throw new ArgumentException($"The row already has the column '{column.Name}'.", nameof(column));
+                throw new ArgumentException($"The row already has the column '{column.Name}'.",
+                    nameof(column));
             }
+
             Own();
             _columns.Add(column);
             _values.Add(value);
@@ -182,7 +185,9 @@ namespace RepoDb.Data.Models
         public Row Add(string name,
             Type type,
             object value) =>
-            Add(new Column(name, type), value);
+            Add(new Column(name,
+                type),
+                value);
 
         /// <summary>
         /// Removes the column with the specified name (the case is ignored), with its value.
@@ -196,6 +201,7 @@ namespace RepoDb.Data.Models
             {
                 return false;
             }
+
             Own();
             _columns.RemoveAt(ordinal);
             _values.RemoveAt(ordinal);
@@ -217,8 +223,10 @@ namespace RepoDb.Data.Models
             var ordinal = IndexOf(name);
             if (ordinal < 0)
             {
-                throw new ArgumentException($"The row has no column '{name}'.", nameof(name));
+                throw new ArgumentException($"The row has no column '{name}'.",
+                    nameof(name));
             }
+
             return ordinal;
         }
 

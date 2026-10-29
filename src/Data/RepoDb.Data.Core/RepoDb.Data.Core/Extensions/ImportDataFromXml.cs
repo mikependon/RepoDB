@@ -27,8 +27,6 @@ namespace RepoDb.Data
     {
         #region Public Methods
 
-        #region ImportDataFromXml (Sync)
-
         /// <summary>
         /// Loads the rows of a XML file into a table without loading the file in memory. The rows are buffered, and every <paramref name="bufferSize"/> rows they are inserted with the bulk insert of the provider (in batches of plain inserts if it has none). The file has a root element whose child elements are the rows, and the child elements of a row are its columns (the attributes are ignored, a self-closing element is <c>null</c>, and an element with no content between its tags is an empty text (<c>null</c> for a column that is not a text)). The columns that the table does not have are ignored, and the values are converted into the types of the columns of the table.
         /// </summary>
@@ -70,12 +68,23 @@ namespace RepoDb.Data
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            return ImportPipeline.Run(connection, tableName, filename, new XmlImportSource(filename), bufferSize, bypassExistingRows, qualifiers, mappings, columnMappingBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction);
+            return ImportPipeline.Run(connection,
+                tableName,
+                filename,
+                new XmlImportSource(filename),
+                bufferSize,
+                bypassExistingRows,
+                qualifiers,
+                mappings,
+                columnMappingBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
         }
-
-        #endregion
-
-        #region ImportDataFromXml (Async)
 
         /// <summary>
         /// Loads the rows of a XML file into a table in an asynchronous way. See <see cref="ImportDataFromXml"/> for how the rows are read, buffered and inserted.
@@ -120,12 +129,25 @@ namespace RepoDb.Data
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return ImportPipeline.RunAsync(connection, tableName, filename, new XmlImportSource(filename), bufferSize, bypassExistingRows, qualifiers, mappings, columnMappingBehavior, identityBehavior, dataInterceptors, progressCallback, commandTimeout, traceKey, trace, transaction, cancellationToken);
+            return ImportPipeline.RunAsync(connection,
+                tableName,
+                filename,
+                new XmlImportSource(filename),
+                bufferSize,
+                bypassExistingRows,
+                qualifiers,
+                mappings,
+                columnMappingBehavior,
+                identityBehavior,
+                dataInterceptors,
+                progressCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken);
         }
 
         #endregion
-
-        #endregion
-
     }
 }

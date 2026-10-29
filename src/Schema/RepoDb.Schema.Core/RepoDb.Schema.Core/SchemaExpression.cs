@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -27,11 +27,48 @@ namespace RepoDb.Schema
         /// </summary>
         private static readonly string[] NonDeterministicFunctions =
         {
-            "now", "curdate", "curtime", "utc_date", "utc_time", "utc_timestamp", "unix_timestamp", "rand", "random", "randomblob", "uuid", "uuid_short",
-            "gen_random_uuid", "uuid_generate_v4", "connection_id", "user", "session_user", "system_user", "database", "schema", "version", "last_insert_id",
-            "last_insert_rowid", "row_count", "found_rows", "changes", "total_changes", "getdate", "getutcdate", "sysdatetime", "sysutcdatetime",
-            "sysdatetimeoffset", "newid", "newsequentialid", "sys_guid", "sys_context", "userenv", "uid", "clock_timestamp", "statement_timestamp",
-            "transaction_timestamp", "timeofday"
+            "now",
+            "curdate",
+            "curtime",
+            "utc_date",
+            "utc_time",
+            "utc_timestamp",
+            "unix_timestamp",
+            "rand",
+            "random",
+            "randomblob",
+            "uuid",
+            "uuid_short",
+            "gen_random_uuid",
+            "uuid_generate_v4",
+            "connection_id",
+            "user",
+            "session_user",
+            "system_user",
+            "database",
+            "schema",
+            "version",
+            "last_insert_id",
+            "last_insert_rowid",
+            "row_count",
+            "found_rows",
+            "changes",
+            "total_changes",
+            "getdate",
+            "getutcdate",
+            "sysdatetime",
+            "sysutcdatetime",
+            "sysdatetimeoffset",
+            "newid",
+            "newsequentialid",
+            "sys_guid",
+            "sys_context",
+            "userenv",
+            "uid",
+            "clock_timestamp",
+            "statement_timestamp",
+            "transaction_timestamp",
+            "timeofday"
         };
 
         /// <summary>
@@ -39,8 +76,20 @@ namespace RepoDb.Schema
         /// </summary>
         private static readonly string[] NonDeterministicKeywords =
         {
-            "current_timestamp", "current_date", "current_time", "current_user", "localtime", "localtimestamp", "sysdate", "systimestamp", "dbtimezone",
-            "sessiontimezone", "current timestamp", "current date", "current time", "current user"
+            "current_timestamp",
+            "current_date",
+            "current_time",
+            "current_user",
+            "localtime",
+            "localtimestamp",
+            "sysdate",
+            "systimestamp",
+            "dbtimezone",
+            "sessiontimezone",
+            "current timestamp",
+            "current date",
+            "current time",
+            "current user"
         };
 
         #endregion
@@ -63,11 +112,16 @@ namespace RepoDb.Schema
             {
                 return null;
             }
-            foreach (var name in (functions ?? Enumerable.Empty<string>()).Where(item => Uses(expression, item, true))
-                .Concat((keywords ?? Enumerable.Empty<string>()).Where(item => Uses(expression, item, false))))
+
+            foreach (var name in (functions ?? Enumerable.Empty<string>()).Where(item => Uses(expression,
+                item,
+                true)).Concat((keywords ?? Enumerable.Empty<string>()).Where(item => Uses(expression,
+                    item,
+                    false))))
             {
                 return name;
             }
+
             return null;
         }
 
@@ -78,8 +132,12 @@ namespace RepoDb.Schema
         /// <returns>The function (i.e.: <c>now()</c>) or the keyword (i.e.: <c>current_timestamp</c>) that the expression uses, or <c>null</c> if it uses none of them.</returns>
         public static string FindNonDeterministic(string expression)
         {
-            var function = FindUsage(expression, NonDeterministicFunctions, null);
-            return function != null ? function + "()" : FindUsage(expression, null, NonDeterministicKeywords);
+            var function = FindUsage(expression,
+                NonDeterministicFunctions,
+                null);
+            return function != null ? function + "()" : FindUsage(expression,
+                null,
+                NonDeterministicKeywords);
         }
 
         /// <summary>

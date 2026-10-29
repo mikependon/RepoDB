@@ -46,9 +46,12 @@ namespace RepoDb.Data.Helpers
                     {
                         break;
                     }
-                    AddColumns(columns, cells);
+
+                    AddColumns(columns,
+                        cells);
                 }
             }
+
             return columns;
         }
 
@@ -71,9 +74,12 @@ namespace RepoDb.Data.Helpers
                     {
                         break;
                     }
-                    AddColumns(columns, cells);
+
+                    AddColumns(columns,
+                        cells);
                 }
             }
+
             return columns;
         }
 
@@ -92,6 +98,7 @@ namespace RepoDb.Data.Helpers
                     count++;
                 }
             }
+
             return count;
         }
 
@@ -112,6 +119,7 @@ namespace RepoDb.Data.Helpers
                     count++;
                 }
             }
+
             return count;
         }
 
@@ -132,8 +140,11 @@ namespace RepoDb.Data.Helpers
                 var found = false;
                 for (var i = 0; i < columns.Count && !found; i++)
                 {
-                    found = string.Equals(columns[i], cell.Key, StringComparison.OrdinalIgnoreCase);
+                    found = string.Equals(columns[i],
+                        cell.Key,
+                        StringComparison.OrdinalIgnoreCase);
                 }
+
                 if (!found)
                 {
                     columns.Add(cell.Key);
@@ -149,7 +160,13 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal sealed class XmlImportSource : IImportSource
     {
+        #region Private Variables
+
         private readonly string _filename;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Creates a new instance of <see cref="XmlImportSource"/> class.
@@ -160,32 +177,65 @@ namespace RepoDb.Data.Helpers
             _filename = filename;
         }
 
-        /// <inheritdoc />
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets whether the discovered columns cover the entire file; always false because only initial rows are sampled.
+        /// </summary>
         public bool HasAllColumns => false;
 
-        /// <inheritdoc />
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Validates source options; this format has no additional options to validate.
+        /// </summary>
         public void Validate()
         {
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Reads the file to find its columns: the names without repeating a name (the case is ignored), in the order that they were found.
+        /// </summary>
+        /// <returns>The names of the columns.</returns>
         public IList<string> ReadColumns() =>
             XmlHelper.ReadColumns(_filename);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Reads the file to find its columns in an asynchronous way.
+        /// </summary>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the names of the columns.</returns>
         public Task<IList<string>> ReadColumnsAsync(CancellationToken cancellationToken) =>
-            XmlHelper.ReadColumnsAsync(_filename, cancellationToken);
+            XmlHelper.ReadColumnsAsync(_filename,
+                cancellationToken);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Counts the rows of the file.
+        /// </summary>
+        /// <returns>The number of rows.</returns>
         public long CountRows() =>
             XmlHelper.CountRows(_filename);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Counts the rows of the file in an asynchronous way.
+        /// </summary>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is the number of rows.</returns>
         public Task<long> CountRowsAsync(CancellationToken cancellationToken) =>
-            XmlHelper.CountRowsAsync(_filename, cancellationToken);
+            XmlHelper.CountRowsAsync(_filename,
+                cancellationToken);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Opens the file to read its rows.
+        /// </summary>
+        /// <returns>The reader of the rows, to be disposed by the caller.</returns>
         public IImportRowReader Open() =>
             XmlHelper.Open(_filename);
+
+        #endregion
     }
 }

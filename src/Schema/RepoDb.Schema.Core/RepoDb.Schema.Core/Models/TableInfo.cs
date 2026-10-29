@@ -7,7 +7,6 @@
 #endregion
 
 using System;
-
 using RepoDb.Schema.Attributes;
 
 namespace RepoDb.Schema.Models
@@ -43,20 +42,15 @@ namespace RepoDb.Schema.Models
         #region Properties
 
         /// <summary>
-        /// Gets or sets the name of the table.
-        /// </summary>
-        public string Name { get; internal set; }
-
-        /// <summary>
-        /// Gets or sets the name of the schema that owns the table.
-        /// </summary>
-        public string Schema { get; internal set; }
-
-        /// <summary>
         /// Gets or sets the name of the database that the table belongs to (<c>null</c> if it is not known).
         /// </summary>
         [DefinitionIgnore]
         public string Database { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the name of the table.
+        /// </summary>
+        public string Name { get; internal set; }
 
         /// <summary>
         /// Gets or sets the name of the provider of the database that the table belongs to (i.e.: <c>SqlServer</c>, <c>MySql</c>, <c>PostgreSql</c>, <c>SQLite</c>; the same as
@@ -65,9 +59,14 @@ namespace RepoDb.Schema.Models
         [DefinitionIgnore]
         public string Provider { get; internal set; }
 
+        /// <summary>
+        /// Gets or sets the name of the schema that owns the table.
+        /// </summary>
+        public string Schema { get; internal set; }
+
         #endregion
 
-        #region Overrides
+        #region Public Methods
 
         /// <summary>
         /// Gets the string that represents the instance of this <see cref="TableInfo"/> object.
@@ -75,10 +74,6 @@ namespace RepoDb.Schema.Models
         /// <returns>The name of this <see cref="TableInfo"/> object.</returns>
         public override string ToString() =>
             Name;
-
-        #endregion
-
-        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="TableInfo"/>.
@@ -107,11 +102,14 @@ namespace RepoDb.Schema.Models
         /// <returns>True if the instances are equal.</returns>
         public bool Equals(TableInfo other)
         {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return Equals(Name, other.Name)
-                && Equals(Schema, other.Schema);
+            if (other is null)
+                return false;
+            if (ReferenceEquals(this,
+                other))
+                return true;
+            return Equals(Name,
+                other.Name) && Equals(Schema,
+                    other.Schema);
         }
 
         /// <summary>
@@ -127,6 +125,7 @@ namespace RepoDb.Schema.Models
             {
                 return objB is null;
             }
+
             return objA.Equals(objB);
         }
 
@@ -137,7 +136,8 @@ namespace RepoDb.Schema.Models
         /// <param name="objB">The second <see cref="TableInfo"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(TableInfo objA,
-            TableInfo objB) => !(objA == objB);
+            TableInfo objB) =>
+            !(objA == objB);
 
         #endregion
     }

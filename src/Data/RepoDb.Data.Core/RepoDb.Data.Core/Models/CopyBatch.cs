@@ -18,6 +18,12 @@ namespace RepoDb.Data.Models
         #region Properties
 
         /// <summary>
+        /// Gets the estimated cumulative bytes of copied values, excluding object overhead and wire encoding.
+        /// Strings use two bytes per character; nulls and unsupported provider-specific values contribute zero.
+        /// </summary>
+        public long CopiedBytes { get; internal set; }
+
+        /// <summary>
         /// Gets the time that the batch took.
         /// </summary>
         public TimeSpan Elapsed => EndTime - StartTime;
@@ -36,12 +42,6 @@ namespace RepoDb.Data.Models
         /// Gets the number of rows that were copied by the batch.
         /// </summary>
         public int RowCount { get; internal set; }
-
-        /// <summary>
-        /// Gets the estimated cumulative bytes of copied values, excluding object overhead and wire encoding.
-        /// Strings use two bytes per character; nulls and unsupported provider-specific values contribute zero.
-        /// </summary>
-        public long CopiedBytes { get; internal set; }
 
         /// <summary>
         /// Gets the time (in UTC) when the batch has started.

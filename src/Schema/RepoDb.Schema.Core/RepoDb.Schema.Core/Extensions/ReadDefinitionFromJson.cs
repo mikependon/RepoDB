@@ -36,7 +36,11 @@ namespace RepoDb.Schema
             string filename,
             string traceKey = SchemaTraceKeys.ReadDefinitionFromJson,
             ITrace trace = null) =>
-            SchemaDefinitionFile.Read(connection, filename, traceKey, trace, content => JsonNode.Parse(content) as JsonObject ?? throw new InvalidDataException("The definition root must be an object."));
+            SchemaDefinitionFile.Read(connection,
+                filename,
+                traceKey,
+                trace,
+                content => JsonNode.Parse(content) as JsonObject ?? throw new InvalidDataException("The definition root must be an object."));
 
         /// <summary>
         /// Asynchronously reads a RepoDB JSON definition, including all tables and extraction metadata.
@@ -53,7 +57,12 @@ namespace RepoDb.Schema
             string traceKey = SchemaTraceKeys.ReadDefinitionFromJson,
             ITrace trace = null,
             CancellationToken cancellationToken = default) =>
-            SchemaDefinitionFile.ReadAsync(connection, filename, traceKey, trace, content => JsonNode.Parse(content) as JsonObject ?? throw new InvalidDataException("The definition root must be an object."), cancellationToken);
+            SchemaDefinitionFile.ReadAsync(connection,
+                filename,
+                traceKey,
+                trace,
+                content => JsonNode.Parse(content) as JsonObject ?? throw new InvalidDataException("The definition root must be an object."),
+                cancellationToken);
 
         #endregion
     }

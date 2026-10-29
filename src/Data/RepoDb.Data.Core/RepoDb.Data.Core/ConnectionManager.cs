@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -19,8 +19,7 @@ namespace RepoDb.Data
     {
         #region Private Variables
 
-        private static readonly ConcurrentDictionary<string, IDbConnection> _connections =
-            new ConcurrentDictionary<string, IDbConnection>(StringComparer.Ordinal);
+        private static readonly ConcurrentDictionary<string, IDbConnection> _connections = new ConcurrentDictionary<string, IDbConnection>(StringComparer.Ordinal);
 
         #endregion
 
@@ -44,15 +43,18 @@ namespace RepoDb.Data
             {
                 throw new ArgumentNullException(nameof(name));
             }
+
             if (connection == null)
             {
                 throw new ArgumentNullException(nameof(connection));
             }
+
             if (force)
             {
                 _connections[name] = connection;
             }
-            else if (_connections.TryAdd(name, connection) == false)
+            else if (_connections.TryAdd(name,
+                connection) == false)
             {
                 throw new InvalidOperationException($"A connection with the name '{name}' is already registered. Use the 'force' argument to replace it.");
             }
@@ -69,10 +71,13 @@ namespace RepoDb.Data
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            if (_connections.TryGetValue(name, out var connection) == false)
+
+            if (_connections.TryGetValue(name,
+                out var connection) == false)
             {
                 throw new InvalidOperationException($"No connection is registered with the name '{name}'.");
             }
+
             return connection;
         }
 
@@ -90,6 +95,7 @@ namespace RepoDb.Data
             {
                 return typed;
             }
+
             throw new InvalidCastException($"The connection '{name}' is of type '{connection.GetType().FullName}' and cannot be converted to '{typeof(T).FullName}'.");
         }
 

@@ -22,7 +22,7 @@ namespace RepoDb.Schema
     /// </summary>
     internal static class SchemaDefinitionReader
     {
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Validates the document and reconstructs its tables without consulting a database.
@@ -33,41 +33,62 @@ namespace RepoDb.Schema
         {
             try
             {
-                if (document == null || !string.Equals(Text(document, "format"), "RepoDB.Schema", StringComparison.Ordinal))
+                if (document == null || !string.Equals(Text(document,
+                    "format"),
+                    "RepoDB.Schema",
+                    StringComparison.Ordinal))
                     throw new InvalidDataException("The file is not a RepoDB schema definition.");
-                var version = Value<int>(document, "formatVersion");
+                var version = Value<int>(document,
+                    "formatVersion");
                 if (version != 1 && version != 2)
                     throw new InvalidDataException("The schema definition version is not supported.");
-                var source = Object(document, "source");
-                var extraction = Object(document, "extraction");
+                var source = Object(document,
+                    "source");
+                var extraction = Object(document,
+                    "extraction");
                 var result = new SchemaDefinitionResult
                 {
                     FormatVersion = version,
-                    Provider = Text(source, "provider"),
-                    Database = Text(source, "database"),
-                    RootTable = Table(Object(extraction, "rootTable"), source),
-                    RelationshipBehavior = Enumeration<RelatedTableBehavior>(extraction, "relationshipBehavior"),
-                    Tables = Array(document, "tables").Select(t => ReadTable(ObjectValue(t), source)).ToList(),
-                    ExternalDependencies = version == 1 ? Array(document, "externalDependencies").Select(t => Table(ObjectValue(t), source)).ToList() : null,
+                    Provider = Text(source,
+                        "provider"),
+                    Database = Text(source,
+                        "database"),
+                    RootTable = Table(Object(extraction,
+                        "rootTable"),
+                        source),
+                    RelationshipBehavior = Enumeration<RelatedTableBehavior>(extraction,
+                        "relationshipBehavior"),
+                    Tables = Array(document,
+                        "tables").Select(t => ReadTable(ObjectValue(t),
+                            source)).ToList(),
+                    ExternalDependencies = version == 1 ? Array(document,
+                        "externalDependencies").Select(t => Table(ObjectValue(t),
+                            source)).ToList() : null,
                     Definition = document
                 };
                 if (version == 2)
                 {
                     var included = new HashSet<TableInfo>(result.Tables.Select(t => t.Table));
-                    result.ExternalDependencies = result.Tables.SelectMany(t => t.ForeignKeys)
-                        .Select(f => f.ReferencedTable).Where(t => t != null && !included.Contains(t))
-                        .Distinct().OrderBy(t => t.Schema, StringComparer.Ordinal).ThenBy(t => t.Name, StringComparer.Ordinal).ToList();
+                    result.ExternalDependencies = result.Tables.SelectMany(t => t.ForeignKeys).Select(f => f.ReferencedTable).Where(t => t != null && !included.Contains(t)).Distinct().OrderBy(t => t.Schema,
+                        StringComparer.Ordinal).ThenBy(t => t.Name,
+                            StringComparer.Ordinal).ToList();
                 }
+
                 Validate(result);
-                if (version == 1) ValidateReferences(result);
+                if (version == 1)
+                    ValidateReferences(result);
                 return result;
             }
-            catch (Exception exception) when (exception is InvalidOperationException || exception is FormatException ||
-                exception is ArgumentException || exception is OverflowException || exception is JsonException)
+            catch (Exception exception) when (exception is InvalidOperationException || exception is FormatException || exception is ArgumentException || exception is OverflowException || exception is JsonException)
             {
-                throw new InvalidDataException("The schema definition contains invalid or missing metadata.", exception);
+                throw new InvalidDataException("The schema definition contains invalid or missing metadata.",
+                    exception);
             }
         }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Reconstructs one table and its ordered keys and constraints.
@@ -75,28 +96,53 @@ namespace RepoDb.Schema
         /// <param name="node">The table node of the document.</param>
         /// <param name="source">The document source metadata.</param>
         /// <returns>The reconstructed table.</returns>
-        private static TableSchema ReadTable(JsonObject node, JsonObject source)
+        private static TableSchema ReadTable(JsonObject node,
+            JsonObject source)
         {
-            var table = new TableSchema(Table(Object(node, "table"), source));
-            if (!node.ContainsKey("primaryKey")) throw new InvalidDataException("Missing primaryKey metadata.");
+            var table = new TableSchema(Table(Object(node,
+                "table"),
+                source));
+            if (!node.ContainsKey("primaryKey"))
+                throw new InvalidDataException("Missing primaryKey metadata.");
             if (node["primaryKey"] is JsonObject primary)
                 table.PrimaryKey = new PrimaryKeyInfo(Name(primary))
-                { Columns = Strings(primary, "columns"), IsClustered = Value<bool>(primary, "clustered") };
-            else if (node["primaryKey"] != null) throw new InvalidDataException("Invalid primaryKey metadata.");
-            table.Columns = Array(node, "columns").Select(c => Column(ObjectValue(c), table.PrimaryKey)).ToList();
-            table.UniqueConstraints = Array(node, "uniqueConstraints").Select(c => new UniqueConstraintInfo(Name(c))
-            { Columns = Strings(c, "columns") }).ToList();
-            table.CheckConstraints = Array(node, "checkConstraints").Select(c => new CheckConstraintInfo(Name(c))
-            { Expression = Expression(c, "expression") }).ToList();
-            table.Indexes = Array(node, "indexes").Select(Index).ToList();
-            table.ForeignKeys = Array(node, "foreignKeys").Select(f =>
+                {
+                    Columns = Strings(primary,
+                        "columns"),
+                    IsClustered = Value<bool>(primary,
+                        "clustered")
+                };
+            else if (node["primaryKey"] != null)
+                throw new InvalidDataException("Invalid primaryKey metadata.");
+            table.Columns = Array(node,
+                "columns").Select(c => Column(ObjectValue(c),
+                    table.PrimaryKey)).ToList();
+            table.UniqueConstraints = Array(node,
+                "uniqueConstraints").Select(c => new UniqueConstraintInfo(Name(c)) { Columns = Strings(c,
+                    "columns") }).ToList();
+            table.CheckConstraints = Array(node,
+                "checkConstraints").Select(c => new CheckConstraintInfo(Name(c)) { Expression = Expression(c,
+                    "expression") }).ToList();
+            table.Indexes = Array(node,
+                "indexes").Select(Index).ToList();
+            table.ForeignKeys = Array(node,
+                "foreignKeys").Select(f =>
             {
-                var reference = Object(f, "references");
+                var reference = Object(f,
+                    "references");
                 return new ForeignKeyInfo(Name(f))
                 {
-                    Columns = Strings(f, "columns"), ReferencedTable = reference["table"] == null ? null : Table(Object(reference, "table"), source),
-                    ReferencedColumns = Strings(reference, "columns"),
-                    DeleteRule = Enumeration<ForeignKeyRule>(f, "onDelete"), UpdateRule = Enumeration<ForeignKeyRule>(f, "onUpdate")
+                    Columns = Strings(f,
+                        "columns"),
+                    ReferencedTable = reference["table"] == null ? null : Table(Object(reference,
+                        "table"),
+                        source),
+                    ReferencedColumns = Strings(reference,
+                        "columns"),
+                    DeleteRule = Enumeration<ForeignKeyRule>(f,
+                        "onDelete"),
+                    UpdateRule = Enumeration<ForeignKeyRule>(f,
+                        "onUpdate")
                 };
             }).ToList();
             return table;
@@ -109,16 +155,32 @@ namespace RepoDb.Schema
         /// <returns>The reconstructed index.</returns>
         private static IndexInfo Index(JsonNode node)
         {
-            var columns = Array(node, "columns");
+            var columns = Array(node,
+                "columns");
             foreach (var column in columns)
-                if (!string.Equals(Text(column, "direction"), "ascending", StringComparison.Ordinal) && !string.Equals(Text(column, "direction"), "descending", StringComparison.Ordinal))
+                if (!string.Equals(Text(column,
+                    "direction"),
+                    "ascending",
+                    StringComparison.Ordinal) && !string.Equals(Text(column,
+                        "direction"),
+                        "descending",
+                        StringComparison.Ordinal))
                     throw new InvalidDataException("Invalid index column direction.");
             return new IndexInfo(Name(node))
             {
                 Columns = columns.Select(Name).ToList(),
-                DescendingColumns = columns.Where(c => string.Equals(Text(c, "direction"), "descending", StringComparison.Ordinal)).Select(Name).ToList(),
-                IncludedColumns = Strings(node, "includedColumns"), IsUnique = Value<bool>(node, "unique"),
-                IsClustered = Value<bool>(node, "clustered"), Filter = Expression(node, "filter")
+                DescendingColumns = columns.Where(c => string.Equals(Text(c,
+                    "direction"),
+                    "descending",
+                    StringComparison.Ordinal)).Select(Name).ToList(),
+                IncludedColumns = Strings(node,
+                    "includedColumns"),
+                IsUnique = Value<bool>(node,
+                    "unique"),
+                IsClustered = Value<bool>(node,
+                    "clustered"),
+                Filter = Expression(node,
+                    "filter")
             };
         }
 
@@ -131,27 +193,63 @@ namespace RepoDb.Schema
         private static ColumnInfo Column(JsonObject node,
             PrimaryKeyInfo primary)
         {
-            foreach (var property in new[] { "identity", "default", "computed", "collation", "comment" })
-                if (!node.ContainsKey(property)) throw new InvalidDataException("Missing column property: " + property);
-            var type = Object(node, "type");
+            foreach (var property in new[]
+            {
+                "identity",
+                "default",
+                "computed",
+                "collation",
+                "comment"
+            }
+
+            )
+                if (!node.ContainsKey(property))
+                    throw new InvalidDataException("Missing column property: " + property);
+            var type = Object(node,
+                "type");
             var identity = node["identity"]?.AsObject();
             var defaultValue = node["default"]?.AsObject();
-            var name = Name(node);
-            var precision = Optional<int>(type, "precision");
-            var scale = Optional<int>(type, "scale");
+            var precision = Optional<int>(type,
+                "precision");
+            var scale = Optional<int>(type,
+                "scale");
             return new ColumnInfo
             {
-                Field = new DbField(name, primary?.Columns.Contains(name) == true, identity != null, Value<bool>(node, "nullable"),
-                    LogicalType(Text(type, "logical")), Optional<int>(type, "length"), Byte(precision), Byte(scale),
-                    Text(type, "native"), defaultValue != null, Text(type, "provider")),
-                Ordinal = Value<int>(node, "ordinal"), NativeType = Text(type, "native"),
-                NumericPrecision = precision, NumericScale = scale, TemporalPrecision = Optional<int>(type, "temporalPrecision"),
-                IsUnicode = Optional<bool>(type, "unicode"), CharacterSet = Text(type, "characterSet"), LengthUnit = Text(type, "lengthUnit"),
-                IdentitySeed = identity == null ? null : Optional<long>(identity, "seed"),
-                IdentityIncrement = identity == null ? null : Optional<long>(identity, "increment"),
-                DefaultValue = defaultValue == null ? ColumnDefaultValue.Unclassified : Enumeration<ColumnDefaultValue>(defaultValue, "kind"),
-                DefaultExpression = defaultValue == null ? null : Expression(defaultValue, "expression"),
-                ComputedExpression = Expression(node, "computed"), Collation = Text(node, "collation"), Comment = Text(node, "comment")
+                Field = ReadField(node,
+                    type,
+                    primary,
+                    identity,
+                    defaultValue,
+                    precision,
+                    scale),
+                Ordinal = Value<int>(node,
+                    "ordinal"),
+                NativeType = Text(type,
+                    "native"),
+                NumericPrecision = precision,
+                NumericScale = scale,
+                TemporalPrecision = Optional<int>(type,
+                    "temporalPrecision"),
+                IsUnicode = Optional<bool>(type,
+                    "unicode"),
+                CharacterSet = Text(type,
+                    "characterSet"),
+                LengthUnit = Text(type,
+                    "lengthUnit"),
+                IdentitySeed = identity == null ? null : Optional<long>(identity,
+                    "seed"),
+                IdentityIncrement = identity == null ? null : Optional<long>(identity,
+                    "increment"),
+                DefaultValue = defaultValue == null ? ColumnDefaultValue.Unclassified : Enumeration<ColumnDefaultValue>(defaultValue,
+                    "kind"),
+                DefaultExpression = defaultValue == null ? null : Expression(defaultValue,
+                    "expression"),
+                ComputedExpression = Expression(node,
+                    "computed"),
+                Collation = Text(node,
+                    "collation"),
+                Comment = Text(node,
+                    "comment")
             };
         }
 
@@ -164,37 +262,22 @@ namespace RepoDb.Schema
             var tables = new Dictionary<TableInfo, TableSchema>();
             foreach (var table in result.Tables)
             {
-                if (tables.ContainsKey(table.Table)) throw new InvalidDataException("Duplicate table identity.");
-                tables.Add(table.Table, table);
+                if (tables.ContainsKey(table.Table))
+                    throw new InvalidDataException("Duplicate table identity.");
+                tables.Add(table.Table,
+                    table);
             }
-            if (!tables.ContainsKey(result.RootTable)) throw new InvalidDataException("The root table definition is missing.");
+
+            if (!tables.ContainsKey(result.RootTable))
+                throw new InvalidDataException("The root table definition is missing.");
             var external = new HashSet<TableInfo>(result.ExternalDependencies);
             if (external.Count != result.ExternalDependencies.Count || external.Any(tables.ContainsKey))
                 throw new InvalidDataException("Invalid external dependency identities.");
             foreach (var table in result.Tables)
             {
-                var columns = new HashSet<string>(table.Columns.Select(c => c.Field.Name), StringComparer.Ordinal);
-                if (columns.Count != table.Columns.Count) throw new InvalidDataException("Duplicate column name.");
-                if (table.Columns.Any(c => c.Ordinal < 1) || table.Columns.Select(c => c.Ordinal).Distinct().Count() != table.Columns.Count)
-                    throw new InvalidDataException("Invalid or duplicate column ordinal.");
-                if (table.PrimaryKey != null) ValidateColumns(table.PrimaryKey.Columns, columns);
-                foreach (var key in table.UniqueConstraints) ValidateColumns(key.Columns, columns);
-                foreach (var index in table.Indexes)
-                {
-                    ValidateColumns(index.Columns, columns);
-                    ValidateColumns(index.IncludedColumns, columns, true);
-                }
-                foreach (var key in table.ForeignKeys)
-                {
-                    ValidateColumns(key.Columns, columns);
-                    if (key.Columns.Count != key.ReferencedColumns.Count)
-                        throw new InvalidDataException("Foreign-key column counts differ.");
-                    if (key.ReferencedTable == null) continue;
-                    if (tables.TryGetValue(key.ReferencedTable, out var target))
-                        ValidateColumns(key.ReferencedColumns, new HashSet<string>(target.Columns.Select(c => c.Field.Name), StringComparer.Ordinal));
-                    else if (!external.Contains(key.ReferencedTable))
-                        throw new InvalidDataException("A foreign-key target is missing from the definition and external dependencies.");
-                }
+                ValidateTable(table,
+                    tables,
+                    external);
             }
         }
 
@@ -219,12 +302,17 @@ namespace RepoDb.Schema
         private static void ValidateReferences(SchemaDefinitionResult result)
         {
             var included = new HashSet<TableInfo>(result.Tables.Select(t => t.Table));
-            foreach (var table in Array(result.Definition, "tables"))
-                foreach (var key in Array(table, "foreignKeys"))
+            foreach (var table in Array(result.Definition,
+                "tables"))
+                foreach (var key in Array(table,
+                    "foreignKeys"))
                 {
-                    var reference = Object(key, "references");
-                    var target = reference["table"] == null ? null : Table(Object(reference, "table"));
-                    if (Value<bool>(reference, "external") != (target == null || !included.Contains(target)))
+                    var reference = Object(key,
+                        "references");
+                    var target = reference["table"] == null ? null : Table(Object(reference,
+                        "table"));
+                    if (Value<bool>(reference,
+                        "external") != (target == null || !included.Contains(target)))
                         throw new InvalidDataException("A foreign-key external flag disagrees with the included tables.");
                 }
         }
@@ -235,10 +323,17 @@ namespace RepoDb.Schema
         /// <param name="node">The node of the table identity.</param>
         /// <param name="source">The inherited source metadata, if available.</param>
         /// <returns>The identity of the table.</returns>
-        private static TableInfo Table(JsonObject node, JsonObject source = null) =>
-            new TableInfo(Name(node), Text(node, "schema"),
-                node.ContainsKey("database") ? Text(node, "database") : source == null ? null : Text(source, "database"),
-                node.ContainsKey("provider") ? Text(node, "provider") : source == null ? null : Text(source, "provider"));
+        private static TableInfo Table(JsonObject node,
+            JsonObject source = null) =>
+            new TableInfo(Name(node),
+                Text(node,
+                    "schema"),
+                node.ContainsKey("database") ? Text(node,
+                    "database") : source == null ? null : Text(source,
+                    "database"),
+                node.ContainsKey("provider") ? Text(node,
+                    "provider") : source == null ? null : Text(source,
+                    "provider"));
 
         /// <summary>
         /// Reads a required object.
@@ -277,7 +372,8 @@ namespace RepoDb.Schema
         private static string Text(JsonNode node,
             string name)
         {
-            if (!(node is JsonObject obj) || !obj.ContainsKey(name)) throw new InvalidDataException("Missing property: " + name);
+            if (!(node is JsonObject obj) || !obj.ContainsKey(name))
+                throw new InvalidDataException("Missing property: " + name);
             return node[name]?.GetValue<string>();
         }
 
@@ -288,7 +384,8 @@ namespace RepoDb.Schema
         /// <returns>The name.</returns>
         private static string Name(JsonNode node)
         {
-            var name = Text(node, "name");
+            var name = Text(node,
+                "name");
             return !string.IsNullOrWhiteSpace(name) ? name : throw new InvalidDataException("A definition name is empty.");
         }
 
@@ -300,7 +397,8 @@ namespace RepoDb.Schema
         /// <returns>The strings that the property holds, in order.</returns>
         private static IList<string> Strings(JsonNode node,
             string name) =>
-            Array(node, name).Select(n => n?.GetValue<string>() ?? throw new InvalidDataException("Null column name.")).ToList();
+            Array(node,
+                name).Select(n => n?.GetValue<string>() ?? throw new InvalidDataException("Null column name.")).ToList();
 
         /// <summary>
         /// Reads a required scalar value.
@@ -319,8 +417,9 @@ namespace RepoDb.Schema
         /// <param name="name">The name of the property.</param>
         /// <returns>The value that the property holds, or <c>null</c> if it is missing.</returns>
         private static T? Optional<T>(JsonNode node,
-            string name) where T : struct =>
-            node[name] == null ? (T?)null : node[name].GetValue<T>();
+            string name)
+            where T : struct =>
+            node[name] == null ? (T? )null : node[name].GetValue<T>();
 
         /// <summary>
         /// Reads a named enum value, rejecting numeric and unknown values.
@@ -329,10 +428,16 @@ namespace RepoDb.Schema
         /// <param name="name">The name of the property.</param>
         /// <returns>The enumeration value that the property names.</returns>
         private static T Enumeration<T>(JsonNode node,
-            string name) where T : struct
+            string name)
+            where T : struct
         {
-            var text = Text(node, name);
-            if (!Enum.TryParse<T>(text, out var value) || !Enum.IsDefined(typeof(T), value) || !string.Equals(value.ToString(), text, StringComparison.Ordinal))
+            var text = Text(node,
+                name);
+            if (!Enum.TryParse<T>(text,
+                out var value) || !Enum.IsDefined(typeof(T),
+                    value) || !string.Equals(value.ToString(),
+                    text,
+                    StringComparison.Ordinal))
                 throw new InvalidDataException("Invalid enum value: " + name);
             return value;
         }
@@ -345,14 +450,17 @@ namespace RepoDb.Schema
         /// <returns>The native SQL of the expression, or <c>null</c> if there is no expression.</returns>
         private static string Expression(JsonNode node,
             string name) =>
-            node[name] == null ? null : Text(Object(node, name), "sql");
+            node[name] == null ? null : Text(Object(node,
+                name),
+                "sql");
 
         /// <summary>
         /// Converts metadata to DbField's restricted range without losing the original ColumnInfo value.
         /// </summary>
         /// <param name="value">The numeric metadata.</param>
         /// <returns>The value as a byte, or <c>null</c> if it is missing or outside the byte range.</returns>
-        private static byte? Byte(int? value) => value >= 0 && value <= byte.MaxValue ? (byte?)value.Value : null;
+        private static byte? Byte(int? value) =>
+            value >= 0 && value <= byte.MaxValue ? (byte? )value.Value : null;
 
         /// <summary>
         /// Resolves only known portable logical types; it never loads CLR types named by a file.
@@ -363,27 +471,134 @@ namespace RepoDb.Schema
         {
             switch (name)
             {
-                case "string": return typeof(string);
-                case "binary": return typeof(byte[]);
-                case "uuid": return typeof(Guid);
-                case "datetimeOffset": return typeof(DateTimeOffset);
-                case "time": return typeof(TimeSpan);
-                case "boolean": return typeof(bool);
-                case "uint8": return typeof(byte);
-                case "int8": return typeof(sbyte);
-                case "int16": return typeof(short);
-                case "uint16": return typeof(ushort);
-                case "int32": return typeof(int);
-                case "uint32": return typeof(uint);
-                case "int64": return typeof(long);
-                case "uint64": return typeof(ulong);
-                case "decimal": return typeof(decimal);
-                case "float32": return typeof(float);
-                case "float64": return typeof(double);
-                case "datetime": return typeof(DateTime);
-                case "unknown": return null;
-                default: throw new InvalidDataException("Unknown logical type: " + name);
+                case "string":
+                    return typeof(string);
+                case "binary":
+                    return typeof(byte[]);
+                case "uuid":
+                    return typeof(Guid);
+                case "datetimeOffset":
+                    return typeof(DateTimeOffset);
+                case "time":
+                    return typeof(TimeSpan);
+                case "boolean":
+                    return typeof(bool);
+                case "uint8":
+                    return typeof(byte);
+                case "int8":
+                    return typeof(sbyte);
+                case "int16":
+                    return typeof(short);
+                case "uint16":
+                    return typeof(ushort);
+                case "int32":
+                    return typeof(int);
+                case "uint32":
+                    return typeof(uint);
+                case "int64":
+                    return typeof(long);
+                case "uint64":
+                    return typeof(ulong);
+                case "decimal":
+                    return typeof(decimal);
+                case "float32":
+                    return typeof(float);
+                case "float64":
+                    return typeof(double);
+                case "datetime":
+                    return typeof(DateTime);
+                case "unknown":
+                    return null;
+                default:
+                    throw new InvalidDataException("Unknown logical type: " + name);
             }
+        }
+
+        /// <summary>
+        /// Validates a table's columns, keys, indexes, and resolvable foreign-key targets.
+        /// </summary>
+        /// <param name="table">The table definition to validate.</param>
+        /// <param name="tables">The included table definitions keyed by identity.</param>
+        /// <param name="external">The declared or reconstructed external target identities.</param>
+        private static void ValidateTable(TableSchema table,
+            Dictionary<TableInfo, TableSchema> tables,
+            HashSet<TableInfo> external)
+        {
+            var columns = new HashSet<string>(table.Columns.Select(c => c.Field.Name),
+                StringComparer.Ordinal);
+            if (columns.Count != table.Columns.Count)
+                throw new InvalidDataException("Duplicate column name.");
+            if (table.Columns.Any(c => c.Ordinal < 1) || table.Columns.Select(c => c.Ordinal).Distinct().Count() != table.Columns.Count)
+                throw new InvalidDataException("Invalid or duplicate column ordinal.");
+            if (table.PrimaryKey != null)
+                ValidateColumns(table.PrimaryKey.Columns,
+                    columns);
+            foreach (var key in table.UniqueConstraints)
+                ValidateColumns(key.Columns,
+                    columns);
+            foreach (var index in table.Indexes)
+            {
+                ValidateColumns(index.Columns,
+                    columns);
+                ValidateColumns(index.IncludedColumns,
+                    columns,
+                    true);
+            }
+
+            foreach (var key in table.ForeignKeys)
+            {
+                ValidateColumns(key.Columns,
+                    columns);
+                if (key.Columns.Count != key.ReferencedColumns.Count)
+                    throw new InvalidDataException("Foreign-key column counts differ.");
+                if (key.ReferencedTable == null)
+                    continue;
+                if (tables.TryGetValue(key.ReferencedTable,
+                    out var target))
+                    ValidateColumns(key.ReferencedColumns,
+                        new HashSet<string>(target.Columns.Select(c => c.Field.Name),
+                            StringComparer.Ordinal));
+                else if (!external.Contains(key.ReferencedTable))
+                    throw new InvalidDataException("A foreign-key target is missing from the definition and external dependencies.");
+            }
+        }
+
+        /// <summary>
+        /// Reconstructs the runtime field from portable metadata and primary-key membership.
+        /// </summary>
+        /// <param name="node">The column node of the table.</param>
+        /// <param name="type">The portable type metadata.</param>
+        /// <param name="primary">The primary key of the table, or <c>null</c> if the table has none.</param>
+        /// <param name="identity">The identity metadata, or null.</param>
+        /// <param name="defaultValue">The default value metadata, or null.</param>
+        /// <param name="precision">The portable numeric precision.</param>
+        /// <param name="scale">The portable numeric scale.</param>
+        /// <returns>The reconstructed runtime field.</returns>
+        private static DbField ReadField(JsonObject node,
+            JsonObject type,
+            PrimaryKeyInfo primary,
+            JsonObject identity,
+            JsonObject defaultValue,
+            int? precision,
+            int? scale)
+        {
+            var name = Name(node);
+            return new DbField(name,
+                primary?.Columns.Contains(name) == true,
+                identity != null,
+                Value<bool>(node,
+                    "nullable"),
+                LogicalType(Text(type,
+                    "logical")),
+                Optional<int>(type,
+                    "length"),
+                Byte(precision),
+                Byte(scale),
+                Text(type,
+                    "native"),
+                defaultValue != null,
+                Text(type,
+                    "provider"));
         }
 
         #endregion

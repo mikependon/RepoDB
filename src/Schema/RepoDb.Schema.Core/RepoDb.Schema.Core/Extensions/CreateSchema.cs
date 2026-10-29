@@ -32,7 +32,7 @@ namespace RepoDb.Schema
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Creates the schema if it does not exist.
@@ -49,7 +49,9 @@ namespace RepoDb.Schema
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns><c>true</c> if the schema was created; <c>false</c> if it already existed.</returns>
         /// <exception cref="ArgumentNullException">The connection or the name of the schema is <c>null</c> (or white space).</exception>
-        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "Parameters are a Dictionary<string, object>, and the non-query has no parameters; neither path reflects over an object.")]
+        [UnconditionalSuppressMessage("Trimming",
+            "IL2026:RequiresUnreferencedCode",
+            Justification = "Parameters are a Dictionary<string, object>, and the non-query has no parameters; neither path reflects over an object.")]
         public static bool CreateSchema(IDbConnection connection,
             string schemaName,
             string parameterPrefix,
@@ -61,8 +63,11 @@ namespace RepoDb.Schema
             ITrace trace,
             IDbTransaction transaction)
         {
-            Validate(connection, schemaName);
-            var exists = connection.ExecuteScalar(string.Format(CultureInfo.InvariantCulture, existsSql, parameterPrefix + ParameterName),
+            Validate(connection,
+                schemaName);
+            var exists = connection.ExecuteScalar(string.Format(CultureInfo.InvariantCulture,
+                existsSql,
+                parameterPrefix + ParameterName),
                 new Dictionary<string, object> { [ParameterName] = schemaName },
                 commandTimeout: commandTimeout,
                 traceKey: traceKey,
@@ -72,7 +77,10 @@ namespace RepoDb.Schema
             {
                 return false;
             }
-            connection.ExecuteNonQuery(string.Format(CultureInfo.InvariantCulture, createSql, quote(schemaName)),
+
+            connection.ExecuteNonQuery(string.Format(CultureInfo.InvariantCulture,
+                createSql,
+                quote(schemaName)),
                 commandTimeout: commandTimeout,
                 traceKey: traceKey,
                 transaction: transaction,
@@ -96,7 +104,9 @@ namespace RepoDb.Schema
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is <c>true</c> if the schema was created; <c>false</c> if it already existed.</returns>
         /// <exception cref="ArgumentNullException">The connection or the name of the schema is <c>null</c> (or white space).</exception>
-        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "Parameters are a Dictionary<string, object>, and the non-query has no parameters; neither path reflects over an object.")]
+        [UnconditionalSuppressMessage("Trimming",
+            "IL2026:RequiresUnreferencedCode",
+            Justification = "Parameters are a Dictionary<string, object>, and the non-query has no parameters; neither path reflects over an object.")]
         public static async Task<bool> CreateSchemaAsync(IDbConnection connection,
             string schemaName,
             string parameterPrefix,
@@ -109,8 +119,11 @@ namespace RepoDb.Schema
             IDbTransaction transaction,
             CancellationToken cancellationToken)
         {
-            Validate(connection, schemaName);
-            var exists = await connection.ExecuteScalarAsync(string.Format(CultureInfo.InvariantCulture, existsSql, parameterPrefix + ParameterName),
+            Validate(connection,
+                schemaName);
+            var exists = await connection.ExecuteScalarAsync(string.Format(CultureInfo.InvariantCulture,
+                existsSql,
+                parameterPrefix + ParameterName),
                 new Dictionary<string, object> { [ParameterName] = schemaName },
                 commandTimeout: commandTimeout,
                 traceKey: traceKey,
@@ -121,7 +134,10 @@ namespace RepoDb.Schema
             {
                 return false;
             }
-            await connection.ExecuteNonQueryAsync(string.Format(CultureInfo.InvariantCulture, createSql, quote(schemaName)),
+
+            await connection.ExecuteNonQueryAsync(string.Format(CultureInfo.InvariantCulture,
+                createSql,
+                quote(schemaName)),
                 commandTimeout: commandTimeout,
                 traceKey: traceKey,
                 transaction: transaction,
@@ -147,6 +163,7 @@ namespace RepoDb.Schema
             {
                 throw new ArgumentNullException(nameof(connection));
             }
+
             if (string.IsNullOrWhiteSpace(schemaName))
             {
                 throw new ArgumentNullException(nameof(schemaName));
@@ -159,7 +176,8 @@ namespace RepoDb.Schema
         /// <param name="count">The result (the number of schemas), or <c>null</c>.</param>
         /// <returns><c>true</c> if at least one schema was found.</returns>
         private static bool Exists(object count) =>
-            count != null && !(count is DBNull) && Convert.ToInt64(count, CultureInfo.InvariantCulture) > 0;
+            count != null && !(count is DBNull) && Convert.ToInt64(count,
+                CultureInfo.InvariantCulture) > 0;
 
         #endregion
     }

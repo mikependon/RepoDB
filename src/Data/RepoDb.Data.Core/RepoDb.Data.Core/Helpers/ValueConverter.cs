@@ -32,27 +32,33 @@ namespace RepoDb.Data.Helpers
             {
                 return value;
             }
+
             type = Nullable.GetUnderlyingType(type) ?? type;
             if (value is string empty && empty.Length == 0 && type != typeof(string) && type != typeof(object) && type != typeof(byte[]))
             {
                 // An empty text has no value of a number, a date, a boolean...: it is a null (an empty text is an empty binary, though)
                 return null;
             }
+
             if (type == typeof(object) || type.IsInstanceOfType(value))
             {
                 return value;
             }
+
             if (IsIntegral(type) && HasFraction(value))
             {
                 throw new FormatException($"The value '{value}' has a fraction, which '{type.Name}' cannot hold.");
             }
+
             try
             {
-                return ConvertCore(value, type);
+                return ConvertCore(value,
+                    type);
             }
             catch (Exception e) when (e is FormatException || e is InvalidCastException || e is OverflowException || e is ArgumentException)
             {
-                throw new FormatException($"The value '{value}' cannot be converted into '{type.Name}'.", e);
+                throw new FormatException($"The value '{value}' cannot be converted into '{type.Name}'.",
+                    e);
             }
         }
 
@@ -71,41 +77,47 @@ namespace RepoDb.Data.Helpers
         {
             if (type == typeof(string))
             {
-                return value is bool flag ? (flag ? "true" : "false") : System.Convert.ToString(value, CultureInfo.InvariantCulture);
+                return value is bool flag ? (flag ? "true" : "false") : System.Convert.ToString(value,
+                    CultureInfo.InvariantCulture);
             }
+
             if (type == typeof(Guid))
             {
-                return Guid.Parse(System.Convert.ToString(value, CultureInfo.InvariantCulture));
+                return Guid.Parse(System.Convert.ToString(value,
+                    CultureInfo.InvariantCulture));
             }
+
             if (type == typeof(DateTime))
             {
-                return DateTime.Parse(System.Convert.ToString(value, CultureInfo.InvariantCulture), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+                return DateTime.Parse(System.Convert.ToString(value,
+                    CultureInfo.InvariantCulture),
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.RoundtripKind);
             }
+
             if (type == typeof(DateTimeOffset))
             {
-                return DateTimeOffset.Parse(System.Convert.ToString(value, CultureInfo.InvariantCulture), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+                return DateTimeOffset.Parse(System.Convert.ToString(value,
+                    CultureInfo.InvariantCulture),
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.RoundtripKind);
             }
+
             if (type == typeof(TimeSpan))
             {
-                return TimeSpan.Parse(System.Convert.ToString(value, CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
+                return TimeSpan.Parse(System.Convert.ToString(value,
+                    CultureInfo.InvariantCulture),
+                    CultureInfo.InvariantCulture);
             }
+
             if (type == typeof(byte[]))
             {
-                return System.Convert.FromBase64String(System.Convert.ToString(value, CultureInfo.InvariantCulture));
+                return System.Convert.FromBase64String(System.Convert.ToString(value,
+                    CultureInfo.InvariantCulture));
             }
-            if (type == typeof(bool))
-            {
-                return value is string text ? bool.Parse(text) : System.Convert.ToBoolean(value, CultureInfo.InvariantCulture);
-            }
-            if (type == typeof(char))
-            {
-                return System.Convert.ToChar(value, CultureInfo.InvariantCulture);
-            }
-            if (type.IsEnum)
-            {
-                return value is string name ? Enum.Parse(type, name, true) : Enum.ToObject(type, ConvertCore(value, Enum.GetUnderlyingType(type)));
-            }
-            return System.Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
+
+            return ConvertScalar(value,
+                type);
         }
 
         /// <summary>
@@ -114,8 +126,7 @@ namespace RepoDb.Data.Helpers
         /// <param name="value">The value that was read from the file.</param>
         /// <returns><c>true</c> if the value is a number that has a fraction; otherwise, <c>false</c>.</returns>
         private static bool HasFraction(object value) =>
-            (value is decimal number && decimal.Truncate(number) != number) ||
-            (value is double real && Math.Truncate(real) != real);
+            (value is decimal number && decimal.Truncate(number) != number) || (value is double real && Math.Truncate(real) != real);
 
         /// <summary>
         /// Checks whether the type is an integral number type.
@@ -123,8 +134,42 @@ namespace RepoDb.Data.Helpers
         /// <param name="type">The type.</param>
         /// <returns><c>true</c> if the type is an integral number type; otherwise, <c>false</c>.</returns>
         private static bool IsIntegral(Type type) =>
-            type == typeof(byte) || type == typeof(sbyte) || type == typeof(short) || type == typeof(ushort) ||
-            type == typeof(int) || type == typeof(uint) || type == typeof(long) || type == typeof(ulong);
+            type == typeof(byte) || type == typeof(sbyte) || type == typeof(short) || type == typeof(ushort) || type == typeof(int) || type == typeof(uint) || type == typeof(long) || type == typeof(ulong);
+
+        /// <summary>
+        /// Converts Boolean, character, enum, and remaining scalar values using invariant culture.
+        /// </summary>
+        /// <param name="value">The value that was read from the file.</param>
+        /// <param name="type">The type of the column.</param>
+        /// <returns>The converted scalar value.</returns>
+        private static object ConvertScalar(object value,
+            Type type)
+        {
+            if (type == typeof(bool))
+            {
+                return value is string text ? bool.Parse(text) : System.Convert.ToBoolean(value,
+                    CultureInfo.InvariantCulture);
+            }
+
+            if (type == typeof(char))
+            {
+                return System.Convert.ToChar(value,
+                    CultureInfo.InvariantCulture);
+            }
+
+            if (type.IsEnum)
+            {
+                return value is string name ? Enum.Parse(type,
+                    name,
+                    true) : Enum.ToObject(type,
+                        ConvertCore(value,
+                            Enum.GetUnderlyingType(type)));
+            }
+
+            return System.Convert.ChangeType(value,
+                type,
+                CultureInfo.InvariantCulture);
+        }
 
         #endregion
     }

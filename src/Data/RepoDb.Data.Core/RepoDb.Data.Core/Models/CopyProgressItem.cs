@@ -24,6 +24,12 @@ namespace RepoDb.Data.Models
         public IList<CopyBatch> Batches { get; internal set; } = new List<CopyBatch>();
 
         /// <summary>
+        /// Gets the estimated cumulative bytes of copied values, excluding object overhead and wire encoding.
+        /// Strings use two bytes per character; nulls and unsupported provider-specific values contribute zero.
+        /// </summary>
+        public long CopiedBytes { get; internal set; }
+
+        /// <summary>
         /// Gets the time that the copy of the table took (or has taken so far, if the copy of the table has not ended).
         /// </summary>
         public TimeSpan Elapsed => EndTime - StartTime;
@@ -50,18 +56,6 @@ namespace RepoDb.Data.Models
         public int RowCount { get; internal set; }
 
         /// <summary>
-        /// Gets the estimated cumulative bytes of copied values, excluding object overhead and wire encoding.
-        /// Strings use two bytes per character; nulls and unsupported provider-specific values contribute zero.
-        /// </summary>
-        public long CopiedBytes { get; internal set; }
-
-        /// <summary>
-        /// Gets the source rows to copy, measured before copying with the source filter applied.
-        /// During counting callbacks this total accumulates after each source table is counted.
-        /// </summary>
-        public long TotalRowCount { get; internal set; }
-
-        /// <summary>
         /// Gets the number of rows skipped by the provider, or <c>null</c> when unknown.
         /// Copying does not query destination row counts, so silently skipped rows cannot be detected.
         /// </summary>
@@ -81,6 +75,12 @@ namespace RepoDb.Data.Models
         /// Gets the details of the target table, which is the table that the rows of the <see cref="Source"/> were copied into.
         /// </summary>
         public Endpoint Target { get; internal set; } = new Endpoint();
+
+        /// <summary>
+        /// Gets the source rows to copy, measured before copying with the source filter applied.
+        /// During counting callbacks this total accumulates after each source table is counted.
+        /// </summary>
+        public long TotalRowCount { get; internal set; }
 
         #endregion
     }

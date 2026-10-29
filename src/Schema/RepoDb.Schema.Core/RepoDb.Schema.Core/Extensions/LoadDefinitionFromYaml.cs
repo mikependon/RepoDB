@@ -45,9 +45,22 @@ namespace RepoDb.Schema
             ITrace trace = null,
             IDbTransaction transaction = null)
         {
-            SchemaDefinitionLoader.Validate(connection, filename, tableExistenceBehavior, commandTimeout, transaction);
-            var definition = connection.ReadDefinitionFromYaml(filename, traceKey, trace);
-            return SchemaDefinitionLoader.Apply(connection, definition, tableExistenceBehavior, createdCallback, commandTimeout, traceKey, trace, transaction);
+            SchemaDefinitionLoader.Validate(connection,
+                filename,
+                tableExistenceBehavior,
+                commandTimeout,
+                transaction);
+            var definition = connection.ReadDefinitionFromYaml(filename,
+                traceKey,
+                trace);
+            return SchemaDefinitionLoader.Apply(connection,
+                definition,
+                tableExistenceBehavior,
+                createdCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
         }
 
         /// <summary>
@@ -74,9 +87,24 @@ namespace RepoDb.Schema
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            SchemaDefinitionLoader.Validate(connection, filename, tableExistenceBehavior, commandTimeout, transaction);
-            var definition = await connection.ReadDefinitionFromYamlAsync(filename, traceKey, trace, cancellationToken).ConfigureAwait(false);
-            return await SchemaDefinitionLoader.ApplyAsync(connection, definition, tableExistenceBehavior, createdCallback, commandTimeout, traceKey, trace, transaction, cancellationToken).ConfigureAwait(false);
+            SchemaDefinitionLoader.Validate(connection,
+                filename,
+                tableExistenceBehavior,
+                commandTimeout,
+                transaction);
+            var definition = await connection.ReadDefinitionFromYamlAsync(filename,
+                traceKey,
+                trace,
+                cancellationToken).ConfigureAwait(false);
+            return await SchemaDefinitionLoader.ApplyAsync(connection,
+                definition,
+                tableExistenceBehavior,
+                createdCallback,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

@@ -20,7 +20,7 @@ namespace RepoDb.Schema
     /// </summary>
     internal static class SchemaDefinitionXmlReader
     {
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Reads an XML document without permitting external entities or document type declarations.
@@ -30,13 +30,20 @@ namespace RepoDb.Schema
         internal static JsonObject Parse(string content)
         {
             using (var text = new StringReader(content))
-            using (var reader = XmlReader.Create(text, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null }))
+            using (var reader = XmlReader.Create(text,
+                new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null }))
             {
                 var root = XDocument.Load(reader).Root;
-                if (root?.Name != "repoDbSchema") throw new InvalidDataException("Invalid schema XML root.");
-                return Node(root, 0) as JsonObject ?? throw new InvalidDataException("The schema XML root must be an object.");
+                if (root?.Name != "repoDbSchema")
+                    throw new InvalidDataException("Invalid schema XML root.");
+                return Node(root,
+                    0) as JsonObject ?? throw new InvalidDataException("The schema XML root must be an object.");
             }
         }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Restores the explicit scalar and collection types used by the writer.
@@ -47,47 +54,102 @@ namespace RepoDb.Schema
         private static JsonNode Node(XElement element,
             int depth)
         {
-            if (depth > 64) throw new InvalidDataException("The definition nesting limit was exceeded.");
+            if (depth > 64)
+                throw new InvalidDataException("The definition nesting limit was exceeded.");
             var type = (string)element.Attribute("type");
-            if ((string.Equals(type, "object", StringComparison.Ordinal) || string.Equals(type, "array", StringComparison.Ordinal)) && element.Nodes().OfType<XText>().Any(t => !string.IsNullOrWhiteSpace(t.Value)))
+            if ((string.Equals(type,
+                "object",
+                StringComparison.Ordinal) || string.Equals(type,
+                    "array",
+                    StringComparison.Ordinal)) && element.Nodes().OfType<XText>().Any(t => !string.IsNullOrWhiteSpace(t.Value)))
                 throw new InvalidDataException("An XML collection contains scalar text.");
-            if (string.Equals(type, "object", StringComparison.Ordinal))
+            if (string.Equals(type,
+                "object",
+                StringComparison.Ordinal))
             {
-                var result = new JsonObject();
-                foreach (var child in element.Elements())
-                {
-                    if (child.Name.Namespace != XNamespace.None || result.ContainsKey(child.Name.LocalName))
-                        throw new InvalidDataException("Invalid or duplicate XML property.");
-                    result.Add(child.Name.LocalName, Node(child, depth + 1));
-                }
-                return result;
+                return ReadObject(element,
+                    depth);
             }
-            if (string.Equals(type, "array", StringComparison.Ordinal))
+
+            if (string.Equals(type,
+                "array",
+                StringComparison.Ordinal))
             {
-                var result = new JsonArray();
-                foreach (var child in element.Elements())
-                {
-                    if (child.Name != "item") throw new InvalidDataException("Invalid XML array item.");
-                    result.Add(Node(child, depth + 1));
-                }
-                return result;
+                return ReadArray(element,
+                    depth);
             }
-            if (element.Elements().Any()) throw new InvalidDataException("An XML scalar contains elements.");
+
+            if (element.Elements().Any())
+                throw new InvalidDataException("An XML scalar contains elements.");
             switch (type)
             {
                 case "null":
-                    if (element.Value.Length != 0) throw new InvalidDataException("Invalid XML null.");
+                    if (element.Value.Length != 0)
+                        throw new InvalidDataException("Invalid XML null.");
                     return null;
-                case "string": return JsonValue.Create(element.Value);
+                case "string":
+                    return JsonValue.Create(element.Value);
                 case "boolean":
-                    if (!string.Equals(element.Value, "true", StringComparison.Ordinal) && !string.Equals(element.Value, "false", StringComparison.Ordinal)) throw new InvalidDataException("Invalid XML boolean.");
-                    return JsonValue.Create(string.Equals(element.Value, "true", StringComparison.Ordinal));
+                    if (!string.Equals(element.Value,
+                        "true",
+                        StringComparison.Ordinal) && !string.Equals(element.Value,
+                            "false",
+                            StringComparison.Ordinal))
+                        throw new InvalidDataException("Invalid XML boolean.");
+                    return JsonValue.Create(string.Equals(element.Value,
+                        "true",
+                        StringComparison.Ordinal));
                 case "integer":
                     var number = JsonNode.Parse(element.Value);
-                    if (!(number is JsonValue value) || !value.TryGetValue<long>(out _)) throw new InvalidDataException("Invalid XML integer.");
+                    if (!(number is JsonValue value) || !value.TryGetValue<long>(out _))
+                        throw new InvalidDataException("Invalid XML integer.");
                     return number;
-                default: throw new InvalidDataException("Unknown XML value type.");
+                default:
+                    throw new InvalidDataException("Unknown XML value type.");
             }
+        }
+
+        /// <summary>
+        /// Reads and validates XML object properties recursively.
+        /// </summary>
+        /// <param name="element">The XML element to be restored.</param>
+        /// <param name="depth">The nesting depth of the element, limited to prevent excessive recursion.</param>
+        /// <returns>The reconstructed JSON collection.</returns>
+        private static JsonNode ReadObject(XElement element,
+            int depth)
+        {
+            var result = new JsonObject();
+            foreach (var child in element.Elements())
+            {
+                if (child.Name.Namespace != XNamespace.None || result.ContainsKey(child.Name.LocalName))
+                    throw new InvalidDataException("Invalid or duplicate XML property.");
+                result.Add(child.Name.LocalName,
+                    Node(child,
+                        depth + 1));
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Reads and validates XML array items recursively.
+        /// </summary>
+        /// <param name="element">The XML element to be restored.</param>
+        /// <param name="depth">The nesting depth of the element, limited to prevent excessive recursion.</param>
+        /// <returns>The reconstructed JSON collection.</returns>
+        private static JsonNode ReadArray(XElement element,
+            int depth)
+        {
+            var result = new JsonArray();
+            foreach (var child in element.Elements())
+            {
+                if (child.Name != "item")
+                    throw new InvalidDataException("Invalid XML array item.");
+                result.Add(Node(child,
+                    depth + 1));
+            }
+
+            return result;
         }
 
         #endregion

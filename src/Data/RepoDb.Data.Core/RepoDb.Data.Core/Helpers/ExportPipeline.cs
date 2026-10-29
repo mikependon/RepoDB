@@ -28,7 +28,7 @@ namespace RepoDb.Data.Helpers
     /// </summary>
     internal static class ExportPipeline
     {
-        #region Constants
+        #region Private Variables
 
         /// <summary>
         /// The number of rows after which what the writer holds is flushed into the file, so only a few rows are held in memory.
@@ -37,7 +37,7 @@ namespace RepoDb.Data.Helpers
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Exports the rows of the table into the file.
@@ -66,47 +66,59 @@ namespace RepoDb.Data.Helpers
             ITrace trace,
             Func<Stream, IExportWriter> createWriter)
         {
-            Validate(connection, tableName, filename, mappings);
+            Validate(connection,
+                tableName,
+                filename,
+                mappings);
             var interceptors = RowInterception.Normalize(dataInterceptors);
             var watch = Stopwatch.StartNew();
-            var progress = new ExportProgress { Start = DateTime.UtcNow };
-            progress.TotalRowCount = connection.Count(tableName, where, commandTimeout: commandTimeout, trace: trace);
-            Report(progress, watch, progressCallback);
-
+            var progress = new ExportProgress
+            {
+                Start = DateTime.UtcNow
+            };
+            progress.TotalRowCount = connection.Count(tableName,
+                where,
+                commandTimeout: commandTimeout,
+                trace: trace);
+            Report(progress,
+                watch,
+                progressCallback);
             var temporary = CreateTemporaryName(filename);
             try
             {
-                var (commandText, param) = CreateSelect(connection, tableName, where, mappings);
-                using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan))
+                var (commandText, param) = CreateSelect(connection,
+                    tableName,
+                    where,
+                    mappings);
+                using (var stream = OpenTemporaryFile(temporary))
                 using (var writer = createWriter(stream))
-                using (var reader = connection.ExecuteReader(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace))
+                using (var reader = connection.ExecuteReader(commandText,
+                    param,
+                    commandTimeout: commandTimeout,
+                    traceKey: traceKey ?? TraceKeys.ExecuteReader,
+                    trace: trace))
                 {
-                    var names = GetNames(reader);
-                    var columns = interceptors == null ? null : RowInterception.GetColumns(reader);
-                    writer.Begin(names);
-                    while (reader.Read())
-                    {
-                        progress.Position++;
-                        WriteRow(writer, reader, names, columns, interceptors);
-                        progress.CurrentRowCount++;
-                        if (progress.CurrentRowCount % FlushRows == 0)
-                        {
-                            writer.Flush();
-                        }
-                        Report(progress, watch, progressCallback);
-                    }
-                    writer.End();
-                    writer.Flush();
+                    WriteRows(writer,
+                        reader,
+                        interceptors,
+                        progress,
+                        watch,
+                        progressCallback);
                 }
-                Replace(temporary, filename);
+
+                Replace(temporary,
+                    filename);
             }
             catch
             {
                 Discard(temporary);
                 throw;
             }
+
             progress.End = DateTime.UtcNow;
-            Report(progress, watch, progressCallback);
+            Report(progress,
+                watch,
+                progressCallback);
             return progress;
         }
 
@@ -139,53 +151,64 @@ namespace RepoDb.Data.Helpers
             Func<Stream, IExportWriter> createWriter,
             CancellationToken cancellationToken)
         {
-            Validate(connection, tableName, filename, mappings);
+            Validate(connection,
+                tableName,
+                filename,
+                mappings);
             var interceptors = RowInterception.Normalize(dataInterceptors);
             var watch = Stopwatch.StartNew();
-            var progress = new ExportProgress { Start = DateTime.UtcNow };
-            progress.TotalRowCount = await connection.CountAsync(tableName, where, commandTimeout: commandTimeout, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
-            Report(progress, watch, progressCallback);
-
+            var progress = new ExportProgress
+            {
+                Start = DateTime.UtcNow
+            };
+            progress.TotalRowCount = await connection.CountAsync(tableName,
+                where,
+                commandTimeout: commandTimeout,
+                trace: trace,
+                cancellationToken: cancellationToken).ConfigureAwait(false);
+            Report(progress,
+                watch,
+                progressCallback);
             var temporary = CreateTemporaryName(filename);
             try
             {
-                var (commandText, param) = CreateSelect(connection, tableName, where, mappings);
-                using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan))
+                var (commandText, param) = CreateSelect(connection,
+                    tableName,
+                    where,
+                    mappings);
+                using (var stream = OpenTemporaryFile(temporary))
                 using (var writer = createWriter(stream))
-                using (var reader = await connection.ExecuteReaderAsync(commandText, param, commandTimeout: commandTimeout, traceKey: traceKey ?? TraceKeys.ExecuteReader, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false))
+                using (var reader = await connection.ExecuteReaderAsync(commandText,
+                    param,
+                    commandTimeout: commandTimeout,
+                    traceKey: traceKey ?? TraceKeys.ExecuteReader,
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false))
                 {
-                    var names = GetNames(reader);
-                    var columns = interceptors == null ? null : RowInterception.GetColumns(reader);
-                    writer.Begin(names);
-                    while (await ReadAsync(reader, cancellationToken).ConfigureAwait(false))
-                    {
-                        progress.Position++;
-                        WriteRow(writer, reader, names, columns, interceptors);
-                        progress.CurrentRowCount++;
-                        if (progress.CurrentRowCount % FlushRows == 0)
-                        {
-                            await writer.FlushAsync(cancellationToken).ConfigureAwait(false);
-                        }
-                        Report(progress, watch, progressCallback);
-                    }
-                    writer.End();
-                    await writer.FlushAsync(cancellationToken).ConfigureAwait(false);
+                    await WriteRowsAsync(writer,
+                        reader,
+                        interceptors,
+                        progress,
+                        watch,
+                        progressCallback,
+                        cancellationToken).ConfigureAwait(false);
                 }
-                Replace(temporary, filename);
+
+                Replace(temporary,
+                    filename);
             }
             catch
             {
                 Discard(temporary);
                 throw;
             }
+
             progress.End = DateTime.UtcNow;
-            Report(progress, watch, progressCallback);
+            Report(progress,
+                watch,
+                progressCallback);
             return progress;
         }
-
-        #endregion
-
-        #region Private Methods
 
         /// <summary>
         /// Validates the arguments of the export.
@@ -205,41 +228,59 @@ namespace RepoDb.Data.Helpers
             {
                 throw new ArgumentNullException(nameof(connection));
             }
+
             if (string.IsNullOrWhiteSpace(tableName))
             {
                 throw new ArgumentNullException(nameof(tableName));
             }
+
             if (string.IsNullOrWhiteSpace(filename))
             {
                 throw new ArgumentNullException(nameof(filename));
             }
+
             if (mappings == null || mappings.Count == 0)
             {
                 return;
             }
+
             var dbSetting = connection.GetDbSetting();
-            var dbFields = DbFieldCache.Get(connection, tableName, null);
+            var dbFields = DbFieldCache.Get(connection,
+                tableName,
+                null);
             var destinations = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var mapping in mappings)
             {
                 if (mapping == null)
                 {
-                    throw new ArgumentException("The column mappings must not contain a null item.", nameof(mappings));
+                    throw new ArgumentException("The column mappings must not contain a null item.",
+                        nameof(mappings));
                 }
+
                 if (string.IsNullOrWhiteSpace(mapping.SourceColumn) || string.IsNullOrWhiteSpace(mapping.DestinationColumn))
                 {
-                    throw new ArgumentException("The source and the destination columns of a column mapping must not be empty.", nameof(mappings));
+                    throw new ArgumentException("The source and the destination columns of a column mapping must not be empty.",
+                        nameof(mappings));
                 }
-                if (dbFields?.GetByUnquotedName(mapping.SourceColumn.AsUnquoted(true, dbSetting)) == null)
+
+                if (dbFields?.GetByUnquotedName(mapping.SourceColumn.AsUnquoted(true,
+                    dbSetting)) == null)
                 {
-                    throw new ArgumentException($"The source column '{mapping.SourceColumn}' does not exist on the table '{tableName}'.", nameof(mappings));
+                    throw new ArgumentException($"The source column '{mapping.SourceColumn}' does not exist on the table '{tableName}'.",
+                        nameof(mappings));
                 }
+
                 if (!destinations.Add(mapping.DestinationColumn))
                 {
-                    throw new ArgumentException($"The destination '{mapping.DestinationColumn}' is mapped more than once.", nameof(mappings));
+                    throw new ArgumentException($"The destination '{mapping.DestinationColumn}' is mapped more than once.",
+                        nameof(mappings));
                 }
             }
         }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Gets the names of the columns of the reader.
@@ -253,6 +294,7 @@ namespace RepoDb.Data.Helpers
             {
                 names[i] = reader.GetName(i);
             }
+
             return names;
         }
 
@@ -272,10 +314,14 @@ namespace RepoDb.Data.Helpers
         {
             if (interceptors == null)
             {
-                writer.WriteRow(reader, names);
+                writer.WriteRow(reader,
+                    names);
                 return;
             }
-            writer.WriteRow(RowInterception.Apply(RowInterception.Read(reader, columns), interceptors));
+
+            writer.WriteRow(RowInterception.Apply(RowInterception.Read(reader,
+                columns),
+                interceptors));
         }
 
         /// <summary>
@@ -312,7 +358,9 @@ namespace RepoDb.Data.Helpers
             {
                 File.Delete(filename);
             }
-            File.Move(temporary, filename);
+
+            File.Move(temporary,
+                filename);
         }
 
         /// <summary>
@@ -331,6 +379,109 @@ namespace RepoDb.Data.Helpers
             catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
             {
             }
+        }
+
+        /// <summary>
+        /// Streams rows through the interceptors and writer, flushing and reporting progress in order.
+        /// </summary>
+        /// <param name="writer">The format-specific output writer.</param>
+        /// <param name="reader">The forward-only source rows.</param>
+        /// <param name="interceptors">The ordered row interceptors, or null.</param>
+        /// <param name="progress">The shared export counters.</param>
+        /// <param name="watch">The timer used in progress reports.</param>
+        /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
+        private static void WriteRows(IExportWriter writer,
+            IDataReader reader,
+            IList<IDataInterceptor<Row>> interceptors,
+            ExportProgress progress,
+            Stopwatch watch,
+            Action<ExportProgress> progressCallback)
+        {
+            var names = GetNames(reader);
+            var columns = interceptors == null ? null : RowInterception.GetColumns(reader);
+            writer.Begin(names);
+            while (reader.Read())
+            {
+                progress.Position++;
+                WriteRow(writer,
+                    reader,
+                    names,
+                    columns,
+                    interceptors);
+                progress.CurrentRowCount++;
+                if (progress.CurrentRowCount % FlushRows == 0)
+                {
+                    writer.Flush();
+                }
+
+                Report(progress,
+                    watch,
+                    progressCallback);
+            }
+
+            writer.End();
+            writer.Flush();
+        }
+
+        /// <summary>
+        /// Streams rows through the interceptors and writer, flushing and reporting progress in order.
+        /// </summary>
+        /// <param name="writer">The format-specific output writer.</param>
+        /// <param name="reader">The forward-only source rows.</param>
+        /// <param name="interceptors">The ordered row interceptors, or null.</param>
+        /// <param name="progress">The shared export counters.</param>
+        /// <param name="watch">The timer used in progress reports.</param>
+        /// <param name="progressCallback">The callback that receives the progress, or <c>null</c>.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task representing completion of all row writes.</returns>
+        private static async Task WriteRowsAsync(IExportWriter writer,
+            IDataReader reader,
+            IList<IDataInterceptor<Row>> interceptors,
+            ExportProgress progress,
+            Stopwatch watch,
+            Action<ExportProgress> progressCallback,
+            CancellationToken cancellationToken)
+        {
+            var names = GetNames(reader);
+            var columns = interceptors == null ? null : RowInterception.GetColumns(reader);
+            writer.Begin(names);
+            while (await ReadAsync(reader,
+                cancellationToken).ConfigureAwait(false))
+            {
+                progress.Position++;
+                WriteRow(writer,
+                    reader,
+                    names,
+                    columns,
+                    interceptors);
+                progress.CurrentRowCount++;
+                if (progress.CurrentRowCount % FlushRows == 0)
+                {
+                    await writer.FlushAsync(cancellationToken).ConfigureAwait(false);
+                }
+
+                Report(progress,
+                    watch,
+                    progressCallback);
+            }
+
+            writer.End();
+            await writer.FlushAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Opens an exclusive sequential stream for the temporary export file.
+        /// </summary>
+        /// <param name="temporary">The temporary output filename.</param>
+        /// <returns>The newly created output stream.</returns>
+        private static FileStream OpenTemporaryFile(string temporary)
+        {
+            return new FileStream(temporary,
+                FileMode.CreateNew,
+                FileAccess.Write,
+                FileShare.None,
+                4096,
+                FileOptions.Asynchronous | FileOptions.SequentialScan);
         }
 
         #endregion

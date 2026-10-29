@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -17,11 +17,15 @@ namespace RepoDb.Schema
     /// </summary>
     public interface IColumnDefaultSupport
     {
+        #region Public Methods
+
         /// <summary>
         /// Gets the reason why the destination database does not create the default value of the column.
         /// </summary>
         /// <param name="column">The column of the source table.</param>
         /// <returns>The reason (i.e.: <c>its value comes from a sequence, which MySQL can not use as a default value</c>), or <c>null</c> if the column has no default value or it is created.</returns>
         string GetUnsupportedDefaultReason(ColumnInfo column);
+
+        #endregion
     }
 }

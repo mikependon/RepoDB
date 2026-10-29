@@ -6,11 +6,11 @@
 
 #endregion
 
-using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,7 +28,7 @@ namespace RepoDb.Schema
     /// </summary>
     internal static class DbConnectionExtension
     {
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Extracts the selected table schemas and saves their definition in the requested format.
@@ -50,43 +50,41 @@ namespace RepoDb.Schema
             ITrace trace,
             string format)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
-            if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentException("A table name is required.", nameof(tableName));
-            if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException("A filename is required.", nameof(filename));
-            if (!Enum.IsDefined(typeof(RelatedTableBehavior), relationshipBehavior)) throw new ArgumentOutOfRangeException(nameof(relationshipBehavior));
-            if (commandTimeout < 0) throw new ArgumentOutOfRangeException(nameof(commandTimeout));
+            ValidateDefinitionArguments(connection,
+                tableName,
+                filename,
+                relationshipBehavior,
+                commandTimeout);
             var path = Path.GetFullPath(filename);
-            var reader = SchemaReaderMapper.Get(connection) ?? throw new MissingMappingException(
-                $"There is no schema reader mapping for '{connection.GetType().FullName}'. Register one through SchemaReaderMapper.");
-
+            var reader = SchemaReaderMapper.Get(connection) ?? throw new MissingMappingException($"There is no schema reader mapping for '{connection.GetType().FullName}'. Register one through SchemaReaderMapper.");
             string content;
-            using (new SchemaReadContext(commandTimeout, traceKey, trace))
+            using (new SchemaReadContext(commandTimeout,
+                traceKey,
+                trace))
             {
-                if (!reader.TableExists(tableName)) throw new InvalidOperationException($"The table '{tableName}' does not exist.");
+                if (!reader.TableExists(tableName))
+                    throw new InvalidOperationException($"The table '{tableName}' does not exist.");
                 var root = reader.GetTableSchema(tableName);
-                var names = relationshipBehavior == RelatedTableBehavior.TableOnly
-                    ? new[] { tableName }
-                    : reader.GetRelatedTables(new[] { tableName }, relationshipBehavior);
-                var tables = names.Select(name => string.Equals(name, tableName, StringComparison.Ordinal) ? root : reader.GetTableSchema(name))
-                    .Concat(new[] { root }).GroupBy(table => table.Table).Select(group => group.First()).ToList();
-                var definition = SchemaDefinition.Create(root.Table, tables, relationshipBehavior);
-                content = SchemaDefinitionSerializer.Serialize(definition, format);
+                var names = relationshipBehavior == RelatedTableBehavior.TableOnly ? new[]
+                {
+                    tableName
+                }
+
+                : reader.GetRelatedTables(new[] { tableName },
+                    relationshipBehavior);
+                var tables = names.Select(name => string.Equals(name,
+                    tableName,
+                    StringComparison.Ordinal) ? root : reader.GetTableSchema(name)).Concat(new[] { root }).GroupBy(table => table.Table).Select(group => group.First()).ToList();
+                var definition = SchemaDefinition.Create(root.Table,
+                    tables,
+                    relationshipBehavior);
+                content = SchemaDefinitionSerializer.Serialize(definition,
+                    format);
             }
 
             // Keep the temporary file on the same volume to allow atomic replacement.
-            var temporary = Path.Combine(Path.GetDirectoryName(path), ".repodb-" + Guid.NewGuid().ToString("N") + ".tmp");
-            try
-            {
-                using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None))
-                using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true)))
-                    writer.Write(content);
-                if (File.Exists(path)) File.Replace(temporary, path, null);
-                else File.Move(temporary, path);
-            }
-            finally
-            {
-                if (File.Exists(temporary)) File.Delete(temporary);
-            }
+            WriteDefinitionFile(path,
+                content);
         }
 
         /// <summary>
@@ -111,60 +109,56 @@ namespace RepoDb.Schema
             string format,
             CancellationToken cancellationToken)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
-            if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentException("A table name is required.", nameof(tableName));
-            if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentException("A filename is required.", nameof(filename));
-            if (!Enum.IsDefined(typeof(RelatedTableBehavior), relationshipBehavior)) throw new ArgumentOutOfRangeException(nameof(relationshipBehavior));
-            if (commandTimeout < 0) throw new ArgumentOutOfRangeException(nameof(commandTimeout));
+            ValidateDefinitionArguments(connection,
+                tableName,
+                filename,
+                relationshipBehavior,
+                commandTimeout);
             cancellationToken.ThrowIfCancellationRequested();
             var path = Path.GetFullPath(filename);
-            var reader = SchemaReaderMapper.Get(connection) ?? throw new MissingMappingException(
-                $"There is no schema reader mapping for '{connection.GetType().FullName}'. Register one through SchemaReaderMapper.");
-
+            var reader = SchemaReaderMapper.Get(connection) ?? throw new MissingMappingException($"There is no schema reader mapping for '{connection.GetType().FullName}'. Register one through SchemaReaderMapper.");
             string content;
-            using (new SchemaReadContext(commandTimeout, traceKey, trace))
+            using (new SchemaReadContext(commandTimeout,
+                traceKey,
+                trace))
             {
-                if (!await reader.TableExistsAsync(tableName, cancellationToken).ConfigureAwait(false))
+                if (!await reader.TableExistsAsync(tableName,
+                    cancellationToken).ConfigureAwait(false))
                     throw new InvalidOperationException($"The table '{tableName}' does not exist.");
                 cancellationToken.ThrowIfCancellationRequested();
-                var root = await reader.GetTableSchemaAsync(tableName, cancellationToken).ConfigureAwait(false);
+                var root = await reader.GetTableSchemaAsync(tableName,
+                    cancellationToken).ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
-                var names = relationshipBehavior == RelatedTableBehavior.TableOnly
-                    ? new[] { tableName }
-                    : await reader.GetRelatedTablesAsync(new[] { tableName }, relationshipBehavior, cancellationToken).ConfigureAwait(false);
+                var names = relationshipBehavior == RelatedTableBehavior.TableOnly ? new[]
+                {
+                    tableName
+                }
+
+                : await reader.GetRelatedTablesAsync(new[] { tableName },
+                    relationshipBehavior,
+                    cancellationToken).ConfigureAwait(false);
                 var tables = new List<TableSchema>();
                 foreach (var name in names)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    tables.Add(string.Equals(name, tableName, StringComparison.Ordinal) ? root
-                        : await reader.GetTableSchemaAsync(name, cancellationToken).ConfigureAwait(false));
+                    tables.Add(string.Equals(name,
+                        tableName,
+                        StringComparison.Ordinal) ? root : await reader.GetTableSchemaAsync(name,
+                            cancellationToken).ConfigureAwait(false));
                 }
+
                 tables.Add(root);
                 cancellationToken.ThrowIfCancellationRequested();
-                var definition = SchemaDefinition.Create(root.Table, tables.GroupBy(table => table.Table).Select(group => group.First()).ToList(), relationshipBehavior);
-                content = SchemaDefinitionSerializer.Serialize(definition, format);
+                var definition = SchemaDefinition.Create(root.Table,
+                    tables.GroupBy(table => table.Table).Select(group => group.First()).ToList(),
+                    relationshipBehavior);
+                content = SchemaDefinitionSerializer.Serialize(definition,
+                    format);
             }
 
-            cancellationToken.ThrowIfCancellationRequested();
-            var bytes = new UTF8Encoding(false, true).GetBytes(content);
-            var temporary = Path.Combine(Path.GetDirectoryName(path), ".repodb-" + Guid.NewGuid().ToString("N") + ".tmp");
-            try
-            {
-                using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None,
-                    4096, FileOptions.Asynchronous | FileOptions.SequentialScan))
-                {
-                    await stream.WriteAsync(bytes, 0, bytes.Length, cancellationToken).ConfigureAwait(false);
-                    await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
-                }
-                // Cancellation is honored before committing the completed file, never after it is committed.
-                cancellationToken.ThrowIfCancellationRequested();
-                if (File.Exists(path)) File.Replace(temporary, path, null);
-                else File.Move(temporary, path);
-            }
-            finally
-            {
-                if (File.Exists(temporary)) File.Delete(temporary);
-            }
+            await WriteDefinitionFileAsync(path,
+                content,
+                cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -176,9 +170,7 @@ namespace RepoDb.Schema
         internal static string GetTargetSchema(string targetSchema,
             IDbConnection destinationConnection)
         {
-            var schema = string.IsNullOrWhiteSpace(targetSchema)
-                ? destinationConnection.GetDbSetting().DefaultSchema
-                : targetSchema;
+            var schema = string.IsNullOrWhiteSpace(targetSchema) ? destinationConnection.GetDbSetting().DefaultSchema : targetSchema;
             return string.IsNullOrWhiteSpace(schema) ? null : schema;
         }
 
@@ -194,7 +186,9 @@ namespace RepoDb.Schema
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="transaction">The transaction to be used on the destination connection.</param>
         /// <param name="traceKey">The tracking key for file-load probes; null keeps the execute method's default.</param>
-        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        [UnconditionalSuppressMessage("Trimming",
+            "IL2026:RequiresUnreferencedCode",
+            Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static void ProbeTables(IEnumerable<PlanTable> tables,
             TableExistsBehavior behavior,
             ISchemaComposer composer,
@@ -204,11 +198,11 @@ namespace RepoDb.Schema
             IDbTransaction transaction,
             string traceKey = null)
         {
-            bool? Probe(string statement) =>
-                string.IsNullOrWhiteSpace(statement)
-                    ? (bool?)null
-                    : ToBoolean(destinationConnection.ExecuteScalar(statement, commandTimeout: commandTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? "ExecuteScalar"));
-
+            bool? Probe(string statement) => string.IsNullOrWhiteSpace(statement) ? (bool? )null : ToBoolean(destinationConnection.ExecuteScalar(statement,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                traceKey: traceKey ?? "ExecuteScalar"));
             // A foreign key is added to a table that exists only if the table that it references is copied, or already exists (a table is not created to be referenced)
             bool CanBeReferenced(ForeignKeyInfo foreignKey)
             {
@@ -216,8 +210,11 @@ namespace RepoDb.Schema
                 {
                     return true;
                 }
+
                 var name = composer.ComposeName(foreignKey.ReferencedTable);
-                return tables.Any(item => string.Equals(item.Name, name, StringComparison.Ordinal)) || Probe(composer.ComposeTableExists(name)) == true;
+                return tables.Any(item => string.Equals(item.Name,
+                    name,
+                    StringComparison.Ordinal)) || Probe(composer.ComposeTableExists(name)) == true;
             }
 
             foreach (var table in tables)
@@ -225,9 +222,12 @@ namespace RepoDb.Schema
                 table.Exists = Probe(composer.ComposeTableExists(table.Name));
                 if (table.Exists == true && behavior == TableExistsBehavior.Align)
                 {
-                    table.MissingColumns = table.Schema.Columns.Where(column => Probe(composer.ComposeColumnExists(table.Name, column.Field.Name)) == false).ToList();
-                    table.MissingIndexes = table.Schema.Indexes.Where(index => index.Name != null && Probe(composer.ComposeIndexExists(table.Name, index.Name)) == false).ToList();
-                    table.MissingForeignKeys = table.Schema.ForeignKeys.Where(foreignKey => foreignKey.Name != null && Probe(composer.ComposeForeignKeyExists(table.Name, foreignKey.Name)) == false && CanBeReferenced(foreignKey)).ToList();
+                    table.MissingColumns = table.Schema.Columns.Where(column => Probe(composer.ComposeColumnExists(table.Name,
+                        column.Field.Name)) == false).ToList();
+                    table.MissingIndexes = table.Schema.Indexes.Where(index => index.Name != null && Probe(composer.ComposeIndexExists(table.Name,
+                        index.Name)) == false).ToList();
+                    table.MissingForeignKeys = table.Schema.ForeignKeys.Where(foreignKey => foreignKey.Name != null && Probe(composer.ComposeForeignKeyExists(table.Name,
+                        foreignKey.Name)) == false && CanBeReferenced(foreignKey)).ToList();
                 }
             }
 
@@ -235,9 +235,16 @@ namespace RepoDb.Schema
             // and the check constraints that the composer does not accept
             foreach (var table in tables.Where(table => table.Exists != true || behavior == TableExistsBehavior.Drop).ToList())
             {
-                SkipUnsupported(table, table.Schema.ForeignKeys.Where(foreignKey => !CanBeReferenced(foreignKey)).ToList(), composer);
+                SkipUnsupported(table,
+                    table.Schema.ForeignKeys.Where(foreignKey => !CanBeReferenced(foreignKey)).ToList(),
+                    composer);
             }
-            IndexNameResolver.Resolve(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe);
+
+            IndexNameResolver.Resolve(tables,
+                behavior,
+                composer,
+                destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true,
+                Probe);
         }
 
         /// <summary>
@@ -253,7 +260,9 @@ namespace RepoDb.Schema
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <param name="traceKey">The tracking key for file-load probes; null keeps the execute method's default.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "No parameter object is passed to the RepoDB execute methods.")]
+        [UnconditionalSuppressMessage("Trimming",
+            "IL2026:RequiresUnreferencedCode",
+            Justification = "No parameter object is passed to the RepoDB execute methods.")]
         internal static async Task ProbeTablesAsync(IEnumerable<PlanTable> tables,
             TableExistsBehavior behavior,
             ISchemaComposer composer,
@@ -264,11 +273,12 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken,
             string traceKey = null)
         {
-            async Task<bool?> Probe(string statement) =>
-                string.IsNullOrWhiteSpace(statement)
-                    ? (bool?)null
-                    : ToBoolean(await destinationConnection.ExecuteScalarAsync(statement, commandTimeout: commandTimeout, transaction: transaction, trace: trace, cancellationToken: cancellationToken, traceKey: traceKey ?? "ExecuteScalar").ConfigureAwait(false));
-
+            async Task<bool?> Probe(string statement) => string.IsNullOrWhiteSpace(statement) ? (bool? )null : ToBoolean(await destinationConnection.ExecuteScalarAsync(statement,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                cancellationToken: cancellationToken,
+                traceKey: traceKey ?? "ExecuteScalar").ConfigureAwait(false));
             // A foreign key is added to a table that exists only if the table that it references is copied, or already exists (a table is not created to be referenced)
             async Task<bool> CanBeReferenced(ForeignKeyInfo foreignKey)
             {
@@ -276,8 +286,11 @@ namespace RepoDb.Schema
                 {
                     return true;
                 }
+
                 var name = composer.ComposeName(foreignKey.ReferencedTable);
-                return tables.Any(item => string.Equals(item.Name, name, StringComparison.Ordinal)) || await Probe(composer.ComposeTableExists(name)).ConfigureAwait(false) == true;
+                return tables.Any(item => string.Equals(item.Name,
+                    name,
+                    StringComparison.Ordinal)) || await Probe(composer.ComposeTableExists(name)).ConfigureAwait(false) == true;
             }
 
             foreach (var table in tables)
@@ -285,30 +298,10 @@ namespace RepoDb.Schema
                 table.Exists = await Probe(composer.ComposeTableExists(table.Name)).ConfigureAwait(false);
                 if (table.Exists == true && behavior == TableExistsBehavior.Align)
                 {
-                    table.MissingColumns = new List<ColumnInfo>();
-                    foreach (var column in table.Schema.Columns)
-                    {
-                        if (await Probe(composer.ComposeColumnExists(table.Name, column.Field.Name)).ConfigureAwait(false) == false)
-                        {
-                            table.MissingColumns.Add(column);
-                        }
-                    }
-                    table.MissingIndexes = new List<IndexInfo>();
-                    foreach (var index in table.Schema.Indexes.Where(index => index.Name != null))
-                    {
-                        if (await Probe(composer.ComposeIndexExists(table.Name, index.Name)).ConfigureAwait(false) == false)
-                        {
-                            table.MissingIndexes.Add(index);
-                        }
-                    }
-                    table.MissingForeignKeys = new List<ForeignKeyInfo>();
-                    foreach (var foreignKey in table.Schema.ForeignKeys.Where(foreignKey => foreignKey.Name != null))
-                    {
-                        if (await Probe(composer.ComposeForeignKeyExists(table.Name, foreignKey.Name)).ConfigureAwait(false) == false && await CanBeReferenced(foreignKey).ConfigureAwait(false))
-                        {
-                            table.MissingForeignKeys.Add(foreignKey);
-                        }
-                    }
+                    await FindMissingObjectsAsync(table,
+                        composer,
+                        Probe,
+                        CanBeReferenced).ConfigureAwait(false);
                 }
             }
 
@@ -322,9 +315,17 @@ namespace RepoDb.Schema
                         unreferenced.Add(foreignKey);
                     }
                 }
-                SkipUnsupported(table, unreferenced, composer);
+
+                SkipUnsupported(table,
+                    unreferenced,
+                    composer);
             }
-            await IndexNameResolver.ResolveAsync(tables, behavior, composer, destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true, Probe).ConfigureAwait(false);
+
+            await IndexNameResolver.ResolveAsync(tables,
+                behavior,
+                composer,
+                destinationConnection.GetDbSetting()?.AreIndexNamesUniquePerSchema == true,
+                Probe).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -353,12 +354,8 @@ namespace RepoDb.Schema
             }
 
             var support = composer as ICheckConstraintSupport;
-            var checkConstraints = support == null
-                ? new List<KeyValuePair<CheckConstraintInfo, string>>()
-                : table.Schema.CheckConstraints
-                    .Select(checkConstraint => new KeyValuePair<CheckConstraintInfo, string>(checkConstraint, support.GetUnsupportedReason(checkConstraint)))
-                    .Where(pair => pair.Value != null)
-                    .ToList();
+            var checkConstraints = support == null ? new List<KeyValuePair<CheckConstraintInfo, string>>() : table.Schema.CheckConstraints.Select(checkConstraint => new KeyValuePair<CheckConstraintInfo, string>(checkConstraint,
+                support.GetUnsupportedReason(checkConstraint))).Where(pair => pair.Value != null).ToList();
             if (foreignKeys.Count == 0 && checkConstraints.Count == 0)
             {
                 return;
@@ -371,13 +368,15 @@ namespace RepoDb.Schema
                 PrimaryKey = schema.PrimaryKey,
                 Indexes = schema.Indexes,
                 UniqueConstraints = schema.UniqueConstraints,
-                CheckConstraints = schema.CheckConstraints.Where(checkConstraint => checkConstraints.All(pair => !ReferenceEquals(pair.Key, checkConstraint))).ToList(),
+                CheckConstraints = schema.CheckConstraints.Where(checkConstraint => checkConstraints.All(pair => !ReferenceEquals(pair.Key,
+                    checkConstraint))).ToList(),
                 ForeignKeys = schema.ForeignKeys.Where(foreignKey => !foreignKeys.Contains(foreignKey)).ToList()
             };
             foreach (var foreignKey in foreignKeys)
             {
                 table.Warnings.Add($"Skipped the foreign key '{foreignKey.Name}': the table '{foreignKey.ReferencedTable.Name}' is not part of the copy and does not exist in the destination.");
             }
+
             foreach (var pair in checkConstraints)
             {
                 table.Warnings.Add($"Skipped the check constraint '{pair.Key.Name}': {pair.Value}.");
@@ -403,13 +402,13 @@ namespace RepoDb.Schema
             PlanStep step,
             int statementIndex) =>
             new ExecutionError
-            {
-                Exception = exception,
-                Statement = step.Statement,
-                StatementIndex = statementIndex,
-                TableName = step.Owner?.Schema.Table?.Name,
-                SchemaName = step.Owner?.Schema.Table?.Schema
-            };
+        {
+            Exception = exception,
+            Statement = step.Statement,
+            StatementIndex = statementIndex,
+            TableName = step.Owner?.Schema.Table?.Name,
+            SchemaName = step.Owner?.Schema.Table?.Schema
+        };
 
         /// <summary>
         /// Gets the script that was (or is going to be) executed for the table.
@@ -428,7 +427,10 @@ namespace RepoDb.Schema
                     return table.AlignStatements;
                 default:
                     var create = schemaComposer.ComposeSchema(table.Schema) ?? Enumerable.Empty<string>();
-                    return table.DropStatement == null ? create : new[] { table.DropStatement }.Concat(create);
+                    return table.DropStatement == null ? create : new[]
+                    {
+                        table.DropStatement
+                    }.Concat(create);
             }
         }
 
@@ -456,12 +458,11 @@ namespace RepoDb.Schema
             {
                 var schema = table.Schema;
                 var aligned = table.Outcome == TableOutcome.Aligned;
-                var schemaErrors = errors
-                    .Where(error => error.TableName == null ||
-                        (string.Equals(error.TableName, schema.Table.Name, StringComparison.Ordinal) &&
-                        string.Equals(error.SchemaName, schema.Table.Schema, StringComparison.Ordinal)))
-                    .ToList();
-
+                var schemaErrors = errors.Where(error => error.TableName == null || (string.Equals(error.TableName,
+                    schema.Table.Name,
+                    StringComparison.Ordinal) && string.Equals(error.SchemaName,
+                        schema.Table.Schema,
+                        StringComparison.Ordinal))).ToList();
                 var item = new CopyTableSchemaResultItem
                 {
                     Action = tableExistenceBehavior,
@@ -486,7 +487,9 @@ namespace RepoDb.Schema
                         Server = (destinationConnection as System.Data.Common.DbConnection)?.DataSource,
                         DatabaseType = destinationConnection.GetType().Name
                     },
-                    Script = string.Join(Environment.NewLine, GetScript(table, schemaComposer)),
+                    Script = string.Join(Environment.NewLine,
+                        GetScript(table,
+                            schemaComposer)),
                     ColumnCount = schema.Columns.Count,
                     IndexCount = schema.Indexes.Count,
                     ForeignKeyCount = schema.ForeignKeys.Count,
@@ -509,13 +512,13 @@ namespace RepoDb.Schema
             IList<CopyTableSchemaResultItem> items,
             IList<ExecutionError> errors) =>
             new CopyTableSchemaResult
-            {
-                StartTime = startTime,
-                EndTime = DateTime.UtcNow,
-                Items = items,
-                Errors = errors,
-                Warnings = items.SelectMany(item => item.Warnings).ToList()
-            };
+        {
+            StartTime = startTime,
+            EndTime = DateTime.UtcNow,
+            Items = items,
+            Errors = errors,
+            Warnings = items.SelectMany(item => item.Warnings).ToList()
+        };
 
         /// <summary>
         /// Validates the arguments of the copy of a single table.
@@ -532,10 +535,12 @@ namespace RepoDb.Schema
             {
                 throw new ArgumentNullException(nameof(connection));
             }
+
             if (string.IsNullOrWhiteSpace(tableName))
             {
                 throw new ArgumentNullException(nameof(tableName));
             }
+
             if (destinationConnection == null)
             {
                 throw new ArgumentNullException(nameof(destinationConnection));
@@ -559,20 +564,187 @@ namespace RepoDb.Schema
             {
                 throw new ArgumentNullException(nameof(connection));
             }
+
             if (tableNames == null)
             {
                 throw new ArgumentNullException(nameof(tableNames));
             }
+
             if (destinationConnection == null)
             {
                 throw new ArgumentNullException(nameof(destinationConnection));
             }
+
             var names = tableNames.ToList();
             if (names.Any(string.IsNullOrWhiteSpace))
             {
-                throw new ArgumentException("The table names cannot contain a null or a white-space name.", nameof(tableNames));
+                throw new ArgumentException("The table names cannot contain a null or a white-space name.",
+                    nameof(tableNames));
             }
+
             return names;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Finds columns, indexes, and foreign keys missing from an existing destination table.
+        /// </summary>
+        /// <param name="table">The table whose missing objects are populated.</param>
+        /// <param name="composer">The destination SQL composer.</param>
+        /// <param name="probe">Executes an existence query with the caller's transaction and cancellation.</param>
+        /// <param name="canBeReferenced">Checks whether a foreign-key target is available.</param>
+        /// <returns>A task representing completion of the alignment probes.</returns>
+        private static async Task FindMissingObjectsAsync(PlanTable table,
+            ISchemaComposer composer,
+            Func<string, Task<bool?>> probe,
+            Func<ForeignKeyInfo, Task<bool>> canBeReferenced)
+        {
+            table.MissingColumns = new List<ColumnInfo>();
+            foreach (var column in table.Schema.Columns)
+            {
+                if (await probe(composer.ComposeColumnExists(table.Name,
+                    column.Field.Name)).ConfigureAwait(false) == false)
+                {
+                    table.MissingColumns.Add(column);
+                }
+            }
+
+            table.MissingIndexes = new List<IndexInfo>();
+            foreach (var index in table.Schema.Indexes.Where(index => index.Name != null))
+            {
+                if (await probe(composer.ComposeIndexExists(table.Name,
+                    index.Name)).ConfigureAwait(false) == false)
+                {
+                    table.MissingIndexes.Add(index);
+                }
+            }
+
+            table.MissingForeignKeys = new List<ForeignKeyInfo>();
+            foreach (var foreignKey in table.Schema.ForeignKeys.Where(foreignKey => foreignKey.Name != null))
+            {
+                if (await probe(composer.ComposeForeignKeyExists(table.Name,
+                    foreignKey.Name)).ConfigureAwait(false) == false && await canBeReferenced(foreignKey).ConfigureAwait(false))
+                {
+                    table.MissingForeignKeys.Add(foreignKey);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Validates the shared arguments before reading a catalog or writing a definition.
+        /// </summary>
+        /// <param name="connection">The source connection with a registered schema reader.</param>
+        /// <param name="tableName">The source table, optionally schema-qualified.</param>
+        /// <param name="filename">The output filename.</param>
+        /// <param name="relationshipBehavior">The related tables to include.</param>
+        /// <param name="commandTimeout">The catalog query timeout in seconds.</param>
+        private static void ValidateDefinitionArguments(IDbConnection connection,
+            string tableName,
+            string filename,
+            RelatedTableBehavior relationshipBehavior,
+            int? commandTimeout)
+        {
+            if (connection == null)
+                throw new ArgumentNullException(nameof(connection));
+            if (string.IsNullOrWhiteSpace(tableName))
+                throw new ArgumentException("A table name is required.",
+                    nameof(tableName));
+            if (string.IsNullOrWhiteSpace(filename))
+                throw new ArgumentException("A filename is required.",
+                    nameof(filename));
+            if (!Enum.IsDefined(typeof(RelatedTableBehavior),
+                relationshipBehavior))
+                throw new ArgumentOutOfRangeException(nameof(relationshipBehavior));
+            if (commandTimeout < 0)
+                throw new ArgumentOutOfRangeException(nameof(commandTimeout));
+        }
+
+        /// <summary>
+        /// Writes a complete definition to a temporary file and commits it atomically.
+        /// </summary>
+        /// <param name="path">The absolute destination filename.</param>
+        /// <param name="content">The complete serialized definition.</param>
+        private static void WriteDefinitionFile(string path,
+            string content)
+        {
+            // Keep the temporary file on the same volume to allow atomic replacement.
+            var temporary = Path.Combine(Path.GetDirectoryName(path),
+                ".repodb-" + Guid.NewGuid().ToString("N") + ".tmp");
+            try
+            {
+                using (var stream = new FileStream(temporary,
+                    FileMode.CreateNew,
+                    FileAccess.Write,
+                    FileShare.None))
+                using (var writer = new StreamWriter(stream,
+                    new UTF8Encoding(false,
+                        true)))
+                    writer.Write(content);
+                if (File.Exists(path))
+                    File.Replace(temporary,
+                        path,
+                        null);
+                else
+                    File.Move(temporary,
+                        path);
+            }
+            finally
+            {
+                if (File.Exists(temporary))
+                    File.Delete(temporary);
+            }
+        }
+
+        /// <summary>
+        /// Writes a complete definition to a temporary file and commits it atomically with cancellation before the commit.
+        /// </summary>
+        /// <param name="path">The absolute destination filename.</param>
+        /// <param name="content">The complete serialized definition.</param>
+        /// <param name="cancellationToken">The token for catalog queries and file writes.</param>
+        /// <returns>A task representing the temporary write and commit.</returns>
+        private static async Task WriteDefinitionFileAsync(string path,
+            string content,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var bytes = new UTF8Encoding(false,
+                true).GetBytes(content);
+            var temporary = Path.Combine(Path.GetDirectoryName(path),
+                ".repodb-" + Guid.NewGuid().ToString("N") + ".tmp");
+            try
+            {
+                using (var stream = new FileStream(temporary,
+                    FileMode.CreateNew,
+                    FileAccess.Write,
+                    FileShare.None,
+                    4096,
+                    FileOptions.Asynchronous | FileOptions.SequentialScan))
+                {
+                    await stream.WriteAsync(bytes,
+                        0,
+                        bytes.Length,
+                        cancellationToken).ConfigureAwait(false);
+                    await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
+                }
+
+                // Cancellation is honored before committing the completed file, never after it is committed.
+                cancellationToken.ThrowIfCancellationRequested();
+                if (File.Exists(path))
+                    File.Replace(temporary,
+                        path,
+                        null);
+                else
+                    File.Move(temporary,
+                        path);
+            }
+            finally
+            {
+                if (File.Exists(temporary))
+                    File.Delete(temporary);
+            }
         }
 
         #endregion

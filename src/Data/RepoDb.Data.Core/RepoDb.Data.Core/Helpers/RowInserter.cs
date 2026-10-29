@@ -50,19 +50,30 @@ namespace RepoDb.Data.Helpers
             {
                 return 0;
             }
-            var (commandText, columns) = Compose(connection, tableName, rows, transaction);
+
+            var (commandText, columns) = Compose(connection,
+                tableName,
+                rows,
+                transaction);
             var ownTransaction = transaction == null ? connection.EnsureOpen().BeginTransaction() : null;
             try
             {
                 var inserted = 0;
-                using (var command = CreateCommand(connection, commandText, columns, commandTimeout, transaction ?? ownTransaction))
+                using (var command = CreateCommand(connection,
+                    commandText,
+                    columns,
+                    commandTimeout,
+                    transaction ?? ownTransaction))
                 {
                     foreach (IDictionary<string, object> row in rows)
                     {
-                        SetValues(command, columns, row);
+                        SetValues(command,
+                            columns,
+                            row);
                         inserted += command.ExecuteNonQuery();
                     }
                 }
+
                 ownTransaction?.Commit();
                 return inserted;
             }
@@ -102,21 +113,30 @@ namespace RepoDb.Data.Helpers
             {
                 return 0;
             }
-            var (commandText, columns) = Compose(connection, tableName, rows, transaction);
+
+            var (commandText, columns) = Compose(connection,
+                tableName,
+                rows,
+                transaction);
             var ownTransaction = transaction == null ? (await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false)).BeginTransaction() : null;
             try
             {
                 var inserted = 0;
-                using (var command = CreateCommand(connection, commandText, columns, commandTimeout, transaction ?? ownTransaction))
+                using (var command = CreateCommand(connection,
+                    commandText,
+                    columns,
+                    commandTimeout,
+                    transaction ?? ownTransaction))
                 {
                     foreach (IDictionary<string, object> row in rows)
                     {
-                        SetValues(command, columns, row);
-                        inserted += command is System.Data.Common.DbCommand dbCommand
-                            ? await dbCommand.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false)
-                            : command.ExecuteNonQuery();
+                        SetValues(command,
+                            columns,
+                            row);
+                        inserted += command is System.Data.Common.DbCommand dbCommand ? await dbCommand.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) : command.ExecuteNonQuery();
                     }
                 }
+
                 ownTransaction?.Commit();
                 return inserted;
             }
@@ -157,25 +177,44 @@ namespace RepoDb.Data.Helpers
             {
                 return 0;
             }
-            var plan = ComposeMerge(connection, tableName, rows, qualifiers, transaction);
+
+            var plan = ComposeMerge(connection,
+                tableName,
+                rows,
+                qualifiers,
+                transaction);
             var ownTransaction = transaction == null ? connection.EnsureOpen().BeginTransaction() : null;
             try
             {
                 var merged = 0;
-                using (var update = CreateCommand(connection, plan.UpdateText, plan.UpdateColumns, commandTimeout, transaction ?? ownTransaction))
-                using (var insert = CreateCommand(connection, plan.InsertText, plan.InsertColumns, commandTimeout, transaction ?? ownTransaction))
+                using (var update = CreateCommand(connection,
+                    plan.UpdateText,
+                    plan.UpdateColumns,
+                    commandTimeout,
+                    transaction ?? ownTransaction))
+                using (var insert = CreateCommand(connection,
+                    plan.InsertText,
+                    plan.InsertColumns,
+                    commandTimeout,
+                    transaction ?? ownTransaction))
                 {
                     foreach (IDictionary<string, object> row in rows)
                     {
-                        SetValues(update, plan.UpdateColumns, row);
+                        SetValues(update,
+                            plan.UpdateColumns,
+                            row);
                         if (update.ExecuteNonQuery() <= 0)
                         {
-                            SetValues(insert, plan.InsertColumns, row);
+                            SetValues(insert,
+                                plan.InsertColumns,
+                                row);
                             insert.ExecuteNonQuery();
                         }
+
                         merged++;
                     }
                 }
+
                 ownTransaction?.Commit();
                 return merged;
             }
@@ -218,35 +257,39 @@ namespace RepoDb.Data.Helpers
             {
                 return 0;
             }
-            var plan = ComposeMerge(connection, tableName, rows, qualifiers, transaction);
+
+            var plan = ComposeMerge(connection,
+                tableName,
+                rows,
+                qualifiers,
+                transaction);
             var ownTransaction = transaction == null ? (await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false)).BeginTransaction() : null;
             try
             {
                 var merged = 0;
-                using (var update = CreateCommand(connection, plan.UpdateText, plan.UpdateColumns, commandTimeout, transaction ?? ownTransaction))
-                using (var insert = CreateCommand(connection, plan.InsertText, plan.InsertColumns, commandTimeout, transaction ?? ownTransaction))
+                using (var update = CreateCommand(connection,
+                    plan.UpdateText,
+                    plan.UpdateColumns,
+                    commandTimeout,
+                    transaction ?? ownTransaction))
+                using (var insert = CreateCommand(connection,
+                    plan.InsertText,
+                    plan.InsertColumns,
+                    commandTimeout,
+                    transaction ?? ownTransaction))
                 {
                     foreach (IDictionary<string, object> row in rows)
                     {
-                        SetValues(update, plan.UpdateColumns, row);
-                        var updated = update is System.Data.Common.DbCommand dbUpdate
-                            ? await dbUpdate.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false)
-                            : update.ExecuteNonQuery();
-                        if (updated <= 0)
-                        {
-                            SetValues(insert, plan.InsertColumns, row);
-                            if (insert is System.Data.Common.DbCommand dbInsert)
-                            {
-                                await dbInsert.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
-                            }
-                            else
-                            {
-                                insert.ExecuteNonQuery();
-                            }
-                        }
+                        await MergeRowAsync(update,
+                            insert,
+                            plan.UpdateColumns,
+                            plan.InsertColumns,
+                            row,
+                            cancellationToken).ConfigureAwait(false);
                         merged++;
                     }
                 }
+
                 ownTransaction?.Commit();
                 return merged;
             }
@@ -280,21 +323,24 @@ namespace RepoDb.Data.Helpers
             IDbTransaction transaction)
         {
             var dbSetting = connection.GetDbSetting();
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var dbFields = DbFieldCache.Get(connection,
+                tableName,
+                transaction);
             var first = (IDictionary<string, object>)rows[0];
-
             // The columns that both the row and the table have (the others are ignored)
-            var columns = first.Keys
-                .Where(key => dbFields.GetByUnquotedName(key.AsUnquoted(true, dbSetting)) != null)
-                .Select((key, index) => (Column: key, Parameter: dbSetting.ParameterPrefix + "p" + index.ToString(System.Globalization.CultureInfo.InvariantCulture)))
-                .ToList();
+            var columns = first.Keys.Where(key => dbFields.GetByUnquotedName(key.AsUnquoted(true,
+                dbSetting)) != null).Select((key,
+                    index) => (Column: key, Parameter: dbSetting.ParameterPrefix + "p" + index.ToString(System.Globalization.CultureInfo.InvariantCulture))).ToList();
             if (columns.Count == 0)
             {
                 throw new InvalidOperationException($"No column of the source matches a column of the table '{tableName}'.");
             }
 
-            var commandText = $"INSERT INTO {tableName.AsQuoted(true, dbSetting)} ({string.Join(", ", columns.Select(c => c.Column.AsQuoted(true, dbSetting)))}) " +
-                $"VALUES ({string.Join(", ", columns.Select(c => c.Parameter))})";
+            var commandText = $"INSERT INTO {tableName.AsQuoted(true,
+                dbSetting)} ({string.Join(", ",
+                    columns.Select(c => c.Column.AsQuoted(true,
+                        dbSetting)))}) " + $"VALUES ({string.Join(", ",
+                        columns.Select(c => c.Parameter))})";
             return (commandText, columns);
         }
 
@@ -316,17 +362,25 @@ namespace RepoDb.Data.Helpers
             IDbTransaction transaction)
         {
             var dbSetting = connection.GetDbSetting();
-            var (insertText, insertColumns) = Compose(connection, tableName, rows, transaction);
+            var (insertText, insertColumns) = Compose(connection,
+                tableName,
+                rows,
+                transaction);
             var keys = new List<string>();
             foreach (var qualifier in qualifiers)
             {
-                var column = insertColumns.FirstOrDefault(c => string.Equals(c.Column.AsUnquoted(true, dbSetting), qualifier.Name, StringComparison.OrdinalIgnoreCase));
+                var column = insertColumns.FirstOrDefault(c => string.Equals(c.Column.AsUnquoted(true,
+                    dbSetting),
+                    qualifier.Name,
+                    StringComparison.OrdinalIgnoreCase));
                 if (column.Column == null)
                 {
                     throw new InvalidOperationException($"The qualifier '{qualifier.Name}' is not a column of the rows to be merged into the table '{tableName}'.");
                 }
+
                 keys.Add(column.Column);
             }
+
             var sets = insertColumns.Where(c => !keys.Contains(c.Column)).Select(c => c.Column).ToList();
             if (sets.Count == 0)
             {
@@ -339,16 +393,23 @@ namespace RepoDb.Data.Helpers
             {
                 var parameter = dbSetting.ParameterPrefix + "u" + updateColumns.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
                 updateColumns.Add((column, parameter));
-                assignments.Add($"{column.AsQuoted(true, dbSetting)} = {parameter}");
+                assignments.Add($"{column.AsQuoted(true,
+                    dbSetting)} = {parameter}");
             }
+
             var conditions = new List<string>();
             foreach (var column in keys)
             {
                 var parameter = dbSetting.ParameterPrefix + "u" + updateColumns.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
                 updateColumns.Add((column, parameter));
-                conditions.Add($"{column.AsQuoted(true, dbSetting)} = {parameter}");
+                conditions.Add($"{column.AsQuoted(true,
+                    dbSetting)} = {parameter}");
             }
-            var updateText = $"UPDATE {tableName.AsQuoted(true, dbSetting)} SET {string.Join(", ", assignments)} WHERE {string.Join(" AND ", conditions)}";
+
+            var updateText = $"UPDATE {tableName.AsQuoted(true,
+                dbSetting)} SET {string.Join(", ",
+                    assignments)} WHERE {string.Join(" AND ",
+                    conditions)}";
             return (insertText, insertColumns, updateText, updateColumns);
         }
 
@@ -376,12 +437,15 @@ namespace RepoDb.Data.Helpers
             {
                 command.CommandTimeout = commandTimeout.Value;
             }
+
             foreach (var (_, parameterName) in columns)
             {
                 var parameter = command.CreateParameter();
-                parameter.ParameterName = parameterName.StartsWith("$", StringComparison.Ordinal) ? parameterName.Substring(1) : parameterName;
+                parameter.ParameterName = parameterName.StartsWith("$",
+                    StringComparison.Ordinal) ? parameterName.Substring(1) : parameterName;
                 command.Parameters.Add(parameter);
             }
+
             return command;
         }
 
@@ -397,7 +461,45 @@ namespace RepoDb.Data.Helpers
         {
             for (var i = 0; i < columns.Count; i++)
             {
-                ((IDbDataParameter)command.Parameters[i]).Value = row.TryGetValue(columns[i].Column, out var value) && value != null ? value : DBNull.Value;
+                ((IDbDataParameter)command.Parameters[i]).Value = row.TryGetValue(columns[i].Column,
+                    out var value) && value != null ? value : DBNull.Value;
+            }
+        }
+
+        /// <summary>
+        /// Updates one row by its qualifiers, inserting it only when the update affects no row.
+        /// </summary>
+        /// <param name="update">The prepared update command.</param>
+        /// <param name="insert">The prepared insert command.</param>
+        /// <param name="updateColumns">The update parameter mappings.</param>
+        /// <param name="insertColumns">The insert parameter mappings.</param>
+        /// <param name="row">The values of the row being merged.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>A task representing the update or insert.</returns>
+        private static async Task MergeRowAsync(IDbCommand update,
+            IDbCommand insert,
+            List<(string Column, string Parameter)> updateColumns,
+            List<(string Column, string Parameter)> insertColumns,
+            IDictionary<string, object> row,
+            CancellationToken cancellationToken)
+        {
+            SetValues(update,
+                updateColumns,
+                row);
+            var updated = update is System.Data.Common.DbCommand dbUpdate ? await dbUpdate.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) : update.ExecuteNonQuery();
+            if (updated <= 0)
+            {
+                SetValues(insert,
+                    insertColumns,
+                    row);
+                if (insert is System.Data.Common.DbCommand dbInsert)
+                {
+                    await dbInsert.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                }
+                else
+                {
+                    insert.ExecuteNonQuery();
+                }
             }
         }
 

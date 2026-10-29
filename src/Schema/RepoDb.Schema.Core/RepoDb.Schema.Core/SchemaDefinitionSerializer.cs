@@ -33,18 +33,35 @@ namespace RepoDb.Schema
         internal static string Serialize(JsonObject definition,
             string format)
         {
-            if (string.Equals(format, "json", StringComparison.Ordinal)) return Json(definition, true) + "\n";
-            if (string.Equals(format, "yaml", StringComparison.Ordinal))
+            if (string.Equals(format,
+                "json",
+                StringComparison.Ordinal))
+                return Json(definition,
+                    true) + "\n";
+            if (string.Equals(format,
+                "yaml",
+                StringComparison.Ordinal))
             {
                 var builder = new StringBuilder();
-                WriteYaml(builder, definition, 0);
+                WriteYaml(builder,
+                    definition,
+                    0);
                 return builder.ToString();
             }
-            if (!string.Equals(format, "xml", StringComparison.Ordinal)) throw new ArgumentOutOfRangeException(nameof(format));
-            var document = new XDocument(new XDeclaration("1.0", "utf-8", null), Xml("repoDbSchema", definition));
+
+            if (!string.Equals(format,
+                "xml",
+                StringComparison.Ordinal))
+                throw new ArgumentOutOfRangeException(nameof(format));
+            var document = new XDocument(new XDeclaration("1.0",
+                "utf-8",
+                null),
+                Xml("repoDbSchema",
+                    definition));
             using (var stream = new MemoryStream())
             {
-                using (var writer = XmlWriter.Create(stream, new XmlWriterSettings { Encoding = new UTF8Encoding(false), Indent = true }))
+                using (var writer = XmlWriter.Create(stream,
+                    new XmlWriterSettings { Encoding = new UTF8Encoding(false), Indent = true }))
                     document.Save(writer);
                 return Encoding.UTF8.GetString(stream.ToArray());
             }
@@ -65,15 +82,15 @@ namespace RepoDb.Schema
         {
             using (var stream = new MemoryStream())
             {
-                using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions
+                using (var writer = new Utf8JsonWriter(stream,
+                    new JsonWriterOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, Indented = indented }))
                 {
-                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                    Indented = indented
-                }))
-                {
-                    if (node == null) writer.WriteNullValue();
-                    else node.WriteTo(writer);
+                    if (node == null)
+                        writer.WriteNullValue();
+                    else
+                        node.WriteTo(writer);
                 }
+
                 return Encoding.UTF8.GetString(stream.ToArray());
             }
         }
@@ -92,16 +109,22 @@ namespace RepoDb.Schema
             {
                 foreach (var property in obj)
                 {
-                    builder.Append(' ', indent).Append(property.Key).Append(':');
-                    WriteYamlValue(builder, property.Value, indent);
+                    builder.Append(' ',
+                        indent).Append(property.Key).Append(':');
+                    WriteYamlValue(builder,
+                        property.Value,
+                        indent);
                 }
             }
             else if (token is JsonArray array)
             {
                 foreach (var item in array)
                 {
-                    builder.Append(' ', indent).Append('-');
-                    WriteYamlValue(builder, item, indent);
+                    builder.Append(' ',
+                        indent).Append('-');
+                    WriteYamlValue(builder,
+                        item,
+                        indent);
                 }
             }
         }
@@ -119,9 +142,13 @@ namespace RepoDb.Schema
             if ((value is JsonObject obj && obj.Count > 0) || (value is JsonArray array && array.Count > 0))
             {
                 builder.Append('\n');
-                WriteYaml(builder, value, indent + 2);
+                WriteYaml(builder,
+                    value,
+                    indent + 2);
             }
-            else builder.Append(' ').Append(Json(value, false)).Append('\n');
+            else
+                builder.Append(' ').Append(Json(value,
+                    false)).Append('\n');
         }
 
         /// <summary>
@@ -135,17 +162,21 @@ namespace RepoDb.Schema
         {
             var element = new XElement(name);
             var kind = token?.GetValueKind() ?? JsonValueKind.Null;
-            var type = kind == JsonValueKind.Number ? "integer"
-                : kind == JsonValueKind.True || kind == JsonValueKind.False ? "boolean"
-                : kind.ToString().ToLowerInvariant();
+            var type = kind == JsonValueKind.Number ? "integer" : kind == JsonValueKind.True || kind == JsonValueKind.False ? "boolean" : kind.ToString().ToLowerInvariant();
             // Type tags preserve null, empty arrays, booleans and integers across formats.
-            element.SetAttributeValue("type", type);
+            element.SetAttributeValue("type",
+                type);
             if (token is JsonObject obj)
-                foreach (var property in obj) element.Add(Xml(property.Key, property.Value));
+                foreach (var property in obj)
+                    element.Add(Xml(property.Key,
+                        property.Value));
             else if (token is JsonArray array)
-                foreach (var item in array) element.Add(Xml("item", item));
+                foreach (var item in array)
+                    element.Add(Xml("item",
+                        item));
             else if (kind != JsonValueKind.Null)
-                element.Value = kind == JsonValueKind.String ? token.GetValue<string>() : Json(token, false);
+                element.Value = kind == JsonValueKind.String ? token.GetValue<string>() : Json(token,
+                    false);
             return element;
         }
 

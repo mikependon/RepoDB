@@ -57,10 +57,13 @@ namespace RepoDb.Data.Helpers
                         {
                             break;
                         }
-                        AddColumns(columns, document);
+
+                        AddColumns(columns,
+                            document);
                     }
                 }
             }
+
             return columns;
         }
 
@@ -84,10 +87,13 @@ namespace RepoDb.Data.Helpers
                         {
                             break;
                         }
-                        AddColumns(columns, document);
+
+                        AddColumns(columns,
+                            document);
                     }
                 }
             }
+
             return columns;
         }
 
@@ -106,6 +112,7 @@ namespace RepoDb.Data.Helpers
                     count++;
                 }
             }
+
             return count;
         }
 
@@ -126,6 +133,7 @@ namespace RepoDb.Data.Helpers
                     count++;
                 }
             }
+
             return count;
         }
 
@@ -143,26 +151,30 @@ namespace RepoDb.Data.Helpers
             var values = new object[width];
             foreach (var property in row.RootElement.EnumerateObject())
             {
-                if (index.TryGetValue(property.Name, out var position))
+                if (index.TryGetValue(property.Name,
+                    out var position))
                 {
                     values[position] = GetValue(property.Value);
                 }
             }
+
             return values;
         }
 
         /// <summary>
-        /// Gets the value that a JSON value holds: a string, a number (as a <see cref="decimal"/>, or a <see cref="double"/> if it does not fit), a boolean or <c>null</c>.
+        /// Gets the value that a JSON value holds: a string, a number (as a <see cref="decimal "/>, or a <see cref="double "/> if it does not fit), a boolean or <c>null</c>.
         /// A value with its type (<c>{ "type": "Int32", "value": 1 }</c>) gives the value that it has, and any other JSON value gives its text.
         /// </summary>
         /// <param name="cell">The JSON value.</param>
         /// <returns>The value.</returns>
         public static object GetValue(JsonElement cell)
         {
-            if (cell.ValueKind == JsonValueKind.Object && cell.TryGetProperty("value", out var typed))
+            if (cell.ValueKind == JsonValueKind.Object && cell.TryGetProperty("value",
+                out var typed))
             {
                 cell = typed;
             }
+
             switch (cell.ValueKind)
             {
                 case JsonValueKind.String:
@@ -190,7 +202,8 @@ namespace RepoDb.Data.Helpers
         /// <exception cref="FormatException">The value cannot be converted into the type.</exception>
         public static object ConvertValue(object value,
             Type type) =>
-            ValueConverter.Convert(value, type);
+            ValueConverter.Convert(value,
+                type);
 
         #endregion
 
@@ -209,8 +222,11 @@ namespace RepoDb.Data.Helpers
                 var found = false;
                 for (var i = 0; i < columns.Count && !found; i++)
                 {
-                    found = string.Equals(columns[i], property.Name, StringComparison.OrdinalIgnoreCase);
+                    found = string.Equals(columns[i],
+                        property.Name,
+                        StringComparison.OrdinalIgnoreCase);
                 }
+
                 if (!found)
                 {
                     columns.Add(property.Name);
