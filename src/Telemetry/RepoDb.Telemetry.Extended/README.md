@@ -33,20 +33,31 @@ Do not register Default telemetry as well unless duplicate events are intended.
 The shared fields retain their existing names: `StartTime`, `Operation`, and `Elapsed`
 represent time, event, and duration in milliseconds.
 
-The trace captures `ThreadId`, `ParameterCount`, and the current W3C Activity's
-`TraceId` and `SpanId` before execution. Correlation identifiers remain null when no
-W3C Activity is active. It does not create tracing spans.
+The library captures the context of an operation when it starts, and the trace copies it:
+`ThreadId`, `ParameterCount`, the current W3C Activity's `TraceId` and `SpanId`, the machine
+name (`Client`) and its `IpAddress`, the type of the connection (`ConnectionType`, i.e.
+`SqlConnection`), and its `Database`. `TraceId` identifies the whole operation across services,
+and `SpanId` identifies one step within it. A span is not created for the database operation,
+so the operations that run within the same Activity share both identifiers; use `SessionId`
+to tell them apart. They remain null when no W3C Activity is active.
 
 Collection results expose `RowsReturned` without enumeration. Numeric results from
 known write operations expose `RowsAffected`. Scalar values and deferred sequences
 leave row counts unknown. Parameter values are not collected.
 
-`Level` defaults to Serilog's `Information`; `Message`, `ConnectionName`, `Database`,
-`CommandType`, and `Table` can be supplied through `Enrich`. The trace log does not
-expose connection or command metadata, and SQL is not parsed to guess it. Enrichment
-runs on the calling thread before execution; callbacks should be fast and not throw.
-Connection names should exclude credentials. Warning classification and messages are
-caller supplied; elapsed duration is populated during publishing.
+`Level` defaults to Serilog's `Information`, and is `Error` when the operation fails.
+`Message`, `ConnectionName` (the friendly name that the application gives to the connection),
+`ConnectionType`, `Database`, `CommandType`, and `Table` can be supplied or replaced through
+`Enrich`. SQL is not parsed to guess command metadata. Enrichment runs on the calling thread
+before execution; callbacks should be fast and not throw. Connection names should exclude
+credentials. Warning classification and messages are caller supplied; elapsed duration is
+populated during publishing.
+
+When an operation fails, the trace is still told that it has completed, and the exception is
+thrown back to the caller. The item records `ErrorType`, `ErrorMessage`, and `ErrorStackTrace`,
+sets `Level` to `Error`, uses the error message as `Message` unless the application gave one,
+and leaves `RowsAffected` and `RowsReturned` unknown. Only `ExecuteNonQuery` and
+`ExecuteNonQueryAsync` report failures so far.
 
 `Properties` supports string, Boolean, int, long, double, decimal, DateTime, Guid,
 and JsonElement values using source-generated JSON metadata. Represent other custom
