@@ -31,7 +31,7 @@ namespace RepoDb.Schema.Core.UnitTests
             var child = TableSchemaFactory.CreateTable("Child", "Id", "ParentId");
             TableSchemaFactory.SetPrimaryKey(child, "PK_Child", "Id");
             TableSchemaFactory.AddForeignKey(child, "FK_Child", parent.Table, new[] { "ParentId" }, new[] { "Id" });
-            var definition = new SchemaDefinitionResult { Tables = new List<TableSchema> { parent, child } };
+            var definition = new SchemaDefinitionInfo { Tables = new List<TableSchema> { parent, child } };
 
             // Act
             var findings = SchemaDefinitionStrictValidator.Validate(definition);
@@ -52,7 +52,7 @@ namespace RepoDb.Schema.Core.UnitTests
             var child = TableSchemaFactory.CreateTable("Child", "Id", "ParentCode");
             TableSchemaFactory.AddForeignKey(child, "FK_Child", parent.Table, new[] { "ParentCode" }, new[] { "Code" });
             var empty = TableSchemaFactory.CreateTable("Empty");
-            var definition = new SchemaDefinitionResult { Tables = new List<TableSchema> { parent, child, empty } };
+            var definition = new SchemaDefinitionInfo { Tables = new List<TableSchema> { parent, child, empty } };
 
             // Act
             var findings = SchemaDefinitionStrictValidator.Validate(definition);
@@ -72,7 +72,7 @@ namespace RepoDb.Schema.Core.UnitTests
             table.Columns.Add(TableSchemaFactory.CreateColumn("Code", typeof(string), 1, isNullable: true));
             TableSchemaFactory.SetPrimaryKey(table, "PK_Child", "Code");
             table.CheckConstraints.Add(new CheckConstraintInfo("CK_Child") { Expression = null });
-            var definition = new SchemaDefinitionResult { Tables = new List<TableSchema> { table } };
+            var definition = new SchemaDefinitionInfo { Tables = new List<TableSchema> { table } };
 
             // Act
             var findings = SchemaDefinitionStrictValidator.Validate(definition);

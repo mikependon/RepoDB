@@ -20,7 +20,7 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets the definition that was read from the file, or <c>null</c> if the file is not valid.
         /// </summary>
-        public SchemaDefinitionResult Definition { get; internal set; }
+        public SchemaDefinitionInfo Definition { get; internal set; }
 
         /// <summary>
         /// Gets the problems that make the file invalid. It is empty if the file is valid.

@@ -24,7 +24,7 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="definition">The definition that was read from the file.</param>
         /// <returns>The errors and the warnings that were found.</returns>
-        internal static DefinitionFindings Validate(SchemaDefinitionResult definition)
+        internal static DefinitionFindings Validate(SchemaDefinitionInfo definition)
         {
             var findings = new DefinitionFindings();
             var tables = definition.Tables.ToDictionary(table => table.Table);

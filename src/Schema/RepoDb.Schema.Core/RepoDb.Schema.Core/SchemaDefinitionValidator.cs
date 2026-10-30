@@ -97,7 +97,7 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="definition">The definition that was read from the file, or <c>null</c> if the trace cancelled the read.</param>
         /// <returns>The outcome, or <c>null</c> if there is no definition. The definition is only part of the outcome if the strict checks found no errors.</returns>
-        private static ValidateDefinitionResult CreateResult(SchemaDefinitionResult definition)
+        private static ValidateDefinitionResult CreateResult(SchemaDefinitionInfo definition)
         {
             if (definition == null)
             {

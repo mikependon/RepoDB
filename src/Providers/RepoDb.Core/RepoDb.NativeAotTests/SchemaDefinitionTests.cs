@@ -67,8 +67,8 @@ namespace RepoDb.NativeAotTests
                             else await connection.SaveDefinitionAsYamlAsync("Invoice", filename, behavior);
                             if (!expected.SequenceEqual(File.ReadAllBytes(filename)))
                                 throw new Exception("Async schema definition differs from synchronous output: " + format + "/" + behavior);
-                            SchemaDefinitionResult synchronous;
-                            SchemaDefinitionResult asynchronous;
+                            SchemaDefinitionInfo synchronous;
+                            SchemaDefinitionInfo asynchronous;
                             if (format == "json")
                             {
                                 synchronous = connection.ReadDefinitionFromJson(filename);

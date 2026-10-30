@@ -16,7 +16,7 @@ namespace RepoDb.Schema.Models
     /// <summary>
     /// Contains a saved definition, including all selected tables and its extraction metadata.
     /// </summary>
-    public sealed class SchemaDefinitionResult
+    public sealed class SchemaDefinitionInfo
     {
         #region Properties
 

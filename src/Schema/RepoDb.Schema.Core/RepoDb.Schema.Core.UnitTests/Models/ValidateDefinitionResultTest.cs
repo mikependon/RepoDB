@@ -61,7 +61,7 @@ namespace RepoDb.Schema.Core.UnitTests.Models
         public void TestValidateDefinitionResultIsValidWithDefinition()
         {
             // Setup
-            var definition = new SchemaDefinitionResult();
+            var definition = new SchemaDefinitionInfo();
 
             // Act
             var result = new ValidateDefinitionResult { Definition = definition };

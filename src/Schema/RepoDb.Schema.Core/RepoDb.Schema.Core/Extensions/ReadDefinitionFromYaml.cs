@@ -33,7 +33,7 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key for the file read.</param>
         /// <param name="trace">The trace callbacks. The before log statement contains the filename and can be changed or cancelled.</param>
         /// <returns>The definition, or null if the trace cancels without requesting an exception.</returns>
-        public static SchemaDefinitionResult ReadDefinitionFromYaml(this IDbConnection connection,
+        public static SchemaDefinitionInfo ReadDefinitionFromYaml(this IDbConnection connection,
             string filename,
             string traceKey = SchemaTraceKeys.ReadDefinitionFromYaml,
             ITrace trace = null) =>
@@ -54,7 +54,7 @@ namespace RepoDb.Schema
         /// <param name="trace">The asynchronous trace callbacks.</param>
         /// <param name="cancellationToken">The cancellation token for reading the file.</param>
         /// <returns>The definition, or null if the trace cancels without requesting an exception.</returns>
-        public static Task<SchemaDefinitionResult> ReadDefinitionFromYamlAsync(this IDbConnection connection,
+        public static Task<SchemaDefinitionInfo> ReadDefinitionFromYamlAsync(this IDbConnection connection,
             string filename,
             string traceKey = SchemaTraceKeys.ReadDefinitionFromYaml,
             ITrace trace = null,

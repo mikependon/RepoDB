@@ -69,7 +69,7 @@ namespace RepoDb.Schema
         /// <param name="transaction">The transaction to be used on the destination connection.</param>
         /// <returns>The result of the load, or <c>null</c> if there is no definition.</returns>
         internal static LoadDefinitionResult Apply(IDbConnection connection,
-            SchemaDefinitionResult definition,
+            SchemaDefinitionInfo definition,
             TableExistsBehavior tableExistenceBehavior,
             Action<CopyTableSchemaResultItem> createdCallback,
             int? commandTimeout,
@@ -116,7 +116,7 @@ namespace RepoDb.Schema
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the result of the load, or <c>null</c> if there is no definition.</returns>
         internal static async Task<LoadDefinitionResult> ApplyAsync(IDbConnection connection,
-            SchemaDefinitionResult definition,
+            SchemaDefinitionInfo definition,
             TableExistsBehavior tableExistenceBehavior,
             Action<CopyTableSchemaResultItem> createdCallback,
             int? commandTimeout,
@@ -171,7 +171,7 @@ namespace RepoDb.Schema
         /// <param name="definition">The definition that is read from the file.</param>
         /// <param name="composer">The composer of the destination database.</param>
         /// <returns>The tables of the plan, in dependency order.</returns>
-        private static System.Collections.Generic.IList<PlanTable> CreateTables(SchemaDefinitionResult definition,
+        private static System.Collections.Generic.IList<PlanTable> CreateTables(SchemaDefinitionInfo definition,
             ISchemaComposer composer)
         {
             var keys = definition.Tables.Select((table,

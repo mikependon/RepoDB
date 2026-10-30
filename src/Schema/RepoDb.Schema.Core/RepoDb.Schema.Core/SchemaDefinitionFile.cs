@@ -38,7 +38,7 @@ namespace RepoDb.Schema
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="parse">The function that parses the content of the file into the definition document.</param>
         /// <returns>The definition read from the file, or <c>null</c> if the trace cancelled the read.</returns>
-        internal static SchemaDefinitionResult Read(IDbConnection connection,
+        internal static SchemaDefinitionInfo Read(IDbConnection connection,
             string filename,
             string traceKey,
             ITrace trace,
@@ -53,7 +53,7 @@ namespace RepoDb.Schema
             if (Cancelled(log))
                 return null;
             var watch = Stopwatch.StartNew();
-            SchemaDefinitionResult result;
+            SchemaDefinitionInfo result;
             try
             {
                 using (var reader = Open(log.Statement))
@@ -66,7 +66,7 @@ namespace RepoDb.Schema
                     exception);
             }
 
-            trace?.AfterExecution(new ResultTraceLog<SchemaDefinitionResult>(log.SessionId,
+            trace?.AfterExecution(new ResultTraceLog<SchemaDefinitionInfo>(log.SessionId,
                 traceKey,
                 watch.Elapsed,
                 result,
@@ -84,7 +84,7 @@ namespace RepoDb.Schema
         /// <param name="parse">The function that parses the content of the file into the definition document.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the definition read from the file, or <c>null</c> if the trace cancelled the read.</returns>
-        internal static async Task<SchemaDefinitionResult> ReadAsync(IDbConnection connection,
+        internal static async Task<SchemaDefinitionInfo> ReadAsync(IDbConnection connection,
             string filename,
             string traceKey,
             ITrace trace,
@@ -134,7 +134,7 @@ namespace RepoDb.Schema
                 parse);
             cancellationToken.ThrowIfCancellationRequested();
             if (trace != null)
-                await trace.AfterExecutionAsync(new ResultTraceLog<SchemaDefinitionResult>(log.SessionId,
+                await trace.AfterExecutionAsync(new ResultTraceLog<SchemaDefinitionInfo>(log.SessionId,
                     traceKey,
                     watch.Elapsed,
                     result,
@@ -198,7 +198,7 @@ namespace RepoDb.Schema
         /// <param name="content">The content of the definition file.</param>
         /// <param name="parse">The function that parses the content into the definition document.</param>
         /// <returns>The definition that is read from the document.</returns>
-        private static SchemaDefinitionResult Parse(string content,
+        private static SchemaDefinitionInfo Parse(string content,
             Func<string, JsonObject> parse)
         {
             try

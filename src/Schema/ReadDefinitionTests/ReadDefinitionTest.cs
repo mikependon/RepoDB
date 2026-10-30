@@ -324,19 +324,19 @@ namespace RepoDb.Schema.Tests
             File.WriteAllText(filename, SchemaDefinitionSerializer.Serialize(Definition(behavior), format));
             var trace = new Mock<ITrace>(MockBehavior.Strict);
             CancellableTraceLog before = null;
-            ResultTraceLog<SchemaDefinitionResult> after = null;
+            ResultTraceLog<SchemaDefinitionInfo> after = null;
             if (asynchronous)
             {
                 trace.Setup(t => t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(), It.IsAny<CancellationToken>()))
                     .Callback<CancellableTraceLog, CancellationToken>((log, _) => before = log).Returns(Task.CompletedTask);
-                trace.Setup(t => t.AfterExecutionAsync(It.IsAny<ResultTraceLog<SchemaDefinitionResult>>(), It.IsAny<CancellationToken>()))
-                    .Callback<ResultTraceLog<SchemaDefinitionResult>, CancellationToken>((log, _) => after = log).Returns(Task.CompletedTask);
+                trace.Setup(t => t.AfterExecutionAsync(It.IsAny<ResultTraceLog<SchemaDefinitionInfo>>(), It.IsAny<CancellationToken>()))
+                    .Callback<ResultTraceLog<SchemaDefinitionInfo>, CancellationToken>((log, _) => after = log).Returns(Task.CompletedTask);
             }
             else
             {
                 trace.Setup(t => t.BeforeExecution(It.IsAny<CancellableTraceLog>())).Callback<CancellableTraceLog>(log => before = log);
-                trace.Setup(t => t.AfterExecution(It.IsAny<ResultTraceLog<SchemaDefinitionResult>>()))
-                    .Callback<ResultTraceLog<SchemaDefinitionResult>>(log => after = log);
+                trace.Setup(t => t.AfterExecution(It.IsAny<ResultTraceLog<SchemaDefinitionInfo>>()))
+                    .Callback<ResultTraceLog<SchemaDefinitionInfo>>(log => after = log);
             }
             var result = await Read(format, asynchronous, trace.Object);
             Assert.AreEqual(filename, before.Statement);
@@ -459,7 +459,7 @@ namespace RepoDb.Schema.Tests
 
         #region Helpers
 
-        private Task<SchemaDefinitionResult> Read(string format, bool asynchronous, ITrace trace = null, CancellationToken token = default)
+        private Task<SchemaDefinitionInfo> Read(string format, bool asynchronous, ITrace trace = null, CancellationToken token = default)
         {
             if (format == "json") return asynchronous ? connection.ReadDefinitionFromJsonAsync(filename, "custom-read", trace, token)
                 : Task.FromResult(connection.ReadDefinitionFromJson(filename, "custom-read", trace));

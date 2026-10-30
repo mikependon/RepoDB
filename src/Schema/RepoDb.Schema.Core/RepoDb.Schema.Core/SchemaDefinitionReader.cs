@@ -29,7 +29,7 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="document">The definition document that is read from the file.</param>
         /// <returns>The definition that is reconstructed from the document.</returns>
-        internal static SchemaDefinitionResult Read(JsonObject document)
+        internal static SchemaDefinitionInfo Read(JsonObject document)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace RepoDb.Schema
                     "source");
                 var extraction = Object(document,
                     "extraction");
-                var result = new SchemaDefinitionResult
+                var result = new SchemaDefinitionInfo
                 {
                     FormatVersion = version,
                     Provider = Text(source,
@@ -257,7 +257,7 @@ namespace RepoDb.Schema
         /// Validates table identities and the column references that can be resolved inside the file.
         /// </summary>
         /// <param name="result">The definition that is reconstructed from the document.</param>
-        private static void Validate(SchemaDefinitionResult result)
+        private static void Validate(SchemaDefinitionInfo result)
         {
             var tables = new Dictionary<TableInfo, TableSchema>();
             foreach (var table in result.Tables)
@@ -299,7 +299,7 @@ namespace RepoDb.Schema
         /// Checks that each serialized foreign-key external flag agrees with the included table identities.
         /// </summary>
         /// <param name="result">The definition that is reconstructed from the document.</param>
-        private static void ValidateReferences(SchemaDefinitionResult result)
+        private static void ValidateReferences(SchemaDefinitionInfo result)
         {
             var included = new HashSet<TableInfo>(result.Tables.Select(t => t.Table));
             foreach (var table in Array(result.Definition,

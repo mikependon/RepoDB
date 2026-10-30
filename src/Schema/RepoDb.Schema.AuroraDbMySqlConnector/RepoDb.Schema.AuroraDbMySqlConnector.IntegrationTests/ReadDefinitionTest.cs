@@ -63,7 +63,7 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.IntegrationTests
                         var state = connection.State;
 
                         // Act
-                        SchemaDefinitionResult actual;
+                        SchemaDefinitionInfo actual;
                         if (format == "json")
                             actual = asynchronous ? await connection.ReadDefinitionFromJsonAsync(filename) : connection.ReadDefinitionFromJson(filename);
                         else if (format == "xml")
