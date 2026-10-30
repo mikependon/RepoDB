@@ -129,6 +129,28 @@ namespace RepoDb.Telemetry.Core
 
         #endregion
 
+        #region Protected Methods
+
+        /// <summary>
+        /// Creates the telemetry item for an operation before execution.
+        /// </summary>
+        /// <param name="log">The operation being captured.</param>
+        /// <returns>The telemetry item to populate and publish.</returns>
+        protected virtual TelemetryItem CreateTelemetryItem(CancellableTraceLog log)
+            => new TelemetryItem();
+
+        /// <summary>
+        /// Captures result metadata without enumerating deferred results.
+        /// </summary>
+        /// <param name="item">The telemetry item being completed.</param>
+        /// <param name="result">The operation result.</param>
+        protected virtual void CompleteTelemetryItem(TelemetryItem item,
+            object result)
+        {
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -172,7 +194,7 @@ namespace RepoDb.Telemetry.Core
                     item.IsCancelled = log.IsCancelled;
                     item.Elapsed = afterTraceLogs.ContainsKey(kvp.Key) ?
                         afterTraceLogs[kvp.Key].Item2.TotalMilliseconds :
-                            (DateTime.UtcNow - log.StartTime).TotalMilliseconds;
+                            (DateTime.UtcNow - item.StartTime).TotalMilliseconds;
                     items.Add(item);
                 }
                 if (items.Count > 0)
@@ -226,18 +248,16 @@ namespace RepoDb.Telemetry.Core
             {
                 if (!_beforeTraceLogs.ContainsKey(log.SessionId))
                 {
-                    var item = new TelemetryItem
-                    {
-                        Application = Option.Application,
-                        Group = Option.Group,
-                        SessionId = log.SessionId,
-                        Operation = log.Key,
-                        StartTime = log.StartTime,
-                        Statement = log.Statement,
-                        Client = _client,
-                        Source = _assembly?.GetName().Name,
-                        Version = _assembly?.GetName().Version?.ToString()
-                    };
+                    var item = CreateTelemetryItem(log);
+                    item.Application = Option.Application;
+                    item.Group = Option.Group;
+                    item.SessionId = log.SessionId;
+                    item.Operation = log.Key;
+                    item.StartTime = log.StartTime;
+                    item.Statement = log.Statement;
+                    item.Client = _client;
+                    item.Source = _assembly?.GetName().Name;
+                    item.Version = _assembly?.GetName().Version?.ToString();
                     _beforeTraceLogs[log.SessionId] = Tuple.Create(log, item);
                 }
             }
@@ -252,6 +272,11 @@ namespace RepoDb.Telemetry.Core
                 {
                     var value = Tuple.Create<DateTime, TimeSpan, object>(DateTime.UtcNow, log.ExecutionTime, log.Result);
                     _afterTraceLogs[log.SessionId] = value;
+                    if (_beforeTraceLogs.TryGetValue(log.SessionId, out var before))
+                    {
+                        CompleteTelemetryItem(before.Item2,
+                            log.Result);
+                    }
                 }
             }
         }

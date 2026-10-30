@@ -177,9 +177,18 @@ namespace RepoDb.Telemetry.Core
         private byte[] ToCompressedJsonBytes(
             IEnumerable<TelemetryItem> telemetryItems)
         {
-            var json = JsonSerializer.Serialize(telemetryItems, TelemetryJsonSerializerContext.Default.IEnumerableTelemetryItem);
+            var json = SerializeItems(telemetryItems);
             return Compress(json);
         }
+
+        /// <summary>
+        /// Serializes the items using the metadata appropriate to the telemetry package.
+        /// </summary>
+        /// <param name="telemetryItems">The items to serialize.</param>
+        /// <returns>The JSON payload before compression.</returns>
+        protected virtual string SerializeItems(IEnumerable<TelemetryItem> telemetryItems)
+            => JsonSerializer.Serialize(telemetryItems,
+                TelemetryJsonSerializerContext.Default.IEnumerableTelemetryItem);
 
         /// <summary>
         /// Wraps the gzip-compressed bytes in an HTTP content whose body is the Base64-encoded
