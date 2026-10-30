@@ -30,7 +30,7 @@ namespace RepoDb
         #region BulkDeleteBase<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -56,35 +56,65 @@ namespace RepoDb
             VerticaTransaction transaction = null)
             where TEntity : class
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
-
-            var entityList = entities.AsList();
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-            var pseudoTableName = VerticaText.CreatePseudoTableName("D");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                VerticaExecution.CreatePseudoTable(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
 
-                using var entityTable = BuildEntityDataTable(entityList, qualifierFields);
-                WriteToServerInternal(connection, pseudoTableName, entityTable, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
+                var entityList = entities.AsList();
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                var pseudoTableName = VerticaText.CreatePseudoTableName("D");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
 
-                result = VerticaExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    VerticaExecution.CreatePseudoTable(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+
+                    using var entityTable = BuildEntityDataTable(entityList, qualifierFields);
+                    WriteToServerInternal(connection, pseudoTableName, entityTable, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
+
+                    result = VerticaExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        VerticaExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                VerticaExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            Tracer.InvokeAfterExecution(traceResult, trace, result);
-            return result;
         }
 
         #endregion
@@ -92,7 +122,7 @@ namespace RepoDb
         #region BulkDeleteBase<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -118,39 +148,69 @@ namespace RepoDb
             string traceKey = VerticaTraceKeys.VerticaBulkDelete,
             VerticaTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
-
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-            var pseudoTableName = VerticaText.CreatePseudoTableName("D");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                VerticaExecution.CreatePseudoTable(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
 
-                var mappings = qualifierFields.Select(f => new VerticaBulkInsertMapItem(f.Name, f.Name)).AsList();
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction);
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
 
-                result = VerticaExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                var pseudoTableName = VerticaText.CreatePseudoTableName("D");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+
+                using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    VerticaExecution.CreatePseudoTable(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+
+                    var mappings = qualifierFields.Select(f => new VerticaBulkInsertMapItem(f.Name, f.Name)).AsList();
+                    WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction);
+
+                    result = VerticaExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        VerticaExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                VerticaExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            Tracer.InvokeAfterExecution(traceResult, trace, result);
-            return result;
         }
 
         #endregion
@@ -158,7 +218,7 @@ namespace RepoDb
         #region BulkDeleteBase<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -182,34 +242,64 @@ namespace RepoDb
             string traceKey = VerticaTraceKeys.VerticaBulkDelete,
             VerticaTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
-
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-            var pseudoTableName = VerticaText.CreatePseudoTableName("D");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                VerticaExecution.CreatePseudoTable(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
 
-                var mappings = qualifierFields.Select(f => new VerticaBulkInsertMapItem(f.Name, f.Name)).AsList();
-                WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, transaction);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                var pseudoTableName = VerticaText.CreatePseudoTableName("D");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
 
-                result = VerticaExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    VerticaExecution.CreatePseudoTable(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+
+                    var mappings = qualifierFields.Select(f => new VerticaBulkInsertMapItem(f.Name, f.Name)).AsList();
+                    WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, transaction);
+
+                    result = VerticaExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        VerticaExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                VerticaExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            Tracer.InvokeAfterExecution(traceResult, trace, result);
-            return result;
         }
 
         #endregion
@@ -221,7 +311,7 @@ namespace RepoDb
         #region BulkDeleteBaseAsync<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -249,35 +339,66 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
-
-            var entityList = entities.AsList();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-            var pseudoTableName = VerticaText.CreatePseudoTableName("D");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
 
-                using var entityTable = BuildEntityDataTable(entityList, qualifierFields);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                var entityList = entities.AsList();
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                var pseudoTableName = VerticaText.CreatePseudoTableName("D");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
 
-                result = await VerticaExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+                traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+
+                    using var entityTable = BuildEntityDataTable(entityList, qualifierFields);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    result = await VerticaExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-            return result;
         }
 
         #endregion
@@ -285,7 +406,7 @@ namespace RepoDb
         #region BulkDeleteBaseAsync<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -313,39 +434,70 @@ namespace RepoDb
             VerticaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
-
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-            var pseudoTableName = VerticaText.CreatePseudoTableName("D");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
 
-                var mappings = qualifierFields.Select(f => new VerticaBulkInsertMapItem(f.Name, f.Name)).AsList();
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
 
-                result = await VerticaExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                var pseudoTableName = VerticaText.CreatePseudoTableName("D");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+
+                using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+                traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+
+                    var mappings = qualifierFields.Select(f => new VerticaBulkInsertMapItem(f.Name, f.Name)).AsList();
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
+
+                    result = await VerticaExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-            return result;
         }
 
         #endregion
@@ -353,7 +505,7 @@ namespace RepoDb
         #region BulkDeleteBaseAsync<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -379,34 +531,65 @@ namespace RepoDb
             VerticaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
-
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-            var pseudoTableName = VerticaText.CreatePseudoTableName("D");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
 
-                var mappings = qualifierFields.Select(f => new VerticaBulkInsertMapItem(f.Name, f.Name)).AsList();
-                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                var pseudoTableName = VerticaText.CreatePseudoTableName("D");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
 
-                result = await VerticaExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+                traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, qualifierFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+
+                    var mappings = qualifierFields.Select(f => new VerticaBulkInsertMapItem(f.Name, f.Name)).AsList();
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
+
+                    result = await VerticaExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-            return result;
         }
 
         #endregion

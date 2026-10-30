@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2021 Michael Camara Pendon.
 // Portions copyright their respective RepoDB contributors.
@@ -25,14 +25,14 @@ using RepoDb.PostgreSql.BulkOperations;
 namespace RepoDb
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public static partial class NpgsqlConnectionExtension
     {
         #region PseudoBasedBinaryImport
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -72,110 +72,133 @@ namespace RepoDb
             string traceKey,
             NpgsqlTransaction transaction)
         {
-            string pseudoTableName = null;
-            var withPseudoTable = identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity ||
-                isBulkInsert == false;
-
+            TraceResult traceResult = null;
+            int? result = default;
+            Exception executionError = null;
             try
             {
-                // Before Execution
-                using var command = CreateTraceCommand(connection, tableName, traceKey, bulkCopyTimeout, transaction);
-                var traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
+                string pseudoTableName = null;
+                var withPseudoTable = identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity ||
+                    isBulkInsert == false;
 
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                try
                 {
-                    return default;
-                }
+                    // Before Execution
+                    using var command = CreateTraceCommand(connection, tableName, traceKey, bulkCopyTimeout, transaction);
+                    traceResult = Tracer
+                        .InvokeBeforeExecution(traceKey, trace, command);
 
-                // Mappings
-                var mappings = getMappings?.Invoke();
-
-                // Create (TEMP)
-                if (withPseudoTable)
-                {
-                    pseudoTableName = getPseudoTableName?.Invoke();
-
-                    DropPseudoTable(connection,
-                        pseudoTableName,
-                        bulkCopyTimeout,
-                        trace,
-                        traceKey,
-                        transaction);
-
-                    CreatePseudoTable(connection,
-                        tableName,
-                        pseudoTableName,
-                        rowCount,
-                        mappings,
-                        bulkCopyTimeout,
-                        identityBehavior,
-                        pseudoTableType,
-                        dbSetting,
-                        trace,
-                        traceKey,
-                        transaction);
-                }
-
-                // Create Index
-                if (isBulkInsert == false && withPseudoTable)
-                {
-                    qualifiers = qualifiers?.Any() == true ? qualifiers :
-                        dbFields?.GetPrimary().AsField().AsEnumerable();
-
-                    CreatePseudoTableIndex(connection,
-                        pseudoTableName,
-                        qualifiers,
-                        bulkCopyTimeout,
-                        dbSetting,
-                        trace,
-                        traceKey,
-                        transaction);
-                }
-
-                // Import
-                var result = binaryImport?.Invoke(pseudoTableName ?? tableName);
-
-                // Merge/Update/Delete
-                if (withPseudoTable)
-                {
-                    var identityResults = MergeToPseudoTableWithIdentityResults(connection,
-                        getMergeToPseudoCommandText,
-                        bulkCopyTimeout,
-                        transaction)?.AsList();
-
-                    if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity)
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                     {
-                        setIdentities?.Invoke(identityResults);
+                        return default;
                     }
 
-                    result = identityResults.Count();
+                    // Mappings
+                    var mappings = getMappings?.Invoke();
+
+                    // Create (TEMP)
+                    if (withPseudoTable)
+                    {
+                        pseudoTableName = getPseudoTableName?.Invoke();
+
+                        DropPseudoTable(connection,
+                            pseudoTableName,
+                            bulkCopyTimeout,
+                            trace,
+                            traceKey,
+                            transaction);
+
+                        CreatePseudoTable(connection,
+                            tableName,
+                            pseudoTableName,
+                            rowCount,
+                            mappings,
+                            bulkCopyTimeout,
+                            identityBehavior,
+                            pseudoTableType,
+                            dbSetting,
+                            trace,
+                            traceKey,
+                            transaction);
+                    }
+
+                    // Create Index
+                    if (isBulkInsert == false && withPseudoTable)
+                    {
+                        qualifiers = qualifiers?.Any() == true ? qualifiers :
+                            dbFields?.GetPrimary().AsField().AsEnumerable();
+
+                        CreatePseudoTableIndex(connection,
+                            pseudoTableName,
+                            qualifiers,
+                            bulkCopyTimeout,
+                            dbSetting,
+                            trace,
+                            traceKey,
+                            transaction);
+                    }
+
+                    // Import
+                    result = binaryImport?.Invoke(pseudoTableName ?? tableName);
+
+                    // Merge/Update/Delete
+                    if (withPseudoTable)
+                    {
+                        var identityResults = MergeToPseudoTableWithIdentityResults(connection,
+                            getMergeToPseudoCommandText,
+                            bulkCopyTimeout,
+                            transaction)?.AsList();
+
+                        if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity)
+                        {
+                            setIdentities?.Invoke(identityResults);
+                        }
+
+                        result = identityResults.Count();
+                    }
+
+                    // Return
+                    return result.GetValueOrDefault();
                 }
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
-
-                // Return
-                return result.GetValueOrDefault();
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        if (withPseudoTable)
+                        {
+                            DropPseudoTable(connection,
+                                pseudoTableName,
+                                bulkCopyTimeout,
+                                trace,
+                                traceKey,
+                                transaction);
+                        }
+                    },
+                        executionError);
+                }
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                if (withPseudoTable)
-                {
-                    DropPseudoTable(connection,
-                        pseudoTableName,
-                        bulkCopyTimeout,
-                        trace,
-                        traceKey,
-                        transaction);
-                }
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -217,109 +240,133 @@ namespace RepoDb
             NpgsqlTransaction transaction,
             CancellationToken cancellationToken = default)
         {
-            string pseudoTableName = null;
-            var withPseudoTable = identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity ||
-                isBulkInsert == false;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Before Execution
-                using var command = CreateTraceCommand(connection, tableName, traceKey, bulkCopyTimeout, transaction);
-                var traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                string pseudoTableName = null;
+                var withPseudoTable = identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity ||
+                    isBulkInsert == false;
 
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                try
                 {
-                    return default;
-                }
+                    // Before Execution
+                    using var command = CreateTraceCommand(connection, tableName, traceKey, bulkCopyTimeout, transaction);
+                    traceResult = await Tracer
+                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-                // Mappings
-                var mappings = getMappings?.Invoke();
-
-                // Create (TEMP)
-                if (withPseudoTable)
-                {
-                    pseudoTableName = getPseudoTableName?.Invoke();
-
-                    await DropPseudoTableAsync(connection,
-                        pseudoTableName,
-                        bulkCopyTimeout,
-                        trace,
-                        traceKey,
-                        transaction,
-                        cancellationToken).ConfigureAwait(false);
-
-                    await CreatePseudoTableAsync(connection,
-                        tableName,
-                        pseudoTableName,
-                        rowCount,
-                        mappings,
-                        bulkCopyTimeout,
-                        identityBehavior,
-                        pseudoTableType,
-                        dbSetting,
-                        trace,
-                        traceKey,
-                        transaction,
-                        cancellationToken).ConfigureAwait(false);
-                }
-
-                // Create Index
-                if (isBulkInsert == false && withPseudoTable)
-                {
-                    qualifiers = qualifiers?.Any() == true ? qualifiers :
-                        dbFields?.GetPrimary().AsField().AsEnumerable();
-
-                    await CreatePseudoTableIndexAsync(connection,
-                        pseudoTableName,
-                        qualifiers,
-                        bulkCopyTimeout,
-                        dbSetting,
-                        trace,
-                        traceKey,
-                        transaction,
-                        cancellationToken).ConfigureAwait(false);
-                }
-
-                // Import
-                var result = await (binaryImportAsync?.Invoke(pseudoTableName ?? tableName)).ConfigureAwait(false);
-
-                // Insert (INTO)
-                if (withPseudoTable)
-                {
-                    var identityResults = (await MergeToPseudoTableWithIdentityResultsAsync(connection,
-                        getMergeToPseudoCommandText,
-                        bulkCopyTimeout,
-                        transaction).ConfigureAwait(false))?.AsList();
-
-                    if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity)
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                     {
-                        setIdentities?.Invoke(identityResults);
+                        return default;
                     }
 
-                    result = identityResults.Count;
+                    // Mappings
+                    var mappings = getMappings?.Invoke();
+
+                    // Create (TEMP)
+                    if (withPseudoTable)
+                    {
+                        pseudoTableName = getPseudoTableName?.Invoke();
+
+                        await DropPseudoTableAsync(connection,
+                            pseudoTableName,
+                            bulkCopyTimeout,
+                            trace,
+                            traceKey,
+                            transaction,
+                            cancellationToken).ConfigureAwait(false);
+
+                        await CreatePseudoTableAsync(connection,
+                            tableName,
+                            pseudoTableName,
+                            rowCount,
+                            mappings,
+                            bulkCopyTimeout,
+                            identityBehavior,
+                            pseudoTableType,
+                            dbSetting,
+                            trace,
+                            traceKey,
+                            transaction,
+                            cancellationToken).ConfigureAwait(false);
+                    }
+
+                    // Create Index
+                    if (isBulkInsert == false && withPseudoTable)
+                    {
+                        qualifiers = qualifiers?.Any() == true ? qualifiers :
+                            dbFields?.GetPrimary().AsField().AsEnumerable();
+
+                        await CreatePseudoTableIndexAsync(connection,
+                            pseudoTableName,
+                            qualifiers,
+                            bulkCopyTimeout,
+                            dbSetting,
+                            trace,
+                            traceKey,
+                            transaction,
+                            cancellationToken).ConfigureAwait(false);
+                    }
+
+                    // Import
+                    result = await (binaryImportAsync?.Invoke(pseudoTableName ?? tableName)).ConfigureAwait(false);
+
+                    // Insert (INTO)
+                    if (withPseudoTable)
+                    {
+                        var identityResults = (await MergeToPseudoTableWithIdentityResultsAsync(connection,
+                            getMergeToPseudoCommandText,
+                            bulkCopyTimeout,
+                            transaction).ConfigureAwait(false))?.AsList();
+
+                        if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity)
+                        {
+                            setIdentities?.Invoke(identityResults);
+                        }
+
+                        result = identityResults.Count;
+                    }
+
+                    // Return
+                    return result;
                 }
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-                // Return
-                return result;
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        if (withPseudoTable)
+                        {
+                            await DropPseudoTableAsync(connection,
+                                pseudoTableName,
+                                bulkCopyTimeout,
+                                trace,
+                                traceKey,
+                                transaction,
+                                (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                        }
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                if (withPseudoTable)
-                {
-                    await DropPseudoTableAsync(connection,
-                        pseudoTableName,
-                        bulkCopyTimeout,
-                        trace,
-                        traceKey,
-                        transaction,
-                        cancellationToken).ConfigureAwait(false);
-                }
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
         }
 
@@ -373,7 +420,7 @@ namespace RepoDb
         #region TransactionalExecute
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="connection"></param>
@@ -436,7 +483,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="connection"></param>

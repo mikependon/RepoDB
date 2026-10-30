@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Enumerations.Firebird;
 using RepoDb.Extensions;
@@ -33,34 +34,64 @@ namespace RepoDb
             string traceKey = FirebirdTraceKeys.FirebirdBulkDeleteByKey,
             FbTransaction transaction = null)
         {
-            var keyValueList = primaryKeys?.Select(k => (object)k).AsList();
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierField = GetQualifierFields(tableName, dbFields).First();
-            var pseudoTableName = FirebirdText.CreatePseudoTableName("K");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, keyValueList?.Count);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                FirebirdExecution.CreatePseudoTable(connection, pseudoTableName, new[] { qualifierField }, dbFields, pseudoTableType, trace, traceKey, transaction);
-                FirebirdExecution.CreatePseudoTableIndex(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
+                var keyValueList = primaryKeys?.Select(k => (object)k).AsList();
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierField = GetQualifierFields(tableName, dbFields).First();
+                var pseudoTableName = FirebirdText.CreatePseudoTableName("K");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, keyValueList?.Count);
 
-                using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValueList);
-                var mappings = new[] { new FirebirdCommandBatcherMapItem(qualifierField.Name, qualifierField.Name) };
-                WriteToServerInternal(connection, pseudoTableName, dataTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
+                using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
 
-                result = FirebirdExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    FirebirdExecution.CreatePseudoTable(connection, pseudoTableName, new[] { qualifierField }, dbFields, pseudoTableType, trace, traceKey, transaction);
+                    FirebirdExecution.CreatePseudoTableIndex(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
+
+                    using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValueList);
+                    var mappings = new[] { new FirebirdCommandBatcherMapItem(qualifierField.Name, qualifierField.Name) };
+                    WriteToServerInternal(connection, pseudoTableName, dataTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
+
+                    result = FirebirdExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        FirebirdExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                FirebirdExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            Tracer.InvokeAfterExecution(traceResult, trace, result);
-            return result;
         }
 
         #endregion
@@ -78,34 +109,65 @@ namespace RepoDb
             FbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var keyValueList = primaryKeys?.Select(k => (object)k).AsList();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
-            var qualifierField = GetQualifierFields(tableName, dbFields).First();
-            var pseudoTableName = FirebirdText.CreatePseudoTableName("K");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, keyValueList?.Count);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                await FirebirdExecution.CreatePseudoTableAsync(connection, pseudoTableName, new[] { qualifierField }, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await FirebirdExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                var keyValueList = primaryKeys?.Select(k => (object)k).AsList();
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
+                var qualifierField = GetQualifierFields(tableName, dbFields).First();
+                var pseudoTableName = FirebirdText.CreatePseudoTableName("K");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, keyValueList?.Count);
 
-                using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValueList);
-                var mappings = new[] { new FirebirdCommandBatcherMapItem(qualifierField.Name, qualifierField.Name) };
-                await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
+                traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-                result = await FirebirdExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    await FirebirdExecution.CreatePseudoTableAsync(connection, pseudoTableName, new[] { qualifierField }, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await FirebirdExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+
+                    using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValueList);
+                    var mappings = new[] { new FirebirdCommandBatcherMapItem(qualifierField.Name, qualifierField.Name) };
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    result = await FirebirdExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        await FirebirdExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                await FirebirdExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-            return result;
         }
 
         #endregion

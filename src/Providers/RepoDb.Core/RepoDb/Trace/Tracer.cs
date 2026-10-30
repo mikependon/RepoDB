@@ -25,6 +25,47 @@ namespace RepoDb
         #region Public Methods
 
         /// <summary>
+        /// Runs bulk cleanup without replacing an existing execution failure.
+        /// </summary>
+        /// <param name="cleanup">The rollback, disposal, or temporary-table cleanup action.</param>
+        /// <param name="executionError">The original execution failure, or null after success.</param>
+        public static void Cleanup(Action cleanup,
+            Exception executionError)
+        {
+            try
+            {
+                cleanup();
+            }
+            catch (Exception) when (executionError != null)
+            {
+                // Preserve the failure that initiated cleanup.
+            }
+        }
+
+        /// <summary>
+        /// Runs asynchronous bulk cleanup without replacing an existing execution failure.
+        /// </summary>
+        /// <param name="cleanup">The asynchronous rollback or temporary-table cleanup action.</param>
+        /// <param name="executionError">The original execution failure, or null after success.</param>
+        /// <returns>A task that completes after the cleanup attempt.</returns>
+        public static async Task CleanupAsync(Func<Task> cleanup,
+            Exception executionError)
+        {
+            try
+            {
+                await cleanup().ConfigureAwait(false);
+            }
+            catch (Exception) when (executionError != null)
+            {
+                // Preserve the failure that initiated cleanup.
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
         /// Notifies observers before execution and reports failures before returning control.
         /// </summary>
         /// <param name="key">The operation name.</param>

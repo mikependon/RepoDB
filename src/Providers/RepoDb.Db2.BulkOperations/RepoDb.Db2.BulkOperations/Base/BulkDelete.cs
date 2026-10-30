@@ -64,56 +64,82 @@ namespace RepoDb
             DB2Transaction transaction = null)
             where TEntity : class
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
-
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
-            var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
-                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
-                Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
 
-                if (qualifierFieldsForPseudoTable != null)
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
+                var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
+
+                using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                 {
-                    using var qualifierTable = BuildEntityDataTable(entityList, qualifierFieldsForPseudoTable);
-                    WriteToServerInternal(connection, pseudoTableName, qualifierTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
-                }
-                else
-                {
-                    WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                    return default;
                 }
 
-                // Execute and return
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-                result = Db2Execution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                try
+                {
+                    // Bulk and post process
+                    Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
+                    Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
+                    Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+
+                    if (qualifierFieldsForPseudoTable != null)
+                    {
+                        using var qualifierTable = BuildEntityDataTable(entityList, qualifierFieldsForPseudoTable);
+                        WriteToServerInternal(connection, pseudoTableName, qualifierTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                    }
+                    else
+                    {
+                        WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                    }
+
+                    // Execute and return
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                    result = Db2Execution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -149,51 +175,77 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkDelete,
             DB2Transaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
-
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
-            var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
-                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
-                Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
 
-                // Execute and return
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-                result = Db2Execution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
+
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
+                var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
+
+                using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
+                    Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
+                    Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                    result = Db2Execution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -227,46 +279,72 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkDelete,
             DB2Transaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
-
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
-            var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
-                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
-                Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
 
-                // Execute and return
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-                result = Db2Execution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
+                var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
+
+                using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
+                    Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
+                    Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                    result = Db2Execution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -308,56 +386,83 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
-
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
-            var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, entities, hasMappings: false, transaction);
 
-                if (qualifierFieldsForPseudoTable != null)
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
+                var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
+
+                using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                 {
-                    using var qualifierTable = BuildEntityDataTable(entityList, qualifierFieldsForPseudoTable);
-                    await WriteToServerAsyncInternal(connection, pseudoTableName, qualifierTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
-                }
-                else
-                {
-                    await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                    return default;
                 }
 
-                // Execute and return
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-                result = await Db2Execution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    // Bulk and post process
+                    await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+
+                    if (qualifierFieldsForPseudoTable != null)
+                    {
+                        using var qualifierTable = BuildEntityDataTable(entityList, qualifierFieldsForPseudoTable);
+                        await WriteToServerAsyncInternal(connection, pseudoTableName, qualifierTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                    }
+
+                    // Execute and return
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                    result = await Db2Execution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -395,51 +500,78 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
-
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
-            var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, table, hasMappings: false, transaction);
 
-                // Execute and return
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-                result = await Db2Execution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
+
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
+                var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
+
+                using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                    result = await Db2Execution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -475,46 +607,73 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
-
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
-            var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, hasMappings: false, transaction);
 
-                // Execute and return
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-                result = await Db2Execution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
+                var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
+
+                using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                    result = await Db2Execution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -524,7 +683,7 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="dbFields"></param>
@@ -538,7 +697,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="qualifierFields"></param>
         /// <returns></returns>
@@ -546,7 +705,7 @@ namespace RepoDb
             qualifierFields?.Select(f => new Db2BulkInsertMapItem(f.Name, f.Name)).AsList();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
@@ -604,7 +763,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="entityType"></param>
         /// <param name="entities"></param>
