@@ -3587,12 +3587,25 @@ isDisposeConnection: false,
                 return default;
             }
 
-            // Execution
-            var result = command.ExecuteNonQuery();
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            var result = 0;
+            Exception error = null;
+            try
+            {
+                result = command.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                error = e;
+                throw;
+            }
+            finally
+            {
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result, error);
+            }
 
             // Set the output parameters
             SetOutputParameters(param);
@@ -3697,12 +3710,25 @@ isDisposeConnection: false,
                 return default;
             }
 
-            // Execution
-            var result = await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            var result = 0;
+            Exception error = null;
+            try
+            {
+                result = await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                error = e;
+                throw;
+            }
+            finally
+            {
+                // After Execution: a token that has been cancelled must not stop the trace from recording the failure
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, error == null ? cancellationToken : CancellationToken.None, error).ConfigureAwait(false);
+            }
 
             // Set the output parameters
             SetOutputParameters(param);

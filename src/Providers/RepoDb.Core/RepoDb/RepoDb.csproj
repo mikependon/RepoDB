@@ -41,6 +41,7 @@
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.13" />
     <PackageReference Include="System.Memory" Version="4.6.3" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <PackageReference Remove="System.Linq.Async" />
@@ -112,6 +113,9 @@
     <InternalsVisibleTo Include="RepoDb.Sqlite.Microsoft" />
     <InternalsVisibleTo Include="RepoDb.Telemetry.Core" />
     <InternalsVisibleTo Include="RepoDb.Telemetry.Default" />
+    <InternalsVisibleTo Include="RepoDb.Telemetry.Core.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Telemetry.Default.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Telemetry.Extended.UnitTests" />
     <InternalsVisibleTo Include="RepoDb.Sqlite.Turso" />
     <InternalsVisibleTo Include="RepoDb.Vertica" />
   </ItemGroup>

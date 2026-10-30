@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using System.Threading;
@@ -149,6 +150,26 @@ namespace RepoDb.Telemetry.Core
         {
         }
 
+        /// <summary>
+        /// Completes the telemetry item with the outcome of the operation, whether it succeeded or failed. If it succeeded, the item is completed with its result.
+        /// If it failed, the result is not a result of the operation, so the item is not completed with it: override the method to record the error.
+        /// </summary>
+        /// <param name="item">The telemetry item to be completed.</param>
+        /// <param name="result">The result of the operation (the default value if it failed).</param>
+        /// <param name="error">The exception that made the operation fail, or <c>null</c> if it succeeded.</param>
+        /// <param name="level">The level of the log of the operation.</param>
+        protected virtual void CompleteTelemetryItem(TelemetryItem item,
+            object result,
+            Exception error,
+            TraceLevel level)
+        {
+            if (error == null)
+            {
+                CompleteTelemetryItem(item,
+                    result);
+            }
+        }
+
         #endregion
 
         #region Properties
@@ -255,7 +276,8 @@ namespace RepoDb.Telemetry.Core
                     item.Operation = log.Key;
                     item.StartTime = log.StartTime;
                     item.Statement = log.Statement;
-                    item.Client = _client;
+                    item.Client = log.PcName ?? _client;
+                    item.IpAddress = log.IpAddress;
                     item.Source = _assembly?.GetName().Name;
                     item.Version = _assembly?.GetName().Version?.ToString();
                     _beforeTraceLogs[log.SessionId] = Tuple.Create(log, item);
@@ -275,7 +297,9 @@ namespace RepoDb.Telemetry.Core
                     if (_beforeTraceLogs.TryGetValue(log.SessionId, out var before))
                     {
                         CompleteTelemetryItem(before.Item2,
-                            log.Result);
+                            log.Result,
+                            log.Error,
+                            log.Level);
                     }
                 }
             }

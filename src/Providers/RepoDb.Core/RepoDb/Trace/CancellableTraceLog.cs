@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 
 namespace RepoDb
@@ -30,7 +31,24 @@ namespace RepoDb
             string key,
             string statement,
             IEnumerable<IDbDataParameter> parameters = null)
-            : base(sessionId, key)
+            : this(sessionId, key, statement, parameters, TraceContext.Empty)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="CancellableTraceLog"/> object for an execution.
+        /// </summary>
+        /// <param name="sessionId">The session identifier used by the current trace.</param>
+        /// <param name="key">The actual tracing key used by the operation.</param>
+        /// <param name="statement">The SQL Statement used on the actual operation execution.</param>
+        /// <param name="parameters">The parameters used on the actual operation.</param>
+        /// <param name="context">The context in which the operation is executed.</param>
+        internal CancellableTraceLog(Guid sessionId,
+            string key,
+            string statement,
+            IEnumerable<IDbDataParameter> parameters,
+            TraceContext context)
+            : base(sessionId, key, context, TraceLevel.Info)
         {
             Statement = statement;
             Parameters = parameters;
@@ -49,9 +67,9 @@ namespace RepoDb
         public IEnumerable<IDbDataParameter> Parameters { get; }
 
         /// <summary>
-        /// Gets the actual date/time value of when the actual execution has started.
+        /// Gets the actual date/time value of when the actual execution has started. The value is set when the log is created, and it does not change.
         /// </summary>
-        public DateTime StartTime => DateTime.UtcNow;
+        public DateTime StartTime { get; } = DateTime.UtcNow;
 
         /// <summary>
         /// Gets a value whether the operation is cancelled.

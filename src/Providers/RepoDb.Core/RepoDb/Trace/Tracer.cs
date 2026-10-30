@@ -78,7 +78,10 @@ namespace RepoDb
 
             var result = TraceResult.Create(key, command);
 
-            await (trace?.BeforeExecutionAsync(result.CancellableTraceLog, cancellationToken)).ConfigureAwait(false);
+            if (trace != null)
+            {
+                await trace.BeforeExecutionAsync(result.CancellableTraceLog, cancellationToken).ConfigureAwait(false);
+            }
 
             if (GlobalConfiguration.Options.UseRegisteredGlobalTraces)
             {
@@ -98,15 +101,17 @@ namespace RepoDb
         #region AfterExecution
 
         /// <summary>
-        /// 
+        /// Tells the traces that the execution has completed, whether it succeeded or failed.
         /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result"></param>
-        /// <param name="trace"></param>
-        /// <param name="value"></param>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="result">The result of the tracing that was started before the execution.</param>
+        /// <param name="trace">The trace object to be told.</param>
+        /// <param name="value">The actual result of the execution (the default value if it failed).</param>
+        /// <param name="error">The exception that made the execution fail, or <c>null</c> if it succeeded.</param>
         public static void InvokeAfterExecution<TResult>(TraceResult result,
             ITrace trace,
-            TResult value)
+            TResult value,
+            Exception error = null)
         {
             if (result == null)
             {
@@ -125,15 +130,16 @@ namespace RepoDb
 
             var log = new ResultTraceLog<TResult>(result.SessionId,
                 result.CancellableTraceLog.Key,
-                DateTime.UtcNow.TimeOfDay.Subtract(result.StartTime.TimeOfDay),
+                result.Elapsed,
                 value,
-                result.CancellableTraceLog);
+                result.CancellableTraceLog,
+                error);
 
-            trace?.AfterExecution(log);
+            NotifyAfterExecution(trace, log);
 
             foreach (var globalTrace in globalTraces)
             {
-                globalTrace.AfterExecution(log);
+                NotifyAfterExecution(globalTrace, log);
             }
         }
 
@@ -142,18 +148,20 @@ namespace RepoDb
         #region AfterExecutionAsync
 
         /// <summary>
-        /// 
+        /// Tells the traces in an asynchronous way that the execution has completed, whether it succeeded or failed.
         /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result"></param>
-        /// <param name="trace"></param>
-        /// <param name="value"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="result">The result of the tracing that was started before the execution.</param>
+        /// <param name="trace">The trace object to be told.</param>
+        /// <param name="value">The actual result of the execution (the default value if it failed).</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to be given to the traces.</param>
+        /// <param name="error">The exception that made the execution fail, or <c>null</c> if it succeeded.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public static async Task InvokeAfterExecutionAsync<TResult>(TraceResult result,
             ITrace trace,
             TResult value,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            Exception error = null)
         {
             if (result == null)
             {
@@ -172,21 +180,75 @@ namespace RepoDb
 
             var log = new ResultTraceLog<TResult>(result.SessionId,
                 result.CancellableTraceLog.Key,
-                DateTime.UtcNow.TimeOfDay.Subtract(result.StartTime.TimeOfDay),
+                result.Elapsed,
                 value,
-                result.CancellableTraceLog);
+                result.CancellableTraceLog,
+                error);
 
-            await (trace?.AfterExecutionAsync(log, cancellationToken)).ConfigureAwait(false);
+            await NotifyAfterExecutionAsync(trace, log, cancellationToken).ConfigureAwait(false);
 
             foreach (var globalTrace in globalTraces)
             {
-                await globalTrace.AfterExecutionAsync(log, cancellationToken).ConfigureAwait(false);
+                await NotifyAfterExecutionAsync(globalTrace, log, cancellationToken).ConfigureAwait(false);
             }
         }
 
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Tells a trace that the execution has completed. If the execution has failed, a trace that fails as well is ignored,
+        /// so it can never replace the error that is reported to the caller.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="trace">The trace to be told, or <c>null</c>.</param>
+        /// <param name="log">The log of the completed execution.</param>
+        private static void NotifyAfterExecution<TResult>(ITrace trace,
+            ResultTraceLog<TResult> log)
+        {
+            if (trace == null)
+            {
+                return;
+            }
+
+            try
+            {
+                trace.AfterExecution(log);
+            }
+            catch (Exception) when (log.Error != null)
+            {
+                // The error of the execution is more important than the error of the trace.
+            }
+        }
+
+        /// <summary>
+        /// Tells a trace in an asynchronous way that the execution has completed. If the execution has failed, a trace that fails as well is ignored,
+        /// so it can never replace the error that is reported to the caller.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="trace">The trace to be told, or <c>null</c>.</param>
+        /// <param name="log">The log of the completed execution.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to be given to the trace.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        private static async Task NotifyAfterExecutionAsync<TResult>(ITrace trace,
+            ResultTraceLog<TResult> log,
+            CancellationToken cancellationToken)
+        {
+            if (trace == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await trace.AfterExecutionAsync(log, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception) when (log.Error != null)
+            {
+                // The error of the execution is more important than the error of the trace.
+            }
+        }
 
         /// <summary>
         /// 

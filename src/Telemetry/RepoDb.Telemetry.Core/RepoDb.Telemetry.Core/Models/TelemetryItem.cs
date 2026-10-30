@@ -36,6 +36,11 @@ namespace RepoDb.Telemetry.Core
         public string Group { get; set; } = "Default";
 
         /// <summary>
+        /// The IP address of the client machine that has executed the operation. This is used to identify where the operation has been executed from.
+        /// </summary>
+        public string IpAddress { get; set; }
+
+        /// <summary>
         /// The flag that indicates whether the operation has been cancelled or not. This is used to determine if the operation has been cancelled by the user or by the system.
         /// </summary>
         public bool IsCancelled { get; set; }
