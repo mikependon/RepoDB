@@ -19,85 +19,85 @@ namespace RepoDb.Schema.Models
         #region Properties
 
         /// <summary>
-        /// Gets the character set reported by the provider, or null when unknown.
+        /// Gets or sets the character set reported by the provider, or null when unknown.
         /// </summary>
-        public string CharacterSet { get; internal set; }
+        public string CharacterSet { get; set; }
 
         /// <summary>
         /// Gets or sets the collation of the column, or <c>null</c> if it is not applicable.
         /// </summary>
-        public string Collation { get; internal set; }
+        public string Collation { get; set; }
 
         /// <summary>
         /// Gets or sets the comment of the column, or null if there is none.
         /// </summary>
-        public string Comment { get; internal set; }
+        public string Comment { get; set; }
 
         /// <summary>
         /// Gets or sets the expression of a computed or generated column, or <c>null</c> if the column is not computed.
         /// </summary>
-        public string ComputedExpression { get; internal set; }
+        public string ComputedExpression { get; set; }
 
         /// <summary>
         /// Gets or sets the default expression of the column, or <c>null</c> if there is none.
         /// </summary>
-        public string DefaultExpression { get; internal set; }
+        public string DefaultExpression { get; set; }
 
         /// <summary>
         /// Gets or sets the kind of the default value of the column (see <see cref="ColumnDefaultValue"/>), which the composer of another database uses to create the equivalent
         /// default value. It is <see cref="ColumnDefaultValue.Unclassified"/> if the schema reader does not set it.
         /// </summary>
-        public ColumnDefaultValue DefaultValue { get; internal set; }
+        public ColumnDefaultValue DefaultValue { get; set; }
 
         /// <summary>
         /// Gets or sets the base field information (name, type, size, precision, scale, nullability, primary and identity flags).
         /// </summary>
-        public DbField Field { get; internal set; }
+        public DbField Field { get; set; }
 
         /// <summary>
         /// Gets or sets the increment of the identity column, or <c>null</c> if the column is not an identity.
         /// </summary>
-        public long? IdentityIncrement { get; internal set; }
+        public long? IdentityIncrement { get; set; }
 
         /// <summary>
         /// Gets or sets the seed of the identity column, or <c>null</c> if the column is not an identity.
         /// </summary>
-        public long? IdentitySeed { get; internal set; }
+        public long? IdentitySeed { get; set; }
 
         /// <summary>
-        /// Gets whether the text encoding supports Unicode, or null when unknown.
+        /// Gets or sets whether the text encoding supports Unicode, or null when unknown.
         /// </summary>
-        public bool? IsUnicode { get; internal set; }
+        public bool? IsUnicode { get; set; }
 
         /// <summary>
-        /// Gets the unit of Field.Size (bytes, characters, or utf16CodeUnits), or null when unknown.
+        /// Gets or sets the unit of Field.Size (bytes, characters, or utf16CodeUnits), or null when unknown.
         /// </summary>
-        public string LengthUnit { get; internal set; }
+        public string LengthUnit { get; set; }
 
         /// <summary>
-        /// Gets the full provider type declaration when available.
+        /// Gets or sets the full provider type declaration when available.
         /// </summary>
-        public string NativeType { get; internal set; }
+        public string NativeType { get; set; }
 
         /// <summary>
-        /// Gets the numeric precision without DbField's byte limit, or null when unknown.
+        /// Gets or sets the numeric precision without DbField's byte limit, or null when unknown.
         /// </summary>
-        public int? NumericPrecision { get; internal set; }
+        public int? NumericPrecision { get; set; }
 
         /// <summary>
-        /// Gets the numeric scale, including negative scales, or null when unknown.
+        /// Gets or sets the numeric scale, including negative scales, or null when unknown.
         /// </summary>
-        public int? NumericScale { get; internal set; }
+        public int? NumericScale { get; set; }
 
         /// <summary>
         /// Gets or sets the position of the column within the table (starting at 1).
         /// </summary>
-        public int Ordinal { get; internal set; }
+        public int Ordinal { get; set; }
 
         /// <summary>
-        /// Gets the fractional-second precision, or null when unknown.
+        /// Gets or sets the fractional-second precision, or null when unknown.
         /// </summary>
-        public int? TemporalPrecision { get; internal set; }
+        public int? TemporalPrecision { get; set; }
 
         #endregion
 

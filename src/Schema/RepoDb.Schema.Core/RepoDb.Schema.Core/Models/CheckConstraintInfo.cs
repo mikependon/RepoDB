@@ -33,12 +33,12 @@ namespace RepoDb.Schema.Models
         /// <summary>
         /// Gets or sets the expression of the check constraint.
         /// </summary>
-        public string Expression { get; internal set; }
+        public string Expression { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the check constraint.
         /// </summary>
-        public string Name { get; internal set; }
+        public string Name { get; set; }
 
         #endregion
 
