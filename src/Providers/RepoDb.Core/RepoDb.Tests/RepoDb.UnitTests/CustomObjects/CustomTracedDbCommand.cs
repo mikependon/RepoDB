@@ -36,6 +36,11 @@ namespace RepoDb.UnitTests.CustomObjects
         public Action OnExecute { get; set; }
 
         /// <summary>
+        /// Gets or sets the factory used to create a reader for result-consumption tests.
+        /// </summary>
+        public Func<DbDataReader> ReaderFactory { get; set; }
+
+        /// <summary>
         /// Gets or sets the number of rows that the execution reports as affected.
         /// </summary>
         public int RowsAffected { get; set; }
@@ -81,7 +86,7 @@ namespace RepoDb.UnitTests.CustomObjects
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
             Execute();
-            return base.ExecuteDbDataReader(behavior);
+            return ReaderFactory?.Invoke() ?? base.ExecuteDbDataReader(behavior);
         }
 
         #endregion

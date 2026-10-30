@@ -105,7 +105,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             // Assert
             var after = trace.GetAfterLog<int>();
             Assert.AreEqual("SqlConnection", after.ConnectionType);
-            Assert.AreEqual("RepoDb", after.Database);
+            Assert.AreEqual(new SqlConnectionStringBuilder(Database.ConnectionString).InitialCatalog,
+                after.Database);
             Assert.AreEqual(Environment.MachineName, after.PcName);
             if (after.IpAddress != null)
             {
@@ -158,7 +159,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             Assert.AreEqual(TraceLevel.Error, after.Level);
             Assert.AreEqual(0, after.Result);
             Assert.AreEqual("SqlConnection", after.ConnectionType);
-            Assert.AreEqual("RepoDb", after.Database);
+            Assert.AreEqual(new SqlConnectionStringBuilder(Database.ConnectionString).InitialCatalog,
+                after.Database);
             Assert.IsFalse(string.IsNullOrEmpty(thrown.StackTrace));
         }
 

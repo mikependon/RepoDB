@@ -1350,20 +1350,35 @@ namespace RepoDb
 
                             // Before Execution
                             var traceResult = Tracer
-                                .InvokeBeforeExecution(traceKey, trace, command);
+                                .InvokeBeforeExecution(traceKey,
+                                    trace,
+                                    command);
 
-                            // Silent cancellation
-                            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                            object returnValue = null;
+                            Exception executionError = null;
+                            try
                             {
-                                return result;
+                                // Silent cancellation
+                                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                {
+                                    return result;
+                                }
+
+                                // Actual Execution
+                                returnValue = Converter.DbNullToNull(command.ExecuteScalar());
                             }
-
-                            // Actual Execution
-                            var returnValue = Converter.DbNullToNull(command.ExecuteScalar());
-
-                            // After Execution
-                            Tracer
-                                .InvokeAfterExecution(traceResult, trace, result);
+                            catch (Exception exception)
+                            {
+                                executionError = exception;
+                                throw;
+                            }
+                            finally
+                            {
+                                Tracer.InvokeAfterExecution(traceResult,
+                                    trace,
+                                    result,
+                                    executionError);
+                            }
 
                             // Set the return value
                             if (returnValue != null)
@@ -1429,48 +1444,82 @@ namespace RepoDb
                             {
                                 // Before Execution
                                 var traceResult = Tracer
-                                    .InvokeBeforeExecution(traceKey, trace, command);
+                                    .InvokeBeforeExecution(traceKey,
+                                        trace,
+                                        command);
 
-                                // Silent cancellation
-                                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                Exception executionError = null;
+                                try
                                 {
-                                    return result;
+                                    // Silent cancellation
+                                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                    {
+                                        return result;
+                                    }
+
+                                    // No identity setters
+                                    result += command.ExecuteNonQuery();
                                 }
-
-                                // No identity setters
-                                result += command.ExecuteNonQuery();
-
-                                // After Execution
-                                Tracer
-                                    .InvokeAfterExecution(traceResult, trace, result);
+                                catch (Exception exception)
+                                {
+                                    executionError = exception;
+                                    throw;
+                                }
+                                finally
+                                {
+                                    Tracer.InvokeAfterExecution(traceResult,
+                                        trace,
+                                        result,
+                                        executionError);
+                                }
                             }
                             else
                             {
                                 // Before Execution
                                 var traceResult = Tracer
-                                    .InvokeBeforeExecution(traceKey, trace, command);
+                                    .InvokeBeforeExecution(traceKey,
+                                        trace,
+                                        command);
 
-                                // Set the identity back
-                                using var reader = command.ExecuteReader();
-
-                                // Get the results
-                                var position = 0;
-                                do
+                                Exception executionError = null;
+                                try
                                 {
-                                    while (reader.Read())
+                                    // Silent cancellation
+                                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                                     {
-                                        var value = Converter.DbNullToNull(reader.GetValue(0));
-                                        var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
-                                        context.KeyPropertySetterFunc?.Invoke(batchItems[index], value);
-                                        result++;
+                                        return result;
                                     }
-                                    position++;
-                                }
-                                while (reader.NextResult());
 
-                                // After Execution
-                                Tracer
-                                    .InvokeAfterExecution(traceResult, trace, result);
+                                    // Set the identity back
+                                    using var reader = command.ExecuteReader();
+
+                                    // Get the results
+                                    var position = 0;
+                                    do
+                                    {
+                                        while (reader.Read())
+                                        {
+                                            var value = Converter.DbNullToNull(reader.GetValue(0));
+                                            var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
+                                            context.KeyPropertySetterFunc?.Invoke(batchItems[index], value);
+                                            result++;
+                                        }
+                                        position++;
+                                    }
+                                    while (reader.NextResult());
+                                }
+                                catch (Exception exception)
+                                {
+                                    executionError = exception;
+                                    throw;
+                                }
+                                finally
+                                {
+                                    Tracer.InvokeAfterExecution(traceResult,
+                                        trace,
+                                        result,
+                                        executionError);
+                                }
                             }
                         }
                     }
@@ -1737,20 +1786,37 @@ namespace RepoDb
 
                             // Before Execution
                             var traceResult = await Tracer
-                                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                                .InvokeBeforeExecutionAsync(traceKey,
+                                    trace,
+                                    command,
+                                    cancellationToken).ConfigureAwait(false);
 
-                            // Silent cancellation
-                            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                            object returnValue = null;
+                            Exception executionError = null;
+                            try
                             {
-                                return result;
+                                // Silent cancellation
+                                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                {
+                                    return result;
+                                }
+
+                                // Actual Execution
+                                returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
                             }
-
-                            // Actual Execution
-                            var returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
-
-                            // After Execution
-                            await Tracer
-                                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                            catch (Exception exception)
+                            {
+                                executionError = exception;
+                                throw;
+                            }
+                            finally
+                            {
+                                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                                    trace,
+                                    result,
+                                    cancellationToken,
+                                    executionError).ConfigureAwait(false);
+                            }
 
                             // Set the return value
                             if (returnValue != null)
@@ -1821,49 +1887,87 @@ namespace RepoDb
                             {
                                 // Before Execution
                                 var traceResult = await Tracer
-                                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                                    .InvokeBeforeExecutionAsync(traceKey,
+                                        trace,
+                                        command,
+                                        cancellationToken).ConfigureAwait(false);
 
-                                // Silent cancellation
-                                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                Exception executionError = null;
+                                try
                                 {
-                                    return result;
+                                    // Silent cancellation
+                                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                    {
+                                        return result;
+                                    }
+
+                                    // No identity setters
+                                    result += await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
                                 }
-
-                                // No identity setters
-                                result += await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
-
-                                // After Execution
-                                await Tracer
-                                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                                catch (Exception exception)
+                                {
+                                    executionError = exception;
+                                    throw;
+                                }
+                                finally
+                                {
+                                    await Tracer.InvokeAfterExecutionAsync(traceResult,
+                                        trace,
+                                        result,
+                                        cancellationToken,
+                                        executionError).ConfigureAwait(false);
+                                }
                             }
                             else
                             {
                                 // Before Execution
                                 var traceResult = await Tracer
-                                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                                    .InvokeBeforeExecutionAsync(traceKey,
+                                        trace,
+                                        command,
+                                        cancellationToken).ConfigureAwait(false);
 
-                                // Set the identity back
-                                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-
-                                // Get the results
-                                var position = 0;
-                                do
+                                Exception executionError = null;
+                                try
                                 {
-                                    while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+                                    // Silent cancellation
+                                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                                     {
-                                        // No need to use async on this level (await reader.GetFieldValueAsync<object>(0, cancellationToken))
-                                        var value = Converter.DbNullToNull(reader.GetValue(0));
-                                        var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
-                                        context.KeyPropertySetterFunc?.Invoke(batchItems[index], value);
-                                        result++;
-                                        position++;
+                                        return result;
                                     }
-                                }
-                                while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(false));
 
-                                // After Execution
-                                await Tracer
-                                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                                    // Set the identity back
+                                    using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+
+                                    // Get the results
+                                    var position = 0;
+                                    do
+                                    {
+                                        while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+                                        {
+                                            // No need to use async on this level (await reader.GetFieldValueAsync<object>(0, cancellationToken))
+                                            var value = Converter.DbNullToNull(reader.GetValue(0));
+                                            var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
+                                            context.KeyPropertySetterFunc?.Invoke(batchItems[index], value);
+                                            result++;
+                                            position++;
+                                        }
+                                    }
+                                    while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(false));
+                                }
+                                catch (Exception exception)
+                                {
+                                    executionError = exception;
+                                    throw;
+                                }
+                                finally
+                                {
+                                    await Tracer.InvokeAfterExecutionAsync(traceResult,
+                                        trace,
+                                        result,
+                                        cancellationToken,
+                                        executionError).ConfigureAwait(false);
+                                }
                             }
                         }
                     }

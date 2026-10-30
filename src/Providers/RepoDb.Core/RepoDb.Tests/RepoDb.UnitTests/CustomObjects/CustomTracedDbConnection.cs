@@ -39,6 +39,11 @@ namespace RepoDb.UnitTests.CustomObjects
         public Exception Failure { get; set; }
 
         /// <summary>
+        /// Gets or sets the factory used to create command readers.
+        /// </summary>
+        public Func<DbDataReader> ReaderFactory { get; set; }
+
+        /// <summary>
         /// Gets or sets the number of rows that the execution of a command reports as affected.
         /// </summary>
         public int RowsAffected { get; set; }
@@ -63,6 +68,7 @@ namespace RepoDb.UnitTests.CustomObjects
                 Delay = Delay,
                 Failure = Failure,
                 OnExecute = () => ExecutionCount++,
+                ReaderFactory = ReaderFactory,
                 RowsAffected = RowsAffected,
                 ScalarValue = ScalarValue
             };

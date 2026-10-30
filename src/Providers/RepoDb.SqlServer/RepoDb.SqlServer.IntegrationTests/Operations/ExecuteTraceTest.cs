@@ -90,7 +90,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             Assert.IsNull(trace.AfterErrors.Single());
             Assert.AreEqual(TraceLevel.Info, trace.AfterLevels.Single());
             Assert.AreEqual("SqlConnection", trace.BeforeLogs.Single().ConnectionType);
-            Assert.AreEqual("RepoDb", trace.BeforeLogs.Single().Database);
+            Assert.AreEqual(new SqlConnectionStringBuilder(Database.ConnectionString).InitialCatalog,
+                trace.BeforeLogs.Single().Database);
             Assert.AreEqual(OneRowStatement, trace.BeforeLogs.Single().Statement);
         }
 

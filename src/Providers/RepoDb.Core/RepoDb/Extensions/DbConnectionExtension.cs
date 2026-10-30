@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2018 Michael Camara Pendon.
 // Portions copyright their respective RepoDB contributors.
@@ -226,17 +226,18 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return result;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
                 using (var reader = command.ExecuteReader())
                 {
                     result = DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
@@ -392,17 +393,18 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return result;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
                 {
                     result = await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken)
@@ -705,17 +707,18 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return default;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
                 using (var reader = command.ExecuteReader())
                 {
                     result = DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()).AsList();
@@ -1029,17 +1032,18 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return result;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
                 {
                     result = await DataReader.ToEnumerableAsync<TResult>(reader, dbFields, connection.GetDbSetting(), cancellationToken)
@@ -1191,17 +1195,18 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return result;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
                 using (var reader = command.ExecuteReader())
                 {
                     var found = false;
@@ -1370,17 +1375,18 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return result;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
                 {
                     var found = false;
@@ -1697,17 +1703,18 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return default;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
                 using (var reader = command.ExecuteReader())
                 {
                     var found = false;
@@ -2036,17 +2043,18 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return result;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
                 {
                     var found = false;
@@ -2212,17 +2220,18 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return result;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
                 using (var reader = command.ExecuteReader())
                 {
                     var count = 0;
@@ -2401,17 +2410,18 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return result;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
                 {
                     var count = 0;
@@ -2738,17 +2748,18 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return default;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
                 using (var reader = command.ExecuteReader())
                 {
                     var count = 0;
@@ -3087,17 +3098,18 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return result;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
                 {
                     var count = 0;
@@ -3469,11 +3481,6 @@ isDisposeConnection: false,
                 traceResult ??= Tracer
                     .InvokeBeforeExecution(traceKey, trace, command);
 
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-                {
-                    return default;
-                }
 
                 // Execution: the after-execution trace is always invoked, with the error if the execution has failed.
                 // Only the execution is guarded, so the trace is told once, and the error is always thrown back to the caller
@@ -3481,6 +3488,12 @@ isDisposeConnection: false,
                 Exception error = null;
                 try
                 {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
                     reader = command.ExecuteReader();
                 }
                 catch (Exception e)
@@ -3491,8 +3504,13 @@ isDisposeConnection: false,
                 finally
                 {
                     // After Execution
-                    Tracer
-                        .InvokeAfterExecution(traceResult, trace, reader, error);
+                    if (beforeExecutionCallback == null)
+                    {
+                        Tracer.InvokeAfterExecution(traceResult,
+                            trace,
+                            reader,
+                            error);
+                    }
                 }
 
                 // Set the output parameters
@@ -3621,11 +3639,6 @@ isDisposeConnection: false,
                 traceResult ??= await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-                {
-                    return default;
-                }
 
                 // Execution: the after-execution trace is always invoked, with the error if the execution has failed.
                 // Only the execution is guarded, so the trace is told once, and the error is always thrown back to the caller
@@ -3633,6 +3646,12 @@ isDisposeConnection: false,
                 Exception error = null;
                 try
                 {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
                     reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception e)
@@ -3643,8 +3662,14 @@ isDisposeConnection: false,
                 finally
                 {
                     // After Execution: a token that has been cancelled must not stop the trace from recording the failure
-                    await Tracer
-                        .InvokeAfterExecutionAsync(traceResult, trace, reader, error == null ? cancellationToken : CancellationToken.None, error).ConfigureAwait(false);
+                    if (beforeExecutionCallbackAsync == null)
+                    {
+                        await Tracer.InvokeAfterExecutionAsync(traceResult,
+                            trace,
+                            reader,
+                            cancellationToken,
+                            error).ConfigureAwait(false);
+                    }
                 }
 
                 // Set the output parameters
@@ -3751,11 +3776,6 @@ isDisposeConnection: false,
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return default;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
@@ -3763,6 +3783,12 @@ isDisposeConnection: false,
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
                 result = command.ExecuteNonQuery();
             }
             catch (Exception e)
@@ -3874,11 +3900,6 @@ isDisposeConnection: false,
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return default;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
@@ -3886,6 +3907,12 @@ isDisposeConnection: false,
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
                 result = await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
@@ -4139,11 +4166,6 @@ isDisposeConnection: false,
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return default;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
@@ -4151,6 +4173,12 @@ isDisposeConnection: false,
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
                 result = Converter.ToType<TResult>(command.ExecuteScalar(), forceAutomaticConversion);
             }
             catch (Exception e)
@@ -4300,11 +4328,6 @@ isDisposeConnection: false,
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return default;
-            }
 
             // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
             // and the error is always thrown back to the caller
@@ -4312,6 +4335,12 @@ isDisposeConnection: false,
             Exception error = null;
             try
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
                 result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false), forceAutomaticConversion);
             }
             catch (Exception e)

@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2019 Michael Camara Pendon.
 // Portions copyright their respective RepoDB contributors.
@@ -11,6 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using RepoDb.Contexts.Providers;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -548,7 +549,6 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-
         #endregion
 
         #region InsertAsync(TableName)<TResult>
@@ -691,34 +691,49 @@ namespace RepoDb
 
                 // Before Execution
                 var traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
+                    .InvokeBeforeExecution(traceKey,
+                        trace,
+                        command);
 
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                Exception executionError = null;
+                try
                 {
-                    return result;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return result;
+                    }
+
+                    // Actual Execution
+                    result = Converter.ToType<TResult>(command.ExecuteScalar());
+
+                    // Set the return value
+                    if (result == null && context.HasIdentityKey && !dbSetting.IsMultiStatementExecutable)
+                    {
+                        result = Converter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
+                    }
+                    else if (result == null && !context.HasIdentityKey && context.KeyFieldName != null)
+                    {
+                        result = Converter.ToType<TResult>(GetEntityFieldValue(entity, context.KeyFieldName));
+                    }
+                    if (result != null)
+                    {
+                        context.KeyPropertySetterFunc?.Invoke(entity, result);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.InvokeAfterExecution(traceResult,
+                        trace,
+                        result,
+                        executionError);
                 }
 
-                // Actual Execution
-                result = Converter.ToType<TResult>(command.ExecuteScalar());
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
-
-                // Set the return value
-                if (result == null && context.HasIdentityKey && !dbSetting.IsMultiStatementExecutable)
-                {
-                    result = Converter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
-                }
-                else if (result == null && !context.HasIdentityKey && context.KeyFieldName != null)
-                {
-                    result = Converter.ToType<TResult>(GetEntityFieldValue(entity, context.KeyFieldName));
-                }
-                if (result != null)
-                {
-                    context.KeyPropertySetterFunc?.Invoke(entity, result);
-                }
             }
 
             // Return the result
@@ -783,34 +798,51 @@ namespace RepoDb
 
                 // Before Execution
                 var traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                    .InvokeBeforeExecutionAsync(traceKey,
+                        trace,
+                        command,
+                        cancellationToken).ConfigureAwait(false);
 
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                Exception executionError = null;
+                try
                 {
-                    return result;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return result;
+                    }
+
+                    // Actual Execution
+                    result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
+
+                    // Set the return value
+                    if (result == null && context.HasIdentityKey && !dbSetting.IsMultiStatementExecutable)
+                    {
+                        result = Converter.ToType<TResult>(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false));
+                    }
+                    else if (result == null && !context.HasIdentityKey && context.KeyFieldName != null)
+                    {
+                        result = Converter.ToType<TResult>(GetEntityFieldValue(entity, context.KeyFieldName));
+                    }
+                    if (result != null)
+                    {
+                        context.KeyPropertySetterFunc?.Invoke(entity, result);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.InvokeAfterExecutionAsync(traceResult,
+                        trace,
+                        result,
+                        cancellationToken,
+                        executionError).ConfigureAwait(false);
                 }
 
-                // Actual Execution
-                result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-                // Set the return value
-                if (result == null && context.HasIdentityKey && !dbSetting.IsMultiStatementExecutable)
-                {
-                    result = Converter.ToType<TResult>(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken).ConfigureAwait(false));
-                }
-                else if (result == null && !context.HasIdentityKey && context.KeyFieldName != null)
-                {
-                    result = Converter.ToType<TResult>(GetEntityFieldValue(entity, context.KeyFieldName));
-                }
-                if (result != null)
-                {
-                    context.KeyPropertySetterFunc?.Invoke(entity, result);
-                }
             }
 
             // Return the result

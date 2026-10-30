@@ -232,7 +232,7 @@ namespace RepoDb.UnitTests.Trace
         [DataRow("Reader", true)]
         [DataRow("Query", false)]
         [DataRow("Query", true)]
-        public async Task ExecuteDoesNotExecuteWhenTheTraceCancelsItAndDoesNotTellTheTraceAfterwards(string operation,
+        public async Task ExecuteDoesNotExecuteWhenTheTraceCancelsItAndStillReportsCompletion(string operation,
             bool asynchronous)
         {
             // Setup
@@ -245,7 +245,7 @@ namespace RepoDb.UnitTests.Trace
             // Assert
             Assert.AreEqual(0, connection.ExecutionCount);
             Assert.AreEqual(1, trace.BeforeLogs.Count);
-            Assert.AreEqual(0, trace.AfterLogs.Count);
+            Assert.AreEqual(1, trace.AfterLogs.Count);
         }
 
         #endregion

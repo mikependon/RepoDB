@@ -260,7 +260,7 @@ namespace RepoDb.UnitTests.Trace
         [TestMethod]
         [DataRow(false)]
         [DataRow(true)]
-        public async Task ExecuteNonQueryDoesNotExecuteOrTellTheTraceThatItCompletedWhenTheTraceCancelsIt(bool asynchronous)
+        public async Task ExecuteNonQueryDoesNotExecuteWhenCancelledButStillReportsCompletion(bool asynchronous)
         {
             // Setup
             using var connection = new CustomTracedDbConnection { RowsAffected = 5 };
@@ -272,7 +272,7 @@ namespace RepoDb.UnitTests.Trace
             // Assert
             Assert.AreEqual(0, result);
             Assert.AreEqual(0, connection.ExecutionCount);
-            Assert.AreEqual(0, trace.AfterLogs.Count);
+            Assert.AreEqual(1, trace.AfterLogs.Count);
         }
 
         [TestMethod]
