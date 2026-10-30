@@ -88,6 +88,21 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
+        public void TestDefinitionFindingsAddErrorWithoutATableDoesNotPrefixTheMessage()
+        {
+            // Setup
+            var findings = new DefinitionFindings();
+
+            // Act
+            findings.AddError("The definition is odd.");
+
+            // Assert
+            Assert.AreEqual(1, findings.Errors.Count);
+            Assert.AreEqual(0, findings.Warnings.Count);
+            Assert.AreEqual("The definition is odd.", findings.Errors[0], StringComparer.Ordinal);
+        }
+
+        [TestMethod]
         public void TestDefinitionFindingsAddWarningWithoutATableDoesNotPrefixTheMessage()
         {
             // Setup

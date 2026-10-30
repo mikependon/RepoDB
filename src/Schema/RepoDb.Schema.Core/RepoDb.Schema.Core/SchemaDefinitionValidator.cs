@@ -6,86 +6,63 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Text.Json.Nodes;
-using System.Threading;
-using System.Threading.Tasks;
-using RepoDb.Interfaces;
 using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema
 {
     /// <summary>
-    /// Validates a definition file by reading it and applying the strict checks to it, and reports the content problems instead of throwing them.
+    /// Validates a definition that is already in memory. The structural checks run first, and the strict checks only run on a definition with a sound structure.
+    /// It does not read, trace or throw: the reading, the tracing and the throwing belong to the callers.
     /// </summary>
     internal static class SchemaDefinitionValidator
     {
         #region Internal Methods
 
         /// <summary>
-        /// Reads the definition file and reports whether its content is valid. Argument and file access errors are still thrown.
+        /// Gets the description of the definition that a trace receives as the statement of the validation.
         /// </summary>
-        /// <param name="connection">The connection that the extension is invoked on. It is not opened or queried.</param>
-        /// <param name="filename">The name of the definition file.</param>
-        /// <param name="traceKey">The tracking key to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="parse">The function that parses the content of the file into the definition document.</param>
-        /// <returns>The outcome of the validation, or <c>null</c> if the trace cancelled the read.</returns>
-        internal static ValidateDefinitionResult Validate(IDbConnection connection,
-            string filename,
-            string traceKey,
-            ITrace trace,
-            Func<string, JsonObject> parse)
+        /// <param name="definition">The definition to be validated.</param>
+        /// <returns>The description of the definition.</returns>
+        internal static string Describe(SchemaDefinitionInfo definition) =>
+            definition.RootTable == null ? "Validate definition" : $"Validate definition of {DefinitionFindings.Describe(definition.RootTable)}";
+
+        /// <summary>
+        /// Validates the definition: the structure first, and then, if the structure is sound, the strict checks.
+        /// </summary>
+        /// <param name="definition">The definition to be validated.</param>
+        /// <returns>The outcome of the validation. The definition is only part of it if there are no errors.</returns>
+        internal static ValidateDefinitionResult Validate(SchemaDefinitionInfo definition)
         {
-            try
+            if (definition.Tables == null)
             {
-                var definition = SchemaDefinitionFile.Read(connection,
-                    filename,
-                    traceKey,
-                    trace,
-                    parse);
-                return CreateResult(definition);
+                return new ValidateDefinitionResult { Errors = { "The definition has no tables." } };
             }
-            catch (InvalidDataException exception)
+            var findings = SchemaDefinitionStructureValidator.Validate(definition);
+            if (findings.Errors.Count == 0)
             {
-                return CreateInvalidResult(exception);
+                findings = SchemaDefinitionStrictValidator.Validate(definition);
             }
+            return CreateResult(definition,
+                findings);
         }
 
         /// <summary>
-        /// Asynchronously reads the definition file and reports whether its content is valid. Argument and file access errors are still thrown.
+        /// Validates the definition, and throws the first error if it is asked to.
         /// </summary>
-        /// <param name="connection">The connection that the extension is invoked on. It is not opened or queried.</param>
-        /// <param name="filename">The name of the definition file.</param>
-        /// <param name="traceKey">The tracking key to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="parse">The function that parses the content of the file into the definition document.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result is the outcome of the validation, or <c>null</c> if the trace cancelled the read.</returns>
-        internal static async Task<ValidateDefinitionResult> ValidateAsync(IDbConnection connection,
-            string filename,
-            string traceKey,
-            ITrace trace,
-            Func<string, JsonObject> parse,
-            CancellationToken cancellationToken)
+        /// <param name="definition">The definition to be validated.</param>
+        /// <param name="throwOnError">Whether the first error is thrown instead of being reported in the outcome.</param>
+        /// <returns>The outcome of the validation. The definition is only part of it if there are no errors.</returns>
+        /// <exception cref="InvalidDataException"><paramref name="throwOnError"/> is <c>true</c> and the definition has errors.</exception>
+        internal static ValidateDefinitionResult Validate(SchemaDefinitionInfo definition,
+            bool throwOnError)
         {
-            try
+            var result = Validate(definition);
+            if (throwOnError && !result.IsValid)
             {
-                var definition = await SchemaDefinitionFile.ReadAsync(connection,
-                    filename,
-                    traceKey,
-                    trace,
-                    parse,
-                    cancellationToken).ConfigureAwait(false);
-                return CreateResult(definition);
+                throw new InvalidDataException(result.Errors[0]);
             }
-            catch (InvalidDataException exception)
-            {
-                return CreateInvalidResult(exception);
-            }
+            return result;
         }
 
         #endregion
@@ -93,47 +70,19 @@ namespace RepoDb.Schema
         #region Private Methods
 
         /// <summary>
-        /// Creates the outcome of a file that was read, after applying the strict checks to it.
+        /// Creates the outcome of the validation of a definition.
         /// </summary>
-        /// <param name="definition">The definition that was read from the file, or <c>null</c> if the trace cancelled the read.</param>
-        /// <returns>The outcome, or <c>null</c> if there is no definition. The definition is only part of the outcome if the strict checks found no errors.</returns>
-        private static ValidateDefinitionResult CreateResult(SchemaDefinitionInfo definition)
-        {
-            if (definition == null)
-            {
-                return null;
-            }
-            var findings = SchemaDefinitionStrictValidator.Validate(definition);
-            return new ValidateDefinitionResult
+        /// <param name="definition">The definition that was validated.</param>
+        /// <param name="findings">The errors and the warnings that were found.</param>
+        /// <returns>The outcome. The definition is only part of it if there are no errors.</returns>
+        private static ValidateDefinitionResult CreateResult(SchemaDefinitionInfo definition,
+            DefinitionFindings findings) =>
+            new ValidateDefinitionResult
             {
                 Definition = findings.Errors.Count == 0 ? definition : null,
                 Errors = findings.Errors,
                 Warnings = findings.Warnings
             };
-        }
-
-        /// <summary>
-        /// Creates the outcome of a file that is not a valid definition.
-        /// </summary>
-        /// <param name="exception">The exception that describes the problem of the file.</param>
-        /// <returns>The invalid outcome, with the messages of the exception and of its underlying causes.</returns>
-        private static ValidateDefinitionResult CreateInvalidResult(Exception exception) =>
-            new ValidateDefinitionResult { Errors = GetMessages(exception) };
-
-        /// <summary>
-        /// Gets the message of the exception, followed by the messages of its underlying causes.
-        /// </summary>
-        /// <param name="exception">The exception to be described.</param>
-        /// <returns>The messages, from the most general to the most specific.</returns>
-        private static IList<string> GetMessages(Exception exception)
-        {
-            var messages = new List<string>();
-            for (var current = exception; current != null; current = current.InnerException)
-            {
-                messages.Add(current.Message);
-            }
-            return messages;
-        }
 
         #endregion
     }

@@ -41,7 +41,8 @@ namespace RepoDb.Schema
                 filename,
                 traceKey,
                 trace,
-                SchemaDefinitionYamlReader.Parse);
+                SchemaDefinitionYamlReader.Parse,
+                true);
 
         /// <summary>
         /// Asynchronously reads a RepoDB YAML definition, including all tables and extraction metadata.
@@ -64,6 +65,7 @@ namespace RepoDb.Schema
                 traceKey,
                 trace,
                 SchemaDefinitionYamlReader.Parse,
+                true,
                 cancellationToken);
 
         #endregion

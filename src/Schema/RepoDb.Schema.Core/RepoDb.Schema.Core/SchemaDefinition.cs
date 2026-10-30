@@ -35,7 +35,7 @@ namespace RepoDb.Schema
         {
             return new JsonObject
             {
-                ["format"] = "RepoDB.Schema",
+                ["format"] = SchemaDefinitionFormat.Name,
                 ["formatVersion"] = 2,
                 ["source"] = new JsonObject
                 {

@@ -325,7 +325,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var actual = File.ReadAllText(Filename);
 
             // Assert
-            StringAssert.Contains(actual, "format: \"RepoDB.Schema\"");
+            StringAssert.Contains(actual, "format: \"RepoDb.Schema.Definition\"");
         }
 
         [TestMethod]

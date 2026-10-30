@@ -39,6 +39,12 @@ namespace RepoDb.Schema.Models
         public IList<TableInfo> ExternalDependencies { get; internal set; }
 
         /// <summary>
+        /// Gets the format of the definition: the value of the <c>format</c> property of the file, which identifies it as a schema definition.
+        /// A valid definition has the format <c>RepoDb.Schema.Definition</c>. It is checked by the validation of the definition, not by the read.
+        /// </summary>
+        public string Format { get; internal set; }
+
+        /// <summary>
         /// Gets the definition format version.
         /// </summary>
         public int FormatVersion { get; internal set; }

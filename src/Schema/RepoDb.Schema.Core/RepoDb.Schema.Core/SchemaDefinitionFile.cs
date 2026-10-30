@@ -37,12 +37,14 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="parse">The function that parses the content of the file into the definition document.</param>
+        /// <param name="validate">Whether the definition is validated after it is read, with <c>ValidateDefinition</c> that throws the first error. The read of a file and the load of a file validate it.</param>
         /// <returns>The definition read from the file, or <c>null</c> if the trace cancelled the read.</returns>
         internal static SchemaDefinitionInfo Read(IDbConnection connection,
             string filename,
             string traceKey,
             ITrace trace,
-            Func<string, JsonObject> parse)
+            Func<string, JsonObject> parse,
+            bool validate)
         {
             Validate(connection,
                 filename);
@@ -50,7 +52,7 @@ namespace RepoDb.Schema
                 traceKey,
                 filename);
             trace?.BeforeExecution(log);
-            if (Cancelled(log))
+            if (IsCancelled(log))
                 return null;
             var watch = Stopwatch.StartNew();
             SchemaDefinitionInfo result;
@@ -66,6 +68,9 @@ namespace RepoDb.Schema
                     exception);
             }
 
+            if (validate)
+                connection.ValidateDefinition(result,
+                    true);
             trace?.AfterExecution(new ResultTraceLog<SchemaDefinitionInfo>(log.SessionId,
                 traceKey,
                 watch.Elapsed,
@@ -82,6 +87,7 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="parse">The function that parses the content of the file into the definition document.</param>
+        /// <param name="validate">Whether the definition is validated after it is read, with <c>ValidateDefinition</c> that throws the first error. The read of a file and the load of a file validate it.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is the definition read from the file, or <c>null</c> if the trace cancelled the read.</returns>
         internal static async Task<SchemaDefinitionInfo> ReadAsync(IDbConnection connection,
@@ -89,6 +95,7 @@ namespace RepoDb.Schema
             string traceKey,
             ITrace trace,
             Func<string, JsonObject> parse,
+            bool validate,
             CancellationToken cancellationToken)
         {
             Validate(connection,
@@ -100,7 +107,7 @@ namespace RepoDb.Schema
             if (trace != null)
                 await trace.BeforeExecutionAsync(log,
                     cancellationToken).ConfigureAwait(false);
-            if (Cancelled(log))
+            if (IsCancelled(log))
                 return null;
             cancellationToken.ThrowIfCancellationRequested();
             var watch = Stopwatch.StartNew();
@@ -132,6 +139,10 @@ namespace RepoDb.Schema
             cancellationToken.ThrowIfCancellationRequested();
             var result = Parse(content.ToString(),
                 parse);
+            if (validate)
+                await connection.ValidateDefinitionAsync(result,
+                    true,
+                    cancellationToken: cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
             if (trace != null)
                 await trace.AfterExecutionAsync(new ResultTraceLog<SchemaDefinitionInfo>(log.SessionId,
@@ -185,15 +196,12 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="log">The trace log that the trace may have cancelled.</param>
         /// <returns><c>true</c> if the trace cancelled the read; otherwise, <c>false</c>.</returns>
-        private static bool Cancelled(CancellableTraceLog log)
-        {
-            if (log.IsCancelled && log.IsThrowException)
-                throw new CancelledExecutionException("The definition read was cancelled by the trace.");
-            return log.IsCancelled;
-        }
+        private static bool IsCancelled(CancellableTraceLog log) =>
+            SchemaTraceCancellation.IsCancelled(log,
+                "The definition read was cancelled by the trace.");
 
         /// <summary>
-        /// Normalizes syntax errors while leaving file access exceptions intact.
+        /// Normalizes syntax errors while leaving file access exceptions intact. The definition that is read is not validated.
         /// </summary>
         /// <param name="content">The content of the definition file.</param>
         /// <param name="parse">The function that parses the content into the definition document.</param>

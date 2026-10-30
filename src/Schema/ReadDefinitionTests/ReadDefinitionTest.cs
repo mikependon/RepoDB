@@ -374,7 +374,7 @@ namespace RepoDb.Schema.Tests
         [TestMethod]
         public async Task ReadsIndependentJsonAndUnknownLogicalType()
         {
-            File.WriteAllText(filename, @"{""format"":""RepoDB.Schema"",""formatVersion"":1,
+            File.WriteAllText(filename, @"{""format"":""RepoDb.Schema.Definition"",""formatVersion"":1,
                 ""source"":{""provider"":""Example"",""database"":null},
                 ""extraction"":{""rootTable"":{""name"":""T"",""schema"":null,""database"":null,""provider"":""Example""},""relationshipBehavior"":""TableOnly""},
                 ""tables"":[{""table"":{""name"":""T"",""schema"":null,""database"":null,""provider"":""Example""},

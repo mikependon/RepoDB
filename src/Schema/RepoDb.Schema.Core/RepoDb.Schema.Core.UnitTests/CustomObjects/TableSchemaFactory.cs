@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.Core.UnitTests.CustomObjects
@@ -42,6 +43,21 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
             table.ForeignKeys.Add(foreignKey);
             return foreignKey;
         }
+
+        /// <summary>
+        /// Creates a definition of the given tables. The first table is the root table, and there are no external dependencies.
+        /// </summary>
+        /// <param name="tables">The tables of the definition.</param>
+        /// <returns>The definition, of the version 2 of the format.</returns>
+        internal static SchemaDefinitionInfo CreateDefinition(params TableSchema[] tables) =>
+            new SchemaDefinitionInfo
+            {
+                Format = SchemaDefinitionFormat.Name,
+                FormatVersion = 2,
+                RootTable = tables.Length == 0 ? null : tables[0].Table,
+                ExternalDependencies = new List<TableInfo>(),
+                Tables = new List<TableSchema>(tables)
+            };
 
         /// <summary>
         /// Creates a column, whose type is an integer by default.

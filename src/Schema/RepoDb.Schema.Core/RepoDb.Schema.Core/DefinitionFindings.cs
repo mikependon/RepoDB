@@ -53,6 +53,15 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
+        /// Adds an error that is about more than one table, or about the definition as a whole.
+        /// </summary>
+        /// <param name="message">The description of the problem.</param>
+        internal void AddError(string message)
+        {
+            Errors.Add(message);
+        }
+
+        /// <summary>
         /// Adds a warning that was found in a table.
         /// </summary>
         /// <param name="table">The table that has the concern.</param>

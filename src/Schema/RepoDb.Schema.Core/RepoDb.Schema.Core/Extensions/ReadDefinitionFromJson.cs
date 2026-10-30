@@ -38,7 +38,8 @@ namespace RepoDb.Schema
                 filename,
                 traceKey,
                 trace,
-                SchemaDefinitionJsonReader.Parse);
+                SchemaDefinitionJsonReader.Parse,
+                true);
 
         /// <summary>
         /// Asynchronously reads a RepoDB JSON definition, including all tables and extraction metadata.
@@ -60,6 +61,7 @@ namespace RepoDb.Schema
                 traceKey,
                 trace,
                 SchemaDefinitionJsonReader.Parse,
+                true,
                 cancellationToken);
 
         #endregion

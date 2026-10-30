@@ -95,14 +95,16 @@ JSON uses objects, arrays, strings, booleans, integers, and null. YAML uses the 
 
 XML uses a `repoDbSchema` root. Each property becomes a named child element; arrays contain `item` elements. Every element has a `type` attribute (`object`, `array`, `string`, `integer`, `boolean`, or `null`) so empty arrays, null, and empty strings remain distinguishable. Strings are escaped by the XML writer. Invalid XML characters cause export to fail before replacing an existing file.
 
+The `format` property identifies the file as a schema definition. It must be exactly `RepoDb.Schema.Definition` (the case is significant): the validation of a definition (`ValidateDefinition`, `ValidateDefinitionFrom*`, and the read and the load of a file) reports any other value, and `SchemaDefinitionInfo.Format` holds the value that was read.
+
 For example, the same small tree in the three syntaxes is:
 
 ```json
-{"format":"RepoDB.Schema","formatVersion":2}
+{"format":"RepoDb.Schema.Definition","formatVersion":2}
 ```
 
 ```yaml
-format: "RepoDB.Schema"
+format: "RepoDb.Schema.Definition"
 formatVersion: 2
 ```
 

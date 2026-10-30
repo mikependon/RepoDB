@@ -25,7 +25,7 @@ namespace RepoDb.Schema
         #region Public Methods
 
         /// <summary>
-        /// Validates the document and reconstructs its tables without consulting a database.
+        /// Recognizes the document and reconstructs its tables without consulting a database. The reconstructed definition is not validated: the validation is a separate step.
         /// </summary>
         /// <param name="document">The definition document that is read from the file.</param>
         /// <returns>The definition that is reconstructed from the document.</returns>
@@ -33,11 +33,10 @@ namespace RepoDb.Schema
         {
             try
             {
-                if (document == null || !string.Equals(Text(document,
-                    "format"),
-                    "RepoDB.Schema",
-                    StringComparison.Ordinal))
+                if (document == null)
                     throw new InvalidDataException("The file is not a RepoDB schema definition.");
+                var format = Text(document,
+                    "format");
                 var version = Value<int>(document,
                     "formatVersion");
                 if (version != 1 && version != 2)
@@ -48,6 +47,7 @@ namespace RepoDb.Schema
                     "extraction");
                 var result = new SchemaDefinitionInfo
                 {
+                    Format = format,
                     FormatVersion = version,
                     Provider = Text(source,
                         "provider"),
@@ -74,9 +74,6 @@ namespace RepoDb.Schema
                             StringComparer.Ordinal).ToList();
                 }
 
-                Validate(result);
-                if (version == 1)
-                    ValidateReferences(result);
                 return result;
             }
             catch (Exception exception) when (exception is InvalidOperationException || exception is FormatException || exception is ArgumentException || exception is OverflowException || exception is JsonException)
@@ -251,70 +248,6 @@ namespace RepoDb.Schema
                 Comment = Text(node,
                     "comment")
             };
-        }
-
-        /// <summary>
-        /// Validates table identities and the column references that can be resolved inside the file.
-        /// </summary>
-        /// <param name="result">The definition that is reconstructed from the document.</param>
-        private static void Validate(SchemaDefinitionInfo result)
-        {
-            var tables = new Dictionary<TableInfo, TableSchema>();
-            foreach (var table in result.Tables)
-            {
-                if (tables.ContainsKey(table.Table))
-                    throw new InvalidDataException("Duplicate table identity.");
-                tables.Add(table.Table,
-                    table);
-            }
-
-            if (!tables.ContainsKey(result.RootTable))
-                throw new InvalidDataException("The root table definition is missing.");
-            var external = new HashSet<TableInfo>(result.ExternalDependencies);
-            if (external.Count != result.ExternalDependencies.Count || external.Any(tables.ContainsKey))
-                throw new InvalidDataException("Invalid external dependency identities.");
-            foreach (var table in result.Tables)
-            {
-                ValidateTable(table,
-                    tables,
-                    external);
-            }
-        }
-
-        /// <summary>
-        /// Ensures a key or index uses distinct existing columns.
-        /// </summary>
-        /// <param name="names">The names of the columns of the key or index.</param>
-        /// <param name="columns">The names of the columns of the table.</param>
-        /// <param name="allowEmpty">Whether the key or index can have no columns.</param>
-        private static void ValidateColumns(IList<string> names,
-            HashSet<string> columns,
-            bool allowEmpty = false)
-        {
-            if ((!allowEmpty && names.Count == 0) || names.Distinct(StringComparer.Ordinal).Count() != names.Count || names.Any(n => !columns.Contains(n)))
-                throw new InvalidDataException("A key or index contains invalid column references.");
-        }
-
-        /// <summary>
-        /// Checks that each serialized foreign-key external flag agrees with the included table identities.
-        /// </summary>
-        /// <param name="result">The definition that is reconstructed from the document.</param>
-        private static void ValidateReferences(SchemaDefinitionInfo result)
-        {
-            var included = new HashSet<TableInfo>(result.Tables.Select(t => t.Table));
-            foreach (var table in Array(result.Definition,
-                "tables"))
-                foreach (var key in Array(table,
-                    "foreignKeys"))
-                {
-                    var reference = Object(key,
-                        "references");
-                    var target = reference["table"] == null ? null : Table(Object(reference,
-                        "table"));
-                    if (Value<bool>(reference,
-                        "external") != (target == null || !included.Contains(target)))
-                        throw new InvalidDataException("A foreign-key external flag disagrees with the included tables.");
-                }
         }
 
         /// <summary>
@@ -511,55 +444,6 @@ namespace RepoDb.Schema
                     return null;
                 default:
                     throw new InvalidDataException("Unknown logical type: " + name);
-            }
-        }
-
-        /// <summary>
-        /// Validates a table's columns, keys, indexes, and resolvable foreign-key targets.
-        /// </summary>
-        /// <param name="table">The table definition to validate.</param>
-        /// <param name="tables">The included table definitions keyed by identity.</param>
-        /// <param name="external">The declared or reconstructed external target identities.</param>
-        private static void ValidateTable(TableSchema table,
-            Dictionary<TableInfo, TableSchema> tables,
-            HashSet<TableInfo> external)
-        {
-            var columns = new HashSet<string>(table.Columns.Select(c => c.Field.Name),
-                StringComparer.Ordinal);
-            if (columns.Count != table.Columns.Count)
-                throw new InvalidDataException("Duplicate column name.");
-            if (table.Columns.Any(c => c.Ordinal < 1) || table.Columns.Select(c => c.Ordinal).Distinct().Count() != table.Columns.Count)
-                throw new InvalidDataException("Invalid or duplicate column ordinal.");
-            if (table.PrimaryKey != null)
-                ValidateColumns(table.PrimaryKey.Columns,
-                    columns);
-            foreach (var key in table.UniqueConstraints)
-                ValidateColumns(key.Columns,
-                    columns);
-            foreach (var index in table.Indexes)
-            {
-                ValidateColumns(index.Columns,
-                    columns);
-                ValidateColumns(index.IncludedColumns,
-                    columns,
-                    true);
-            }
-
-            foreach (var key in table.ForeignKeys)
-            {
-                ValidateColumns(key.Columns,
-                    columns);
-                if (key.Columns.Count != key.ReferencedColumns.Count)
-                    throw new InvalidDataException("Foreign-key column counts differ.");
-                if (key.ReferencedTable == null)
-                    continue;
-                if (tables.TryGetValue(key.ReferencedTable,
-                    out var target))
-                    ValidateColumns(key.ReferencedColumns,
-                        new HashSet<string>(target.Columns.Select(c => c.Field.Name),
-                            StringComparer.Ordinal));
-                else if (!external.Contains(key.ReferencedTable))
-                    throw new InvalidDataException("A foreign-key target is missing from the definition and external dependencies.");
             }
         }
 

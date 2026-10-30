@@ -433,6 +433,166 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.IsTrue(result.Warnings.Any(warning => warning.Contains("constraint name 'PK_Shared' is used by more than one table", StringComparison.Ordinal)));
         }
 
+        [TestMethod]
+        [DataRow("json", false)]
+        [DataRow("json", true)]
+        [DataRow("xml", false)]
+        [DataRow("xml", true)]
+        [DataRow("yaml", false)]
+        [DataRow("yaml", true)]
+        public async Task ValidateThrowsTheFirstProblemOfAReadableFileWhenThrowOnErrorIsTrue(string format,
+            bool asynchronous)
+        {
+            // Setup
+            var table = TableSchemaFactory.CreateTable("Child", "Id");
+            TableSchemaFactory.SetPrimaryKey(table, "PK_Child", "Missing");
+            table.Indexes.Add(new IndexInfo("IX_Child") { Columns = new[] { "AlsoMissing" } });
+            WriteDefinition(format, RelatedTableBehavior.TableOnly, table.Table, table);
+            using var connection = new CustomDbConnection();
+
+            // Act/Assert
+            var exception = await Assert.ThrowsExactlyAsync<InvalidDataException>(() => Validate(connection, format, asynchronous, throwOnError: true)).ConfigureAwait(false);
+            StringAssert.Contains(exception.Message, "primary key 'PK_Child'", StringComparison.Ordinal);
+            Assert.IsFalse(exception.Message.Contains("IX_Child", StringComparison.Ordinal));
+        }
+
+        [TestMethod]
+        [DataRow("json", false)]
+        [DataRow("json", true)]
+        [DataRow("xml", false)]
+        [DataRow("xml", true)]
+        [DataRow("yaml", false)]
+        [DataRow("yaml", true)]
+        public async Task ValidateReportsTheErrorsInTheResultWhenThrowOnErrorIsFalse(string format,
+            bool asynchronous)
+        {
+            // Setup
+            var table = TableSchemaFactory.CreateTable("Child", "Id");
+            TableSchemaFactory.SetPrimaryKey(table, "PK_Child", "Missing");
+            WriteDefinition(format, RelatedTableBehavior.TableOnly, table.Table, table);
+            using var connection = new CustomDbConnection();
+
+            // Act
+            var result = await Validate(connection, format, asynchronous, throwOnError: false).ConfigureAwait(false);
+
+            // Assert
+            Assert.IsFalse(result.IsValid);
+            Assert.AreEqual(1, result.Errors.Count);
+        }
+
+        [TestMethod]
+        [DataRow("json", "{ not json", "malformed", false)]
+        [DataRow("json", "{ not json", "malformed", true)]
+        [DataRow("json", "[]", "root must be an object", false)]
+        [DataRow("json", "[]", "root must be an object", true)]
+        [DataRow("json", "{}", "Missing property: format", false)]
+        [DataRow("json", "{}", "Missing property: format", true)]
+        [DataRow("xml", "<repoDbSchema>", "malformed", false)]
+        [DataRow("xml", "<repoDbSchema>", "malformed", true)]
+        [DataRow("xml", "<other />", "Invalid schema XML root", false)]
+        [DataRow("xml", "<other />", "Invalid schema XML root", true)]
+        [DataRow("yaml", "- a", "malformed", false)]
+        [DataRow("yaml", "- a", "malformed", true)]
+        [DataRow("yaml", "", "The YAML definition is empty", false)]
+        [DataRow("yaml", "", "The YAML definition is empty", true)]
+        public async Task ValidateThrowsAFileThatCannotBeReadWhenThrowOnErrorIsTrue(string format,
+            string content,
+            string expectedMessage,
+            bool asynchronous)
+        {
+            // Setup
+            File.WriteAllText(_filename, content);
+            using var connection = new CustomDbConnection();
+
+            // Act/Assert
+            var exception = await Assert.ThrowsExactlyAsync<InvalidDataException>(() => Validate(connection, format, asynchronous, throwOnError: true)).ConfigureAwait(false);
+            StringAssert.Contains(exception.Message, expectedMessage, StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        [DataRow("json", false)]
+        [DataRow("json", true)]
+        [DataRow("xml", false)]
+        [DataRow("xml", true)]
+        [DataRow("yaml", false)]
+        [DataRow("yaml", true)]
+        public async Task ValidateThrowsAFileWithAnInvalidTextEncodingWhenThrowOnErrorIsTrue(string format,
+            bool asynchronous)
+        {
+            // Setup
+            File.WriteAllBytes(_filename, new byte[] { 0xC3, 0x28 });
+            using var connection = new CustomDbConnection();
+
+            // Act/Assert
+            var exception = await Assert.ThrowsExactlyAsync<InvalidDataException>(() => Validate(connection, format, asynchronous, throwOnError: true)).ConfigureAwait(false);
+            StringAssert.Contains(exception.Message, "invalid text encoding", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        [DataRow("json", false)]
+        [DataRow("json", true)]
+        [DataRow("xml", false)]
+        [DataRow("xml", true)]
+        [DataRow("yaml", false)]
+        [DataRow("yaml", true)]
+        public async Task ValidateReturnsAValidFileWhenThrowOnErrorIsTrue(string format,
+            bool asynchronous)
+        {
+            // Setup
+            WriteValidDefinition(format);
+            using var connection = new CustomDbConnection();
+
+            // Act
+            var result = await Validate(connection, format, asynchronous, throwOnError: true).ConfigureAwait(false);
+
+            // Assert
+            Assert.IsTrue(result.IsValid);
+            Assert.AreEqual("FileTable", result.Definition.Tables.Single().Table.Name);
+        }
+
+        [TestMethod]
+        [DataRow("json", false)]
+        [DataRow("json", true)]
+        [DataRow("xml", false)]
+        [DataRow("xml", true)]
+        [DataRow("yaml", false)]
+        [DataRow("yaml", true)]
+        public async Task ValidateDoesNotThrowTheWarningsOfAFileWhenThrowOnErrorIsTrue(string format,
+            bool asynchronous)
+        {
+            // Setup
+            var table = TableSchemaFactory.CreateTable("Child");
+            table.Columns.Add(TableSchemaFactory.CreateColumn("Code", typeof(string), 1, isNullable: true));
+            TableSchemaFactory.SetPrimaryKey(table, "PK_Child", "Code");
+            WriteDefinition(format, RelatedTableBehavior.TableOnly, table.Table, table);
+            using var connection = new CustomDbConnection();
+
+            // Act
+            var result = await Validate(connection, format, asynchronous, throwOnError: true).ConfigureAwait(false);
+
+            // Assert
+            Assert.IsTrue(result.IsValid);
+            Assert.AreEqual(1, result.Warnings.Count);
+        }
+
+        [TestMethod]
+        [DataRow("json", false)]
+        [DataRow("json", true)]
+        [DataRow("xml", false)]
+        [DataRow("xml", true)]
+        [DataRow("yaml", false)]
+        [DataRow("yaml", true)]
+        public async Task ValidateThrowsAMissingFileWhateverThrowOnErrorIs(string format,
+            bool asynchronous)
+        {
+            // Setup
+            using var connection = new CustomDbConnection();
+
+            // Act/Assert
+            await Assert.ThrowsExactlyAsync<FileNotFoundException>(() => Validate(connection, format, asynchronous, throwOnError: true)).ConfigureAwait(false);
+            await Assert.ThrowsExactlyAsync<FileNotFoundException>(() => Validate(connection, format, asynchronous, throwOnError: false)).ConfigureAwait(false);
+        }
+
         #endregion
 
         #region Private Methods
@@ -477,6 +637,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         /// <param name="traceKey">The tracking key (the default one of the extension method if it is <c>null</c>).</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The cancellation token of the asynchronous extension method.</param>
+        /// <param name="throwOnError">Whether the first problem is thrown instead of being reported in the result.</param>
         /// <returns>A task that represents the operation. The task result is the outcome of the validation.</returns>
         private async Task<ValidateDefinitionResult> Validate(IDbConnection connection,
             string format,
@@ -484,17 +645,18 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             string filename = null,
             string traceKey = null,
             ITrace trace = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            bool throwOnError = false)
         {
             filename ??= _filename;
             switch (format)
             {
                 case "json":
-                    return await ValidateJson(connection, asynchronous, filename, traceKey, trace, cancellationToken).ConfigureAwait(false);
+                    return await ValidateJson(connection, asynchronous, filename, throwOnError, traceKey, trace, cancellationToken).ConfigureAwait(false);
                 case "xml":
-                    return await ValidateXml(connection, asynchronous, filename, traceKey, trace, cancellationToken).ConfigureAwait(false);
+                    return await ValidateXml(connection, asynchronous, filename, throwOnError, traceKey, trace, cancellationToken).ConfigureAwait(false);
                 default:
-                    return await ValidateYaml(connection, asynchronous, filename, traceKey, trace, cancellationToken).ConfigureAwait(false);
+                    return await ValidateYaml(connection, asynchronous, filename, throwOnError, traceKey, trace, cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -504,6 +666,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         /// <param name="connection">The connection that the extension method is invoked on.</param>
         /// <param name="asynchronous">Whether the asynchronous extension method is used.</param>
         /// <param name="filename">The name of the file.</param>
+        /// <param name="throwOnError">Whether the first problem is thrown instead of being reported in the result.</param>
         /// <param name="traceKey">The tracking key (the default one of the extension method if it is <c>null</c>).</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The cancellation token of the asynchronous extension method.</param>
@@ -511,6 +674,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         private static Task<ValidateDefinitionResult> ValidateJson(IDbConnection connection,
             bool asynchronous,
             string filename,
+            bool throwOnError,
             string traceKey,
             ITrace trace,
             CancellationToken cancellationToken)
@@ -518,12 +682,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             if (traceKey == null)
             {
                 return asynchronous
-                    ? connection.ValidateDefinitionFromJsonAsync(filename, trace: trace, cancellationToken: cancellationToken)
-                    : Task.FromResult(connection.ValidateDefinitionFromJson(filename, trace: trace));
+                    ? connection.ValidateDefinitionFromJsonAsync(filename, throwOnError, trace: trace, cancellationToken: cancellationToken)
+                    : Task.FromResult(connection.ValidateDefinitionFromJson(filename, throwOnError, trace: trace));
             }
             return asynchronous
-                ? connection.ValidateDefinitionFromJsonAsync(filename, traceKey, trace, cancellationToken)
-                : Task.FromResult(connection.ValidateDefinitionFromJson(filename, traceKey, trace));
+                ? connection.ValidateDefinitionFromJsonAsync(filename, throwOnError, traceKey, trace, cancellationToken)
+                : Task.FromResult(connection.ValidateDefinitionFromJson(filename, throwOnError, traceKey, trace));
         }
 
         /// <summary>
@@ -532,6 +696,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         /// <param name="connection">The connection that the extension method is invoked on.</param>
         /// <param name="asynchronous">Whether the asynchronous extension method is used.</param>
         /// <param name="filename">The name of the file.</param>
+        /// <param name="throwOnError">Whether the first problem is thrown instead of being reported in the result.</param>
         /// <param name="traceKey">The tracking key (the default one of the extension method if it is <c>null</c>).</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The cancellation token of the asynchronous extension method.</param>
@@ -539,6 +704,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         private static Task<ValidateDefinitionResult> ValidateXml(IDbConnection connection,
             bool asynchronous,
             string filename,
+            bool throwOnError,
             string traceKey,
             ITrace trace,
             CancellationToken cancellationToken)
@@ -546,12 +712,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             if (traceKey == null)
             {
                 return asynchronous
-                    ? connection.ValidateDefinitionFromXmlAsync(filename, trace: trace, cancellationToken: cancellationToken)
-                    : Task.FromResult(connection.ValidateDefinitionFromXml(filename, trace: trace));
+                    ? connection.ValidateDefinitionFromXmlAsync(filename, throwOnError, trace: trace, cancellationToken: cancellationToken)
+                    : Task.FromResult(connection.ValidateDefinitionFromXml(filename, throwOnError, trace: trace));
             }
             return asynchronous
-                ? connection.ValidateDefinitionFromXmlAsync(filename, traceKey, trace, cancellationToken)
-                : Task.FromResult(connection.ValidateDefinitionFromXml(filename, traceKey, trace));
+                ? connection.ValidateDefinitionFromXmlAsync(filename, throwOnError, traceKey, trace, cancellationToken)
+                : Task.FromResult(connection.ValidateDefinitionFromXml(filename, throwOnError, traceKey, trace));
         }
 
         /// <summary>
@@ -560,6 +726,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         /// <param name="connection">The connection that the extension method is invoked on.</param>
         /// <param name="asynchronous">Whether the asynchronous extension method is used.</param>
         /// <param name="filename">The name of the file.</param>
+        /// <param name="throwOnError">Whether the first problem is thrown instead of being reported in the result.</param>
         /// <param name="traceKey">The tracking key (the default one of the extension method if it is <c>null</c>).</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The cancellation token of the asynchronous extension method.</param>
@@ -567,6 +734,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         private static Task<ValidateDefinitionResult> ValidateYaml(IDbConnection connection,
             bool asynchronous,
             string filename,
+            bool throwOnError,
             string traceKey,
             ITrace trace,
             CancellationToken cancellationToken)
@@ -574,12 +742,12 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             if (traceKey == null)
             {
                 return asynchronous
-                    ? connection.ValidateDefinitionFromYamlAsync(filename, trace: trace, cancellationToken: cancellationToken)
-                    : Task.FromResult(connection.ValidateDefinitionFromYaml(filename, trace: trace));
+                    ? connection.ValidateDefinitionFromYamlAsync(filename, throwOnError, trace: trace, cancellationToken: cancellationToken)
+                    : Task.FromResult(connection.ValidateDefinitionFromYaml(filename, throwOnError, trace: trace));
             }
             return asynchronous
-                ? connection.ValidateDefinitionFromYamlAsync(filename, traceKey, trace, cancellationToken)
-                : Task.FromResult(connection.ValidateDefinitionFromYaml(filename, traceKey, trace));
+                ? connection.ValidateDefinitionFromYamlAsync(filename, throwOnError, traceKey, trace, cancellationToken)
+                : Task.FromResult(connection.ValidateDefinitionFromYaml(filename, throwOnError, traceKey, trace));
         }
 
         #endregion

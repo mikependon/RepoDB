@@ -38,7 +38,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var actual = JsonNode.Parse(File.ReadAllText(Filename));
 
             // Assert
-            Assert.AreEqual("RepoDB.Schema", (string)actual["format"]);
+            Assert.AreEqual("RepoDb.Schema.Definition", (string)actual["format"]);
         }
 
         [TestMethod]

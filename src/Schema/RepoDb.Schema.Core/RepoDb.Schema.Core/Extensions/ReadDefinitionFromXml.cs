@@ -40,7 +40,8 @@ namespace RepoDb.Schema
                 filename,
                 traceKey,
                 trace,
-                SchemaDefinitionXmlReader.Parse);
+                SchemaDefinitionXmlReader.Parse,
+                true);
 
         /// <summary>
         /// Asynchronously reads a RepoDB XML definition, including all tables and extraction metadata.
@@ -62,6 +63,7 @@ namespace RepoDb.Schema
                 traceKey,
                 trace,
                 SchemaDefinitionXmlReader.Parse,
+                true,
                 cancellationToken);
 
         #endregion

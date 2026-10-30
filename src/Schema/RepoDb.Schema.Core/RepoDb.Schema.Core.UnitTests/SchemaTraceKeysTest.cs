@@ -193,6 +193,17 @@ namespace RepoDb.Schema.Core.UnitTests
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
+
+        [TestMethod]
+        public void TestSchemaTraceKeysValidateDefinition()
+        {
+            // Act
+            var actual = SchemaTraceKeys.ValidateDefinition;
+            var expected = "ValidateDefinition";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
         #endregion
     }
 }

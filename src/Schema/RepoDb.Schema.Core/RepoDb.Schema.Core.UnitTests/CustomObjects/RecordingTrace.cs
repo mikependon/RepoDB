@@ -44,14 +44,29 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
         #region Properties
 
         /// <summary>
+        /// Gets the number of executions that the trace was told have completed.
+        /// </summary>
+        internal int AfterCount { get; private set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the executions are cancelled, without throwing an exception.
         /// </summary>
         internal bool Cancel { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether a cancelled execution asks for an exception to be thrown.
+        /// </summary>
+        internal bool CancelWithException { get; set; }
+
+        /// <summary>
         /// Gets the tracking keys of the executions, in the order that they happened.
         /// </summary>
         internal List<string> Keys { get; } = new List<string>();
+
+        /// <summary>
+        /// Gets the logs of the executions, in the order that they happened.
+        /// </summary>
+        internal List<CancellableTraceLog> Logs { get; } = new List<CancellableTraceLog>();
 
         #endregion
 
@@ -75,6 +90,7 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
         public void AfterExecution<TResult>(ResultTraceLog<TResult> log)
         {
             Assert.IsFalse(_asynchronous);
+            AfterCount++;
         }
 
         /// <summary>
@@ -102,6 +118,7 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
             CancellationToken cancellationToken = default)
         {
             Assert.IsTrue(_asynchronous);
+            AfterCount++;
             return Task.CompletedTask;
         }
 
@@ -116,9 +133,10 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
         private void Record(CancellableTraceLog log)
         {
             Keys.Add(log.Key);
-            if (Cancel)
+            Logs.Add(log);
+            if (Cancel || CancelWithException)
             {
-                log.Cancel(false);
+                log.Cancel(CancelWithException);
             }
         }
 
