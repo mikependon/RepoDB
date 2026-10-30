@@ -32,7 +32,7 @@ namespace RepoDb.UnitTests.Trace
             // Assert
             Assert.AreEqual(TraceLevel.Info, log.Level);
             Assert.AreEqual(0, log.ThreadId);
-            Assert.IsNull(log.PcName);
+            Assert.IsNull(log.MachineName);
             Assert.IsNull(log.IpAddress);
             Assert.IsNull(log.TraceId);
             Assert.IsNull(log.SpanId);
@@ -64,7 +64,7 @@ namespace RepoDb.UnitTests.Trace
             // Assert
             Assert.AreEqual(TraceLevel.Info, log.Level);
             Assert.AreEqual(context.ThreadId, log.ThreadId);
-            Assert.AreEqual(context.PcName, log.PcName);
+            Assert.AreEqual(context.MachineName, log.MachineName);
             Assert.AreEqual(context.IpAddress, log.IpAddress);
             Assert.AreEqual("CustomTracedDbConnection", log.ConnectionType);
             Assert.AreEqual("TestDatabase", log.Database);
@@ -125,7 +125,7 @@ namespace RepoDb.UnitTests.Trace
             // Assert
             Assert.AreSame(before, log.BeforeExecutionLog);
             Assert.AreEqual(before.ThreadId, log.ThreadId);
-            Assert.AreEqual(before.PcName, log.PcName);
+            Assert.AreEqual(before.MachineName, log.MachineName);
             Assert.AreEqual(before.IpAddress, log.IpAddress);
             Assert.AreEqual(before.ConnectionType, log.ConnectionType);
             Assert.AreEqual(before.Database, log.Database);

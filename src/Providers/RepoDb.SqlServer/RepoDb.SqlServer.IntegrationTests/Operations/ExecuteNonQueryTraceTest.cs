@@ -107,7 +107,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             Assert.AreEqual("SqlConnection", after.ConnectionType);
             Assert.AreEqual(new SqlConnectionStringBuilder(Database.ConnectionString).InitialCatalog,
                 after.Database);
-            Assert.AreEqual(Environment.MachineName, after.PcName);
+            Assert.AreEqual(Environment.MachineName, after.MachineName);
             if (after.IpAddress != null)
             {
                 Assert.IsTrue(IPAddress.TryParse(after.IpAddress, out _), $"'{after.IpAddress}' is not an IP address.");

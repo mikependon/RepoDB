@@ -36,7 +36,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(0, context.ThreadId);
-            Assert.IsNull(context.PcName);
+            Assert.IsNull(context.MachineName);
             Assert.IsNull(context.IpAddress);
             Assert.IsNull(context.TraceId);
             Assert.IsNull(context.SpanId);
@@ -56,7 +56,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(Environment.CurrentManagedThreadId, context.ThreadId);
-            Assert.AreEqual(Environment.MachineName, context.PcName);
+            Assert.AreEqual(Environment.MachineName, context.MachineName);
             Assert.AreEqual(TraceEnvironment.IpAddress, context.IpAddress);
             Assert.AreEqual("CustomTracedDbConnection", context.ConnectionType);
             Assert.AreEqual("TestDatabase", context.Database);

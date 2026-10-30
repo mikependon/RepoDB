@@ -22,10 +22,10 @@ namespace RepoDb.UnitTests.Trace
         #region Public Methods
 
         [TestMethod]
-        public void TestTraceEnvironmentPcNameIsTheNameOfTheMachine()
+        public void TestTraceEnvironmentMachineNameIsTheNameOfTheMachine()
         {
             // Act
-            var actual = TraceEnvironment.PcName;
+            var actual = TraceEnvironment.MachineName;
 
             // Assert
             Assert.AreEqual(Environment.MachineName, actual, StringComparer.Ordinal);

@@ -276,7 +276,7 @@ namespace RepoDb.Telemetry.Core
                     item.Operation = log.Key;
                     item.StartTime = log.StartTime;
                     item.Statement = log.Statement;
-                    item.Client = log.PcName ?? _client;
+                    item.Client = log.MachineName ?? _client;
                     item.IpAddress = log.IpAddress;
                     item.Source = _assembly?.GetName().Name;
                     item.Version = _assembly?.GetName().Version?.ToString();

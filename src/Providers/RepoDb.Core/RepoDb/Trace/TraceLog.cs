@@ -83,7 +83,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the name of the machine that executed the operation.
         /// </summary>
-        public string PcName => Context.PcName;
+        public string MachineName => Context.MachineName;
 
         /// <summary>
         /// Gets the session identifier used by the current trace.

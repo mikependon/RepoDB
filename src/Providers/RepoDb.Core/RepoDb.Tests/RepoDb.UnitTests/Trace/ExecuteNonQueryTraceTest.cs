@@ -100,7 +100,7 @@ namespace RepoDb.UnitTests.Trace
             var before = trace.BeforeLogs.Single();
             Assert.AreEqual(TraceLevel.Info, before.Level);
             Assert.AreEqual(threadId, before.ThreadId);
-            Assert.AreEqual(Environment.MachineName, before.PcName);
+            Assert.AreEqual(Environment.MachineName, before.MachineName);
             Assert.AreEqual(TraceEnvironment.IpAddress, before.IpAddress);
             Assert.AreEqual(nameof(CustomTracedDbConnection), before.ConnectionType);
             Assert.AreEqual("TestDatabase", before.Database);
@@ -125,7 +125,7 @@ namespace RepoDb.UnitTests.Trace
             var before = trace.BeforeLogs.Single();
             var after = trace.GetAfterLog<int>();
             Assert.AreEqual(before.ThreadId, after.ThreadId);
-            Assert.AreEqual(before.PcName, after.PcName);
+            Assert.AreEqual(before.MachineName, after.MachineName);
             Assert.AreEqual(before.IpAddress, after.IpAddress);
             Assert.AreEqual(before.ConnectionType, after.ConnectionType);
             Assert.AreEqual(before.Database, after.Database);

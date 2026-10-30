@@ -39,7 +39,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the name of the machine, or <c>null</c> if it cannot be resolved.
         /// </summary>
-        public static string PcName { get; } = ResolvePcName();
+        public static string MachineName { get; } = ResolveMachineName();
 
         #endregion
 
@@ -119,7 +119,7 @@ namespace RepoDb
         /// Resolves the name of the machine, falling back to the host name and then to the environment variables that the operating systems set.
         /// </summary>
         /// <returns>The name of the machine, or <c>null</c> if it cannot be resolved.</returns>
-        private static string ResolvePcName()
+        private static string ResolveMachineName()
         {
             try
             {

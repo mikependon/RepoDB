@@ -24,14 +24,14 @@ namespace RepoDb
         /// Creates a new instance of <see cref="TraceContext"/> class.
         /// </summary>
         /// <param name="threadId">The identifier of the managed thread that started the execution.</param>
-        /// <param name="pcName">The name of the machine.</param>
+        /// <param name="machineName">The name of the machine.</param>
         /// <param name="ipAddress">The IP address of the machine.</param>
         /// <param name="traceId">The identifier of the trace that the active <see cref="Activity"/> belongs to.</param>
         /// <param name="spanId">The identifier of the span of the active <see cref="Activity"/>.</param>
         /// <param name="connectionType">The name of the type of the connection.</param>
         /// <param name="database">The name of the database of the connection.</param>
         internal TraceContext(int threadId,
-            string pcName,
+            string machineName,
             string ipAddress,
             string traceId,
             string spanId,
@@ -39,7 +39,7 @@ namespace RepoDb
             string database)
         {
             ThreadId = threadId;
-            PcName = pcName;
+            MachineName = machineName;
             IpAddress = ipAddress;
             TraceId = traceId;
             SpanId = spanId;
@@ -74,7 +74,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the name of the machine.
         /// </summary>
-        public string PcName { get; }
+        public string MachineName { get; }
 
         /// <summary>
         /// Gets the identifier of the span of the active <see cref="Activity"/>, or <c>null</c> if there is none.
@@ -107,7 +107,7 @@ namespace RepoDb
             var isW3C = activity?.IdFormat == ActivityIdFormat.W3C;
             var connection = command?.Connection;
             return new TraceContext(Environment.CurrentManagedThreadId,
-                TraceEnvironment.PcName,
+                TraceEnvironment.MachineName,
                 TraceEnvironment.IpAddress,
                 isW3C ? activity.TraceId.ToString() : null,
                 isW3C ? activity.SpanId.ToString() : null,
