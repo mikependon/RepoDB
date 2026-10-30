@@ -15,6 +15,20 @@ namespace RepoDb.Telemetry.Core
     /// </summary>
     public class TelemetryItem
     {
+        /// <summary>
+        /// The name of the application that produces the telemetry.
+        /// </summary>
+        public string Application { get; set; }
+
+        /// <summary>
+        /// The client machine name that has executed the operation. This is used to identify the machine that has executed the operation.
+        /// </summary>
+        public string Client { get; set; }
+
+        /// <summary>
+        /// The recorded total elapsed time (in milliseconds) of the operation that has been executed. This is calculated by subtracting the <see cref="StartTime"/> from the current time.
+        /// </summary>
+        public double Elapsed { get; set; }
 
         /// <summary>
         /// The group name of the telemetry item. This is used to group the telemetry items.
@@ -22,9 +36,14 @@ namespace RepoDb.Telemetry.Core
         public string Group { get; set; } = "Default";
 
         /// <summary>
-        /// The name of the application that produces the telemetry.
+        /// The flag that indicates whether the operation has been cancelled or not. This is used to determine if the operation has been cancelled by the user or by the system.
         /// </summary>
-        public string Application { get; set; }
+        public bool IsCancelled { get; set; }
+
+        /// <summary>
+        /// The name of the operation that has been executed. This can be Insert, Delete, Update, Query, etc.
+        /// </summary>
+        public string Operation { get; set; }
 
         /// <summary>
         /// The session identifier of the operation (i.e. Insert, Delete, Update, Query) that has been executed.
@@ -32,9 +51,9 @@ namespace RepoDb.Telemetry.Core
         public Guid SessionId { get; set; }
 
         /// <summary>
-        /// The name of the operation that has been executed. This can be Insert, Delete, Update, Query, etc.
+        /// The source of the telemetry that has executed the operation (this could be an Assembly, a Type, or anything). This is used to identify the application that has executed the operation.
         /// </summary>
-        public string Operation { get; set; }
+        public string Source { get; set; }
 
         /// <summary>
         /// The start time of when the operation has started the execution. This is used to calculate the elapsed time of the operation.
@@ -45,26 +64,6 @@ namespace RepoDb.Telemetry.Core
         /// The actual statement that has been executed. This can be the SQL statement or the query expression that has been executed.
         /// </summary>
         public string Statement { get; set; }
-
-        /// <summary>
-        /// The recorded total elapsed time (in milliseconds) of the operation that has been executed. This is calculated by subtracting the <see cref="StartTime"/> from the current time.
-        /// </summary>
-        public double Elapsed { get; set; }
-
-        /// <summary>
-        /// The flag that indicates whether the operation has been cancelled or not. This is used to determine if the operation has been cancelled by the user or by the system.
-        /// </summary>
-        public bool IsCancelled { get; set; }
-
-        /// <summary>
-        /// The client machine name that has executed the operation. This is used to identify the machine that has executed the operation.
-        /// </summary>
-        public string Client { get; set; }
-
-        /// <summary>
-        /// The source of the telemetry that has executed the operation (this could be an Assembly, a Type, or anything). This is used to identify the application that has executed the operation.
-        /// </summary>
-        public string Source { get; set; }
 
         /// <summary>
         /// The client machine name that has executed the operation. This is used to identify the machine that has executed the operation.
