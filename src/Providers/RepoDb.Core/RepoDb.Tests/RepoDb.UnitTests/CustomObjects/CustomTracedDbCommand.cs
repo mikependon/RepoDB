@@ -7,6 +7,8 @@
 #endregion
 
 using System;
+using System.Data;
+using System.Data.Common;
 using System.Threading;
 
 namespace RepoDb.UnitTests.CustomObjects
@@ -38,6 +40,11 @@ namespace RepoDb.UnitTests.CustomObjects
         /// </summary>
         public int RowsAffected { get; set; }
 
+        /// <summary>
+        /// Gets or sets the value that the execution of a scalar statement returns.
+        /// </summary>
+        public object ScalarValue { get; set; }
+
         #endregion
 
         #region Public Methods
@@ -48,6 +55,44 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <returns>The number of rows affected.</returns>
         public override int ExecuteNonQuery()
         {
+            Execute();
+            return RowsAffected;
+        }
+
+        /// <summary>
+        /// Executes the command as a scalar statement: it takes the delay, then it throws the failure or returns the scalar value.
+        /// </summary>
+        /// <returns>The scalar value.</returns>
+        public override object ExecuteScalar()
+        {
+            Execute();
+            return ScalarValue;
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Executes the command as a query: it takes the delay, then it throws the failure or returns a reader that has no rows.
+        /// </summary>
+        /// <param name="behavior">The behavior of the execution.</param>
+        /// <returns>The reader.</returns>
+        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
+        {
+            Execute();
+            return base.ExecuteDbDataReader(behavior);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Counts the execution, then takes the delay and throws the failure.
+        /// </summary>
+        private void Execute()
+        {
             OnExecute?.Invoke();
             if (Delay > TimeSpan.Zero)
             {
@@ -57,7 +102,6 @@ namespace RepoDb.UnitTests.CustomObjects
             {
                 throw Failure;
             }
-            return RowsAffected;
         }
 
         #endregion

@@ -131,7 +131,7 @@ namespace RepoDb
             var log = new ResultTraceLog<TResult>(result.SessionId,
                 result.CancellableTraceLog.Key,
                 result.Elapsed,
-                value,
+                error == null ? value : default,
                 result.CancellableTraceLog,
                 error);
 
@@ -181,7 +181,7 @@ namespace RepoDb
             var log = new ResultTraceLog<TResult>(result.SessionId,
                 result.CancellableTraceLog.Key,
                 result.Elapsed,
-                value,
+                error == null ? value : default,
                 result.CancellableTraceLog,
                 error);
 

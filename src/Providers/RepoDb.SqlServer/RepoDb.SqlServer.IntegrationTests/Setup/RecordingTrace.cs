@@ -9,6 +9,7 @@
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,6 +28,16 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
         /// Gets the logs that were received after an execution, in the order that they were received.
         /// </summary>
         public List<object> AfterLogs { get; } = new List<object>();
+
+        /// <summary>
+        /// Gets the errors of the logs that were received after an execution, in the order that they were received (<c>null</c> for an execution that succeeded).
+        /// </summary>
+        public List<Exception> AfterErrors { get; } = new List<Exception>();
+
+        /// <summary>
+        /// Gets the levels of the logs that were received after an execution, in the order that they were received.
+        /// </summary>
+        public List<TraceLevel> AfterLevels { get; } = new List<TraceLevel>();
 
         /// <summary>
         /// Gets the cancellation tokens that were received after an execution (the asynchronous ones only).
@@ -77,7 +88,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
         /// <param name="log">The log of the execution.</param>
         public void AfterExecution<TResult>(ResultTraceLog<TResult> log)
         {
-            AfterLogs.Add(log);
+            Record(log);
             if (ThrowOnAfter != null)
             {
                 throw ThrowOnAfter;
@@ -107,9 +118,25 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
         public Task AfterExecutionAsync<TResult>(ResultTraceLog<TResult> log,
             CancellationToken cancellationToken = default)
         {
-            AfterLogs.Add(log);
+            Record(log);
             AfterTokens.Add(cancellationToken);
             return ThrowOnAfter == null ? Task.CompletedTask : Task.FromException(ThrowOnAfter);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Records the log that was received after an execution.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="log">The log of the execution.</param>
+        private void Record<TResult>(ResultTraceLog<TResult> log)
+        {
+            AfterLogs.Add(log);
+            AfterErrors.Add(log.Error);
+            AfterLevels.Add(log.Level);
         }
 
         #endregion

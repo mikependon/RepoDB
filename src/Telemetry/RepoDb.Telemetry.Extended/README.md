@@ -56,8 +56,10 @@ populated during publishing.
 When an operation fails, the trace is still told that it has completed, and the exception is
 thrown back to the caller. The item records `ErrorType`, `ErrorMessage`, and `ErrorStackTrace`,
 sets `Level` to `Error`, uses the error message as `Message` unless the application gave one,
-and leaves `RowsAffected` and `RowsReturned` unknown. Only `ExecuteNonQuery` and
-`ExecuteNonQueryAsync` report failures so far.
+and leaves `RowsAffected` and `RowsReturned` unknown. The `Execute*` extension methods of
+`IDbConnection` (`ExecuteNonQuery`, `ExecuteScalar`, `ExecuteReader`, `ExecuteQuery`,
+`ExecuteQueryFirst`, `ExecuteQuerySingle` and `ExecuteQueryMultiple`, sync and async) report
+failures. `ExecuteReader` reports only the failure to execute, not one raised while the caller reads the rows.
 
 `Properties` supports string, Boolean, int, long, double, decimal, DateTime, Guid,
 and JsonElement values using source-generated JSON metadata. Represent other custom

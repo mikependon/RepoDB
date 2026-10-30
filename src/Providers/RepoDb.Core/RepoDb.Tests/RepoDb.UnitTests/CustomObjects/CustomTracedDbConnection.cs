@@ -43,6 +43,11 @@ namespace RepoDb.UnitTests.CustomObjects
         /// </summary>
         public int RowsAffected { get; set; }
 
+        /// <summary>
+        /// Gets or sets the value that the execution of a scalar statement returns.
+        /// </summary>
+        public object ScalarValue { get; set; }
+
         #endregion
 
         #region Protected Methods
@@ -58,7 +63,8 @@ namespace RepoDb.UnitTests.CustomObjects
                 Delay = Delay,
                 Failure = Failure,
                 OnExecute = () => ExecutionCount++,
-                RowsAffected = RowsAffected
+                RowsAffected = RowsAffected,
+                ScalarValue = ScalarValue
             };
 
         #endregion
