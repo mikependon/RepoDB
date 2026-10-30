@@ -45,24 +45,24 @@ namespace RepoDb.Schema.Models
         /// Gets or sets the name of the database that the table belongs to (<c>null</c> if it is not known).
         /// </summary>
         [DefinitionIgnore]
-        public string Database { get; internal set; }
+        public string Database { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the table.
         /// </summary>
-        public string Name { get; internal set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the provider of the database that the table belongs to (i.e.: <c>SqlServer</c>, <c>MySql</c>, <c>PostgreSql</c>, <c>SQLite</c>; the same as
         /// <see cref="RepoDb.DbField.Provider"/>), or <c>null</c> if it is not known.
         /// </summary>
         [DefinitionIgnore]
-        public string Provider { get; internal set; }
+        public string Provider { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the schema that owns the table.
         /// </summary>
-        public string Schema { get; internal set; }
+        public string Schema { get; set; }
 
         #endregion
 
