@@ -50,21 +50,21 @@ namespace RepoDb.Schema
             SchemaDefinitionLoader.Validate(connection,
                 filename,
                 tableExistenceBehavior,
+                schemaMappingMode,
                 commandTimeout,
-                transaction,
-                schemaMappingMode);
+                transaction);
             var definition = connection.ReadDefinitionFromYaml(filename,
                 traceKey,
                 trace);
             return SchemaDefinitionLoader.Apply(connection,
                 definition,
                 tableExistenceBehavior,
+                schemaMappingMode,
                 createdCallback,
                 commandTimeout,
                 traceKey,
                 trace,
-                transaction,
-                schemaMappingMode);
+                transaction);
         }
 
         /// <summary>
@@ -96,9 +96,9 @@ namespace RepoDb.Schema
             SchemaDefinitionLoader.Validate(connection,
                 filename,
                 tableExistenceBehavior,
+                schemaMappingMode,
                 commandTimeout,
-                transaction,
-                schemaMappingMode);
+                transaction);
             var definition = await connection.ReadDefinitionFromYamlAsync(filename,
                 traceKey,
                 trace,
@@ -106,13 +106,13 @@ namespace RepoDb.Schema
             return await SchemaDefinitionLoader.ApplyAsync(connection,
                 definition,
                 tableExistenceBehavior,
+                schemaMappingMode,
                 createdCallback,
                 commandTimeout,
                 traceKey,
                 trace,
                 transaction,
-                cancellationToken,
-                schemaMappingMode).ConfigureAwait(false);
+                cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

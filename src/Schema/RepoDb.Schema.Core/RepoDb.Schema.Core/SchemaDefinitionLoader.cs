@@ -32,14 +32,15 @@ namespace RepoDb.Schema
         /// <param name="connection">The connection of the destination database.</param>
         /// <param name="filename">The name of the definition file.</param>
         /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database.</param>
+        /// <param name="schemaMappingMode">How source schema names are mapped to the destination.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used on the destination connection.</param>
         internal static void Validate(IDbConnection connection,
             string filename,
             TableExistsBehavior tableExistenceBehavior,
+            SchemaMappingMode schemaMappingMode,
             int? commandTimeout,
-            IDbTransaction transaction,
-            SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve)
+            IDbTransaction transaction)
         {
             if (!Enum.IsDefined(typeof(SchemaMappingMode), schemaMappingMode))
                 throw new ArgumentOutOfRangeException(nameof(schemaMappingMode));
@@ -65,6 +66,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The connection of the destination database.</param>
         /// <param name="definition">The definition that is read from the file (nothing is applied if it is <c>null</c>).</param>
         /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database.</param>
+        /// <param name="schemaMappingMode">How source schema names are mapped to the destination.</param>
         /// <param name="createdCallback">The callback that receives the item of each table once its schema is created.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="traceKey">The tracking key to be used.</param>
@@ -74,12 +76,12 @@ namespace RepoDb.Schema
         internal static LoadDefinitionResult Apply(IDbConnection connection,
             SchemaDefinitionInfo definition,
             TableExistsBehavior tableExistenceBehavior,
+            SchemaMappingMode schemaMappingMode,
             Action<CopyTableSchemaResultItem> createdCallback,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
-            IDbTransaction transaction,
-            SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve)
+            IDbTransaction transaction)
         {
             if (definition == null)
                 return null;
@@ -112,6 +114,7 @@ namespace RepoDb.Schema
         /// <param name="connection">The connection of the destination database.</param>
         /// <param name="definition">The definition that is read from the file (nothing is applied if it is <c>null</c>).</param>
         /// <param name="tableExistenceBehavior">Defines what happens when a table already exists in the destination database.</param>
+        /// <param name="schemaMappingMode">How source schema names are mapped to the destination.</param>
         /// <param name="createdCallback">The callback that receives the item of each table once its schema is created.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="traceKey">The tracking key to be used.</param>
@@ -122,13 +125,13 @@ namespace RepoDb.Schema
         internal static async Task<LoadDefinitionResult> ApplyAsync(IDbConnection connection,
             SchemaDefinitionInfo definition,
             TableExistsBehavior tableExistenceBehavior,
+            SchemaMappingMode schemaMappingMode,
             Action<CopyTableSchemaResultItem> createdCallback,
             int? commandTimeout,
             string traceKey,
             ITrace trace,
             IDbTransaction transaction,
-            CancellationToken cancellationToken,
-            SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve)
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (definition == null)

@@ -30,41 +30,41 @@ namespace RepoDb.Schema
         /// <param name="connection">The destination connection with a registered schema composer.</param>
         /// <param name="filename">The existing definition filename.</param>
         /// <param name="tableExistenceBehavior">The behavior for existing tables. Drop permanently deletes their data. The default is Skip.</param>
+        /// <param name="schemaMappingMode">How source schema names are mapped to the destination.</param>
         /// <param name="createdCallback">The callback invoked for each completed table, including skipped or aligned tables, as in CopyTableSchemaTo.</param>
         /// <param name="commandTimeout">The destination command timeout in seconds; null uses the provider default.</param>
         /// <param name="traceKey">The tracking key for file reads and destination commands.</param>
         /// <param name="trace">The trace for file reads and destination commands.</param>
         /// <param name="transaction">An optional transaction belonging to the destination connection. The caller commits or rolls it back.</param>
-        /// <param name="schemaMappingMode">How source schema names are mapped to the destination.</param>
         /// <returns>The loaded definition and creation outcomes, or null if the file read is cancelled by Cancel(false).</returns>
         public static LoadDefinitionResult LoadDefinitionFromXml(this IDbConnection connection,
             string filename,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
+            SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve,
             Action<CopyTableSchemaResultItem> createdCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.LoadDefinitionFromXml,
             ITrace trace = null,
-            IDbTransaction transaction = null,
-            SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve)
+            IDbTransaction transaction = null)
         {
             SchemaDefinitionLoader.Validate(connection,
                 filename,
                 tableExistenceBehavior,
+                schemaMappingMode,
                 commandTimeout,
-                transaction,
-                schemaMappingMode);
+                transaction);
             var definition = connection.ReadDefinitionFromXml(filename,
                 traceKey,
                 trace);
             return SchemaDefinitionLoader.Apply(connection,
                 definition,
                 tableExistenceBehavior,
+                schemaMappingMode,
                 createdCallback,
                 commandTimeout,
                 traceKey,
                 trace,
-                transaction,
-                schemaMappingMode);
+                transaction);
         }
 
         /// <summary>
@@ -74,31 +74,31 @@ namespace RepoDb.Schema
         /// <param name="connection">The destination connection with a registered schema composer.</param>
         /// <param name="filename">The existing definition filename.</param>
         /// <param name="tableExistenceBehavior">The behavior for existing tables. Drop permanently deletes their data. The default is Skip.</param>
+        /// <param name="schemaMappingMode">How source schema names are mapped to the destination.</param>
         /// <param name="createdCallback">The callback invoked for each completed table, as in CopyTableSchemaTo.</param>
         /// <param name="commandTimeout">The destination command timeout in seconds; null uses the provider default.</param>
         /// <param name="traceKey">The tracking key for file reads and destination commands.</param>
         /// <param name="trace">The asynchronous trace for file reads and destination commands.</param>
         /// <param name="transaction">An optional destination transaction, managed by the caller.</param>
         /// <param name="cancellationToken">The cancellation token for file reads and destination commands.</param>
-        /// <param name="schemaMappingMode">How source schema names are mapped to the destination.</param>
         /// <returns>The loaded definition and creation outcomes, or null if the file read is cancelled by Cancel(false).</returns>
         public static async Task<LoadDefinitionResult> LoadDefinitionFromXmlAsync(this IDbConnection connection,
             string filename,
             TableExistsBehavior tableExistenceBehavior = TableExistsBehavior.Skip,
+            SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve,
             Action<CopyTableSchemaResultItem> createdCallback = null,
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.LoadDefinitionFromXml,
             ITrace trace = null,
             IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default,
-            SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve)
+            CancellationToken cancellationToken = default)
         {
             SchemaDefinitionLoader.Validate(connection,
                 filename,
                 tableExistenceBehavior,
+                schemaMappingMode,
                 commandTimeout,
-                transaction,
-                schemaMappingMode);
+                transaction);
             var definition = await connection.ReadDefinitionFromXmlAsync(filename,
                 traceKey,
                 trace,
@@ -106,13 +106,13 @@ namespace RepoDb.Schema
             return await SchemaDefinitionLoader.ApplyAsync(connection,
                 definition,
                 tableExistenceBehavior,
+                schemaMappingMode,
                 createdCallback,
                 commandTimeout,
                 traceKey,
                 trace,
                 transaction,
-                cancellationToken,
-                schemaMappingMode).ConfigureAwait(false);
+                cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
