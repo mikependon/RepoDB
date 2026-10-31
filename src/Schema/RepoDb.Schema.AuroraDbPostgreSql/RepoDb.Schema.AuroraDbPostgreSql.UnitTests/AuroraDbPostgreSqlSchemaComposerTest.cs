@@ -673,6 +673,19 @@ namespace RepoDb.Schema.AuroraDbPostgreSql.UnitTests
             StringAssert.Contains(composer.ComposeTableExists("public.\"O'Brien\""), "O''Brien", StringComparison.Ordinal);
         }
 
+        [TestMethod]
+        public void TestAuroraDbPostgreSqlSchemaComposerComposesTheStatementsThatStopAndStartTheForeignKeyChecks()
+        {
+            // Act
+            var composer = new AuroraDbPostgreSqlSchemaComposer();
+
+            // Assert
+            Assert.AreEqual("SET session_replication_role = replica", composer.ComposeDisableConstraintChecks(false));
+            Assert.AreEqual("SET session_replication_role = DEFAULT", composer.ComposeEnableConstraintChecks(false));
+            Assert.AreEqual(composer.ComposeDisableConstraintChecks(false), composer.ComposeDisableConstraintChecks(true));
+            Assert.IsInstanceOfType<IConstraintCheckSupport>(composer);
+        }
+
         #endregion
     }
 }

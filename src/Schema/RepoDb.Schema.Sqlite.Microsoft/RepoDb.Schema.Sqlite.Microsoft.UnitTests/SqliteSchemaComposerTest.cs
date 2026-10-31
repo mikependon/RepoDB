@@ -1265,6 +1265,29 @@ namespace RepoDb.Schema.Sqlite.Microsoft.UnitTests
             Assert.IsFalse(actual.Contains("COLLATE", StringComparison.Ordinal));
         }
 
+        [TestMethod]
+        public void TestSqliteSchemaComposerComposesTheStatementsThatStopAndStartTheForeignKeyChecks()
+        {
+            // Act
+            var composer = new SqliteSchemaComposer();
+
+            // Assert
+            Assert.AreEqual("PRAGMA foreign_keys = OFF", composer.ComposeDisableConstraintChecks(false));
+            Assert.AreEqual("PRAGMA foreign_keys = ON", composer.ComposeEnableConstraintChecks(false));
+            Assert.IsInstanceOfType<IConstraintCheckSupport>(composer);
+        }
+
+        [TestMethod]
+        public void TestSqliteSchemaComposerDefersTheForeignKeyChecksToTheCommitInATransactionAsThePragmaIsIgnoredThere()
+        {
+            // Act
+            var composer = new SqliteSchemaComposer();
+
+            // Assert
+            Assert.AreEqual("PRAGMA defer_foreign_keys = ON", composer.ComposeDisableConstraintChecks(true));
+            Assert.AreEqual("PRAGMA defer_foreign_keys = OFF", composer.ComposeEnableConstraintChecks(true));
+        }
+
         #endregion
     }
 }

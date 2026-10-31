@@ -1376,6 +1376,19 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
             Assert.IsNull(new MySqlConnectorSchemaComposer().GetUnsupportedDefaultReason(GetDefaultColumn(ColumnDefaultValue.Unclassified, null, "int", typeof(int))));
         }
 
+        [TestMethod]
+        public void TestMySqlConnectorSchemaComposerComposesTheStatementsThatStopAndStartTheForeignKeyChecks()
+        {
+            // Act
+            var composer = new MySqlConnectorSchemaComposer();
+
+            // Assert
+            Assert.AreEqual("SET FOREIGN_KEY_CHECKS = 0", composer.ComposeDisableConstraintChecks(false));
+            Assert.AreEqual("SET FOREIGN_KEY_CHECKS = 1", composer.ComposeEnableConstraintChecks(false));
+            Assert.AreEqual(composer.ComposeDisableConstraintChecks(false), composer.ComposeDisableConstraintChecks(true));
+            Assert.IsInstanceOfType<IConstraintCheckSupport>(composer);
+        }
+
         #endregion
     }
 }

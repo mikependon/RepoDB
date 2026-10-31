@@ -1376,6 +1376,19 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector.UnitTests
             Assert.IsNull(new AuroraDbMySqlConnectorSchemaComposer().GetUnsupportedDefaultReason(GetDefaultColumn(ColumnDefaultValue.Unclassified, null, "int", typeof(int))));
         }
 
+        [TestMethod]
+        public void TestAuroraDbMySqlConnectorSchemaComposerComposesTheStatementsThatStopAndStartTheForeignKeyChecks()
+        {
+            // Act
+            var composer = new AuroraDbMySqlConnectorSchemaComposer();
+
+            // Assert
+            Assert.AreEqual("SET FOREIGN_KEY_CHECKS = 0", composer.ComposeDisableConstraintChecks(false));
+            Assert.AreEqual("SET FOREIGN_KEY_CHECKS = 1", composer.ComposeEnableConstraintChecks(false));
+            Assert.AreEqual(composer.ComposeDisableConstraintChecks(false), composer.ComposeDisableConstraintChecks(true));
+            Assert.IsInstanceOfType<IConstraintCheckSupport>(composer);
+        }
+
         #endregion
     }
 }

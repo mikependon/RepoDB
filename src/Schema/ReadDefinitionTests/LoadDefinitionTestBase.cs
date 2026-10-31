@@ -178,8 +178,8 @@ namespace RepoDb.Schema.Tests
         {
             if (format == "json") return asynchronous ? connection.LoadDefinitionFromJsonAsync(filename, behavior, callback, cancellationToken: token)
                 : Task.FromResult(connection.LoadDefinitionFromJson(filename, behavior, callback));
-            if (format == "xml") return asynchronous ? connection.LoadDefinitionFromXmlAsync(filename, behavior, callback, cancellationToken: token)
-                : Task.FromResult(connection.LoadDefinitionFromXml(filename, behavior, callback));
+            if (format == "xml") return asynchronous ? connection.LoadDefinitionFromXmlAsync(filename, behavior, createdCallback: callback, cancellationToken: token)
+                : Task.FromResult(connection.LoadDefinitionFromXml(filename, behavior, createdCallback: callback));
             return asynchronous ? connection.LoadDefinitionFromYamlAsync(filename, behavior, callback, cancellationToken: token)
                 : Task.FromResult(connection.LoadDefinitionFromYaml(filename, behavior, callback));
         }

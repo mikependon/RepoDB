@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from a PostgreSQL database or from another database engine.
     /// The collations are not composed, as they are specific to the database that they came from.
     /// </summary>
-    public class PostgreSqlSchemaComposer : ISchemaComposer
+    public class PostgreSqlSchemaComposer : ISchemaComposer, IConstraintCheckSupport
     {
         #region Private Variables
 
@@ -31,6 +31,22 @@ namespace RepoDb.Schema
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Composes the statement that stops PostgreSQL from checking the foreign keys, for the session of the connection that executes it.
+        /// </summary>
+        /// <param name="hasTransaction">Whether the statement is executed in a transaction.</param>
+        /// <returns>The SQL statement.</returns>
+        public string ComposeDisableConstraintChecks(bool hasTransaction) =>
+            "SET session_replication_role = replica";
+
+        /// <summary>
+        /// Composes the statement that makes PostgreSQL check the foreign keys again, for the session of the connection that executes it.
+        /// </summary>
+        /// <param name="hasTransaction">Whether the statement is executed in a transaction.</param>
+        /// <returns>The SQL statement.</returns>
+        public string ComposeEnableConstraintChecks(bool hasTransaction) =>
+            "SET session_replication_role = DEFAULT";
 
         /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.

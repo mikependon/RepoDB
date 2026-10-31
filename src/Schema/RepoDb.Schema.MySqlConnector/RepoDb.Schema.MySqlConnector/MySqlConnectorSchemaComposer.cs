@@ -20,7 +20,7 @@ namespace RepoDb.Schema
     /// An <see cref="ISchemaComposer"/> that composes the SQL statements, in the dialect of MySQL, that create the objects of a table.
     /// The column types are mapped on a best-effort basis, so the schema can come from a MySQL database or from another database engine.
     /// </summary>
-    public class MySqlConnectorSchemaComposer : ISchemaComposer, ICheckConstraintSupport, IColumnDefaultSupport
+    public class MySqlConnectorSchemaComposer : ISchemaComposer, ICheckConstraintSupport, IColumnDefaultSupport, IConstraintCheckSupport
     {
         #region Private Variables
 
@@ -30,6 +30,22 @@ namespace RepoDb.Schema
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Composes the statement that stops MySQL from checking the foreign keys, for the session of the connection that executes it.
+        /// </summary>
+        /// <param name="hasTransaction">Whether the statement is executed in a transaction.</param>
+        /// <returns>The SQL statement.</returns>
+        public string ComposeDisableConstraintChecks(bool hasTransaction) =>
+            "SET FOREIGN_KEY_CHECKS = 0";
+
+        /// <summary>
+        /// Composes the statement that makes MySQL check the foreign keys again, for the session of the connection that executes it.
+        /// </summary>
+        /// <param name="hasTransaction">Whether the statement is executed in a transaction.</param>
+        /// <returns>The SQL statement.</returns>
+        public string ComposeEnableConstraintChecks(bool hasTransaction) =>
+            "SET FOREIGN_KEY_CHECKS = 1";
 
         /// <summary>
         /// Gets the reason why MySQL does not create the default value of the column (i.e.: the next value of a sequence, or a function of another database).

@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from a SQLite database or from another database engine.
     /// SQLite can not add a foreign key to an existing table, so the foreign keys are part of the statement that creates the table (see <see cref="ComposeAddForeignKey"/>).
     /// </summary>
-    public class SqliteSchemaComposer : ISchemaComposer, ICheckConstraintSupport
+    public class SqliteSchemaComposer : ISchemaComposer, ICheckConstraintSupport, IConstraintCheckSupport
     {
         #region Private Variables
 
@@ -31,6 +31,22 @@ namespace RepoDb.Schema
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Composes the statement that stops SQLite from checking the foreign keys, for the session of the connection that executes it.
+        /// </summary>
+        /// <param name="hasTransaction">Whether the statement is executed in a transaction: SQLite ignores <c>PRAGMA foreign_keys</c> inside one, so the checks are deferred to the commit instead.</param>
+        /// <returns>The SQL statement.</returns>
+        public string ComposeDisableConstraintChecks(bool hasTransaction) =>
+            hasTransaction ? "PRAGMA defer_foreign_keys = ON" : "PRAGMA foreign_keys = OFF";
+
+        /// <summary>
+        /// Composes the statement that makes SQLite check the foreign keys again, for the session of the connection that executes it.
+        /// </summary>
+        /// <param name="hasTransaction">Whether the statement is executed in a transaction: SQLite ignores <c>PRAGMA foreign_keys</c> inside one, so the checks are deferred to the commit instead.</param>
+        /// <returns>The SQL statement.</returns>
+        public string ComposeEnableConstraintChecks(bool hasTransaction) =>
+            hasTransaction ? "PRAGMA defer_foreign_keys = OFF" : "PRAGMA foreign_keys = ON";
 
         /// <summary>
         /// Gets the reason why SQLite refuses the check constraint: a function that is not deterministic (like the current date and time) can not be used in a <c>CHECK</c>.

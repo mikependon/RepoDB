@@ -1248,7 +1248,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, (ColumnMappingBehavior)99, IdentityBehavior.KeepIdentity, null));
+                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, (ColumnMappingBehavior)99, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null));
         }
 
         [TestMethod]
@@ -1257,7 +1257,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
             foreach (var behavior in new[] { ColumnMappingBehavior.Automatic, ColumnMappingBehavior.Strict, ColumnMappingBehavior.StrictBypass })
             {
                 // Act/Assert
-                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, behavior, IdentityBehavior.KeepIdentity, null);
+                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, behavior, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null);
             }
         }
 
@@ -1266,7 +1266,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                DataDbConnection.Validate(null, "Person", "Person", GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null));
+                DataDbConnection.Validate(null, "Person", "Person", GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null));
         }
 
         [TestMethod]
@@ -1274,9 +1274,9 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                DataDbConnection.Validate(GetConnection(), null, "Person", GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null));
+                DataDbConnection.Validate(GetConnection(), null, "Person", GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null));
             Assert.Throws<ArgumentNullException>(() =>
-                DataDbConnection.Validate(GetConnection(), " ", "Person", GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null));
+                DataDbConnection.Validate(GetConnection(), " ", "Person", GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null));
         }
 
         [TestMethod]
@@ -1284,9 +1284,9 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                DataDbConnection.Validate(GetConnection(), "Person", null, GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null));
+                DataDbConnection.Validate(GetConnection(), "Person", null, GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null));
             Assert.Throws<ArgumentNullException>(() =>
-                DataDbConnection.Validate(GetConnection(), "Person", " ", GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null));
+                DataDbConnection.Validate(GetConnection(), "Person", " ", GetConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null));
         }
 
         [TestMethod]
@@ -1294,7 +1294,7 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentNullException>(() =>
-                DataDbConnection.Validate(GetConnection(), "Person", "Person", null, null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null));
+                DataDbConnection.Validate(GetConnection(), "Person", "Person", null, null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null));
         }
 
         [TestMethod]
@@ -1302,9 +1302,9 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, 0, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null));
+                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, 0, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null));
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, -1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null));
+                DataDbConnection.Validate(GetConnection(), "Person", "Person", GetConnection(), null, -1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null));
         }
 
         [TestMethod]
@@ -1312,29 +1312,29 @@ namespace RepoDb.Data.Core.UnitTests.Extensions
         {
             // Act/Assert
             Assert.Throws<ArgumentException>(() =>
-                DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, RelationshipBehavior.Parents, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null));
+                DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, RelationshipBehavior.Parents, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null));
         }
 
         [TestMethod]
         public void TestValidateAcceptsTablesWithDifferentNamesIfOnlyTheTableIsCopiedEvenIfTheSchemaIsRequested()
         {
             // Act/Assert
-            DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Drop, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null);
-            DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), "Sales", 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null);
+            DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Drop, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null);
+            DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), "Sales", 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null);
         }
 
         [TestMethod]
         public void TestValidateAcceptsTablesWithDifferentNamesIfTheSchemaIsNotRequested()
         {
             // Act/Assert
-            DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null);
+            DataDbConnection.Validate(new FakeDbConnection(), "Person", "Customer", new FakeDbConnection(), null, 1, RelationshipBehavior.TableOnly, TableExistsBehavior.Skip, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null);
         }
 
         [TestMethod]
         public void TestValidateAcceptsTablesWithTheSameNameInDifferentSchemasIfTheSchemaIsRequested()
         {
             // Act/Assert
-            DataDbConnection.Validate(new FakeDbConnection(), "[dbo].[Person]", "[Sales].[Person]", new FakeDbConnection(), "Sales", 1, RelationshipBehavior.Parents, TableExistsBehavior.Drop, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, null);
+            DataDbConnection.Validate(new FakeDbConnection(), "[dbo].[Person]", "[Sales].[Person]", new FakeDbConnection(), "Sales", 1, RelationshipBehavior.Parents, TableExistsBehavior.Drop, ColumnMappingBehavior.Automatic, IdentityBehavior.KeepIdentity, ConstraintCheckBehavior.Enforce, null);
         }
 
         #endregion
