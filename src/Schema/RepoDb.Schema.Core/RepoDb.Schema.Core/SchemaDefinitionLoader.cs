@@ -38,8 +38,11 @@ namespace RepoDb.Schema
             string filename,
             TableExistsBehavior tableExistenceBehavior,
             int? commandTimeout,
-            IDbTransaction transaction)
+            IDbTransaction transaction,
+            SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve)
         {
+            if (!Enum.IsDefined(typeof(SchemaMappingMode), schemaMappingMode))
+                throw new ArgumentOutOfRangeException(nameof(schemaMappingMode));
             if (connection == null)
                 throw new ArgumentNullException(nameof(connection));
             if (string.IsNullOrWhiteSpace(filename))
@@ -75,14 +78,15 @@ namespace RepoDb.Schema
             int? commandTimeout,
             string traceKey,
             ITrace trace,
-            IDbTransaction transaction)
+            IDbTransaction transaction,
+            SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve)
         {
             if (definition == null)
                 return null;
             var startTime = DateTime.UtcNow;
             var composer = Composer(connection);
             var tables = CreateTables(definition,
-                composer);
+                composer, connection.GetDbSetting(), schemaMappingMode);
             var copy = SchemaPlanExecutor.Execute(startTime,
                 tables,
                 composer,
@@ -123,7 +127,8 @@ namespace RepoDb.Schema
             string traceKey,
             ITrace trace,
             IDbTransaction transaction,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (definition == null)
@@ -131,7 +136,7 @@ namespace RepoDb.Schema
             var startTime = DateTime.UtcNow;
             var composer = Composer(connection);
             var tables = CreateTables(definition,
-                composer);
+                composer, connection.GetDbSetting(), schemaMappingMode);
             var copy = await SchemaPlanExecutor.ExecuteAsync(startTime,
                 tables,
                 composer,
@@ -172,8 +177,11 @@ namespace RepoDb.Schema
         /// <param name="composer">The composer of the destination database.</param>
         /// <returns>The tables of the plan, in dependency order.</returns>
         private static System.Collections.Generic.IList<PlanTable> CreateTables(SchemaDefinitionInfo definition,
-            ISchemaComposer composer)
+            ISchemaComposer composer,
+            IDbSetting setting,
+            SchemaMappingMode schemaMappingMode)
         {
+            SchemaDefinitionMapping.Validate(definition, setting, schemaMappingMode);
             var keys = definition.Tables.Select((table,
                 position) => new { table.Table, Key = position.ToString(CultureInfo.InvariantCulture) }).ToDictionary(item => item.Table,
                     item => item.Key);
@@ -181,9 +189,17 @@ namespace RepoDb.Schema
                 table => keys[table.Table],
                 table => table != null && keys.TryGetValue(table,
                     out var key) ? key : "external");
-            return Plan.CreateTables(ordered.Select(item => item.Schema),
-                null,
-                composer);
+            var tables = ordered.Select(item =>
+            {
+                var source = item.Schema;
+                var target = SchemaDefinitionMapping.Map(source, schemaMappingMode);
+                return new PlanTable(source, target, composer.ComposeName(target.Table));
+            }).ToList();
+            var duplicate = tables.GroupBy(table => table.Name, StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicate != null)
+                throw new InvalidOperationException($"Multiple source tables map to destination name '{duplicate.Key}' using {schemaMappingMode}.");
+            return tables;
         }
 
         #endregion

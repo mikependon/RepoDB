@@ -35,6 +35,7 @@ namespace RepoDb.Schema
         /// <param name="traceKey">The tracking key for file reads and destination commands.</param>
         /// <param name="trace">The trace for file reads and destination commands.</param>
         /// <param name="transaction">An optional transaction belonging to the destination connection. The caller commits or rolls it back.</param>
+        /// <param name="schemaMappingMode">How source schema names are mapped to the destination.</param>
         /// <returns>The loaded definition and creation outcomes, or null if the file read is cancelled by Cancel(false).</returns>
         public static LoadDefinitionResult LoadDefinitionFromJson(this IDbConnection connection,
             string filename,
@@ -43,13 +44,15 @@ namespace RepoDb.Schema
             int? commandTimeout = null,
             string traceKey = SchemaTraceKeys.LoadDefinitionFromJson,
             ITrace trace = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve)
         {
             SchemaDefinitionLoader.Validate(connection,
                 filename,
                 tableExistenceBehavior,
                 commandTimeout,
-                transaction);
+                transaction,
+                schemaMappingMode);
             var definition = connection.ReadDefinitionFromJson(filename,
                 traceKey,
                 trace);
@@ -60,7 +63,8 @@ namespace RepoDb.Schema
                 commandTimeout,
                 traceKey,
                 trace,
-                transaction);
+                transaction,
+                schemaMappingMode);
         }
 
         /// <summary>
@@ -76,6 +80,7 @@ namespace RepoDb.Schema
         /// <param name="trace">The asynchronous trace for file reads and destination commands.</param>
         /// <param name="transaction">An optional destination transaction, managed by the caller.</param>
         /// <param name="cancellationToken">The cancellation token for file reads and destination commands.</param>
+        /// <param name="schemaMappingMode">How source schema names are mapped to the destination.</param>
         /// <returns>The loaded definition and creation outcomes, or null if the file read is cancelled by Cancel(false).</returns>
         public static async Task<LoadDefinitionResult> LoadDefinitionFromJsonAsync(this IDbConnection connection,
             string filename,
@@ -85,13 +90,15 @@ namespace RepoDb.Schema
             string traceKey = SchemaTraceKeys.LoadDefinitionFromJson,
             ITrace trace = null,
             IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve)
         {
             SchemaDefinitionLoader.Validate(connection,
                 filename,
                 tableExistenceBehavior,
                 commandTimeout,
-                transaction);
+                transaction,
+                schemaMappingMode);
             var definition = await connection.ReadDefinitionFromJsonAsync(filename,
                 traceKey,
                 trace,
@@ -104,7 +111,8 @@ namespace RepoDb.Schema
                 traceKey,
                 trace,
                 transaction,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken,
+                schemaMappingMode).ConfigureAwait(false);
         }
 
         #endregion

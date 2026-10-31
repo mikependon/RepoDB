@@ -31,6 +31,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         public void Initialize()
         {
             filename = Path.Combine(Path.GetTempPath(), "repodb-load-core-" + Guid.NewGuid().ToString("N"));
+            using var initializeConnection = new CustomDbConnection();
+            var setting = new Mock<IDbSetting>();
+            setting.SetupGet(s => s.IsSchemaSupported).Returns(true);
+            DbSettingMapper.Add<CustomDbConnection>(setting.Object, true);
             SchemaReaderMapper.Clear();
             var composer = new Mock<ISchemaComposer>();
             composer.Setup(c => c.ComposeName(It.IsAny<TableInfo>())).Returns<TableInfo>(table => table.Name);
@@ -141,6 +145,25 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Assert.AreEqual(3, result.Definition.Tables.Sum(table => table.ForeignKeys.Count));
         }
 
+        [TestMethod]
+        [DataRow("json", false)]
+        [DataRow("json", true)]
+        [DataRow("xml", false)]
+        [DataRow("xml", true)]
+        [DataRow("yaml", false)]
+        [DataRow("yaml", true)]
+        public async Task MapsNamesAndRejectsUnsupportedPreserveBeforeCommands(string format, bool asynchronous)
+        {
+            Write(format);
+            using var connection = new CustomDbConnection();
+            CustomDbSetting.Map(null);
+            await Assert.ThrowsExactlyAsync<NotSupportedException>(() => Load(connection, format, asynchronous));
+            Assert.AreEqual(0, connection.Details.Count);
+            var result = await Load(connection, format, asynchronous, schemaMappingMode: SchemaMappingMode.Prefix);
+            Assert.IsTrue(connection.ExecutedCommands.Contains("CREATE FileSchema_FileTable"));
+            Assert.AreEqual("FileSchema", result.Definition.Tables.Single().Table.Schema);
+        }
+
         private void Write(string format)
         {
             var schema = new TableSchema(new TableInfo("FileTable", "FileSchema", "FileDatabase", "FileProvider"));
@@ -151,14 +174,14 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         private Task<LoadDefinitionResult> Load(IDbConnection connection, string format, bool asynchronous,
-            Action<CopyTableSchemaResultItem> callback = null, IDbTransaction transaction = null, ITrace trace = null)
+            Action<CopyTableSchemaResultItem> callback = null, IDbTransaction transaction = null, ITrace trace = null, SchemaMappingMode schemaMappingMode = SchemaMappingMode.Preserve)
         {
-            if (format == "json") return asynchronous ? connection.LoadDefinitionFromJsonAsync(filename, createdCallback: callback, commandTimeout: 17, traceKey: "load-test", trace: trace, transaction: transaction)
-                : Task.FromResult(connection.LoadDefinitionFromJson(filename, createdCallback: callback, commandTimeout: 17, traceKey: "load-test", trace: trace, transaction: transaction));
-            if (format == "xml") return asynchronous ? connection.LoadDefinitionFromXmlAsync(filename, createdCallback: callback, commandTimeout: 17, traceKey: "load-test", trace: trace, transaction: transaction)
-                : Task.FromResult(connection.LoadDefinitionFromXml(filename, createdCallback: callback, commandTimeout: 17, traceKey: "load-test", trace: trace, transaction: transaction));
-            return asynchronous ? connection.LoadDefinitionFromYamlAsync(filename, createdCallback: callback, commandTimeout: 17, traceKey: "load-test", trace: trace, transaction: transaction)
-                : Task.FromResult(connection.LoadDefinitionFromYaml(filename, createdCallback: callback, commandTimeout: 17, traceKey: "load-test", trace: trace, transaction: transaction));
+            if (format == "json") return asynchronous ? connection.LoadDefinitionFromJsonAsync(filename, createdCallback: callback, commandTimeout: 17, traceKey: "load-test", trace: trace, transaction: transaction, schemaMappingMode: schemaMappingMode)
+                : Task.FromResult(connection.LoadDefinitionFromJson(filename, createdCallback: callback, commandTimeout: 17, traceKey: "load-test", trace: trace, transaction: transaction, schemaMappingMode: schemaMappingMode));
+            if (format == "xml") return asynchronous ? connection.LoadDefinitionFromXmlAsync(filename, createdCallback: callback, commandTimeout: 17, traceKey: "load-test", trace: trace, transaction: transaction, schemaMappingMode: schemaMappingMode)
+                : Task.FromResult(connection.LoadDefinitionFromXml(filename, createdCallback: callback, commandTimeout: 17, traceKey: "load-test", trace: trace, transaction: transaction, schemaMappingMode: schemaMappingMode));
+            return asynchronous ? connection.LoadDefinitionFromYamlAsync(filename, createdCallback: callback, commandTimeout: 17, traceKey: "load-test", trace: trace, transaction: transaction, schemaMappingMode: schemaMappingMode)
+                : Task.FromResult(connection.LoadDefinitionFromYaml(filename, createdCallback: callback, commandTimeout: 17, traceKey: "load-test", trace: trace, transaction: transaction, schemaMappingMode: schemaMappingMode));
         }
 
         private sealed class RecordingTrace : ITrace
