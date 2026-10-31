@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
@@ -21,8 +22,8 @@ namespace RepoDb.UnitTests.CustomObjects
     {
         #region Private Variables
 
-        private static readonly IDictionary<string, Func<CustomTracedDbConnection, ITrace, bool, Task<object>>> _operations =
-            new Dictionary<string, Func<CustomTracedDbConnection, ITrace, bool, Task<object>>>(StringComparer.Ordinal)
+        private static readonly IDictionary<string, Func<CustomTracedDbConnection, ITrace, bool, CancellationToken, Task<object>>> _operations =
+            new Dictionary<string, Func<CustomTracedDbConnection, ITrace, bool, CancellationToken, Task<object>>>(StringComparer.Ordinal)
             {
                 ["Average"] = ExecuteAverageAsync,
                 ["AverageAll"] = ExecuteAverageAllAsync,
@@ -67,16 +68,19 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="operation">The operation name.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         public static Task<object> ExecuteAsync(CustomTracedDbConnection connection,
             ITrace trace,
             string operation,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => _operations.TryGetValue(operation,
                 out var execute)
                 ? execute(connection,
                     trace,
-                    asynchronous)
+                    asynchronous,
+                    cancellationToken)
                 : throw new ArgumentOutOfRangeException(nameof(operation));
 
         #endregion
@@ -89,14 +93,17 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteAverageAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.AverageAsync<OperationTraceEntity>(field: item => item.Id,
                     where: (QueryGroup)null,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.Average<OperationTraceEntity>(field: item => item.Id,
                     where: (QueryGroup)null,
                     trace: trace);
@@ -107,13 +114,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteAverageAllAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.AverageAllAsync<OperationTraceEntity>(field: item => item.Id,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.AverageAll<OperationTraceEntity>(field: item => item.Id,
                     trace: trace);
 
@@ -123,15 +133,18 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteBatchQueryAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.BatchQueryAsync<OperationTraceEntity>(0,
                 10,
                     orderBy: new[] { new OrderField("Id", Order.Ascending) },
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.BatchQuery<OperationTraceEntity>(0,
                 10,
                     orderBy: new[] { new OrderField("Id", Order.Ascending) },
@@ -143,13 +156,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteCountAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.CountAsync<OperationTraceEntity>(where: (QueryGroup)null,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.Count<OperationTraceEntity>(where: (QueryGroup)null,
                     trace: trace);
 
@@ -159,12 +175,15 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteCountAllAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
-                ? await connection.CountAllAsync<OperationTraceEntity>(trace: trace).ConfigureAwait(false)
+                ? await connection.CountAllAsync<OperationTraceEntity>(trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.CountAll<OperationTraceEntity>(trace: trace);
 
         /// <summary>
@@ -173,13 +192,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteDeleteAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.DeleteAsync<OperationTraceEntity>(where: (QueryGroup)null,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.Delete<OperationTraceEntity>(where: (QueryGroup)null,
                     trace: trace);
 
@@ -189,12 +211,15 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteDeleteAllAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
-                ? await connection.DeleteAllAsync<OperationTraceEntity>(trace: trace).ConfigureAwait(false)
+                ? await connection.DeleteAllAsync<OperationTraceEntity>(trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.DeleteAll<OperationTraceEntity>(trace: trace);
 
         /// <summary>
@@ -203,13 +228,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteExistsAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.ExistsAsync<OperationTraceEntity>(where: (QueryGroup)null,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.Exists<OperationTraceEntity>(where: (QueryGroup)null,
                     trace: trace);
 
@@ -219,13 +247,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteInsertAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.InsertAsync(new OperationTraceEntity { Id = 1, Name = "Test" },
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.Insert(new OperationTraceEntity { Id = 1, Name = "Test" },
                     trace: trace);
 
@@ -235,14 +266,17 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteInsertAllAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.InsertAllAsync(new[] { new OperationTraceEntity { Id = 1, Name = "Test" }, new OperationTraceEntity { Id = 1, Name = "Test" } },
                     batchSize: 1,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.InsertAll(new[] { new OperationTraceEntity { Id = 1, Name = "Test" }, new OperationTraceEntity { Id = 1, Name = "Test" } },
                     batchSize: 1,
                     trace: trace);
@@ -253,14 +287,17 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteInsertAllBatchAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.InsertAllAsync(new[] { new OperationTraceEntity { Id = 1, Name = "Test" }, new OperationTraceEntity { Id = 1, Name = "Test" } },
                     batchSize: 2,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.InsertAll(new[] { new OperationTraceEntity { Id = 1, Name = "Test" }, new OperationTraceEntity { Id = 1, Name = "Test" } },
                     batchSize: 2,
                     trace: trace);
@@ -271,14 +308,17 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteMaxAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.MaxAsync<OperationTraceEntity>(field: item => item.Id,
                     where: (QueryGroup)null,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.Max<OperationTraceEntity>(field: item => item.Id,
                     where: (QueryGroup)null,
                     trace: trace);
@@ -289,13 +329,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteMaxAllAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.MaxAllAsync<OperationTraceEntity>(field: item => item.Id,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.MaxAll<OperationTraceEntity>(field: item => item.Id,
                     trace: trace);
 
@@ -305,13 +348,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteMergeAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.MergeAsync(new OperationTraceEntity { Id = 1, Name = "Test" },
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.Merge(new OperationTraceEntity { Id = 1, Name = "Test" },
                     trace: trace);
 
@@ -321,14 +367,17 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteMergeAllAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.MergeAllAsync(new[] { new OperationTraceEntity { Id = 1, Name = "Test" }, new OperationTraceEntity { Id = 1, Name = "Test" } },
                     batchSize: 1,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.MergeAll(new[] { new OperationTraceEntity { Id = 1, Name = "Test" }, new OperationTraceEntity { Id = 1, Name = "Test" } },
                     batchSize: 1,
                     trace: trace);
@@ -339,14 +388,17 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteMergeAllBatchAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.MergeAllAsync(new[] { new OperationTraceEntity { Id = 1, Name = "Test" }, new OperationTraceEntity { Id = 1, Name = "Test" } },
                     batchSize: 2,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.MergeAll(new[] { new OperationTraceEntity { Id = 1, Name = "Test" }, new OperationTraceEntity { Id = 1, Name = "Test" } },
                     batchSize: 2,
                     trace: trace);
@@ -357,14 +409,17 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteMinAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.MinAsync<OperationTraceEntity>(field: item => item.Id,
                     where: (QueryGroup)null,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.Min<OperationTraceEntity>(field: item => item.Id,
                     where: (QueryGroup)null,
                     trace: trace);
@@ -375,13 +430,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteMinAllAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.MinAllAsync<OperationTraceEntity>(field: item => item.Id,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.MinAll<OperationTraceEntity>(field: item => item.Id,
                     trace: trace);
 
@@ -391,13 +449,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteQueryAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.QueryAsync<OperationTraceEntity>(where: (QueryGroup)null,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.Query<OperationTraceEntity>(where: (QueryGroup)null,
                     trace: trace);
 
@@ -407,12 +468,15 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteQueryAllAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
-                ? await connection.QueryAllAsync<OperationTraceEntity>(trace: trace).ConfigureAwait(false)
+                ? await connection.QueryAllAsync<OperationTraceEntity>(trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.QueryAll<OperationTraceEntity>(trace: trace);
 
         /// <summary>
@@ -421,13 +485,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteQueryFirstAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.QueryFirstAsync<OperationTraceEntity>(where: (QueryGroup)null,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.QueryFirst<OperationTraceEntity>(where: (QueryGroup)null,
                     trace: trace);
 
@@ -437,14 +504,17 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteQueryMultipleAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.QueryMultipleAsync<OperationTraceEntity, OperationTraceEntity>(what1: (object)null,
                     what2: (object)null,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.QueryMultiple<OperationTraceEntity, OperationTraceEntity>(what1: (object)null,
                     what2: (object)null,
                     trace: trace);
@@ -455,13 +525,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteQuerySingleAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.QuerySingleAsync<OperationTraceEntity>(where: (QueryGroup)null,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.QuerySingle<OperationTraceEntity>(where: (QueryGroup)null,
                     trace: trace);
 
@@ -471,15 +544,18 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteSkipQueryAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.SkipQueryAsync<OperationTraceEntity>(0,
                 10,
                     orderBy: new[] { new OrderField("Id", Order.Ascending) },
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.SkipQuery<OperationTraceEntity>(0,
                 10,
                     orderBy: new[] { new OrderField("Id", Order.Ascending) },
@@ -491,14 +567,17 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteSumAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.SumAsync<OperationTraceEntity>(field: item => item.Id,
                     where: (QueryGroup)null,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.Sum<OperationTraceEntity>(field: item => item.Id,
                     where: (QueryGroup)null,
                     trace: trace);
@@ -509,13 +588,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteSumAllAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.SumAllAsync<OperationTraceEntity>(field: item => item.Id,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.SumAll<OperationTraceEntity>(field: item => item.Id,
                     trace: trace);
 
@@ -525,12 +607,15 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteTruncateAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
-                ? await connection.TruncateAsync<OperationTraceEntity>(trace: trace).ConfigureAwait(false)
+                ? await connection.TruncateAsync<OperationTraceEntity>(trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.Truncate<OperationTraceEntity>(trace: trace);
 
         /// <summary>
@@ -539,13 +624,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteUpdateAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.UpdateAsync(new OperationTraceEntity { Id = 1, Name = "Test" },
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.Update(new OperationTraceEntity { Id = 1, Name = "Test" },
                     trace: trace);
 
@@ -555,14 +643,17 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteUpdateAllAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.UpdateAllAsync(new[] { new OperationTraceEntity { Id = 1, Name = "Test" }, new OperationTraceEntity { Id = 1, Name = "Test" } },
                     batchSize: 1,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.UpdateAll(new[] { new OperationTraceEntity { Id = 1, Name = "Test" }, new OperationTraceEntity { Id = 1, Name = "Test" } },
                     batchSize: 1,
                     trace: trace);
@@ -573,14 +664,17 @@ namespace RepoDb.UnitTests.CustomObjects
         /// <param name="connection">The configured test connection.</param>
         /// <param name="trace">The trace receiving notifications.</param>
         /// <param name="asynchronous">Whether to use the asynchronous API.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
         /// <returns>The operation result.</returns>
         private static async Task<object> ExecuteUpdateAllBatchAsync(CustomTracedDbConnection connection,
             ITrace trace,
-            bool asynchronous)
+            bool asynchronous,
+            CancellationToken cancellationToken = default)
             => asynchronous
                 ? await connection.UpdateAllAsync(new[] { new OperationTraceEntity { Id = 1, Name = "Test" }, new OperationTraceEntity { Id = 1, Name = "Test" } },
                     batchSize: 2,
-                    trace: trace).ConfigureAwait(false)
+                    trace: trace,
+                    cancellationToken: cancellationToken).ConfigureAwait(false)
                 : connection.UpdateAll(new[] { new OperationTraceEntity { Id = 1, Name = "Test" }, new OperationTraceEntity { Id = 1, Name = "Test" } },
                     batchSize: 2,
                     trace: trace);

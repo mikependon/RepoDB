@@ -29,6 +29,16 @@ namespace RepoDb.UnitTests.CustomObjects
         public List<object> AfterLogs { get; } = new List<object>();
 
         /// <summary>
+        /// Gets the starting logs referenced by the completion notifications.
+        /// </summary>
+        public IList<CancellableTraceLog> AfterBeforeLogs { get; } = new List<CancellableTraceLog>();
+
+        /// <summary>
+        /// Gets the measured command durations reported by the completion notifications.
+        /// </summary>
+        public IList<TimeSpan> AfterExecutionTimes { get; } = new List<TimeSpan>();
+
+        /// <summary>
         /// Gets the errors of the logs that were received after an execution, in the order that they were received (<c>null</c> for an execution that succeeded).
         /// </summary>
         public List<Exception> AfterErrors { get; } = new List<Exception>();
@@ -143,6 +153,8 @@ namespace RepoDb.UnitTests.CustomObjects
         private void Record<TResult>(ResultTraceLog<TResult> log)
         {
             AfterLogs.Add(log);
+            AfterBeforeLogs.Add(log.BeforeExecutionLog);
+            AfterExecutionTimes.Add(log.ExecutionTime);
             AfterErrors.Add(log.Error);
             AfterLevels.Add(log.Level);
             AfterResults.Add(log.Result);
