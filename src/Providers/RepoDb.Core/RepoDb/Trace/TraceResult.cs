@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics;
 
 namespace RepoDb
 {
@@ -22,8 +23,21 @@ namespace RepoDb
     /// <param name="log"></param>
     internal class TraceResult(CancellableTraceLog log)
     {
+        #region Private Variables
+
+        /// <summary>
+        /// Measures the length of the execution.
+        /// </summary>
+        private readonly Stopwatch _watch = Stopwatch.StartNew();
+
+        #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets the length of the execution so far. It is measured with a stopwatch, so it does not depend on the clock.
+        /// </summary>
+        public TimeSpan Elapsed => _watch.Elapsed;
 
         /// <summary>
         /// 
@@ -55,7 +69,10 @@ namespace RepoDb
         {
             return new TraceResult(
                 new CancellableTraceLog(Guid.NewGuid(),
-                    key, command.CommandText, GetParameters(command)));
+                    key,
+                    command.CommandText,
+                    GetParameters(command),
+                    TraceContext.Capture(command)));
         }
 
         /// <summary>

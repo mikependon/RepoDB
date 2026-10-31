@@ -193,5 +193,30 @@ namespace RepoDb.Telemetry.Core.UnitTests.Models
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
         }
+
+        [TestMethod]
+        public void TestTelemetryItemIpAddressProperty()
+        {
+            // Act
+            var item = new TelemetryItem
+            {
+                IpAddress = "10.0.0.7"
+            };
+            var actual = item.IpAddress;
+            var expected = "10.0.0.7";
+
+            // Assert
+            Assert.AreEqual(expected, actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestTelemetryItemIpAddressIsNotSetByDefault()
+        {
+            // Act
+            var item = new TelemetryItem();
+
+            // Assert
+            Assert.IsNull(item.IpAddress);
+        }
     }
 }

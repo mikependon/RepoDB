@@ -150,7 +150,7 @@ namespace RepoDb
             int? batchSize = null,
             SqlTransaction? transaction = null,
             ITrace? trace = null,
-            string? traceKey = null)
+            string? traceKey = SqlServerTraceKeys.SqlServerBulkInsert)
         {
             return BulkInsertInternal(connection: connection,
                 tableName: tableName,
@@ -396,7 +396,7 @@ namespace RepoDb
             int? batchSize = null,
             SqlTransaction? transaction = null,
             ITrace? trace = null,
-            string? traceKey = null,
+            string? traceKey = SqlServerTraceKeys.SqlServerBulkInsert,
             CancellationToken cancellationToken = default)
         {
             return BulkInsertAsyncInternal(connection: connection,

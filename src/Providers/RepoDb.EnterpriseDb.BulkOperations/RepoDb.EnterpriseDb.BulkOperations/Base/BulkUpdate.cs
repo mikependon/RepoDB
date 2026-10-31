@@ -32,7 +32,7 @@ namespace RepoDb
         #region BulkUpdateBase<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -60,53 +60,79 @@ namespace RepoDb
             EDBTransaction transaction = null)
             where TEntity : class
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
-
-            // Identify the columns
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-            var identityField = dbFields.GetIdentity()?.AsField();
-
-            // Skip if there's nothing to update
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = EDBText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                EDBExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                EDBExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
-                EDBExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
-                result = EDBExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
+                // Identify the columns
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                var identityField = dbFields.GetIdentity()?.AsField();
+
+                // Skip if there's nothing to update
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = EDBText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    EDBExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    EDBExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                    EDBExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
+                    result = EDBExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        EDBExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                EDBExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -114,7 +140,7 @@ namespace RepoDb
         #region BulkUpdateBase<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -142,57 +168,83 @@ namespace RepoDb
             string traceKey = EDBTraceKeys.EDBBulkUpdate,
             EDBTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
-
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-            var identityField = dbFields.GetIdentity()?.AsField();
-
-            // Skip if there's nothing to update
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = EDBText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                EDBExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                EDBExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
-                EDBExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
-                result = EDBExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
+
+                // Identify the columns
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                var identityField = dbFields.GetIdentity()?.AsField();
+
+                // Skip if there's nothing to update
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = EDBText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    EDBExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    EDBExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                    EDBExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+                    result = EDBExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        EDBExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                EDBExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -200,7 +252,7 @@ namespace RepoDb
         #region BulkUpdateBase<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -226,52 +278,78 @@ namespace RepoDb
             string traceKey = EDBTraceKeys.EDBBulkUpdate,
             EDBTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
-
-            // Identify the columns
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-            var identityField = dbFields.GetIdentity()?.AsField();
-
-            // Skip if there's nothing to update
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = EDBText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                EDBExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                EDBExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
-                EDBExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize);
-                result = EDBExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
+                // Identify the columns
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                var identityField = dbFields.GetIdentity()?.AsField();
+
+                // Skip if there's nothing to update
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+                var pseudoTableName = EDBText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    EDBExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    EDBExecution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                    EDBExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize);
+                    result = EDBExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        EDBExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                EDBExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -283,7 +361,7 @@ namespace RepoDb
         #region BulkUpdateBaseAsync<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -313,53 +391,80 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
-
-            // Identify the columns
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-            var identityField = dbFields.GetIdentity()?.AsField();
-
-            // Skip if there's nothing to update
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = EDBText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                await EDBExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await EDBExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await EDBExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
-                result = await EDBExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+
+                // Identify the columns
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                var identityField = dbFields.GetIdentity()?.AsField();
+
+                // Skip if there's nothing to update
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = EDBText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    await EDBExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await EDBExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await EDBExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                    result = await EDBExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await EDBExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await EDBExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -367,7 +472,7 @@ namespace RepoDb
         #region BulkUpdateBaseAsync<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -397,57 +502,84 @@ namespace RepoDb
             EDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
-
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-            var identityField = dbFields.GetIdentity()?.AsField();
-
-            // Skip if there's nothing to update
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = EDBText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                await EDBExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await EDBExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await EDBExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
-                result = await EDBExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
+
+                // Identify the columns
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                var identityField = dbFields.GetIdentity()?.AsField();
+
+                // Skip if there's nothing to update
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = EDBText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    await EDBExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await EDBExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await EDBExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                    result = await EDBExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await EDBExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await EDBExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -455,7 +587,7 @@ namespace RepoDb
         #region BulkUpdateBaseAsync<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -483,52 +615,79 @@ namespace RepoDb
             EDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
-
-            // Identify the columns
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-            var identityField = dbFields.GetIdentity()?.AsField();
-
-            // Skip if there's nothing to update
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = EDBText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                await EDBExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await EDBExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await EDBExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
-                result = await EDBExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
+                // Identify the columns
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                var identityField = dbFields.GetIdentity()?.AsField();
+
+                // Skip if there's nothing to update
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+                var pseudoTableName = EDBText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    await EDBExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await EDBExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await EDBExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                    result = await EDBExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await EDBExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await EDBExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -538,7 +697,7 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="fields"></param>
         /// <param name="qualifiers"></param>

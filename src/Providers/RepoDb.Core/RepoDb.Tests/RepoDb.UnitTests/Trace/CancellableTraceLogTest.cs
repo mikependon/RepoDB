@@ -1711,7 +1711,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -1728,7 +1728,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1748,7 +1748,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -1765,7 +1765,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1785,7 +1785,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -1802,7 +1802,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1822,7 +1822,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -1839,7 +1839,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1859,7 +1859,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -1876,7 +1876,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1896,7 +1896,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -1913,7 +1913,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1936,7 +1936,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
 
@@ -1955,7 +1955,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1976,7 +1976,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -1994,7 +1994,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2018,7 +2018,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2035,7 +2035,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2055,7 +2055,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2072,7 +2072,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2099,7 +2099,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2122,7 +2122,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2146,7 +2146,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2163,7 +2163,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2183,7 +2183,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2200,7 +2200,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2223,7 +2223,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2239,7 +2239,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2258,7 +2258,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2274,7 +2274,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2298,7 +2298,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2318,7 +2318,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2338,7 +2338,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2358,7 +2358,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2381,7 +2381,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2397,7 +2397,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2416,7 +2416,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2432,7 +2432,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2456,7 +2456,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2473,7 +2473,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2493,7 +2493,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2510,7 +2510,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2535,7 +2535,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2552,7 +2552,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2573,7 +2573,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2590,7 +2590,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2614,7 +2614,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2632,7 +2632,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2652,7 +2652,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2670,7 +2670,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2695,7 +2695,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2713,7 +2713,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2734,7 +2734,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2752,7 +2752,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2776,7 +2776,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2793,7 +2793,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2813,7 +2813,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2830,7 +2830,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2855,7 +2855,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2872,7 +2872,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2893,7 +2893,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2910,7 +2910,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2935,7 +2935,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2952,7 +2952,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2973,7 +2973,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -2990,7 +2990,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3015,7 +3015,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3033,7 +3033,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3054,7 +3054,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3072,7 +3072,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3096,7 +3096,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3113,7 +3113,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3133,7 +3133,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3150,7 +3150,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3174,7 +3174,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3194,7 +3194,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3218,7 +3218,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3238,7 +3238,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3262,7 +3262,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3282,7 +3282,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3305,7 +3305,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3324,7 +3324,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3351,7 +3351,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3373,7 +3373,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3396,7 +3396,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3420,7 +3420,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3445,7 +3445,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3471,7 +3471,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3496,7 +3496,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3518,7 +3518,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3541,7 +3541,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3565,7 +3565,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3590,7 +3590,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3616,7 +3616,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3643,7 +3643,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3661,7 +3661,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3682,7 +3682,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3700,7 +3700,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3724,7 +3724,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3741,7 +3741,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3761,7 +3761,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3778,7 +3778,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3801,7 +3801,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3817,7 +3817,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3836,7 +3836,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3852,7 +3852,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3882,7 +3882,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3906,7 +3906,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3932,7 +3932,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3956,7 +3956,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3981,7 +3981,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -3998,7 +3998,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -4019,7 +4019,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
@@ -4036,7 +4036,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
-            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
+            Assert.AreEqual(1, trace.AfterExecutionInvocationCount);
         }
 
         #endregion

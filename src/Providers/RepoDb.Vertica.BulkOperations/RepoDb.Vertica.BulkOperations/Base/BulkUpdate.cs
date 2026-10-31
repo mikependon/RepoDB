@@ -30,7 +30,7 @@ namespace RepoDb
         #region BulkUpdateBase<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -58,43 +58,73 @@ namespace RepoDb
             VerticaTransaction transaction = null)
             where TEntity : class
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
-
-            var entityList = entities.AsList();
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
-            var identityField = dbFields.GetIdentity()?.AsField();
-
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = VerticaText.CreatePseudoTableName("U");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                VerticaExecution.CreatePseudoTable(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
 
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : stagingFields;
-                using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                WriteToServerInternal(connection, pseudoTableName, entityTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
-                result = VerticaExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
+                var entityList = entities.AsList();
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
+                var identityField = dbFields.GetIdentity()?.AsField();
+
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = VerticaText.CreatePseudoTableName("U");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    VerticaExecution.CreatePseudoTable(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : stagingFields;
+                    using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                    WriteToServerInternal(connection, pseudoTableName, entityTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
+                    result = VerticaExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        VerticaExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                VerticaExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            Tracer.InvokeAfterExecution(traceResult, trace, result);
-            return result;
         }
 
         #endregion
@@ -102,7 +132,7 @@ namespace RepoDb
         #region BulkUpdateBase<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -130,44 +160,74 @@ namespace RepoDb
             string traceKey = VerticaTraceKeys.VerticaBulkUpdate,
             VerticaTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
-
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
-            var identityField = dbFields.GetIdentity()?.AsField();
-
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = VerticaText.CreatePseudoTableName("U");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                VerticaExecution.CreatePseudoTable(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction);
-                result = VerticaExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
+
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
+                var identityField = dbFields.GetIdentity()?.AsField();
+
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = VerticaText.CreatePseudoTableName("U");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    VerticaExecution.CreatePseudoTable(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction);
+                    result = VerticaExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        VerticaExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                VerticaExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            Tracer.InvokeAfterExecution(traceResult, trace, result);
-            return result;
         }
 
         #endregion
@@ -175,7 +235,7 @@ namespace RepoDb
         #region BulkUpdateBase<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -201,39 +261,69 @@ namespace RepoDb
             string traceKey = VerticaTraceKeys.VerticaBulkUpdate,
             VerticaTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
-
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
-            var identityField = dbFields.GetIdentity()?.AsField();
-
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = VerticaText.CreatePseudoTableName("U");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                VerticaExecution.CreatePseudoTable(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList(), bulkCopyTimeout, batchSize, transaction);
-                result = VerticaExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
+                var identityField = dbFields.GetIdentity()?.AsField();
+
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = VerticaText.CreatePseudoTableName("U");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    VerticaExecution.CreatePseudoTable(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList(), bulkCopyTimeout, batchSize, transaction);
+                    result = VerticaExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        VerticaExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                VerticaExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            Tracer.InvokeAfterExecution(traceResult, trace, result);
-            return result;
         }
 
         #endregion
@@ -245,7 +335,7 @@ namespace RepoDb
         #region BulkUpdateBaseAsync<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -275,43 +365,74 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
-
-            var entityList = entities.AsList();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
-            var identityField = dbFields.GetIdentity()?.AsField();
-
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = VerticaText.CreatePseudoTableName("U");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
 
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : stagingFields;
-                using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                var entityList = entities.AsList();
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
+                var identityField = dbFields.GetIdentity()?.AsField();
+
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = VerticaText.CreatePseudoTableName("U");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+                traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : stagingFields;
+                    using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-            return result;
         }
 
         #endregion
@@ -319,7 +440,7 @@ namespace RepoDb
         #region BulkUpdateBaseAsync<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -349,44 +470,75 @@ namespace RepoDb
             VerticaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
-
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
-            var identityField = dbFields.GetIdentity()?.AsField();
-
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = VerticaText.CreatePseudoTableName("U");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
-                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
+
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
+                var identityField = dbFields.GetIdentity()?.AsField();
+
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = VerticaText.CreatePseudoTableName("U");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+                traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
+                    result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-            return result;
         }
 
         #endregion
@@ -394,7 +546,7 @@ namespace RepoDb
         #region BulkUpdateBaseAsync<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -422,39 +574,70 @@ namespace RepoDb
             VerticaTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
-
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
-            var identityField = dbFields.GetIdentity()?.AsField();
-
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = VerticaText.CreatePseudoTableName("U");
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
-                result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields).AsList();
+                var identityField = dbFields.GetIdentity()?.AsField();
+
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = VerticaText.CreatePseudoTableName("U");
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+                traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    await VerticaExecution.CreatePseudoTableAsync(connection, pseudoTableName, stagingFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
+                    result = await VerticaExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                await VerticaExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-            return result;
         }
 
         #endregion

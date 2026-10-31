@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Data;
@@ -90,96 +91,123 @@ namespace RepoDb
             ITrace? trace = null,
             string? traceKey = null)
         {
-            // Validate
-            if (primaryKeys?.Any() != true)
-            {
-                return default;
-            }
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            // Variables
-            var dbSetting = connection.GetDbSetting();
-            var hasTransaction = transaction != null;
-            int result;
-
-            transaction = CreateOrValidateCurrentTransaction(connection, transaction);
-            var tempTableName = CreateBulkDeleteTempTableName(tableName, pseudoTableType == SqlServerBulkImportPseudoTableType.Physical, dbSetting);
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Get the DB Fields
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
-
-                // Variables needed
-                var primaryDbField = dbFields?.GetPrimary();
-                var identityDbField = dbFields?.GetIdentity();
-                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
-
-                // Throw an error if there are is no primary key
-                if (primaryOrIdentityDbField == null)
+                // Validate
+                if (primaryKeys?.Any() != true)
                 {
-                    throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
+                    return default;
                 }
 
-                // Create the temporary table and its qualifier index (index must exist before the data load)
-                var primaryOrIdentityField = primaryOrIdentityDbField.AsField();
-                CreateTemporaryTableWithIndex(connection, tableName, tempTableName, primaryOrIdentityField.AsEnumerable(), primaryOrIdentityField.AsEnumerable(), dbSetting, false, transaction, trace);
+                using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
 
-                // Do the bulk insertion first
-                using (var table = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                 {
-                    options |= primaryOrIdentityDbField.IsIdentity == true ?
-                        Compiler.GetEnumFunc<SqlBulkCopyOptions>("KeepIdentity")() : default;
-                    var mappings = new[] { new SqlServerBulkInsertMapItem(primaryOrIdentityField.Name, primaryOrIdentityField.Name) };
-
-                    // WriteToServer
-                    WriteToServerInternal(connection,
-                       tempTableName,
-                       table,
-                       null,
-                       mappings,
-                       options,
-                       bulkCopyTimeout,
-                       batchSize,
-                       false,
-                       transaction);
+                    return default;
                 }
 
-                // Delete the actual delete
-                var sql = GetBulkDeleteSqlText(tableName,
-                    tempTableName,
-                    primaryOrIdentityField.AsEnumerable(),
-                    hints,
-                    dbSetting);
-                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkDelete);
+                // Variables
+                var dbSetting = connection.GetDbSetting();
+                var hasTransaction = transaction != null;
 
-                // Drop the table after used
-                sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
+                transaction = CreateOrValidateCurrentTransaction(connection, transaction);
+                var tempTableName = CreateBulkDeleteTempTableName(tableName, pseudoTableType == SqlServerBulkImportPseudoTableType.Physical, dbSetting);
 
-                CommitTransaction(transaction, hasTransaction);
+                try
+                {
+                    // Get the DB Fields
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
+
+                    // Variables needed
+                    var primaryDbField = dbFields?.GetPrimary();
+                    var identityDbField = dbFields?.GetIdentity();
+                    var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
+
+                    // Throw an error if there are is no primary key
+                    if (primaryOrIdentityDbField == null)
+                    {
+                        throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
+                    }
+
+                    // Create the temporary table and its qualifier index (index must exist before the data load)
+                    var primaryOrIdentityField = primaryOrIdentityDbField.AsField();
+                    CreateTemporaryTableWithIndex(connection, tableName, tempTableName, primaryOrIdentityField.AsEnumerable(), primaryOrIdentityField.AsEnumerable(), dbSetting, false, transaction, trace);
+
+                    // Do the bulk insertion first
+                    using (var table = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
+                    {
+                        options |= primaryOrIdentityDbField.IsIdentity == true ?
+                            Compiler.GetEnumFunc<SqlBulkCopyOptions>("KeepIdentity")() : default;
+                        var mappings = new[] { new SqlServerBulkInsertMapItem(primaryOrIdentityField.Name, primaryOrIdentityField.Name) };
+
+                        // WriteToServer
+                        WriteToServerInternal(connection,
+                           tempTableName,
+                           table,
+                           null,
+                           mappings,
+                           options,
+                           bulkCopyTimeout,
+                           batchSize,
+                           false,
+                           transaction);
+                    }
+
+                    // Delete the actual delete
+                    var sql = GetBulkDeleteSqlText(tableName,
+                        tempTableName,
+                        primaryOrIdentityField.AsEnumerable(),
+                        hints,
+                        dbSetting);
+                    result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkDelete);
+
+                    // Drop the table after used
+                    sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
+                    connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
+
+                    CommitTransaction(transaction, hasTransaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    Tracer.Cleanup(() =>
+                    {
+                        RollbackTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        DisposeTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
+                }
+
+                // Return the result
+                return result;
             }
-            catch
+            catch (Exception exception)
             {
-                RollbackTransaction(transaction, hasTransaction);
+                executionError ??= exception;
                 throw;
             }
             finally
             {
-                DisposeTransaction(transaction, hasTransaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            // Return the result
-            return result;
         }
 
         #endregion
@@ -257,97 +285,125 @@ namespace RepoDb
             string? traceKey = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate
-            if (primaryKeys?.Any() != true)
-            {
-                return default;
-            }
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            // Variables
-            var dbSetting = connection.GetDbSetting();
-            var hasTransaction = transaction != null;
-            int result;
-
-            transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
-            var tempTableName = CreateBulkDeleteTempTableName(tableName, pseudoTableType == SqlServerBulkImportPseudoTableType.Physical, dbSetting);
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken).ConfigureAwait(false);
-
-                // Variables needed
-                var primaryDbField = dbFields?.GetPrimary();
-                var identityDbField = dbFields?.GetIdentity();
-                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
-
-                // Throw an error if there are is no primary key
-                if (primaryOrIdentityDbField == null)
+                // Validate
+                if (primaryKeys?.Any() != true)
                 {
-                    throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
+                    return default;
                 }
 
-                // Create the temporary table and its qualifier index (index must exist before the data load)
-                var primaryOrIdentityField = primaryOrIdentityDbField.AsField();
-                await CreateTemporaryTableWithIndexAsync(connection, tableName, tempTableName, primaryOrIdentityField.AsEnumerable(), primaryOrIdentityField.AsEnumerable(), dbSetting, false, transaction, trace, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
 
-                // Do the bulk insertion first
-                using (var table = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                 {
-                    options |= primaryOrIdentityDbField.IsIdentity == true ?
-                        Compiler.GetEnumFunc<SqlBulkCopyOptions>("KeepIdentity")() : default;
-                    var mappings = new[] { new SqlServerBulkInsertMapItem(primaryOrIdentityField.Name, primaryOrIdentityField.Name) };
-
-                    // WriteToServer
-                    await WriteToServerAsyncInternal(connection,
-                       tempTableName,
-                       table,
-                       null,
-                       mappings,
-                       options,
-                       bulkCopyTimeout,
-                       batchSize,
-                       false,
-                       transaction,
-                       cancellationToken).ConfigureAwait(false);
+                    return default;
                 }
 
-                // Delete the actual delete
-                var sql = GetBulkDeleteSqlText(tableName,
-                    tempTableName,
-                    primaryOrIdentityField.AsEnumerable(),
-                    hints,
-                    dbSetting);
-                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkDelete, cancellationToken: cancellationToken).ConfigureAwait(false);
+                // Variables
+                var dbSetting = connection.GetDbSetting();
+                var hasTransaction = transaction != null;
 
-                // Drop the table after used
-                sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
+                transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
+                var tempTableName = CreateBulkDeleteTempTableName(tableName, pseudoTableType == SqlServerBulkImportPseudoTableType.Physical, dbSetting);
 
-                CommitTransaction(transaction, hasTransaction);
+                try
+                {
+                    // Get the DB Fields
+                    var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken).ConfigureAwait(false);
+
+                    // Variables needed
+                    var primaryDbField = dbFields?.GetPrimary();
+                    var identityDbField = dbFields?.GetIdentity();
+                    var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
+
+                    // Throw an error if there are is no primary key
+                    if (primaryOrIdentityDbField == null)
+                    {
+                        throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
+                    }
+
+                    // Create the temporary table and its qualifier index (index must exist before the data load)
+                    var primaryOrIdentityField = primaryOrIdentityDbField.AsField();
+                    await CreateTemporaryTableWithIndexAsync(connection, tableName, tempTableName, primaryOrIdentityField.AsEnumerable(), primaryOrIdentityField.AsEnumerable(), dbSetting, false, transaction, trace, cancellationToken).ConfigureAwait(false);
+
+                    // Do the bulk insertion first
+                    using (var table = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
+                    {
+                        options |= primaryOrIdentityDbField.IsIdentity == true ?
+                            Compiler.GetEnumFunc<SqlBulkCopyOptions>("KeepIdentity")() : default;
+                        var mappings = new[] { new SqlServerBulkInsertMapItem(primaryOrIdentityField.Name, primaryOrIdentityField.Name) };
+
+                        // WriteToServer
+                        await WriteToServerAsyncInternal(connection,
+                           tempTableName,
+                           table,
+                           null,
+                           mappings,
+                           options,
+                           bulkCopyTimeout,
+                           batchSize,
+                           false,
+                           transaction,
+                           cancellationToken).ConfigureAwait(false);
+                    }
+
+                    // Delete the actual delete
+                    var sql = GetBulkDeleteSqlText(tableName,
+                        tempTableName,
+                        primaryOrIdentityField.AsEnumerable(),
+                        hints,
+                        dbSetting);
+                    result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkDelete, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    // Drop the table after used
+                    sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
+                    await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    CommitTransaction(transaction, hasTransaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    Tracer.Cleanup(() =>
+                    {
+                        RollbackTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        DisposeTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
+                }
+
+                // Return the result
+                return result;
             }
-            catch
+            catch (Exception exception)
             {
-                RollbackTransaction(transaction, hasTransaction);
+                executionError ??= exception;
                 throw;
             }
             finally
             {
-                DisposeTransaction(transaction, hasTransaction);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            // Return the result
-            return result;
         }
 
         #endregion

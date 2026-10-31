@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2019 Michael Camara Pendon.
 // Portions copyright their respective RepoDB contributors.
@@ -9526,62 +9526,76 @@ namespace RepoDb
                 var separator = connection.GetDbSetting().MultiStatementSeparator;
                 var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-                Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
+                Tuple<IEnumerable<T1>, IEnumerable<T2>> result = null;
                 TraceResult traceResult = null;
 
                 // Before Execution
                 var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                     traceResult = Tracer
-                        .InvokeBeforeExecution(traceKey, trace, command));
+                        .InvokeBeforeExecution(traceKey,
+                            trace,
+                            command));
 
                 // Actual Execution
-                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    traceKey: null,
-                    transaction: transaction,
-                    trace: null,
-                    entityType: null,
-                    dbFields: null,
-                    skipCommandArrayParametersCheck: true,
-                    beforeExecutionCallback: beforeExecutionCallback))
+                Exception executionError = null;
+                try
                 {
-                    // Silent cancellation
-                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                        commandText: commandText,
+                        param: param,
+                        commandType: commandType,
+                        commandTimeout: commandTimeout,
+                        traceKey: null,
+                        transaction: transaction,
+                        trace: null,
+                        entityType: null,
+                        dbFields: null,
+                        skipCommandArrayParametersCheck: true,
+                        beforeExecutionCallback: beforeExecutionCallback))
                     {
-                        return default;
+                        // Silent cancellation
+                        if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                        {
+                            return default;
+                        }
+
+                        // T1
+                        item1 = QueryMultipleInternal<T1>(connection,
+                            reader,
+                            item1,
+                            cacheKey1,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: false);
+
+                        // T2
+                        item2 = QueryMultipleInternal<T2>(connection,
+                            reader,
+                            item2,
+                            cacheKey2,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // Result
+                        result = Tuple.Create(item1, item2);
                     }
-
-                    // T1
-                    item1 = QueryMultipleInternal<T1>(connection,
-                        reader,
-                        item1,
-                        cacheKey1,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: false);
-
-                    // T2
-                    item2 = QueryMultipleInternal<T2>(connection,
-                        reader,
-                        item2,
-                        cacheKey2,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // Result
-                    result = Tuple.Create(item1, item2);
-
-                    // After Execution
-                    Tracer
-                        .InvokeAfterExecution(traceResult, trace, result);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.InvokeAfterExecution(traceResult,
+                        trace,
+                        result,
+                        executionError);
                 }
 
                 // Result
@@ -10305,74 +10319,87 @@ forwardToNextResult: true);
                 var separator = connection.GetDbSetting().MultiStatementSeparator;
                 var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result = null;
                 TraceResult traceResult = null;
 
                 // Before Execution
                 var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                     traceResult = Tracer
-                        .InvokeBeforeExecution(traceKey, trace, command));
+                        .InvokeBeforeExecution(traceKey,
+                            trace,
+                            command));
 
                 // Actual Execution
-                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    traceKey: null,
-                    transaction: transaction,
-                    trace: null,
-                    entityType: null,
-                    dbFields: null,
-                    skipCommandArrayParametersCheck: true,
-                    beforeExecutionCallback: beforeExecutionCallback))
+                Exception executionError = null;
+                try
                 {
-                    // Silent cancellation
-                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                        commandText: commandText,
+                        param: param,
+                        commandType: commandType,
+                        commandTimeout: commandTimeout,
+                        traceKey: null,
+                        transaction: transaction,
+                        trace: null,
+                        entityType: null,
+                        dbFields: null,
+                        skipCommandArrayParametersCheck: true,
+                        beforeExecutionCallback: beforeExecutionCallback))
                     {
-                        return default;
+                        // Silent cancellation
+                        if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                        {
+                            return default;
+                        }
+
+                        // T1
+                        item1 = QueryMultipleInternal<T1>(connection,
+                            reader,
+                            item1,
+                            cacheKey1,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: false);
+
+                        // T2
+                        item2 = QueryMultipleInternal<T2>(connection,
+                            reader,
+                            item2,
+                            cacheKey2,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T3
+                        item3 = QueryMultipleInternal<T3>(connection,
+                            reader,
+                            item3,
+                            cacheKey3,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // Result
+                        result = Tuple.Create(item1, item2, item3);
                     }
-
-                    // T1
-                    item1 = QueryMultipleInternal<T1>(connection,
-                        reader,
-                        item1,
-                        cacheKey1,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: false);
-
-                    // T2
-                    item2 = QueryMultipleInternal<T2>(connection,
-                        reader,
-                        item2,
-                        cacheKey2,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T3
-                    item3 = QueryMultipleInternal<T3>(connection,
-                        reader,
-                        item3,
-                        cacheKey3,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-
-                    // Result
-                    result = Tuple.Create(item1, item2, item3);
-
-                    // After Execution
-                    Tracer
-                        .InvokeAfterExecution(traceResult, trace, result);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.InvokeAfterExecution(traceResult,
+                        trace,
+                        result,
+                        executionError);
                 }
 
                 // Result
@@ -11280,85 +11307,98 @@ forwardToNextResult: true);
                 var separator = connection.GetDbSetting().MultiStatementSeparator;
                 var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result = null;
                 TraceResult traceResult = null;
 
                 // Before Execution
                 var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                     traceResult = Tracer
-                        .InvokeBeforeExecution(traceKey, trace, command));
+                        .InvokeBeforeExecution(traceKey,
+                            trace,
+                            command));
 
                 // Actual Execution
-                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    traceKey: null,
-                    transaction: transaction,
-                    trace: null,
-                    entityType: null,
-                    dbFields: null,
-                    skipCommandArrayParametersCheck: true,
-                    beforeExecutionCallback: beforeExecutionCallback))
+                Exception executionError = null;
+                try
                 {
-                    // Silent cancellation
-                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                        commandText: commandText,
+                        param: param,
+                        commandType: commandType,
+                        commandTimeout: commandTimeout,
+                        traceKey: null,
+                        transaction: transaction,
+                        trace: null,
+                        entityType: null,
+                        dbFields: null,
+                        skipCommandArrayParametersCheck: true,
+                        beforeExecutionCallback: beforeExecutionCallback))
                     {
-                        return default;
+                        // Silent cancellation
+                        if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                        {
+                            return default;
+                        }
+
+                        // T1
+                        item1 = QueryMultipleInternal<T1>(connection,
+                            reader,
+                            item1,
+                            cacheKey1,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: false);
+
+                        // T2
+                        item2 = QueryMultipleInternal<T2>(connection,
+                            reader,
+                            item2,
+                            cacheKey2,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T3
+                        item3 = QueryMultipleInternal<T3>(connection,
+                            reader,
+                            item3,
+                            cacheKey3,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T4
+                        item4 = QueryMultipleInternal<T4>(connection,
+                            reader,
+                            item4,
+                            cacheKey4,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // Result
+                        result = Tuple.Create(item1, item2, item3, item4);
                     }
-
-                    // T1
-                    item1 = QueryMultipleInternal<T1>(connection,
-                        reader,
-                        item1,
-                        cacheKey1,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: false);
-
-                    // T2
-                    item2 = QueryMultipleInternal<T2>(connection,
-                        reader,
-                        item2,
-                        cacheKey2,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T3
-                    item3 = QueryMultipleInternal<T3>(connection,
-                        reader,
-                        item3,
-                        cacheKey3,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-
-                    // T4
-                    item4 = QueryMultipleInternal<T4>(connection,
-                        reader,
-                        item4,
-                        cacheKey4,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // Result
-                    result = Tuple.Create(item1, item2, item3, item4);
-
-                    // After Execution
-                    Tracer
-                        .InvokeAfterExecution(traceResult, trace, result);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.InvokeAfterExecution(traceResult,
+                        trace,
+                        result,
+                        executionError);
                 }
 
                 // Result
@@ -12444,95 +12484,109 @@ forwardToNextResult: true);
                 var separator = connection.GetDbSetting().MultiStatementSeparator;
                 var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result = null;
                 TraceResult traceResult = null;
 
                 // Before Execution
                 var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                     traceResult = Tracer
-                        .InvokeBeforeExecution(traceKey, trace, command));
+                        .InvokeBeforeExecution(traceKey,
+                            trace,
+                            command));
 
                 // Actual Execution
-                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    traceKey: null,
-                    transaction: transaction,
-                    trace: null,
-                    entityType: null,
-                    dbFields: null,
-                    skipCommandArrayParametersCheck: true,
-                    beforeExecutionCallback: beforeExecutionCallback))
+                Exception executionError = null;
+                try
                 {
-                    // Silent cancellation
-                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                        commandText: commandText,
+                        param: param,
+                        commandType: commandType,
+                        commandTimeout: commandTimeout,
+                        traceKey: null,
+                        transaction: transaction,
+                        trace: null,
+                        entityType: null,
+                        dbFields: null,
+                        skipCommandArrayParametersCheck: true,
+                        beforeExecutionCallback: beforeExecutionCallback))
                     {
-                        return default;
+                        // Silent cancellation
+                        if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                        {
+                            return default;
+                        }
+
+                        // T1
+                        item1 = QueryMultipleInternal<T1>(connection,
+                            reader,
+                            item1,
+                            cacheKey1,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: false);
+
+                        // T2
+                        item2 = QueryMultipleInternal<T2>(connection,
+                            reader,
+                            item2,
+                            cacheKey2,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T3
+                        item3 = QueryMultipleInternal<T3>(connection,
+                            reader,
+                            item3,
+                            cacheKey3,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T4
+                        item4 = QueryMultipleInternal<T4>(connection,
+                            reader,
+                            item4,
+                            cacheKey4,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T5
+                        item5 = QueryMultipleInternal<T5>(connection,
+                            reader,
+                            item5,
+                            cacheKey5,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // Result
+                        result = Tuple.Create(item1, item2, item3, item4, item5);
                     }
-
-                    // T1
-                    item1 = QueryMultipleInternal<T1>(connection,
-                        reader,
-                        item1,
-                        cacheKey1,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: false);
-
-                    // T2
-                    item2 = QueryMultipleInternal<T2>(connection,
-                        reader,
-                        item2,
-                        cacheKey2,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T3
-                    item3 = QueryMultipleInternal<T3>(connection,
-                        reader,
-                        item3,
-                        cacheKey3,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T4
-                    item4 = QueryMultipleInternal<T4>(connection,
-                        reader,
-                        item4,
-                        cacheKey4,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T5
-                    item5 = QueryMultipleInternal<T5>(connection,
-                        reader,
-                        item5,
-                        cacheKey5,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // Result
-                    result = Tuple.Create(item1, item2, item3, item4, item5);
-
-                    // After Execution
-                    Tracer
-                        .InvokeAfterExecution(traceResult, trace, result);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.InvokeAfterExecution(traceResult,
+                        trace,
+                        result,
+                        executionError);
                 }
 
                 // Result
@@ -13796,106 +13850,120 @@ forwardToNextResult: true);
                 var separator = connection.GetDbSetting().MultiStatementSeparator;
                 var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result = null;
                 TraceResult traceResult = null;
 
                 // Before Execution
                 var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                     traceResult = Tracer
-                        .InvokeBeforeExecution(traceKey, trace, command));
+                        .InvokeBeforeExecution(traceKey,
+                            trace,
+                            command));
 
                 // Actual Execution
-                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    traceKey: null,
-                    transaction: transaction,
-                    trace: null,
-                    entityType: null,
-                    dbFields: null,
-                    skipCommandArrayParametersCheck: true,
-                    beforeExecutionCallback: beforeExecutionCallback))
+                Exception executionError = null;
+                try
                 {
-                    // Silent cancellation
-                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                        commandText: commandText,
+                        param: param,
+                        commandType: commandType,
+                        commandTimeout: commandTimeout,
+                        traceKey: null,
+                        transaction: transaction,
+                        trace: null,
+                        entityType: null,
+                        dbFields: null,
+                        skipCommandArrayParametersCheck: true,
+                        beforeExecutionCallback: beforeExecutionCallback))
                     {
-                        return default;
+                        // Silent cancellation
+                        if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                        {
+                            return default;
+                        }
+
+                        // T1
+                        item1 = QueryMultipleInternal<T1>(connection,
+                            reader,
+                            item1,
+                            cacheKey1,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: false);
+
+                        // T2
+                        item2 = QueryMultipleInternal<T2>(connection,
+                            reader,
+                            item2,
+                            cacheKey2,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T3
+                        item3 = QueryMultipleInternal<T3>(connection,
+                            reader,
+                            item3,
+                            cacheKey3,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T4
+                        item4 = QueryMultipleInternal<T4>(connection,
+                            reader,
+                            item4,
+                            cacheKey4,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T5
+                        item5 = QueryMultipleInternal<T5>(connection,
+                            reader,
+                            item5,
+                            cacheKey5,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T6
+                        item6 = QueryMultipleInternal<T6>(connection,
+                            reader,
+                            item6,
+                            cacheKey6,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // Result
+                        result = Tuple.Create(item1, item2, item3, item4, item5, item6);
                     }
-
-                    // T1
-                    item1 = QueryMultipleInternal<T1>(connection,
-                        reader,
-                        item1,
-                        cacheKey1,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: false);
-
-                    // T2
-                    item2 = QueryMultipleInternal<T2>(connection,
-                        reader,
-                        item2,
-                        cacheKey2,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T3
-                    item3 = QueryMultipleInternal<T3>(connection,
-                        reader,
-                        item3,
-                        cacheKey3,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T4
-                    item4 = QueryMultipleInternal<T4>(connection,
-                        reader,
-                        item4,
-                        cacheKey4,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T5
-                    item5 = QueryMultipleInternal<T5>(connection,
-                        reader,
-                        item5,
-                        cacheKey5,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T6
-                    item6 = QueryMultipleInternal<T6>(connection,
-                        reader,
-                        item6,
-                        cacheKey6,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // Result
-                    result = Tuple.Create(item1, item2, item3, item4, item5, item6);
-
-                    // After Execution
-                    Tracer
-                        .InvokeAfterExecution(traceResult, trace, result);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.InvokeAfterExecution(traceResult,
+                        trace,
+                        result,
+                        executionError);
                 }
 
                 // Result
@@ -15337,117 +15405,131 @@ forwardToNextResult: true);
                 var separator = connection.GetDbSetting().MultiStatementSeparator;
                 var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result = null;
                 TraceResult traceResult = null;
 
                 // Before Execution
                 var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                     traceResult = Tracer
-                        .InvokeBeforeExecution(traceKey, trace, command));
+                        .InvokeBeforeExecution(traceKey,
+                            trace,
+                            command));
 
                 // Actual Execution
-                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    traceKey: null,
-                    transaction: transaction,
-                    trace: null,
-                    entityType: null,
-                    dbFields: null,
-                    skipCommandArrayParametersCheck: true,
-                    beforeExecutionCallback: beforeExecutionCallback))
+                Exception executionError = null;
+                try
                 {
-                    // Silent cancellation
-                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                        commandText: commandText,
+                        param: param,
+                        commandType: commandType,
+                        commandTimeout: commandTimeout,
+                        traceKey: null,
+                        transaction: transaction,
+                        trace: null,
+                        entityType: null,
+                        dbFields: null,
+                        skipCommandArrayParametersCheck: true,
+                        beforeExecutionCallback: beforeExecutionCallback))
                     {
-                        return default;
+                        // Silent cancellation
+                        if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                        {
+                            return default;
+                        }
+
+                        // T1
+                        item1 = QueryMultipleInternal<T1>(connection,
+                            reader,
+                            item1,
+                            cacheKey1,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: false);
+
+                        // T2
+                        item2 = QueryMultipleInternal<T2>(connection,
+                            reader,
+                            item2,
+                            cacheKey2,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T3
+                        item3 = QueryMultipleInternal<T3>(connection,
+                            reader,
+                            item3,
+                            cacheKey3,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T4
+                        item4 = QueryMultipleInternal<T4>(connection,
+                            reader,
+                            item4,
+                            cacheKey4,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T5
+                        item5 = QueryMultipleInternal<T5>(connection,
+                            reader,
+                            item5,
+                            cacheKey5,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T6
+                        item6 = QueryMultipleInternal<T6>(connection,
+                            reader,
+                            item6,
+                            cacheKey6,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // T7
+                        item7 = QueryMultipleInternal<T7>(connection,
+                            reader,
+                            item7,
+                            cacheKey7,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true);
+
+                        // Result
+                        result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
                     }
-
-                    // T1
-                    item1 = QueryMultipleInternal<T1>(connection,
-                        reader,
-                        item1,
-                        cacheKey1,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: false);
-
-                    // T2
-                    item2 = QueryMultipleInternal<T2>(connection,
-                        reader,
-                        item2,
-                        cacheKey2,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T3
-                    item3 = QueryMultipleInternal<T3>(connection,
-                        reader,
-                        item3,
-                        cacheKey3,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T4
-                    item4 = QueryMultipleInternal<T4>(connection,
-                        reader,
-                        item4,
-                        cacheKey4,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T5
-                    item5 = QueryMultipleInternal<T5>(connection,
-                        reader,
-                        item5,
-                        cacheKey5,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T6
-                    item6 = QueryMultipleInternal<T6>(connection,
-                        reader,
-                        item6,
-                        cacheKey6,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // T7
-                    item7 = QueryMultipleInternal<T7>(connection,
-                        reader,
-                        item7,
-                        cacheKey7,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true);
-
-                    // Result
-                    result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
-
-                    // After Execution
-                    Tracer
-                        .InvokeAfterExecution(traceResult, trace, result);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.InvokeAfterExecution(traceResult,
+                        trace,
+                        result,
+                        executionError);
                 }
 
                 // Result
@@ -16045,65 +16127,79 @@ forwardToNextResult: true);
             var separator = connection.GetDbSetting().MultiStatementSeparator;
             var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> result = null;
             TraceResult traceResult = null;
 
             // Before Execution
             var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command));
+                    .InvokeBeforeExecution(traceKey,
+                        trace,
+                        command));
 
             // Actual Execution
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // DB setting
+                    var dbSetting = connection.GetDbSetting();
+
+                    // T1
+                    item1 = QueryMultipleInternal(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false);
+
+                    // T2
+                    item2 = QueryMultipleInternal(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // Result
+                    result = Tuple.Create(item1, item2);
                 }
-
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
-
-                // T1
-                item1 = QueryMultipleInternal(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false);
-
-                // T2
-                item2 = QueryMultipleInternal(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // Result
-                result = Tuple.Create(item1, item2);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
 
             // Result
@@ -16634,77 +16730,90 @@ forwardToNextResult: true);
             var separator = connection.GetDbSetting().MultiStatementSeparator;
             var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result = null;
             TraceResult traceResult = null;
 
             // Before Execution
             var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command));
+                    .InvokeBeforeExecution(traceKey,
+                        trace,
+                        command));
 
             // Actual Execution
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // DB setting
+                    var dbSetting = connection.GetDbSetting();
+
+                    // T1
+                    item1 = QueryMultipleInternal(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false);
+
+                    // T2
+                    item2 = QueryMultipleInternal(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T3
+                    item3 = QueryMultipleInternal(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3);
                 }
-
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
-
-                // T1
-                item1 = QueryMultipleInternal(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false);
-
-                // T2
-                item2 = QueryMultipleInternal(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // T3
-                item3 = QueryMultipleInternal(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-
-                // Result
-                result = Tuple.Create(item1, item2, item3);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
 
             // Result
@@ -17360,87 +17469,101 @@ forwardToNextResult: true);
             var separator = connection.GetDbSetting().MultiStatementSeparator;
             var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result = null;
             TraceResult traceResult = null;
 
             // Before Execution
             var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command));
+                    .InvokeBeforeExecution(traceKey,
+                        trace,
+                        command));
 
             // Actual Execution
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // DB setting
+                    var dbSetting = connection.GetDbSetting();
+
+                    // T1
+                    item1 = QueryMultipleInternal(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false);
+
+                    // T2
+                    item2 = QueryMultipleInternal(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T3
+                    item3 = QueryMultipleInternal(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T4
+                    item4 = QueryMultipleInternal(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4);
                 }
-
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
-
-                // T1
-                item1 = QueryMultipleInternal(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false);
-
-                // T2
-                item2 = QueryMultipleInternal(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // T3
-                item3 = QueryMultipleInternal(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // T4
-                item4 = QueryMultipleInternal(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // Result
-                result = Tuple.Create(item1, item2, item3, item4);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
 
             // Result
@@ -18216,99 +18339,112 @@ forwardToNextResult: true);
             var separator = connection.GetDbSetting().MultiStatementSeparator;
             var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result = null;
             TraceResult traceResult = null;
 
             // Before Execution
             var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command));
+                    .InvokeBeforeExecution(traceKey,
+                        trace,
+                        command));
 
             // Actual Execution
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // DB setting
+                    var dbSetting = connection.GetDbSetting();
+
+                    // T1
+                    item1 = QueryMultipleInternal(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false);
+
+                    // T2
+                    item2 = QueryMultipleInternal(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T3
+                    item3 = QueryMultipleInternal(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T4
+                    item4 = QueryMultipleInternal(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T5
+                    item5 = QueryMultipleInternal(connection,
+                        reader,
+                        item5,
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4, item5);
                 }
-
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
-
-                // T1
-                item1 = QueryMultipleInternal(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false);
-
-                // T2
-                item2 = QueryMultipleInternal(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // T3
-                item3 = QueryMultipleInternal(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-
-                // T4
-                item4 = QueryMultipleInternal(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // T5
-                item5 = QueryMultipleInternal(connection,
-                    reader,
-                    item5,
-                    cacheKey5,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // Result
-                result = Tuple.Create(item1, item2, item3, item4, item5);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
 
             // Result
@@ -19204,110 +19340,123 @@ forwardToNextResult: true);
             var separator = connection.GetDbSetting().MultiStatementSeparator;
             var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result = null;
             TraceResult traceResult = null;
 
             // Before Execution
             var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command));
+                    .InvokeBeforeExecution(traceKey,
+                        trace,
+                        command));
 
             // Actual Execution
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // DB setting
+                    var dbSetting = connection.GetDbSetting();
+
+                    // T1
+                    item1 = QueryMultipleInternal(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false);
+
+                    // T2
+                    item2 = QueryMultipleInternal(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T3
+                    item3 = QueryMultipleInternal(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T4
+                    item4 = QueryMultipleInternal(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T5
+                    item5 = QueryMultipleInternal(connection,
+                        reader,
+                        item5,
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T6
+                    item6 = QueryMultipleInternal(connection,
+                        reader,
+                        item6,
+                        cacheKey6,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4, item5, item6);
                 }
-
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
-
-                // T1
-                item1 = QueryMultipleInternal(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false);
-
-                // T2
-                item2 = QueryMultipleInternal(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // T3
-                item3 = QueryMultipleInternal(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-
-                // T4
-                item4 = QueryMultipleInternal(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // T5
-                item5 = QueryMultipleInternal(connection,
-                    reader,
-                    item5,
-                    cacheKey5,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // T6
-                item6 = QueryMultipleInternal(connection,
-                    reader,
-                    item6,
-                    cacheKey6,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // Result
-                result = Tuple.Create(item1, item2, item3, item4, item5, item6);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
 
             // Result
@@ -20323,121 +20472,134 @@ forwardToNextResult: true);
             var separator = connection.GetDbSetting().MultiStatementSeparator;
             var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result = null;
             TraceResult traceResult = null;
 
             // Before Execution
             var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command));
+                    .InvokeBeforeExecution(traceKey,
+                        trace,
+                        command));
 
             // Actual Execution
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // DB setting
+                    var dbSetting = connection.GetDbSetting();
+
+                    // T1
+                    item1 = QueryMultipleInternal(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false);
+
+                    // T2
+                    item2 = QueryMultipleInternal(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T3
+                    item3 = QueryMultipleInternal(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T4
+                    item4 = QueryMultipleInternal(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T5
+                    item5 = QueryMultipleInternal(connection,
+                        reader,
+                        item5,
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T6
+                    item6 = QueryMultipleInternal(connection,
+                        reader,
+                        item6,
+                        cacheKey6,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // T7
+                    item7 = QueryMultipleInternal(connection,
+                        reader,
+                        item7,
+                        cacheKey7,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
                 }
-
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
-
-                // T1
-                item1 = QueryMultipleInternal(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false);
-
-                // T2
-                item2 = QueryMultipleInternal(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // T3
-                item3 = QueryMultipleInternal(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-
-                // T4
-                item4 = QueryMultipleInternal(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // T5
-                item5 = QueryMultipleInternal(connection,
-                    reader,
-                    item5,
-                    cacheKey5,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // T6
-                item6 = QueryMultipleInternal(connection,
-                    reader,
-                    item6,
-                    cacheKey6,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // T7
-                item7 = QueryMultipleInternal(connection,
-                    reader,
-                    item7,
-                    cacheKey7,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true);
-
-                // Result
-                result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
 
             // Result
@@ -20977,65 +21139,81 @@ forwardToNextResult: true);
                 var separator = connection.GetDbSetting().MultiStatementSeparator;
                 var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-                Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
+                Tuple<IEnumerable<T1>, IEnumerable<T2>> result = null;
                 TraceResult traceResult = null;
 
                 // Before Execution
                 async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                     traceResult = await Tracer
-                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                        .InvokeBeforeExecutionAsync(traceKey,
+                            trace,
+                            command,
+                            cancellationToken).ConfigureAwait(false);
 
                 // Actual Execution
-                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    traceKey: null,
-                    transaction: transaction,
-                    trace: null,
-                    cancellationToken: cancellationToken,
-                    entityType: null,
-                    dbFields: null,
-                    skipCommandArrayParametersCheck: true,
-                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+                Exception executionError = null;
+                try
                 {
-                    // Silent cancellation
-                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                        commandText: commandText,
+                        param: param,
+                        commandType: commandType,
+                        commandTimeout: commandTimeout,
+                        traceKey: null,
+                        transaction: transaction,
+                        trace: null,
+                        cancellationToken: cancellationToken,
+                        entityType: null,
+                        dbFields: null,
+                        skipCommandArrayParametersCheck: true,
+                        beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                     {
-                        return default;
+                        // Silent cancellation
+                        if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                        {
+                            return default;
+                        }
+
+                        // T1
+                        item1 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item1,
+                            cacheKey1,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: false,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T2
+                        item2 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item2,
+                            cacheKey2,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // Result
+                        result = Tuple.Create(item1, item2);
                     }
-
-                    // T1
-                    item1 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item1,
-                        cacheKey1,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: false,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T2
-                    item2 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item2,
-                        cacheKey2,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // Result
-                    result = Tuple.Create(item1, item2);
-
-                    // After Execution
-                    await Tracer
-                        .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.InvokeAfterExecutionAsync(traceResult,
+                        trace,
+                        result,
+                        cancellationToken,
+                        executionError).ConfigureAwait(false);
                 }
 
                 // Result
@@ -21781,77 +21959,93 @@ forwardToNextResult: true,
                 var separator = connection.GetDbSetting().MultiStatementSeparator;
                 var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result = null;
                 TraceResult traceResult = null;
 
                 // Before Execution
                 async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                     traceResult = await Tracer
-                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                        .InvokeBeforeExecutionAsync(traceKey,
+                            trace,
+                            command,
+                            cancellationToken).ConfigureAwait(false);
 
                 // Actual Execution
-                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    traceKey: null,
-                    transaction: transaction,
-                    trace: null,
-                    cancellationToken: cancellationToken,
-                    entityType: null,
-                    dbFields: null,
-                    skipCommandArrayParametersCheck: true,
-                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+                Exception executionError = null;
+                try
                 {
-                    // Silent cancellation
-                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                        commandText: commandText,
+                        param: param,
+                        commandType: commandType,
+                        commandTimeout: commandTimeout,
+                        traceKey: null,
+                        transaction: transaction,
+                        trace: null,
+                        cancellationToken: cancellationToken,
+                        entityType: null,
+                        dbFields: null,
+                        skipCommandArrayParametersCheck: true,
+                        beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                     {
-                        return default;
+                        // Silent cancellation
+                        if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                        {
+                            return default;
+                        }
+
+                        // T1
+                        item1 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item1,
+                            cacheKey1,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: false,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T2
+                        item2 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item2,
+                            cacheKey2,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T3
+                        item3 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item3,
+                            cacheKey3,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // Result
+                        result = Tuple.Create(item1, item2, item3);
                     }
-
-                    // T1
-                    item1 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item1,
-                        cacheKey1,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: false,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T2
-                    item2 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item2,
-                        cacheKey2,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T3
-                    item3 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item3,
-                        cacheKey3,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // Result
-                    result = Tuple.Create(item1, item2, item3);
-
-                    // After Execution
-                    await Tracer
-                        .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.InvokeAfterExecutionAsync(traceResult,
+                        trace,
+                        result,
+                        cancellationToken,
+                        executionError).ConfigureAwait(false);
                 }
 
                 // Result
@@ -22783,89 +22977,105 @@ forwardToNextResult: true,
                 var separator = connection.GetDbSetting().MultiStatementSeparator;
                 var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result = null;
                 TraceResult traceResult = null;
 
                 // Before Execution
                 async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                     traceResult = await Tracer
-                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                        .InvokeBeforeExecutionAsync(traceKey,
+                            trace,
+                            command,
+                            cancellationToken).ConfigureAwait(false);
 
                 // Actual Execution
-                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    traceKey: null,
-                    transaction: transaction,
-                    trace: null,
-                    cancellationToken: cancellationToken,
-                    entityType: null,
-                    dbFields: null,
-                    skipCommandArrayParametersCheck: true,
-                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+                Exception executionError = null;
+                try
                 {
-                    // Silent cancellation
-                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                        commandText: commandText,
+                        param: param,
+                        commandType: commandType,
+                        commandTimeout: commandTimeout,
+                        traceKey: null,
+                        transaction: transaction,
+                        trace: null,
+                        cancellationToken: cancellationToken,
+                        entityType: null,
+                        dbFields: null,
+                        skipCommandArrayParametersCheck: true,
+                        beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                     {
-                        return default;
+                        // Silent cancellation
+                        if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                        {
+                            return default;
+                        }
+
+                        // T1
+                        item1 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item1,
+                            cacheKey1,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: false,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T2
+                        item2 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item2,
+                            cacheKey2,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T3
+                        item3 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item3,
+                            cacheKey3,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T4
+                        item4 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item4,
+                            cacheKey4,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // Result
+                        result = Tuple.Create(item1, item2, item3, item4);
                     }
-
-                    // T1
-                    item1 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item1,
-                        cacheKey1,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: false,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T2
-                    item2 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item2,
-                        cacheKey2,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T3
-                    item3 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item3,
-                        cacheKey3,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T4
-                    item4 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item4,
-                        cacheKey4,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // Result
-                    result = Tuple.Create(item1, item2, item3, item4);
-
-                    // After Execution
-                    await Tracer
-                        .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.InvokeAfterExecutionAsync(traceResult,
+                        trace,
+                        result,
+                        cancellationToken,
+                        executionError).ConfigureAwait(false);
                 }
 
                 // Result
@@ -23977,101 +24187,117 @@ forwardToNextResult: true,
                 var separator = connection.GetDbSetting().MultiStatementSeparator;
                 var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result = null;
                 TraceResult traceResult = null;
 
                 // Before Execution
                 async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                     traceResult = await Tracer
-                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                        .InvokeBeforeExecutionAsync(traceKey,
+                            trace,
+                            command,
+                            cancellationToken).ConfigureAwait(false);
 
                 // Actual Execution
-                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    traceKey: null,
-                    transaction: transaction,
-                    trace: null,
-                    cancellationToken: cancellationToken,
-                    entityType: null,
-                    dbFields: null,
-                    skipCommandArrayParametersCheck: true,
-                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+                Exception executionError = null;
+                try
                 {
-                    // Silent cancellation
-                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                        commandText: commandText,
+                        param: param,
+                        commandType: commandType,
+                        commandTimeout: commandTimeout,
+                        traceKey: null,
+                        transaction: transaction,
+                        trace: null,
+                        cancellationToken: cancellationToken,
+                        entityType: null,
+                        dbFields: null,
+                        skipCommandArrayParametersCheck: true,
+                        beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                     {
-                        return default;
+                        // Silent cancellation
+                        if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                        {
+                            return default;
+                        }
+
+                        // T1
+                        item1 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item1,
+                            cacheKey1,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: false,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T2
+                        item2 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item2,
+                            cacheKey2,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T3
+                        item3 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item3,
+                            cacheKey3,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T4
+                        item4 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item4,
+                            cacheKey4,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T5
+                        item5 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item5,
+                            cacheKey5,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // Result
+                        result = Tuple.Create(item1, item2, item3, item4, item5);
                     }
-
-                    // T1
-                    item1 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item1,
-                        cacheKey1,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: false,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T2
-                    item2 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item2,
-                        cacheKey2,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T3
-                    item3 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item3,
-                        cacheKey3,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T4
-                    item4 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item4,
-                        cacheKey4,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T5
-                    item5 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item5,
-                        cacheKey5,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // Result
-                    result = Tuple.Create(item1, item2, item3, item4, item5);
-
-                    // After Execution
-                    await Tracer
-                        .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.InvokeAfterExecutionAsync(traceResult,
+                        trace,
+                        result,
+                        cancellationToken,
+                        executionError).ConfigureAwait(false);
                 }
 
                 // Result
@@ -25363,113 +25589,129 @@ forwardToNextResult: true,
                 var separator = connection.GetDbSetting().MultiStatementSeparator;
                 var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result = null;
                 TraceResult traceResult = null;
 
                 // Before Execution
                 async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                     traceResult = await Tracer
-                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                        .InvokeBeforeExecutionAsync(traceKey,
+                            trace,
+                            command,
+                            cancellationToken).ConfigureAwait(false);
 
                 // Actual Execution
-                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    traceKey: null,
-                    transaction: transaction,
-                    trace: null,
-                    cancellationToken: cancellationToken,
-                    entityType: null,
-                    dbFields: null,
-                    skipCommandArrayParametersCheck: true,
-                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+                Exception executionError = null;
+                try
                 {
-                    // Silent cancellation
-                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                        commandText: commandText,
+                        param: param,
+                        commandType: commandType,
+                        commandTimeout: commandTimeout,
+                        traceKey: null,
+                        transaction: transaction,
+                        trace: null,
+                        cancellationToken: cancellationToken,
+                        entityType: null,
+                        dbFields: null,
+                        skipCommandArrayParametersCheck: true,
+                        beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                     {
-                        return default;
+                        // Silent cancellation
+                        if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                        {
+                            return default;
+                        }
+
+                        // T1
+                        item1 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item1,
+                            cacheKey1,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: false,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T2
+                        item2 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item2,
+                            cacheKey2,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T3
+                        item3 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item3,
+                            cacheKey3,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T4
+                        item4 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item4,
+                            cacheKey4,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T5
+                        item5 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item5,
+                            cacheKey5,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T6
+                        item6 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item6,
+                            cacheKey6,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // Result
+                        result = Tuple.Create(item1, item2, item3, item4, item5, item6);
                     }
-
-                    // T1
-                    item1 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item1,
-                        cacheKey1,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: false,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T2
-                    item2 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item2,
-                        cacheKey2,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T3
-                    item3 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item3,
-                        cacheKey3,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T4
-                    item4 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item4,
-                        cacheKey4,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T5
-                    item5 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item5,
-                        cacheKey5,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T6
-                    item6 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item6,
-                        cacheKey6,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // Result
-                    result = Tuple.Create(item1, item2, item3, item4, item5, item6);
-
-                    // After Execution
-                    await Tracer
-                        .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.InvokeAfterExecutionAsync(traceResult,
+                        trace,
+                        result,
+                        cancellationToken,
+                        executionError).ConfigureAwait(false);
                 }
 
                 // Result
@@ -26941,125 +27183,141 @@ forwardToNextResult: true,
                 var separator = connection.GetDbSetting().MultiStatementSeparator;
                 var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result = null;
                 TraceResult traceResult = null;
 
                 // Before Execution
                 async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                     traceResult = await Tracer
-                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                        .InvokeBeforeExecutionAsync(traceKey,
+                            trace,
+                            command,
+                            cancellationToken).ConfigureAwait(false);
 
                 // Actual Execution
-                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    traceKey: null,
-                    transaction: transaction,
-                    trace: null,
-                    cancellationToken: cancellationToken,
-                    entityType: null,
-                    dbFields: null,
-                    skipCommandArrayParametersCheck: true,
-                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+                Exception executionError = null;
+                try
                 {
-                    // Silent cancellation
-                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                        commandText: commandText,
+                        param: param,
+                        commandType: commandType,
+                        commandTimeout: commandTimeout,
+                        traceKey: null,
+                        transaction: transaction,
+                        trace: null,
+                        cancellationToken: cancellationToken,
+                        entityType: null,
+                        dbFields: null,
+                        skipCommandArrayParametersCheck: true,
+                        beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                     {
-                        return default;
+                        // Silent cancellation
+                        if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                        {
+                            return default;
+                        }
+
+                        // T1
+                        item1 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item1,
+                            cacheKey1,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: false,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T2
+                        item2 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item2,
+                            cacheKey2,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T3
+                        item3 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item3,
+                            cacheKey3,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T4
+                        item4 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item4,
+                            cacheKey4,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T5
+                        item5 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item5,
+                            cacheKey5,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T6
+                        item6 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item6,
+                            cacheKey6,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // T7
+                        item7 = await QueryMultipleAsyncInternal(connection,
+                            reader,
+                            item7,
+                            cacheKey7,
+                            dbSetting,
+                            cacheItemExpiration,
+                            transaction,
+                            cache,
+                            forwardToNextResult: true,
+                            cancellationToken).ConfigureAwait(false);
+
+                        // Result
+                        result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
                     }
-
-                    // T1
-                    item1 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item1,
-                        cacheKey1,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: false,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T2
-                    item2 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item2,
-                        cacheKey2,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T3
-                    item3 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item3,
-                        cacheKey3,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T4
-                    item4 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item4,
-                        cacheKey4,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T5
-                    item5 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item5,
-                        cacheKey5,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T6
-                    item6 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item6,
-                        cacheKey6,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // T7
-                    item7 = await QueryMultipleAsyncInternal(connection,
-                        reader,
-                        item7,
-                        cacheKey7,
-                        dbSetting,
-                        cacheItemExpiration,
-                        transaction,
-                        cache,
-forwardToNextResult: true,
-                        cancellationToken).ConfigureAwait(false);
-
-                    // Result
-                    result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
-
-                    // After Execution
-                    await Tracer
-                        .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.InvokeAfterExecutionAsync(traceResult,
+                        trace,
+                        result,
+                        cancellationToken,
+                        executionError).ConfigureAwait(false);
                 }
 
                 // Result
@@ -27680,68 +27938,84 @@ forwardToNextResult: true,
             var separator = connection.GetDbSetting().MultiStatementSeparator;
             var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> result = null;
             TraceResult traceResult = null;
 
             // Before Execution
             async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                    .InvokeBeforeExecutionAsync(traceKey,
+                        trace,
+                        command,
+                        cancellationToken).ConfigureAwait(false);
 
             // Actual Execution
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: traceKey,
+                    transaction: transaction,
+                    trace: trace,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // DB setting
+                    var dbSetting = connection.GetDbSetting();
+
+                    // T1
+                    item1 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T2
+                    item2 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // Result
+                    result = Tuple.Create(item1, item2);
                 }
-
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
-
-                // T1
-                item1 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T2
-                item2 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // Result
-                result = Tuple.Create(item1, item2);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
 
             // Result
@@ -28289,80 +28563,96 @@ forwardToNextResult: true,
             var separator = connection.GetDbSetting().MultiStatementSeparator;
             var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result = null;
             TraceResult traceResult = null;
 
             // Before Execution
             async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                    .InvokeBeforeExecutionAsync(traceKey,
+                        trace,
+                        command,
+                        cancellationToken).ConfigureAwait(false);
 
             // Actual Execution
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: traceKey,
+                    transaction: transaction,
+                    trace: trace,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // DB setting
+                    var dbSetting = connection.GetDbSetting();
+
+                    // T1
+                    item1 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T2
+                    item2 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T3
+                    item3 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3);
                 }
-
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
-
-                // T1
-                item1 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T2
-                item2 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T3
-                item3 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // Result
-                result = Tuple.Create(item1, item2, item3);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
 
             // Result
@@ -29036,92 +29326,108 @@ forwardToNextResult: true,
             var separator = connection.GetDbSetting().MultiStatementSeparator;
             var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result = null;
             TraceResult traceResult = null;
 
             // Before Execution
             async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                    .InvokeBeforeExecutionAsync(traceKey,
+                        trace,
+                        command,
+                        cancellationToken).ConfigureAwait(false);
 
             // Actual Execution
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: traceKey,
+                    transaction: transaction,
+                    trace: trace,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // DB setting
+                    var dbSetting = connection.GetDbSetting();
+
+                    // T1
+                    item1 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T2
+                    item2 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T3
+                    item3 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T4
+                    item4 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4);
                 }
-
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
-
-                // T1
-                item1 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T2
-                item2 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T3
-                item3 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T4
-                item4 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // Result
-                result = Tuple.Create(item1, item2, item3, item4);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
 
             // Result
@@ -29916,104 +30222,120 @@ forwardToNextResult: true,
             var separator = connection.GetDbSetting().MultiStatementSeparator;
             var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result = null;
             TraceResult traceResult = null;
 
             // Before Execution
             async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                    .InvokeBeforeExecutionAsync(traceKey,
+                        trace,
+                        command,
+                        cancellationToken).ConfigureAwait(false);
 
             // Actual Execution
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: traceKey,
+                    transaction: transaction,
+                    trace: trace,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // DB setting
+                    var dbSetting = connection.GetDbSetting();
+
+                    // T1
+                    item1 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T2
+                    item2 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T3
+                    item3 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T4
+                    item4 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T5
+                    item5 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item5,
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4, item5);
                 }
-
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
-
-                // T1
-                item1 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T2
-                item2 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T3
-                item3 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T4
-                item4 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T5
-                item5 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item5,
-                    cacheKey5,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // Result
-                result = Tuple.Create(item1, item2, item3, item4, item5);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
 
             // Result
@@ -30929,116 +31251,132 @@ forwardToNextResult: true,
             var separator = connection.GetDbSetting().MultiStatementSeparator;
             var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result = null;
             TraceResult traceResult = null;
 
             // Before Execution
             async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                    .InvokeBeforeExecutionAsync(traceKey,
+                        trace,
+                        command,
+                        cancellationToken).ConfigureAwait(false);
 
             // Actual Execution
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: traceKey,
+                    transaction: transaction,
+                    trace: trace,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // DB setting
+                    var dbSetting = connection.GetDbSetting();
+
+                    // T1
+                    item1 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T2
+                    item2 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T3
+                    item3 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T4
+                    item4 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T5
+                    item5 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item5,
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T6
+                    item6 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item6,
+                        cacheKey6,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4, item5, item6);
                 }
-
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
-
-                // T1
-                item1 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T2
-                item2 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T3
-                item3 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T4
-                item4 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T5
-                item5 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item5,
-                    cacheKey5,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T6
-                item6 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item6,
-                    cacheKey6,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // Result
-                result = Tuple.Create(item1, item2, item3, item4, item5, item6);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
 
             // Result
@@ -32075,128 +32413,144 @@ forwardToNextResult: true,
             var separator = connection.GetDbSetting().MultiStatementSeparator;
             var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), fixParameters: false);
-            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result = null;
             TraceResult traceResult = null;
 
             // Before Execution
             async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                    .InvokeBeforeExecutionAsync(traceKey,
+                        trace,
+                        command,
+                        cancellationToken).ConfigureAwait(false);
 
             // Actual Execution
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: traceKey,
+                    transaction: transaction,
+                    trace: trace,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // DB setting
+                    var dbSetting = connection.GetDbSetting();
+
+                    // T1
+                    item1 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T2
+                    item2 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T3
+                    item3 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T4
+                    item4 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T5
+                    item5 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item5,
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T6
+                    item6 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item6,
+                        cacheKey6,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // T7
+                    item7 = await QueryMultipleAsyncInternal(connection,
+                        reader,
+                        item7,
+                        cacheKey7,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: true,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
                 }
-
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
-
-                // T1
-                item1 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T2
-                item2 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T3
-                item3 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T4
-                item4 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T5
-                item5 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item5,
-                    cacheKey5,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T6
-                item6 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item6,
-                    cacheKey6,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // T7
-                item7 = await QueryMultipleAsyncInternal(connection,
-                    reader,
-                    item7,
-                    cacheKey7,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: true,
-                    cancellationToken).ConfigureAwait(false);
-
-                // Result
-                result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
 
             // Result
@@ -32456,40 +32810,53 @@ forwardToNextResult: true,
             var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command));
 
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: CommandType.Text,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
+            IEnumerable<T> result = null;
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: CommandType.Text,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
                 {
-                    return null;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return null;
+                    }
+
+                    result = QueryMultipleInternal<T>(connection,
+                        reader,
+                        items: null,
+                        cacheKey,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false);
+
+                    return result;
                 }
-
-                var result = QueryMultipleInternal<T>(connection,
-                    reader,
-items: null,
-                    cacheKey,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
-
-                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
         }
 
@@ -32531,44 +32898,61 @@ forwardToNextResult: false);
 
             async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                    .InvokeBeforeExecutionAsync(traceKey,
+                        trace,
+                        command,
+                        cancellationToken).ConfigureAwait(false);
 
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: CommandType.Text,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
+            IEnumerable<T> result = null;
+            Exception executionError = null;
+            try
             {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: CommandType.Text,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync).ConfigureAwait(false)))
                 {
-                    return null;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return null;
+                    }
+
+                    result = await QueryMultipleAsyncInternal<T>(connection,
+                        reader,
+                        items: null,
+                        cacheKey,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        forwardToNextResult: false,
+                        cancellationToken).ConfigureAwait(false);
+
+                    return result;
                 }
-
-                var result = await QueryMultipleAsyncInternal<T>(connection,
-                    reader,
-items: null,
-                    cacheKey,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-forwardToNextResult: false,
-                    cancellationToken).ConfigureAwait(false);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError = exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
         }
 

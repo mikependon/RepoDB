@@ -30,6 +30,22 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         {
         }
 
+
+        /// <summary>
+        /// Creates a test command with one parameter, and the context that the library captures when an operation starts.
+        /// </summary>
+        /// <param name="context">The context of the execution.</param>
+        /// <param name="operation">The operation being traced.</param>
+        internal TestCommandLog(TraceContext context,
+            string operation = "Delete")
+            : base(Guid.NewGuid(),
+                operation,
+                "DELETE FROM dbo.Warehouse WHERE Id = @Id",
+                new IDbDataParameter[] { null },
+                context)
+        {
+        }
+
         #endregion
     }
 }

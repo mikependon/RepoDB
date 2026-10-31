@@ -139,43 +139,69 @@ namespace RepoDb
             OracleTransaction transaction = null)
             where TEntity : class
         {
-            var entityList = entities.AsList();
-            var pseudoTableName = OracleText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
+                var entityList = entities.AsList();
+                var pseudoTableName = OracleText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
 
-                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction);
-                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var insertFields = GetInsertFields(tableName, dbFields, mappings);
-                result = OracleExecution.InsertFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, insertFields, identityField, entityList, trace, traceKey, transaction);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+
+                    OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction);
+                    OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var insertFields = GetInsertFields(tableName, dbFields, mappings);
+                    result = OracleExecution.InsertFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, insertFields, identityField, entityList, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        OracleExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                OracleExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         /// <summary>
@@ -209,26 +235,45 @@ namespace RepoDb
             OracleTransaction transaction = null)
             where TEntity : class
         {
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Actual Execution
-            var result = WriteToServerInternal(connection,
-                tableName,
-                entities,
-                mappings,
-                bulkCopyOptions,
-                bulkCopyTimeout,
-                batchSize);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
+                // Actual Execution
+                result = WriteToServerInternal(connection,
+                    tableName,
+                    entities,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
+            }
         }
 
         #endregion
@@ -343,43 +388,69 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null)
         {
-            var rows = GetDataRows(table, rowState)?.ToArray();
-            var pseudoTableName = OracleText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
+                var rows = GetDataRows(table, rowState)?.ToArray();
+                var pseudoTableName = OracleText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
 
-                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction);
-                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var insertFields = GetInsertFields(tableName, dbFields, mappings);
-                result = OracleExecution.InsertFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+
+                    OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction);
+                    OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var insertFields = GetInsertFields(tableName, dbFields, mappings);
+                    result = OracleExecution.InsertFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        OracleExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                OracleExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         /// <summary>
@@ -411,27 +482,46 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null)
         {
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Actual Execution
-            var result = WriteToServerInternal(connection,
-                tableName,
-                table,
-                rowState,
-                mappings,
-                bulkCopyOptions,
-                bulkCopyTimeout,
-                batchSize);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
+                // Actual Execution
+                result = WriteToServerInternal(connection,
+                    tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
+            }
         }
 
         #endregion
@@ -476,30 +566,49 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Actual Execution
-            var result = WriteToServerInternal(connection,
-                tableName,
-                reader,
-                mappings,
-                bulkCopyOptions,
-                bulkCopyTimeout,
-                batchSize,
-                identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
+                // Actual Execution
+                result = WriteToServerInternal(connection,
+                    tableName,
+                    reader,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize,
+                    identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
+            }
         }
 
         #endregion
@@ -616,43 +725,70 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var entityList = entities.AsList();
-            var pseudoTableName = OracleText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
+                var entityList = entities.AsList();
+                var pseudoTableName = OracleText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
 
-                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var insertFields = GetInsertFields(tableName, dbFields, mappings);
-                result = await OracleExecution.InsertFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, insertFields, identityField, entityList, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+
+                    await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var insertFields = GetInsertFields(tableName, dbFields, mappings);
+                    result = await OracleExecution.InsertFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, insertFields, identityField, entityList, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         /// <summary>
@@ -685,27 +821,47 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Actual Execution
-            var result = await WriteToServerAsyncInternal(connection,
-                tableName,
-                entities,
-                mappings,
-                bulkCopyOptions,
-                bulkCopyTimeout,
-                batchSize,
-                cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                // Actual Execution
+                result = await WriteToServerAsyncInternal(connection,
+                    tableName,
+                    entities,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize,
+                    cancellationToken).ConfigureAwait(false);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
+            }
         }
 
         #endregion
@@ -824,43 +980,70 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var rows = GetDataRows(table, rowState)?.ToArray();
-            var pseudoTableName = OracleText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
+                var rows = GetDataRows(table, rowState)?.ToArray();
+                var pseudoTableName = OracleText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
 
-                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var insertFields = GetInsertFields(tableName, dbFields, mappings);
-                result = await OracleExecution.InsertFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+
+                    await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var insertFields = GetInsertFields(tableName, dbFields, mappings);
+                    result = await OracleExecution.InsertFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         /// <summary>
@@ -892,28 +1075,48 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Actual Execution
-            var result = await WriteToServerAsyncInternal(connection,
-                tableName,
-                table,
-                rowState,
-                mappings,
-                bulkCopyOptions,
-                bulkCopyTimeout,
-                batchSize,
-                cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                // Actual Execution
+                result = await WriteToServerAsyncInternal(connection,
+                    tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize,
+                    cancellationToken).ConfigureAwait(false);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
+            }
         }
 
         #endregion
@@ -951,31 +1154,51 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Actual Execution
-            var result = await WriteToServerAsyncInternal(connection,
-                tableName,
-                reader,
-                mappings,
-                bulkCopyOptions,
-                bulkCopyTimeout,
-                batchSize,
-                cancellationToken,
-                identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                // Actual Execution
+                result = await WriteToServerAsyncInternal(connection,
+                    tableName,
+                    reader,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize,
+                    cancellationToken,
+                    identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity).ConfigureAwait(false);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
+            }
         }
 
         #endregion

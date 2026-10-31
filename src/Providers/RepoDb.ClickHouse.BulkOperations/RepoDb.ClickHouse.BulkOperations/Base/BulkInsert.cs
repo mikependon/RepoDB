@@ -68,31 +68,50 @@ namespace RepoDb
             DbTransaction transaction = null)
             where TEntity : class
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
 
-            GuardReturnIdentity(identityBehavior);
+                GuardReturnIdentity(identityBehavior);
 
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Actual Execution
-            var result = WriteToServerInternal(connection,
-                tableName,
-                entities,
-                mappings,
-                bulkCopyTimeout,
-                batchSize,
-                transaction);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
+                // Actual Execution
+                result = WriteToServerInternal(connection,
+                    tableName,
+                    entities,
+                    mappings,
+                    bulkCopyTimeout,
+                    batchSize,
+                    transaction);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
+            }
         }
 
         #endregion
@@ -130,36 +149,55 @@ namespace RepoDb
             string traceKey = ClickHouseTraceKeys.ClickHouseBulkInsert,
             DbTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
-
-            if (table == null)
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
             {
-                throw new ArgumentNullException(nameof(table));
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
+
+                GuardReturnIdentity(identityBehavior);
+
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // Actual Execution
+                result = WriteToServerInternal(connection,
+                    tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyTimeout,
+                    batchSize);
+
+                return result;
             }
-
-            GuardReturnIdentity(identityBehavior);
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            // Actual Execution
-            var result = WriteToServerInternal(connection,
-                tableName,
-                table,
-                rowState,
-                mappings,
-                bulkCopyTimeout,
-                batchSize);
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
+            }
         }
 
         #endregion
@@ -191,29 +229,48 @@ namespace RepoDb
             string traceKey = ClickHouseTraceKeys.ClickHouseBulkInsert,
             DbTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Actual Execution
-            var result = WriteToServerInternal(connection,
-                tableName,
-                reader,
-                mappings,
-                bulkCopyTimeout,
-                batchSize,
-                transaction);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
+                // Actual Execution
+                result = WriteToServerInternal(connection,
+                    tableName,
+                    reader,
+                    mappings,
+                    bulkCopyTimeout,
+                    batchSize,
+                    transaction);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
+            }
         }
 
         #endregion
@@ -256,32 +313,52 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
 
-            GuardReturnIdentity(identityBehavior);
+                GuardReturnIdentity(identityBehavior);
 
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Actual Execution
-            var result = await WriteToServerAsyncInternal(connection,
-                tableName,
-                entities,
-                mappings,
-                bulkCopyTimeout,
-                batchSize,
-                cancellationToken,
-                transaction).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                // Actual Execution
+                result = await WriteToServerAsyncInternal(connection,
+                    tableName,
+                    entities,
+                    mappings,
+                    bulkCopyTimeout,
+                    batchSize,
+                    cancellationToken,
+                    transaction).ConfigureAwait(false);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
+            }
         }
 
         #endregion
@@ -320,37 +397,57 @@ namespace RepoDb
             DbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
-
-            if (table == null)
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
             {
-                throw new ArgumentNullException(nameof(table));
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
+
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
+
+                GuardReturnIdentity(identityBehavior);
+
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // Actual Execution
+                result = await WriteToServerAsyncInternal(connection,
+                    tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyTimeout,
+                    batchSize,
+                    cancellationToken).ConfigureAwait(false);
+
+                return result;
             }
-
-            GuardReturnIdentity(identityBehavior);
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            // Actual Execution
-            var result = await WriteToServerAsyncInternal(connection,
-                tableName,
-                table,
-                rowState,
-                mappings,
-                bulkCopyTimeout,
-                batchSize,
-                cancellationToken).ConfigureAwait(false);
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
+            }
         }
 
         #endregion
@@ -384,30 +481,50 @@ namespace RepoDb
             DbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Actual Execution
-            var result = await WriteToServerAsyncInternal(connection,
-                tableName,
-                reader,
-                mappings,
-                bulkCopyTimeout,
-                batchSize,
-                cancellationToken,
-                transaction).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                // Actual Execution
+                result = await WriteToServerAsyncInternal(connection,
+                    tableName,
+                    reader,
+                    mappings,
+                    bulkCopyTimeout,
+                    batchSize,
+                    cancellationToken,
+                    transaction).ConfigureAwait(false);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
+            }
         }
 
         #endregion

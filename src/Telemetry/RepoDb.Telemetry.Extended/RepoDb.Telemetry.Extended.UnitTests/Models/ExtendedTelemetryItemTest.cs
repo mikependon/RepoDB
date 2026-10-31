@@ -39,6 +39,31 @@ namespace RepoDb.Telemetry.Extended.UnitTests
             Assert.IsEmpty(second.Properties);
         }
 
+        /// <summary>
+        /// Verifies the connection type and the error are not set by default, and can be set.
+        /// </summary>
+        [TestMethod]
+        public void ConnectionTypeAndErrorAreNotSetByDefaultAndCanBeSet()
+        {
+            var item = new ExtendedTelemetryItem();
+            Assert.IsNull(item.ConnectionType);
+            Assert.IsNull(item.ErrorMessage);
+            Assert.IsNull(item.ErrorStackTrace);
+            Assert.IsNull(item.ErrorType);
+            item.ConnectionType = "SqlConnection";
+            item.ErrorMessage = "The statement failed.";
+            item.ErrorStackTrace = "at Method()";
+            item.ErrorType = "System.InvalidOperationException";
+            Assert.AreEqual("SqlConnection",
+                item.ConnectionType);
+            Assert.AreEqual("The statement failed.",
+                item.ErrorMessage);
+            Assert.AreEqual("at Method()",
+                item.ErrorStackTrace);
+            Assert.AreEqual("System.InvalidOperationException",
+                item.ErrorType);
+        }
+
         #endregion
     }
 }

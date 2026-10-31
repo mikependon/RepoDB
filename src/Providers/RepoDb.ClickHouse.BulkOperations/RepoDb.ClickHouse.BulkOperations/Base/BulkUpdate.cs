@@ -33,7 +33,7 @@ namespace RepoDb
         #region BulkUpdateBase<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -61,53 +61,79 @@ namespace RepoDb
             DbTransaction transaction = null)
             where TEntity : class
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
-
-            // Identify the columns
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-
-            // Skip if there's nothing to update
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = ClickHouseText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                ClickHouseExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                ClickHouseExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                result = WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
 
-                // Execute and return
-                ClickHouseExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
+                // Identify the columns
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+
+                // Skip if there's nothing to update
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = ClickHouseText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    ClickHouseExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    ClickHouseExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    result = WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    ClickHouseExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        ClickHouseExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                ClickHouseExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -115,7 +141,7 @@ namespace RepoDb
         #region BulkUpdateBase<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -143,57 +169,83 @@ namespace RepoDb
             string traceKey = ClickHouseTraceKeys.ClickHouseBulkUpdate,
             DbTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
-
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-
-            // Skip if there's nothing to update
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = ClickHouseText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                ClickHouseExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                ClickHouseExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                result = WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
 
-                // Execute and return
-                ClickHouseExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
+
+                // Identify the columns
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+
+                // Skip if there's nothing to update
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = ClickHouseText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    ClickHouseExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    ClickHouseExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    result = WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    ClickHouseExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        ClickHouseExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                ClickHouseExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -201,7 +253,7 @@ namespace RepoDb
         #region BulkUpdateBase<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -227,52 +279,78 @@ namespace RepoDb
             string traceKey = ClickHouseTraceKeys.ClickHouseBulkUpdate,
             DbTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
-
-            // Identify the columns
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-
-            // Skip if there's nothing to update
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = ClickHouseText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                ClickHouseExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                ClickHouseExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                result = WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-                // Execute and return
-                ClickHouseExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
+                // Identify the columns
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+
+                // Skip if there's nothing to update
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+                var pseudoTableName = ClickHouseText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    ClickHouseExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    ClickHouseExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    result = WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    ClickHouseExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        ClickHouseExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                ClickHouseExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -284,7 +362,7 @@ namespace RepoDb
         #region BulkUpdateBaseAsync<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -314,53 +392,80 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
-
-            // Identify the columns
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-
-            // Skip if there's nothing to update
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = ClickHouseText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                await ClickHouseExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await ClickHouseExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                result = await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, entities, mappings?.Any() == true, transaction);
 
-                // Execute and return
-                await ClickHouseExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Identify the columns
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+
+                // Skip if there's nothing to update
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = ClickHouseText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    await ClickHouseExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await ClickHouseExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    result = await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    await ClickHouseExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await ClickHouseExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await ClickHouseExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -368,7 +473,7 @@ namespace RepoDb
         #region BulkUpdateBaseAsync<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -398,57 +503,84 @@ namespace RepoDb
             DbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
-
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-
-            // Skip if there's nothing to update
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            var pseudoTableName = ClickHouseText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                await ClickHouseExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await ClickHouseExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                result = await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, table, mappings?.Any() == true, transaction);
 
-                // Execute and return
-                await ClickHouseExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
+
+                // Identify the columns
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+
+                // Skip if there's nothing to update
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                var pseudoTableName = ClickHouseText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    await ClickHouseExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await ClickHouseExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    result = await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    await ClickHouseExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await ClickHouseExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await ClickHouseExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -456,7 +588,7 @@ namespace RepoDb
         #region BulkUpdateBaseAsync<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -484,52 +616,79 @@ namespace RepoDb
             DbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
-
-            // Identify the columns
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
-            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-
-            // Skip if there's nothing to update
-            if (!HasUpdateableFields(stagingFields, qualifierFields))
-            {
-                return 0;
-            }
-
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = ClickHouseText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                await ClickHouseExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await ClickHouseExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                result = await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-                // Execute and return
-                await ClickHouseExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Identify the columns
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+
+                // Skip if there's nothing to update
+                if (!HasUpdateableFields(stagingFields, qualifierFields))
+                {
+                    return 0;
+                }
+
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+                var pseudoTableName = ClickHouseText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
+
+                using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    await ClickHouseExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await ClickHouseExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    result = await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    await ClickHouseExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await ClickHouseExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await ClickHouseExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -539,7 +698,7 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="fields"></param>
         /// <param name="qualifiers"></param>

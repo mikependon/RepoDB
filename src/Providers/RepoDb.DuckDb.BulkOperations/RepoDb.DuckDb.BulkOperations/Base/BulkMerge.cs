@@ -31,7 +31,7 @@ namespace RepoDb
         #region BulkMergeBase<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -98,7 +98,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -128,52 +128,78 @@ namespace RepoDb
             DuckDBTransaction transaction = null)
             where TEntity : class
         {
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                // Create pseudo table
-                DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction);
-                
-                // Write
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
-                using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyTimeout, batchSize);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = DuckDbExecution.MergeFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, trace, traceKey, transaction);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    // Create pseudo table
+                    DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction);
+
+                    // Write
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                    using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                    WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    result = DuckDbExecution.MergeFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -201,48 +227,74 @@ namespace RepoDb
             DuckDBTransaction transaction = null)
             where TEntity : class
         {
-            // Identify the columns
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                // Identify the columns
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
-                // Write
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
-                using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyTimeout, batchSize);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                var identityField = dbFields.GetIdentity()?.AsField();
-                result = DuckDbExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+
+                    // Write
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                    using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                    WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    var identityField = dbFields.GetIdentity()?.AsField();
+                    result = DuckDbExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -250,7 +302,7 @@ namespace RepoDb
         #region BulkMergeBase<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -325,7 +377,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -355,47 +407,73 @@ namespace RepoDb
             string traceKey = DuckDbTraceKeys.DuckDbBulkMerge,
             DuckDBTransaction transaction = null)
         {
-            var rows = GetDataRows(table, rowState)?.ToArray();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var rows = GetDataRows(table, rowState)?.ToArray();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = DuckDbExecution.MergeFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, trace, traceKey, transaction);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    result = DuckDbExecution.MergeFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -423,43 +501,69 @@ namespace RepoDb
             string traceKey = DuckDbTraceKeys.DuckDbBulkMerge,
             DuckDBTransaction transaction = null)
         {
-            // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                // Identify the columns
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                var identityField = dbFields.GetIdentity()?.AsField();
-                result = DuckDbExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    var identityField = dbFields.GetIdentity()?.AsField();
+                    result = DuckDbExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -467,7 +571,7 @@ namespace RepoDb
         #region BulkMergeBase<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -493,46 +597,72 @@ namespace RepoDb
             string traceKey = DuckDbTraceKeys.DuckDbBulkMerge,
             DuckDBTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
-
-            // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-                DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize);
+                // Identify the columns
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                var identityField = dbFields.GetIdentity()?.AsField();
-                result = DuckDbExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    var identityField = dbFields.GetIdentity()?.AsField();
+                    result = DuckDbExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -544,7 +674,7 @@ namespace RepoDb
         #region BulkMergeBaseAsync<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -615,7 +745,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -647,52 +777,79 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                // Create pseudo table
-                await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Write
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
-                using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = await DuckDbExecution.MergeFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    // Create pseudo table
+                    await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    // Write
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                    using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    result = await DuckDbExecution.MergeFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -722,48 +879,75 @@ namespace RepoDb
             CancellationToken cancellationToken)
             where TEntity : class
         {
-            // Identify the columns
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                // Identify the columns
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
-                // Write
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
-                using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                var identityField = dbFields.GetIdentity()?.AsField();
-                result = await DuckDbExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    // Write
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                    using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    var identityField = dbFields.GetIdentity()?.AsField();
+                    result = await DuckDbExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -771,7 +955,7 @@ namespace RepoDb
         #region BulkMergeBaseAsync<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -850,7 +1034,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -882,47 +1066,74 @@ namespace RepoDb
             DuckDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var rows = GetDataRows(table, rowState)?.ToArray();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var rows = GetDataRows(table, rowState)?.ToArray();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = await DuckDbExecution.MergeFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    result = await DuckDbExecution.MergeFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -952,43 +1163,70 @@ namespace RepoDb
             DuckDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                // Identify the columns
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                var identityField = dbFields.GetIdentity()?.AsField();
-                result = await DuckDbExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    var identityField = dbFields.GetIdentity()?.AsField();
+                    result = await DuckDbExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -996,7 +1234,7 @@ namespace RepoDb
         #region BulkMergeBaseAsync<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -1024,46 +1262,73 @@ namespace RepoDb
             DuckDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
-
-            // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-                await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                // Identify the columns
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                var identityField = dbFields.GetIdentity()?.AsField();
-                result = await DuckDbExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    var identityField = dbFields.GetIdentity()?.AsField();
+                    result = await DuckDbExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -1073,7 +1338,7 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="dbFields"></param>

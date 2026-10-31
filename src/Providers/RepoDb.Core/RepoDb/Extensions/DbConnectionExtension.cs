@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2018 Michael Camara Pendon.
 // Portions copyright their respective RepoDB contributors.
@@ -226,26 +226,39 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            Exception error = null;
+            try
             {
-                return result;
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
+                using (var reader = command.ExecuteReader())
+                {
+                    result = DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
+                }
             }
-
-            // Execute
-            using (var reader = command.ExecuteReader())
+            catch (Exception e)
             {
-                result = DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
-
+                error = e;
+                throw;
+            }
+            finally
+            {
                 // After Execution
                 Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+                    .InvokeAfterExecution(traceResult, trace, result, error);
+            }
 
-                // Set Cache
-                if (cache != null && cacheKey != null)
-                {
-                    cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
-                }
+            // Set Cache
+            if (cache != null && cacheKey != null)
+            {
+                cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
             }
 
             // Set the output parameters
@@ -380,27 +393,40 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            Exception error = null;
+            try
             {
-                return result;
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
+                using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    result = await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken)
+                        .ToListAsync(cancellationToken).ConfigureAwait(false);
+                }
             }
-
-            // Execute
-            using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+            catch (Exception e)
             {
-                result = await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken)
-                    .ToListAsync(cancellationToken).ConfigureAwait(false);
-
+                error = e;
+                throw;
+            }
+            finally
+            {
                 // After Execution
                 await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, error == null ? cancellationToken : CancellationToken.None, error).ConfigureAwait(false);
+            }
 
-                // Set Cache
-                if (cache != null && cacheKey != null)
-                {
-                    await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
-                }
+            // Set Cache
+            if (cache != null && cacheKey != null)
+            {
+                await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
             }
 
             // Set the output parameters
@@ -681,26 +707,39 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            Exception error = null;
+            try
             {
-                return default;
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                using (var reader = command.ExecuteReader())
+                {
+                    result = DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()).AsList();
+                }
             }
-
-            // Execute
-            using (var reader = command.ExecuteReader())
+            catch (Exception e)
             {
-                result = DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()).AsList();
-
+                error = e;
+                throw;
+            }
+            finally
+            {
                 // After Execution
                 Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+                    .InvokeAfterExecution(traceResult, trace, result, error);
+            }
 
-                // Set Cache
-                if (cache != null && cacheKey != null)
-                {
-                    cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
-                }
+            // Set Cache
+            if (cache != null && cacheKey != null)
+            {
+                cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
             }
 
             // Set the output parameters
@@ -993,27 +1032,40 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            Exception error = null;
+            try
             {
-                return result;
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
+                using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    result = await DataReader.ToEnumerableAsync<TResult>(reader, dbFields, connection.GetDbSetting(), cancellationToken)
+                        .ToListAsync(cancellationToken).ConfigureAwait(false);
+                }
             }
-
-            // Execute
-            using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+            catch (Exception e)
             {
-                result = await DataReader.ToEnumerableAsync<TResult>(reader, dbFields, connection.GetDbSetting(), cancellationToken)
-                    .ToListAsync(cancellationToken).ConfigureAwait(false);
-
+                error = e;
+                throw;
+            }
+            finally
+            {
                 // After Execution
                 await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, error == null ? cancellationToken : CancellationToken.None, error).ConfigureAwait(false);
+            }
 
-                // Set Cache
-                if (cache != null && cacheKey != null)
-                {
-                    await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
-                }
+            // Set Cache
+            if (cache != null && cacheKey != null)
+            {
+                await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
             }
 
             // Set the output parameters
@@ -1143,38 +1195,51 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            Exception error = null;
+            try
             {
-                return result;
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
+                using (var reader = command.ExecuteReader())
+                {
+                    var found = false;
+
+                    foreach (var item in DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()))
+                    {
+                        result = item;
+                        found = true;
+                        break;
+                    }
+
+                    if (!found)
+                    {
+                        throw new EmptyException("No row was found for the given query.");
+                    }
+                }
             }
-
-            // Execute
-            using (var reader = command.ExecuteReader())
+            catch (Exception e)
             {
-                var found = false;
-
-                foreach (var item in DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()))
-                {
-                    result = item;
-                    found = true;
-                    break;
-                }
-
-                if (!found)
-                {
-                    throw new EmptyException("No row was found for the given query.");
-                }
-
+                error = e;
+                throw;
+            }
+            finally
+            {
                 // After Execution
                 Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+                    .InvokeAfterExecution(traceResult, trace, result, error);
+            }
 
-                // Set Cache
-                if (cache != null && cacheKey != null)
-                {
-                    cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
-                }
+            // Set Cache
+            if (cache != null && cacheKey != null)
+            {
+                cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
             }
 
             // Set the output parameters
@@ -1310,38 +1375,51 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            Exception error = null;
+            try
             {
-                return result;
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
+                using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    var found = false;
+
+                    await foreach (var item in DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken).ConfigureAwait(false))
+                    {
+                        result = item;
+                        found = true;
+                        break;
+                    }
+
+                    if (!found)
+                    {
+                        throw new EmptyException("No row was found for the given query.");
+                    }
+                }
             }
-
-            // Execute
-            using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+            catch (Exception e)
             {
-                var found = false;
-
-                await foreach (var item in DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken).ConfigureAwait(false))
-                {
-                    result = item;
-                    found = true;
-                    break;
-                }
-
-                if (!found)
-                {
-                    throw new EmptyException("No row was found for the given query.");
-                }
-
+                error = e;
+                throw;
+            }
+            finally
+            {
                 // After Execution
                 await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, error == null ? cancellationToken : CancellationToken.None, error).ConfigureAwait(false);
+            }
 
-                // Set Cache
-                if (cache != null && cacheKey != null)
-                {
-                    await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
-                }
+            // Set Cache
+            if (cache != null && cacheKey != null)
+            {
+                await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
             }
 
             // Set the output parameters
@@ -1625,38 +1703,51 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            Exception error = null;
+            try
             {
-                return default;
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                using (var reader = command.ExecuteReader())
+                {
+                    var found = false;
+
+                    foreach (var item in DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()))
+                    {
+                        result = item;
+                        found = true;
+                        break;
+                    }
+
+                    if (!found)
+                    {
+                        throw new EmptyException("No row was found for the given query.");
+                    }
+                }
             }
-
-            // Execute
-            using (var reader = command.ExecuteReader())
+            catch (Exception e)
             {
-                var found = false;
-
-                foreach (var item in DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()))
-                {
-                    result = item;
-                    found = true;
-                    break;
-                }
-
-                if (!found)
-                {
-                    throw new EmptyException("No row was found for the given query.");
-                }
-
+                error = e;
+                throw;
+            }
+            finally
+            {
                 // After Execution
                 Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+                    .InvokeAfterExecution(traceResult, trace, result, error);
+            }
 
-                // Set Cache
-                if (cache != null && cacheKey != null)
-                {
-                    cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
-                }
+            // Set Cache
+            if (cache != null && cacheKey != null)
+            {
+                cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
             }
 
             // Set the output parameters
@@ -1952,38 +2043,51 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            Exception error = null;
+            try
             {
-                return result;
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
+                using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    var found = false;
+
+                    await foreach (var item in DataReader.ToEnumerableAsync<TResult>(reader, dbFields, connection.GetDbSetting(), cancellationToken).ConfigureAwait(false))
+                    {
+                        result = item;
+                        found = true;
+                        break;
+                    }
+
+                    if (!found)
+                    {
+                        throw new EmptyException("No row was found for the given query.");
+                    }
+                }
             }
-
-            // Execute
-            using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+            catch (Exception e)
             {
-                var found = false;
-
-                await foreach (var item in DataReader.ToEnumerableAsync<TResult>(reader, dbFields, connection.GetDbSetting(), cancellationToken).ConfigureAwait(false))
-                {
-                    result = item;
-                    found = true;
-                    break;
-                }
-
-                if (!found)
-                {
-                    throw new EmptyException("No row was found for the given query.");
-                }
-
+                error = e;
+                throw;
+            }
+            finally
+            {
                 // After Execution
                 await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, error == null ? cancellationToken : CancellationToken.None, error).ConfigureAwait(false);
+            }
 
-                // Set Cache
-                if (cache != null && cacheKey != null)
-                {
-                    await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
-                }
+            // Set Cache
+            if (cache != null && cacheKey != null)
+            {
+                await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
             }
 
             // Set the output parameters
@@ -2116,45 +2220,58 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return result;
-            }
 
-            // Execute
-            using (var reader = command.ExecuteReader())
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            Exception error = null;
+            try
             {
-                var count = 0;
-
-                foreach (var item in DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()))
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                 {
-                    result = item;
-                    count++;
+                    return result;
+                }
+
+                using (var reader = command.ExecuteReader())
+                {
+                    var count = 0;
+
+                    foreach (var item in DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()))
+                    {
+                        result = item;
+                        count++;
+                        if (count > 1)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (count == 0)
+                    {
+                        throw new EmptyException("No row was found for the given query.");
+                    }
                     if (count > 1)
                     {
-                        break;
+                        throw new MultipleRowsFoundException("More than one row was found for the given query.");
                     }
                 }
-
-                if (count == 0)
-                {
-                    throw new EmptyException("No row was found for the given query.");
-                }
-                if (count > 1)
-                {
-                    throw new MultipleRowsFoundException("More than one row was found for the given query.");
-                }
-
+            }
+            catch (Exception e)
+            {
+                error = e;
+                throw;
+            }
+            finally
+            {
                 // After Execution
                 Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+                    .InvokeAfterExecution(traceResult, trace, result, error);
+            }
 
-                // Set Cache
-                if (cache != null && cacheKey != null)
-                {
-                    cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
-                }
+            // Set Cache
+            if (cache != null && cacheKey != null)
+            {
+                cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
             }
 
             // Set the output parameters
@@ -2293,45 +2410,58 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return result;
-            }
 
-            // Execute
-            using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            Exception error = null;
+            try
             {
-                var count = 0;
-
-                await foreach (var item in DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken).ConfigureAwait(false))
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                 {
-                    result = item;
-                    count++;
+                    return result;
+                }
+
+                using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    var count = 0;
+
+                    await foreach (var item in DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken).ConfigureAwait(false))
+                    {
+                        result = item;
+                        count++;
+                        if (count > 1)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (count == 0)
+                    {
+                        throw new EmptyException("No row was found for the given query.");
+                    }
                     if (count > 1)
                     {
-                        break;
+                        throw new MultipleRowsFoundException("More than one row was found for the given query.");
                     }
                 }
-
-                if (count == 0)
-                {
-                    throw new EmptyException("No row was found for the given query.");
-                }
-                if (count > 1)
-                {
-                    throw new MultipleRowsFoundException("More than one row was found for the given query.");
-                }
-
+            }
+            catch (Exception e)
+            {
+                error = e;
+                throw;
+            }
+            finally
+            {
                 // After Execution
                 await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, error == null ? cancellationToken : CancellationToken.None, error).ConfigureAwait(false);
+            }
 
-                // Set Cache
-                if (cache != null && cacheKey != null)
-                {
-                    await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
-                }
+            // Set Cache
+            if (cache != null && cacheKey != null)
+            {
+                await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
             }
 
             // Set the output parameters
@@ -2618,45 +2748,58 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return default;
-            }
 
-            // Execute
-            using (var reader = command.ExecuteReader())
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            Exception error = null;
+            try
             {
-                var count = 0;
-
-                foreach (var item in DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()))
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                 {
-                    result = item;
-                    count++;
+                    return default;
+                }
+
+                using (var reader = command.ExecuteReader())
+                {
+                    var count = 0;
+
+                    foreach (var item in DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()))
+                    {
+                        result = item;
+                        count++;
+                        if (count > 1)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (count == 0)
+                    {
+                        throw new EmptyException("No row was found for the given query.");
+                    }
                     if (count > 1)
                     {
-                        break;
+                        throw new MultipleRowsFoundException("More than one row was found for the given query.");
                     }
                 }
-
-                if (count == 0)
-                {
-                    throw new EmptyException("No row was found for the given query.");
-                }
-                if (count > 1)
-                {
-                    throw new MultipleRowsFoundException("More than one row was found for the given query.");
-                }
-
+            }
+            catch (Exception e)
+            {
+                error = e;
+                throw;
+            }
+            finally
+            {
                 // After Execution
                 Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+                    .InvokeAfterExecution(traceResult, trace, result, error);
+            }
 
-                // Set Cache
-                if (cache != null && cacheKey != null)
-                {
-                    cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
-                }
+            // Set Cache
+            if (cache != null && cacheKey != null)
+            {
+                cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false);
             }
 
             // Set the output parameters
@@ -2955,45 +3098,58 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
-            {
-                return result;
-            }
 
-            // Execute
-            using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            Exception error = null;
+            try
             {
-                var count = 0;
-
-                await foreach (var item in DataReader.ToEnumerableAsync<TResult>(reader, dbFields, connection.GetDbSetting(), cancellationToken).ConfigureAwait(false))
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                 {
-                    result = item;
-                    count++;
+                    return result;
+                }
+
+                using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    var count = 0;
+
+                    await foreach (var item in DataReader.ToEnumerableAsync<TResult>(reader, dbFields, connection.GetDbSetting(), cancellationToken).ConfigureAwait(false))
+                    {
+                        result = item;
+                        count++;
+                        if (count > 1)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (count == 0)
+                    {
+                        throw new EmptyException("No row was found for the given query.");
+                    }
                     if (count > 1)
                     {
-                        break;
+                        throw new MultipleRowsFoundException("More than one row was found for the given query.");
                     }
                 }
-
-                if (count == 0)
-                {
-                    throw new EmptyException("No row was found for the given query.");
-                }
-                if (count > 1)
-                {
-                    throw new MultipleRowsFoundException("More than one row was found for the given query.");
-                }
-
+            }
+            catch (Exception e)
+            {
+                error = e;
+                throw;
+            }
+            finally
+            {
                 // After Execution
                 await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, error == null ? cancellationToken : CancellationToken.None, error).ConfigureAwait(false);
+            }
 
-                // Set Cache
-                if (cache != null && cacheKey != null)
-                {
-                    await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
-                }
+            // Set Cache
+            if (cache != null && cacheKey != null)
+            {
+                await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), throwException: false, cancellationToken).ConfigureAwait(false);
             }
 
             // Set the output parameters
@@ -3325,18 +3481,37 @@ isDisposeConnection: false,
                 traceResult ??= Tracer
                     .InvokeBeforeExecution(traceKey, trace, command);
 
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+                // Execution: the after-execution trace is always invoked, with the error if the execution has failed.
+                // Only the execution is guarded, so the trace is told once, and the error is always thrown back to the caller
+                DbDataReader reader = null;
+                Exception error = null;
+                try
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    reader = command.ExecuteReader();
                 }
-
-                // Execute
-                var reader = command.ExecuteReader();
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, reader);
+                catch (Exception e)
+                {
+                    error = e;
+                    throw;
+                }
+                finally
+                {
+                    // After Execution
+                    if (beforeExecutionCallback == null)
+                    {
+                        Tracer.InvokeAfterExecution(traceResult,
+                            trace,
+                            reader,
+                            error);
+                    }
+                }
 
                 // Set the output parameters
                 SetOutputParameters(param);
@@ -3464,18 +3639,38 @@ isDisposeConnection: false,
                 traceResult ??= await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+                // Execution: the after-execution trace is always invoked, with the error if the execution has failed.
+                // Only the execution is guarded, so the trace is told once, and the error is always thrown back to the caller
+                DbDataReader reader = null;
+                Exception error = null;
+                try
                 {
-                    return default;
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
                 }
-
-                // Execute
-                var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, reader, cancellationToken).ConfigureAwait(false);
+                catch (Exception e)
+                {
+                    error = e;
+                    throw;
+                }
+                finally
+                {
+                    // After Execution: a token that has been cancelled must not stop the trace from recording the failure
+                    if (beforeExecutionCallbackAsync == null)
+                    {
+                        await Tracer.InvokeAfterExecutionAsync(traceResult,
+                            trace,
+                            reader,
+                            cancellationToken,
+                            error).ConfigureAwait(false);
+                    }
+                }
 
                 // Set the output parameters
                 SetOutputParameters(param);
@@ -3581,18 +3776,32 @@ isDisposeConnection: false,
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            var result = 0;
+            Exception error = null;
+            try
             {
-                return default;
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                result = command.ExecuteNonQuery();
             }
-
-            // Execution
-            var result = command.ExecuteNonQuery();
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
+            catch (Exception e)
+            {
+                error = e;
+                throw;
+            }
+            finally
+            {
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result, error);
+            }
 
             // Set the output parameters
             SetOutputParameters(param);
@@ -3691,18 +3900,32 @@ isDisposeConnection: false,
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            var result = 0;
+            Exception error = null;
+            try
             {
-                return default;
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                result = await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
             }
-
-            // Execution
-            var result = await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+            catch (Exception e)
+            {
+                error = e;
+                throw;
+            }
+            finally
+            {
+                // After Execution: a token that has been cancelled must not stop the trace from recording the failure
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, error == null ? cancellationToken : CancellationToken.None, error).ConfigureAwait(false);
+            }
 
             // Set the output parameters
             SetOutputParameters(param);
@@ -3943,18 +4166,32 @@ isDisposeConnection: false,
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            var result = default(TResult);
+            Exception error = null;
+            try
             {
-                return default;
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                result = Converter.ToType<TResult>(command.ExecuteScalar(), forceAutomaticConversion);
             }
-
-            // Execute
-            var result = Converter.ToType<TResult>(command.ExecuteScalar(), forceAutomaticConversion);
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
+            catch (Exception e)
+            {
+                error = e;
+                throw;
+            }
+            finally
+            {
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result, error);
+            }
 
             // Set Cache
             if (cache != null && cacheKey != null)
@@ -4091,18 +4328,32 @@ isDisposeConnection: false,
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Silent cancellation
-            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+
+            // Execution: the after-execution trace is always invoked, with the error if the execution has failed,
+            // and the error is always thrown back to the caller
+            var result = default(TResult);
+            Exception error = null;
+            try
             {
-                return default;
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false), forceAutomaticConversion);
             }
-
-            // Execution
-            var result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false), forceAutomaticConversion);
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+            catch (Exception e)
+            {
+                error = e;
+                throw;
+            }
+            finally
+            {
+                // After Execution: a token that has been cancelled must not stop the trace from recording the failure
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, error == null ? cancellationToken : CancellationToken.None, error).ConfigureAwait(false);
+            }
 
             // Set Cache
             if (cache != null && cacheKey != null)

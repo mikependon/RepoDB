@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2019 Michael Camara Pendon.
 // Portions copyright their respective RepoDB contributors.
@@ -61,128 +61,155 @@ namespace RepoDb
             string? traceKey = null)
             where TEntity : class
         {
-            // Validate
-            if (entities?.Any() != true)
-            {
-                return default;
-            }
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            // Variables needed
-            var dbSetting = connection.GetDbSetting();
-            var hasTransaction = transaction != null;
-            int result;
-
-            transaction = CreateOrValidateCurrentTransaction(connection, transaction);
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Get the DB Fields
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
+                // Validate
+                if (entities?.Any() != true)
+                {
+                    return default;
+                }
+
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
                 // Variables needed
-                var identityDbField = dbFields?.GetIdentity();
-                var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.FirstOrDefault());
-                var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
-                    GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
-                    FieldCache.Get(entityType);
-                var fields = dbFields?.GetAsFields();
+                var dbSetting = connection.GetDbSetting();
+                var hasTransaction = transaction != null;
 
-                // Filter the fields (based on mappings)
-                if (mappings?.Any() == true)
+                transaction = CreateOrValidateCurrentTransaction(connection, transaction);
+
+                try
                 {
-                    fields = fields?
-                        .Where(e =>
-                            mappings.Any(mapping => string.Equals(mapping.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                }
-                else
-                {
-                    // Filter the fields (based on the data entity and the column mappings behavior)
-                    fields = GetFieldsForColumnMappings(connection, tableName, fields, entityFields?.Select(field => field.Name));
+                    // Get the DB Fields
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
-                    // Explicitly define the mappings
-                    mappings = fields?
-                        .Select(e =>
-                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
-                }
+                    // Variables needed
+                    var identityDbField = dbFields?.GetIdentity();
+                    var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.FirstOrDefault());
+                    var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
+                        GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
+                        FieldCache.Get(entityType);
+                    var fields = dbFields?.GetAsFields();
 
-                // Throw an error if there are no fields
-                if (fields?.Any() != true)
-                {
-                    throw new MissingFieldException("There are no field(s) found for this operation.");
-                }
-
-                // Pseudo temp table
-                var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
-                var tempTableName = CreateBulkInsertTempTableIfNecessary(connection,
-                    tableName,
-                    pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
-                    transaction,
-                    withPseudoExecution,
-                    dbSetting,
-                    fields,
-                    trace);
-
-                // WriteToServer
-                result = WriteToServerInternal(connection,
-                    tempTableName ?? tableName,
-                    entities,
-                    mappings,
-                    options,
-                    bulkCopyTimeout,
-                    batchSize,
-                    withPseudoExecution,
-                    transaction);
-
-                // Check if this is with pseudo
-                if (withPseudoExecution)
-                {
-                    // Merge the actual data
-                    var sql = GetBulkInsertSqlText(tableName,
-                        tempTableName,
-                        fields,
-                        identityDbField?.AsField(),
-                        hints,
-                        dbSetting,
-                        withPseudoExecution,
-                        options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
-
-                    // Execute the SQL
-                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert))
+                    // Filter the fields (based on mappings)
+                    if (mappings?.Any() == true)
                     {
-                        var mapping = mappings?.FirstOrDefault(e => string.Equals(e.DestinationColumn, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
-                        var identityField = mapping != null ? new Field(mapping.SourceColumn) : identityDbField.AsField();
-                        result = SetIdentityForEntities(entities, reader, identityField);
+                        fields = fields?
+                            .Where(e =>
+                                mappings.Any(mapping => string.Equals(mapping.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                    }
+                    else
+                    {
+                        // Filter the fields (based on the data entity and the column mappings behavior)
+                        fields = GetFieldsForColumnMappings(connection, tableName, fields, entityFields?.Select(field => field.Name));
+
+                        // Explicitly define the mappings
+                        mappings = fields?
+                            .Select(e =>
+                                new SqlServerBulkInsertMapItem(e.Name, e.Name));
                     }
 
-                    // Drop the table after used
-                    sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                    connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
+                    // Throw an error if there are no fields
+                    if (fields?.Any() != true)
+                    {
+                        throw new MissingFieldException("There are no field(s) found for this operation.");
+                    }
+
+                    // Pseudo temp table
+                    var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
+                    var tempTableName = CreateBulkInsertTempTableIfNecessary(connection,
+                        tableName,
+                        pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
+                        transaction,
+                        withPseudoExecution,
+                        dbSetting,
+                        fields,
+                        trace);
+
+                    // WriteToServer
+                    result = WriteToServerInternal(connection,
+                        tempTableName ?? tableName,
+                        entities,
+                        mappings,
+                        options,
+                        bulkCopyTimeout,
+                        batchSize,
+                        withPseudoExecution,
+                        transaction);
+
+                    // Check if this is with pseudo
+                    if (withPseudoExecution)
+                    {
+                        // Merge the actual data
+                        var sql = GetBulkInsertSqlText(tableName,
+                            tempTableName,
+                            fields,
+                            identityDbField?.AsField(),
+                            hints,
+                            dbSetting,
+                            withPseudoExecution,
+                            options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
+
+                        // Execute the SQL
+                        using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert))
+                        {
+                            var mapping = mappings?.FirstOrDefault(e => string.Equals(e.DestinationColumn, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
+                            var identityField = mapping != null ? new Field(mapping.SourceColumn) : identityDbField.AsField();
+                            result = SetIdentityForEntities(entities, reader, identityField);
+                        }
+
+                        // Drop the table after used
+                        sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
+                        connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
+                    }
+
+                    CommitTransaction(transaction, hasTransaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    Tracer.Cleanup(() =>
+                    {
+                        RollbackTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        DisposeTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
                 }
 
-                CommitTransaction(transaction, hasTransaction);
+                // Return the result
+                return result;
             }
-            catch
+            catch (Exception exception)
             {
-                RollbackTransaction(transaction, hasTransaction);
+                executionError ??= exception;
                 throw;
             }
             finally
             {
-                DisposeTransaction(transaction, hasTransaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            // Return the result
-            return result;
         }
 
         /// <summary>
@@ -210,92 +237,119 @@ namespace RepoDb
             ITrace? trace = null,
             string? traceKey = null)
         {
-            if (reader == null)
-            {
-                throw new ArgumentNullException(nameof(reader));
-            }
-
-            // Validate
-            if (!reader.HasRows)
-            {
-                return default;
-            }
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            // Variables needed
-            var hasTransaction = transaction != null;
-            int result;
-
-            transaction = CreateOrValidateCurrentTransaction(connection, transaction);
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Get the DB Fields
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
+                if (reader == null)
+                {
+                    throw new ArgumentNullException(nameof(reader));
+                }
+
+                // Validate
+                if (!reader.HasRows)
+                {
+                    return default;
+                }
+
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
                 // Variables needed
-                var readerFields = Enumerable
-                    .Range(0, reader.FieldCount)
-                    .Select(index => reader.GetName(index));
-                var fields = dbFields?.GetAsFields();
+                var hasTransaction = transaction != null;
 
-                // Filter the fields (based on mappings)
-                if (mappings?.Any() == true)
+                transaction = CreateOrValidateCurrentTransaction(connection, transaction);
+
+                try
                 {
-                    fields = fields?
-                        .Where(e =>
-                            mappings.Any(mapping => string.Equals(mapping.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                    // Get the DB Fields
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
+
+                    // Variables needed
+                    var readerFields = Enumerable
+                        .Range(0, reader.FieldCount)
+                        .Select(index => reader.GetName(index));
+                    var fields = dbFields?.GetAsFields();
+
+                    // Filter the fields (based on mappings)
+                    if (mappings?.Any() == true)
+                    {
+                        fields = fields?
+                            .Where(e =>
+                                mappings.Any(mapping => string.Equals(mapping.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                    }
+                    else
+                    {
+                        // Filter the fields (based on the data reader and the column mappings behavior)
+                        fields = GetFieldsForColumnMappings(connection, tableName, fields, readerFields);
+
+                        // Explicitly define the mappings
+                        mappings = fields?
+                            .Select(e =>
+                                new SqlServerBulkInsertMapItem(e.Name, e.Name));
+                    }
+
+                    // Throw an error if there are no fields
+                    if (fields?.Any() != true)
+                    {
+                        throw new MissingFieldException("There are no field(s) found for this operation.");
+                    }
+
+                    // WriteToServer
+                    result = WriteToServerInternal(connection,
+                        tableName,
+                        reader,
+                        mappings,
+                        options,
+                        bulkCopyTimeout,
+                        batchSize,
+                        transaction);
+
+                    CommitTransaction(transaction, hasTransaction);
                 }
-                else
+                catch (Exception exception)
                 {
-                    // Filter the fields (based on the data reader and the column mappings behavior)
-                    fields = GetFieldsForColumnMappings(connection, tableName, fields, readerFields);
-
-                    // Explicitly define the mappings
-                    mappings = fields?
-                        .Select(e =>
-                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
+                    executionError = exception;
+                    Tracer.Cleanup(() =>
+                    {
+                        RollbackTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
+                    throw;
                 }
-
-                // Throw an error if there are no fields
-                if (fields?.Any() != true)
+                finally
                 {
-                    throw new MissingFieldException("There are no field(s) found for this operation.");
+                    Tracer.Cleanup(() =>
+                    {
+                        DisposeTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
                 }
 
-                // WriteToServer
-                result = WriteToServerInternal(connection,
-                    tableName,
-                    reader,
-                    mappings,
-                    options,
-                    bulkCopyTimeout,
-                    batchSize,
-                    transaction);
-
-                CommitTransaction(transaction, hasTransaction);
+                // Return the result
+                return result;
             }
-            catch
+            catch (Exception exception)
             {
-                RollbackTransaction(transaction, hasTransaction);
+                executionError ??= exception;
                 throw;
             }
             finally
             {
-                DisposeTransaction(transaction, hasTransaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            // Return the result
-            return result;
         }
 
         /// <summary>
@@ -331,139 +385,166 @@ namespace RepoDb
             ITrace? trace = null,
             string? traceKey = null)
         {
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            // Validate
-            if (table.Rows.Count <= 0)
-            {
-                return default;
-            }
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            // Variables needed
-            var dbSetting = connection.GetDbSetting();
-            var hasTransaction = transaction != null;
-            int result;
-
-            transaction = CreateOrValidateCurrentTransaction(connection, transaction);
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Get the DB Fields
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
+
+                // Validate
+                if (table.Rows.Count <= 0)
+                {
+                    return default;
+                }
+
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
                 // Variables needed
-                var identityDbField = dbFields?.GetIdentity();
-                var tableFields = GetDataColumns(table)
-                    .Select(column => column.ColumnName);
-                var fields = dbFields?.GetAsFields();
+                var dbSetting = connection.GetDbSetting();
+                var hasTransaction = transaction != null;
 
-                // Filter the fields (based on mappings)
-                if (mappings?.Any() == true)
+                transaction = CreateOrValidateCurrentTransaction(connection, transaction);
+
+                try
                 {
-                    fields = fields?
-                        .Where(e =>
-                            mappings.Any(mapping => string.Equals(mapping.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                }
-                else
-                {
-                    // Filter the fields (based on the data table and the column mappings behavior)
-                    fields = GetFieldsForColumnMappings(connection, tableName, fields, tableFields);
+                    // Get the DB Fields
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
-                    // Explicitly define the mappings
-                    mappings = fields?
-                        .Select(e =>
-                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
-                }
+                    // Variables needed
+                    var identityDbField = dbFields?.GetIdentity();
+                    var tableFields = GetDataColumns(table)
+                        .Select(column => column.ColumnName);
+                    var fields = dbFields?.GetAsFields();
 
-                // Throw an error if there are no fields
-                if (fields?.Any() != true)
-                {
-                    throw new MissingFieldException("There are no field(s) found for this operation.");
-                }
-
-                // Pseudo temp table
-                var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
-                var tempTableName = CreateBulkInsertTempTableIfNecessary(connection,
-                    tableName,
-                    pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
-                    transaction,
-                    withPseudoExecution,
-                    dbSetting,
-                    fields,
-                    trace);
-
-                // WriteToServer
-                result = WriteToServerInternal(connection,
-                    tempTableName ?? tableName,
-                    table,
-                    rowState,
-                    mappings,
-                    options,
-                    bulkCopyTimeout,
-                    batchSize,
-                    withPseudoExecution,
-                    transaction);
-
-                // Check if this is with pseudo
-                if (withPseudoExecution)
-                {
-                    if (identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity)
+                    // Filter the fields (based on mappings)
+                    if (mappings?.Any() == true)
                     {
-                        var sql = GetBulkInsertSqlText(tableName,
-                            tempTableName,
-                            fields,
-                            identityDbField?.AsField(),
-                            hints,
-                            dbSetting,
-                            withPseudoExecution,
-                            options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
-
-                        // Identify the column
-                        var column = table.Columns[identityDbField.Name];
-                        if (column?.ReadOnly == false)
-                        {
-                            using var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert);
-
-                            result = SetIdentityForEntities(table, reader, column);
-                        }
-                        else
-                        {
-                            result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert);
-                        }
-
-                        // Drop the table after used
-                        sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                        connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
+                        fields = fields?
+                            .Where(e =>
+                                mappings.Any(mapping => string.Equals(mapping.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                     }
+                    else
+                    {
+                        // Filter the fields (based on the data table and the column mappings behavior)
+                        fields = GetFieldsForColumnMappings(connection, tableName, fields, tableFields);
+
+                        // Explicitly define the mappings
+                        mappings = fields?
+                            .Select(e =>
+                                new SqlServerBulkInsertMapItem(e.Name, e.Name));
+                    }
+
+                    // Throw an error if there are no fields
+                    if (fields?.Any() != true)
+                    {
+                        throw new MissingFieldException("There are no field(s) found for this operation.");
+                    }
+
+                    // Pseudo temp table
+                    var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
+                    var tempTableName = CreateBulkInsertTempTableIfNecessary(connection,
+                        tableName,
+                        pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
+                        transaction,
+                        withPseudoExecution,
+                        dbSetting,
+                        fields,
+                        trace);
+
+                    // WriteToServer
+                    result = WriteToServerInternal(connection,
+                        tempTableName ?? tableName,
+                        table,
+                        rowState,
+                        mappings,
+                        options,
+                        bulkCopyTimeout,
+                        batchSize,
+                        withPseudoExecution,
+                        transaction);
+
+                    // Check if this is with pseudo
+                    if (withPseudoExecution)
+                    {
+                        if (identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity)
+                        {
+                            var sql = GetBulkInsertSqlText(tableName,
+                                tempTableName,
+                                fields,
+                                identityDbField?.AsField(),
+                                hints,
+                                dbSetting,
+                                withPseudoExecution,
+                                options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
+
+                            // Identify the column
+                            var column = table.Columns[identityDbField.Name];
+                            if (column?.ReadOnly == false)
+                            {
+                                using var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert);
+
+                                result = SetIdentityForEntities(table, reader, column);
+                            }
+                            else
+                            {
+                                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert);
+                            }
+
+                            // Drop the table after used
+                            sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
+                            connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
+                        }
+                    }
+
+                    CommitTransaction(transaction, hasTransaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    Tracer.Cleanup(() =>
+                    {
+                        RollbackTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        DisposeTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
                 }
 
-                CommitTransaction(transaction, hasTransaction);
+                // Return the result
+                return result;
             }
-            catch
+            catch (Exception exception)
             {
-                RollbackTransaction(transaction, hasTransaction);
+                executionError ??= exception;
                 throw;
             }
             finally
             {
-                DisposeTransaction(transaction, hasTransaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            // Return the result
-            return result;
         }
 
         #endregion
@@ -505,132 +586,160 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            // Validate
-            if (entities?.Any() != true)
-            {
-                return default;
-            }
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            // Variables needed
-            var dbSetting = connection.GetDbSetting();
-            var hasTransaction = transaction != null;
-            int result;
-
-            transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken: cancellationToken).ConfigureAwait(false);
+                // Validate
+                if (entities?.Any() != true)
+                {
+                    return default;
+                }
+
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
                 // Variables needed
-                var identityDbField = dbFields?.GetIdentity();
-                var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.FirstOrDefault());
-                var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
-                    GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
-                    FieldCache.Get(entityType);
-                var fields = dbFields?.GetAsFields();
+                var dbSetting = connection.GetDbSetting();
+                var hasTransaction = transaction != null;
 
-                // Filter the fields (based on mappings)
-                if (mappings?.Any() == true)
+                transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
+
+                try
                 {
-                    fields = fields?
-                        .Where(e =>
-                            mappings.Any(mapping => string.Equals(mapping.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                }
-                else
-                {
-                    // Filter the fields (based on the data entity and the column mappings behavior)
-                    fields = GetFieldsForColumnMappings(connection, tableName, fields, entityFields?.Select(field => field.Name));
+                    // Get the DB Fields
+                    var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-                    // Explicitly define the mappings
-                    mappings = fields?
-                        .Select(e =>
-                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
-                }
+                    // Variables needed
+                    var identityDbField = dbFields?.GetIdentity();
+                    var entityType = DbConnectionExtension.GetEntityType<TEntity>(entities?.FirstOrDefault());
+                    var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
+                        GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
+                        FieldCache.Get(entityType);
+                    var fields = dbFields?.GetAsFields();
 
-                // Throw an error if there are no fields
-                if (fields?.Any() != true)
-                {
-                    throw new MissingFieldException("There are no field(s) found for this operation.");
-                }
-
-                // Pseudo temp table
-                var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
-                var tempTableName = await CreateBulkInsertTempTableIfNecessaryAsync(connection,
-                    tableName,
-                    pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
-                    transaction,
-                    withPseudoExecution,
-                    dbSetting,
-                    fields,
-                    cancellationToken,
-                    trace).ConfigureAwait(false);
-
-                // WriteToServer
-                result = await WriteToServerAsyncInternal(connection,
-                    tempTableName ?? tableName,
-                    entities,
-                    mappings,
-                    options,
-                    bulkCopyTimeout,
-                    batchSize,
-                    withPseudoExecution,
-                    transaction,
-                    cancellationToken).ConfigureAwait(false);
-
-                // Check if this is with pseudo
-                if (withPseudoExecution)
-                {
-                    // Merge the actual data
-                    var sql = GetBulkInsertSqlText(tableName,
-                        tempTableName,
-                        fields,
-                        identityDbField?.AsField(),
-                        hints,
-                        dbSetting,
-                        withPseudoExecution,
-                        options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
-
-                    // Execute the SQL
-                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert, cancellationToken: cancellationToken).ConfigureAwait(false)))
+                    // Filter the fields (based on mappings)
+                    if (mappings?.Any() == true)
                     {
-                        var mapping = mappings?.FirstOrDefault(e => string.Equals(e.DestinationColumn, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
-                        var mappedIdentityDbField = mapping != null
-                            ? new DbField(mapping.SourceColumn, identityDbField.IsPrimary, identityDbField.IsIdentity, identityDbField.IsNullable, identityDbField.Type, identityDbField.Size, identityDbField.Precision, identityDbField.Scale, identityDbField.DatabaseType, identityDbField.HasDefaultValue, identityDbField.Provider)
-                            : identityDbField;
-                        result = await SetIdentityForEntitiesAsync(entities, reader, mappedIdentityDbField, cancellationToken).ConfigureAwait(false);
+                        fields = fields?
+                            .Where(e =>
+                                mappings.Any(mapping => string.Equals(mapping.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                    }
+                    else
+                    {
+                        // Filter the fields (based on the data entity and the column mappings behavior)
+                        fields = GetFieldsForColumnMappings(connection, tableName, fields, entityFields?.Select(field => field.Name));
+
+                        // Explicitly define the mappings
+                        mappings = fields?
+                            .Select(e =>
+                                new SqlServerBulkInsertMapItem(e.Name, e.Name));
                     }
 
-                    // Drop the table after used
-                    sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                    await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    // Throw an error if there are no fields
+                    if (fields?.Any() != true)
+                    {
+                        throw new MissingFieldException("There are no field(s) found for this operation.");
+                    }
+
+                    // Pseudo temp table
+                    var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
+                    var tempTableName = await CreateBulkInsertTempTableIfNecessaryAsync(connection,
+                        tableName,
+                        pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
+                        transaction,
+                        withPseudoExecution,
+                        dbSetting,
+                        fields,
+                        cancellationToken,
+                        trace).ConfigureAwait(false);
+
+                    // WriteToServer
+                    result = await WriteToServerAsyncInternal(connection,
+                        tempTableName ?? tableName,
+                        entities,
+                        mappings,
+                        options,
+                        bulkCopyTimeout,
+                        batchSize,
+                        withPseudoExecution,
+                        transaction,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // Check if this is with pseudo
+                    if (withPseudoExecution)
+                    {
+                        // Merge the actual data
+                        var sql = GetBulkInsertSqlText(tableName,
+                            tempTableName,
+                            fields,
+                            identityDbField?.AsField(),
+                            hints,
+                            dbSetting,
+                            withPseudoExecution,
+                            options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
+
+                        // Execute the SQL
+                        using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert, cancellationToken: cancellationToken).ConfigureAwait(false)))
+                        {
+                            var mapping = mappings?.FirstOrDefault(e => string.Equals(e.DestinationColumn, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
+                            var mappedIdentityDbField = mapping != null
+                                ? new DbField(mapping.SourceColumn, identityDbField.IsPrimary, identityDbField.IsIdentity, identityDbField.IsNullable, identityDbField.Type, identityDbField.Size, identityDbField.Precision, identityDbField.Scale, identityDbField.DatabaseType, identityDbField.HasDefaultValue, identityDbField.Provider)
+                                : identityDbField;
+                            result = await SetIdentityForEntitiesAsync(entities, reader, mappedIdentityDbField, cancellationToken).ConfigureAwait(false);
+                        }
+
+                        // Drop the table after used
+                        sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
+                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    }
+
+                    CommitTransaction(transaction, hasTransaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    Tracer.Cleanup(() =>
+                    {
+                        RollbackTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        DisposeTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
                 }
 
-                CommitTransaction(transaction, hasTransaction);
+                // Return the result
+                return result;
             }
-            catch
+            catch (Exception exception)
             {
-                RollbackTransaction(transaction, hasTransaction);
+                executionError ??= exception;
                 throw;
             }
             finally
             {
-                DisposeTransaction(transaction, hasTransaction);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            // Return the result
-            return result;
         }
 
         /// <summary>
@@ -660,93 +769,121 @@ namespace RepoDb
             string? traceKey = null,
             CancellationToken cancellationToken = default)
         {
-            if (reader == null)
-            {
-                throw new ArgumentNullException(nameof(reader));
-            }
-
-            // Validate
-            if (!reader.HasRows)
-            {
-                return default;
-            }
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            // Variables needed
-            var hasTransaction = transaction != null;
-            int result;
-
-            transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken).ConfigureAwait(false);
+                if (reader == null)
+                {
+                    throw new ArgumentNullException(nameof(reader));
+                }
+
+                // Validate
+                if (!reader.HasRows)
+                {
+                    return default;
+                }
+
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
                 // Variables needed
-                var readerFields = Enumerable
-                    .Range(0, reader.FieldCount)
-                    .Select(index => reader.GetName(index));
-                var fields = dbFields?.GetAsFields();
+                var hasTransaction = transaction != null;
 
-                // Filter the fields (based on mappings)
-                if (mappings?.Any() == true)
+                transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
+
+                try
                 {
-                    fields = fields?
-                        .Where(e =>
-                            mappings.Any(mapping => string.Equals(mapping.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                    // Get the DB Fields
+                    var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken).ConfigureAwait(false);
+
+                    // Variables needed
+                    var readerFields = Enumerable
+                        .Range(0, reader.FieldCount)
+                        .Select(index => reader.GetName(index));
+                    var fields = dbFields?.GetAsFields();
+
+                    // Filter the fields (based on mappings)
+                    if (mappings?.Any() == true)
+                    {
+                        fields = fields?
+                            .Where(e =>
+                                mappings.Any(mapping => string.Equals(mapping.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                    }
+                    else
+                    {
+                        // Filter the fields (based on the data reader and the column mappings behavior)
+                        fields = GetFieldsForColumnMappings(connection, tableName, fields, readerFields);
+
+                        // Explicitly define the mappings
+                        mappings = fields?
+                            .Select(e =>
+                                new SqlServerBulkInsertMapItem(e.Name, e.Name));
+                    }
+
+                    // Throw an error if there are no fields
+                    if (fields?.Any() != true)
+                    {
+                        throw new MissingFieldException("There are no field(s) found for this operation.");
+                    }
+
+                    // WriteToServer
+                    result = await WriteToServerAsyncInternal(connection,
+                        tableName,
+                        reader,
+                        mappings,
+                        options,
+                        bulkCopyTimeout,
+                        batchSize,
+                        transaction,
+                        cancellationToken).ConfigureAwait(false);
+
+                    CommitTransaction(transaction, hasTransaction);
                 }
-                else
+                catch (Exception exception)
                 {
-                    // Filter the fields (based on the data reader and the column mappings behavior)
-                    fields = GetFieldsForColumnMappings(connection, tableName, fields, readerFields);
-
-                    // Explicitly define the mappings
-                    mappings = fields?
-                        .Select(e =>
-                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
+                    executionError = exception;
+                    Tracer.Cleanup(() =>
+                    {
+                        RollbackTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
+                    throw;
                 }
-
-                // Throw an error if there are no fields
-                if (fields?.Any() != true)
+                finally
                 {
-                    throw new MissingFieldException("There are no field(s) found for this operation.");
+                    Tracer.Cleanup(() =>
+                    {
+                        DisposeTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
                 }
 
-                // WriteToServer
-                result = await WriteToServerAsyncInternal(connection,
-                    tableName,
-                    reader,
-                    mappings,
-                    options,
-                    bulkCopyTimeout,
-                    batchSize,
-                    transaction,
-                    cancellationToken).ConfigureAwait(false);
-
-                CommitTransaction(transaction, hasTransaction);
+                // Return the result
+                return result;
             }
-            catch
+            catch (Exception exception)
             {
-                RollbackTransaction(transaction, hasTransaction);
+                executionError ??= exception;
                 throw;
             }
             finally
             {
-                DisposeTransaction(transaction, hasTransaction);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            // Return the result
-            return result;
         }
 
         /// <summary>
@@ -784,141 +921,169 @@ namespace RepoDb
             string? traceKey = null,
             CancellationToken cancellationToken = default)
         {
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            // Validate
-            if (table.Rows.Count <= 0)
-            {
-                return default;
-            }
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            // Variables needed
-            var dbSetting = connection.GetDbSetting();
-            var hasTransaction = transaction != null;
-            int result;
-
-            transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken).ConfigureAwait(false);
+                if (table == null)
+                {
+                    throw new ArgumentNullException(nameof(table));
+                }
+
+                // Validate
+                if (table.Rows.Count <= 0)
+                {
+                    return default;
+                }
+
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
                 // Variables needed
-                var identityDbField = dbFields?.GetIdentity();
-                var tableFields = GetDataColumns(table)
-                    .Select(column => column.ColumnName);
-                var fields = dbFields?.GetAsFields();
+                var dbSetting = connection.GetDbSetting();
+                var hasTransaction = transaction != null;
 
-                // Filter the fields (based on mappings)
-                if (mappings?.Any() == true)
+                transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
+
+                try
                 {
-                    fields = fields?
-                        .Where(e =>
-                            mappings.Any(mapping => string.Equals(mapping.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                }
-                else
-                {
-                    // Filter the fields (based on the data table and the column mappings behavior)
-                    fields = GetFieldsForColumnMappings(connection, tableName, fields, tableFields);
+                    // Get the DB Fields
+                    var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken).ConfigureAwait(false);
 
-                    // Explicitly define the mappings
-                    mappings = fields?
-                        .Select(e =>
-                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
-                }
+                    // Variables needed
+                    var identityDbField = dbFields?.GetIdentity();
+                    var tableFields = GetDataColumns(table)
+                        .Select(column => column.ColumnName);
+                    var fields = dbFields?.GetAsFields();
 
-                // Throw an error if there are no fields
-                if (fields?.Any() != true)
-                {
-                    throw new MissingFieldException("There are no field(s) found for this operation.");
-                }
-
-                // Pseudo temp table
-                var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
-                var tempTableName = await CreateBulkInsertTempTableIfNecessaryAsync(connection,
-                    tableName,
-                    pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
-                    transaction,
-                    withPseudoExecution,
-                    dbSetting,
-                    fields,
-                    cancellationToken,
-                    trace).ConfigureAwait(false);
-
-                // WriteToServer
-                result = await WriteToServerAsyncInternal(connection,
-                    tempTableName ?? tableName,
-                    table,
-                    rowState,
-                    mappings,
-                    options,
-                    bulkCopyTimeout,
-                    batchSize,
-                    withPseudoExecution,
-                    transaction,
-                    cancellationToken).ConfigureAwait(false);
-
-                // Check if this is with pseudo
-                if (withPseudoExecution)
-                {
-                    if (identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity)
+                    // Filter the fields (based on mappings)
+                    if (mappings?.Any() == true)
                     {
-                        var sql = GetBulkInsertSqlText(tableName,
-                            tempTableName,
-                            fields,
-                            identityDbField?.AsField(),
-                            hints,
-                            dbSetting,
-                            withPseudoExecution,
-                            options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
-
-                        // Identify the column
-                        var column = table.Columns[identityDbField.Name];
-                        if (column?.ReadOnly == false)
-                        {
-                            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert, cancellationToken: cancellationToken).ConfigureAwait(false);
-
-                            result = await SetIdentityForEntitiesAsync(table, reader, column, cancellationToken).ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert, cancellationToken: cancellationToken).ConfigureAwait(false);
-                        }
-
-                        // Drop the table after used
-                        sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
+                        fields = fields?
+                            .Where(e =>
+                                mappings.Any(mapping => string.Equals(mapping.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                     }
+                    else
+                    {
+                        // Filter the fields (based on the data table and the column mappings behavior)
+                        fields = GetFieldsForColumnMappings(connection, tableName, fields, tableFields);
+
+                        // Explicitly define the mappings
+                        mappings = fields?
+                            .Select(e =>
+                                new SqlServerBulkInsertMapItem(e.Name, e.Name));
+                    }
+
+                    // Throw an error if there are no fields
+                    if (fields?.Any() != true)
+                    {
+                        throw new MissingFieldException("There are no field(s) found for this operation.");
+                    }
+
+                    // Pseudo temp table
+                    var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
+                    var tempTableName = await CreateBulkInsertTempTableIfNecessaryAsync(connection,
+                        tableName,
+                        pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
+                        transaction,
+                        withPseudoExecution,
+                        dbSetting,
+                        fields,
+                        cancellationToken,
+                        trace).ConfigureAwait(false);
+
+                    // WriteToServer
+                    result = await WriteToServerAsyncInternal(connection,
+                        tempTableName ?? tableName,
+                        table,
+                        rowState,
+                        mappings,
+                        options,
+                        bulkCopyTimeout,
+                        batchSize,
+                        withPseudoExecution,
+                        transaction,
+                        cancellationToken).ConfigureAwait(false);
+
+                    // Check if this is with pseudo
+                    if (withPseudoExecution)
+                    {
+                        if (identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity)
+                        {
+                            var sql = GetBulkInsertSqlText(tableName,
+                                tempTableName,
+                                fields,
+                                identityDbField?.AsField(),
+                                hints,
+                                dbSetting,
+                                withPseudoExecution,
+                                options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
+
+                            // Identify the column
+                            var column = table.Columns[identityDbField.Name];
+                            if (column?.ReadOnly == false)
+                            {
+                                using var reader = (DbDataReader)await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                                result = await SetIdentityForEntitiesAsync(table, reader, column, cancellationToken).ConfigureAwait(false);
+                            }
+                            else
+                            {
+                                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert, cancellationToken: cancellationToken).ConfigureAwait(false);
+                            }
+
+                            // Drop the table after used
+                            sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
+                            await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken).ConfigureAwait(false);
+                        }
+                    }
+
+                    CommitTransaction(transaction, hasTransaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    Tracer.Cleanup(() =>
+                    {
+                        RollbackTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        DisposeTransaction(transaction, hasTransaction);
+                    },
+                        executionError);
                 }
 
-                CommitTransaction(transaction, hasTransaction);
+                // Return the result
+                return result;
             }
-            catch
+            catch (Exception exception)
             {
-                RollbackTransaction(transaction, hasTransaction);
+                executionError ??= exception;
                 throw;
             }
             finally
             {
-                DisposeTransaction(transaction, hasTransaction);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            // Return the result
-            return result;
         }
 
         #endregion

@@ -33,6 +33,25 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         {
         }
 
+
+        /// <summary>
+        /// Creates a result of an operation that has failed, paired with its command trace.
+        /// </summary>
+        /// <param name="log">The original command.</param>
+        /// <param name="result">The returned result (the default value if the operation has failed).</param>
+        /// <param name="error">The exception that made the operation fail.</param>
+        internal TestResultLog(CancellableTraceLog log,
+            TResult result,
+            Exception error)
+            : base(log.SessionId,
+                log.Key,
+                TimeSpan.FromMilliseconds(320),
+                result,
+                log,
+                error)
+        {
+        }
+
         #endregion
     }
 }

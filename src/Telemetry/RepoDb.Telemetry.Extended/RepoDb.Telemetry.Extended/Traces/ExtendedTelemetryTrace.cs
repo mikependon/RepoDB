@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using RepoDb.Telemetry.Core;
 using Serilog;
+using Serilog.Events;
 
 namespace RepoDb.Telemetry.Extended
 {
@@ -114,18 +115,54 @@ namespace RepoDb.Telemetry.Extended
         /// <returns>The enriched event.</returns>
         protected override TelemetryItem CreateTelemetryItem(CancellableTraceLog log)
         {
+            // The context is captured by the library when the operation starts. A log that carries none (i.e. one that is
+            // written by a provider that does not capture it) gets the values of the activity and of the thread that are current.
             var activity = Activity.Current;
+            var isW3C = activity?.IdFormat == ActivityIdFormat.W3C;
             var item = new ExtendedTelemetryItem
             {
+                ConnectionType = log.ConnectionType,
+                Database = log.Database,
                 Operation = log.Key,
                 ParameterCount = log.Parameters?.Count() ?? 0,
-                SpanId = activity?.IdFormat == ActivityIdFormat.W3C ? activity.SpanId.ToString() : null,
-                ThreadId = Environment.CurrentManagedThreadId,
-                TraceId = activity?.IdFormat == ActivityIdFormat.W3C ? activity.TraceId.ToString() : null
+                SpanId = log.SpanId ?? (isW3C ? activity.SpanId.ToString() : null),
+                ThreadId = log.ThreadId != 0 ? log.ThreadId : Environment.CurrentManagedThreadId,
+                TraceId = log.TraceId ?? (isW3C ? activity.TraceId.ToString() : null)
             };
             ((ExtendedTelemetryOption)Option).Enrich?.Invoke(item,
                 log);
             return item;
+        }
+
+        /// <summary>
+        /// Completes the event with the outcome of the operation. If the operation has failed, the exception is recorded and the level is an error,
+        /// and the row counts are not recorded as the operation did not complete. Otherwise, the level of the trace is applied if it is not an information,
+        /// and the known row counts are recorded.
+        /// </summary>
+        /// <param name="item">The event being completed.</param>
+        /// <param name="result">The operation result (the default value if the operation has failed).</param>
+        /// <param name="error">The exception that made the operation fail, or <c>null</c> if it succeeded.</param>
+        /// <param name="level">The level of the log of the operation.</param>
+        protected override void CompleteTelemetryItem(TelemetryItem item,
+            object result,
+            Exception error,
+            TraceLevel level)
+        {
+            var extended = (ExtendedTelemetryItem)item;
+            if (error != null)
+            {
+                SetError(extended,
+                    error);
+                return;
+            }
+            if (level != TraceLevel.Info)
+            {
+                extended.Level = ToLogEventLevel(level);
+            }
+            base.CompleteTelemetryItem(item,
+                result,
+                error,
+                level);
         }
 
         /// <summary>
@@ -151,6 +188,42 @@ namespace RepoDb.Telemetry.Extended
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Records the exception that made the operation fail. The rows are not recorded, as the operation did not complete.
+        /// The message of the item is not replaced if the application has already given it one.
+        /// </summary>
+        /// <param name="item">The telemetry item of the operation.</param>
+        /// <param name="error">The exception that made the operation fail.</param>
+        private static void SetError(ExtendedTelemetryItem item,
+            Exception error)
+        {
+            item.Level = LogEventLevel.Error;
+            item.ErrorType = error.GetType().FullName;
+            item.ErrorMessage = error.Message;
+            item.ErrorStackTrace = error.StackTrace;
+            item.Message = item.Message ?? error.Message;
+        }
+
+        /// <summary>
+        /// Gets the level of the logging that is equivalent to the level of the trace.
+        /// </summary>
+        /// <param name="level">The level of the trace.</param>
+        /// <returns>The equivalent level of the logging.</returns>
+        private static LogEventLevel ToLogEventLevel(TraceLevel level)
+        {
+            switch (level)
+            {
+                case TraceLevel.Error:
+                    return LogEventLevel.Error;
+                case TraceLevel.Warning:
+                    return LogEventLevel.Warning;
+                case TraceLevel.Verbose:
+                    return LogEventLevel.Verbose;
+                default:
+                    return LogEventLevel.Information;
+            }
+        }
 
         /// <summary>
         /// Identifies operations whose numeric result represents affected rows.

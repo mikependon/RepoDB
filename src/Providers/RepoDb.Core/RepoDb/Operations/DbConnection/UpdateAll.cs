@@ -1267,20 +1267,34 @@ namespace RepoDb
 
                             // Before Execution
                             var traceResult = Tracer
-                                .InvokeBeforeExecution(traceKey, trace, command);
+                                .InvokeBeforeExecution(traceKey,
+                                    trace,
+                                    command);
 
-                            // Silent cancellation
-                            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                            Exception executionError = null;
+                            try
                             {
-                                return result;
+                                // Silent cancellation
+                                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                {
+                                    return result;
+                                }
+
+                                // Actual Execution
+                                result += command.ExecuteNonQuery();
                             }
-
-                            // Actual Execution
-                            result += command.ExecuteNonQuery();
-
-                            // After Execution
-                            Tracer
-                                .InvokeAfterExecution(traceResult, trace, result);
+                            catch (Exception exception)
+                            {
+                                executionError = exception;
+                                throw;
+                            }
+                            finally
+                            {
+                                Tracer.InvokeAfterExecution(traceResult,
+                                    trace,
+                                    result,
+                                    executionError);
+                            }
                         }
                     }
                     else
@@ -1332,20 +1346,34 @@ namespace RepoDb
 
                             // Before Execution
                             var traceResult = Tracer
-                                .InvokeBeforeExecution(traceKey, trace, command);
+                                .InvokeBeforeExecution(traceKey,
+                                    trace,
+                                    command);
 
-                            // Silent cancellation
-                            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                            Exception executionError = null;
+                            try
                             {
-                                return result;
+                                // Silent cancellation
+                                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                {
+                                    return result;
+                                }
+
+                                // Actual Execution
+                                result += command.ExecuteNonQuery();
                             }
-
-                            // Actual Execution
-                            result += command.ExecuteNonQuery();
-
-                            // After Execution
-                            Tracer
-                                .InvokeAfterExecution(traceResult, trace, result);
+                            catch (Exception exception)
+                            {
+                                executionError = exception;
+                                throw;
+                            }
+                            finally
+                            {
+                                Tracer.InvokeAfterExecution(traceResult,
+                                    trace,
+                                    result,
+                                    executionError);
+                            }
                         }
                     }
                 }
@@ -1475,20 +1503,36 @@ namespace RepoDb
 
                             // Before Execution
                             var traceResult = await Tracer
-                                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                                .InvokeBeforeExecutionAsync(traceKey,
+                                    trace,
+                                    command,
+                                    cancellationToken).ConfigureAwait(false);
 
-                            // Silent cancellation
-                            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                            Exception executionError = null;
+                            try
                             {
-                                return result;
+                                // Silent cancellation
+                                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                {
+                                    return result;
+                                }
+
+                                // Actual Execution
+                                result += await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
                             }
-
-                            // Actual Execution
-                            result += await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
-
-                            // After Execution
-                            await Tracer
-                                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                            catch (Exception exception)
+                            {
+                                executionError = exception;
+                                throw;
+                            }
+                            finally
+                            {
+                                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                                    trace,
+                                    result,
+                                    cancellationToken,
+                                    executionError).ConfigureAwait(false);
+                            }
                         }
                     }
                     else
@@ -1541,20 +1585,36 @@ namespace RepoDb
 
                             // Before Execution
                             var traceResult = await Tracer
-                                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                                .InvokeBeforeExecutionAsync(traceKey,
+                                    trace,
+                                    command,
+                                    cancellationToken).ConfigureAwait(false);
 
-                            // Silent cancellation
-                            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                            Exception executionError = null;
+                            try
                             {
-                                return result;
+                                // Silent cancellation
+                                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                {
+                                    return result;
+                                }
+
+                                // Actual Execution
+                                result += await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
                             }
-
-                            // Actual Execution
-                            result += await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
-
-                            // After Execution
-                            await Tracer
-                                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                            catch (Exception exception)
+                            {
+                                executionError = exception;
+                                throw;
+                            }
+                            finally
+                            {
+                                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                                    trace,
+                                    result,
+                                    cancellationToken,
+                                    executionError).ConfigureAwait(false);
+                            }
                         }
                     }
                 }

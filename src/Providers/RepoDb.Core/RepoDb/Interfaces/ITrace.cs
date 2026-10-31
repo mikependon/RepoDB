@@ -26,7 +26,8 @@ namespace RepoDb.Interfaces
         void BeforeExecution(CancellableTraceLog log);
 
         /// <summary>
-        /// A method that is being raised after the actual execution of the operation.
+        /// Reports completion after success, failure, or cancellation of a traced command.
+        /// Execution failures are available in the log's Error property and are rethrown to the caller.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="log">The trace log object referenced by the execution.</param>
@@ -45,7 +46,9 @@ namespace RepoDb.Interfaces
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// A method that is being raised after the actual execution of the operation in an asynchronous way.
+        /// Reports completion asynchronously after success, failure, or cancellation of a traced command.
+        /// Execution failures are available in the log's Error property and are rethrown to the caller.
+        /// Failure notifications receive an uncancelled token so cancellation does not prevent recording the error.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="log">The trace log object referenced by the execution.</param>

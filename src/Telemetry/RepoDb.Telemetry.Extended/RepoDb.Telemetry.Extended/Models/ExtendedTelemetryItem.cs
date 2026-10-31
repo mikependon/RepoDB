@@ -32,9 +32,30 @@ namespace RepoDb.Telemetry.Extended
         public string ConnectionName { get; set; }
 
         /// <summary>
+        /// Gets or sets the name of the type of the connection that has executed the operation (i.e. SqlConnection). It is captured by the library,
+        /// unlike the <see cref="ConnectionName"/>, which is the friendly name that the application gives to the connection.
+        /// </summary>
+        public string ConnectionType { get; set; }
+
+        /// <summary>
         /// The database name, when supplied by the caller.
         /// </summary>
         public string Database { get; set; }
+
+        /// <summary>
+        /// Gets or sets the message of the exception that made the operation fail, or <c>null</c> if it did not fail.
+        /// </summary>
+        public string ErrorMessage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stack trace of the exception that made the operation fail, or <c>null</c> if it did not fail.
+        /// </summary>
+        public string ErrorStackTrace { get; set; }
+
+        /// <summary>
+        /// Gets or sets the full name of the type of the exception that made the operation fail, or <c>null</c> if it did not fail.
+        /// </summary>
+        public string ErrorType { get; set; }
 
         /// <summary>
         /// The event severity.

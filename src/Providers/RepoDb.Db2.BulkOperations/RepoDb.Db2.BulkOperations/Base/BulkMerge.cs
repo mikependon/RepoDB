@@ -137,49 +137,75 @@ namespace RepoDb
             DB2Transaction transaction = null)
             where TEntity : class
         {
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                // Create pseudo table
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction, new[] { identityField });
-                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
-                
-                // Write
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
-                using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = Db2Execution.MergeFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, trace, traceKey, transaction);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    // Create pseudo table
+                    Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction, new[] { identityField });
+                    Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+
+                    // Write
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                    using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                    WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    result = Db2Execution.MergeFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         /// <summary>
@@ -213,50 +239,76 @@ namespace RepoDb
             DB2Transaction transaction = null)
             where TEntity : class
         {
-            // Identify the columns
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                // Identify the columns
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
-                Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
-                // Write
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
-                using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                var identityField = dbFields.GetIdentity()?.AsField();
-                result = Db2Execution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                    Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+
+                    // Write
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                    using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                    WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    var identityField = dbFields.GetIdentity()?.AsField();
+                    result = Db2Execution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -374,44 +426,70 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkMerge,
             DB2Transaction transaction = null)
         {
-            var rows = GetDataRows(table, rowState)?.ToArray();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var rows = GetDataRows(table, rowState)?.ToArray();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction, new[] { identityField });
-                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = Db2Execution.MergeFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, trace, traceKey, transaction);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction, new[] { identityField });
+                    Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    result = Db2Execution.MergeFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         /// <summary>
@@ -445,45 +523,71 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkMerge,
             DB2Transaction transaction = null)
         {
-            // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                // Identify the columns
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
-                Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                var identityField = dbFields.GetIdentity()?.AsField();
-                result = Db2Execution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                    Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    var identityField = dbFields.GetIdentity()?.AsField();
+                    result = Db2Execution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -519,48 +623,74 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkMerge,
             DB2Transaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
-
-            // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
-                Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                // Identify the columns
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                var identityField = dbFields.GetIdentity()?.AsField();
-                result = Db2Execution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                    Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                    Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    var identityField = dbFields.GetIdentity()?.AsField();
+                    result = Db2Execution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         #endregion
@@ -681,49 +811,76 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                // Create pseudo table
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken, nullableFields: new[] { identityField }).ConfigureAwait(false);
-                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Write
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
-                using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = await Db2Execution.MergeFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    // Create pseudo table
+                    await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken, nullableFields: new[] { identityField }).ConfigureAwait(false);
+                    await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+
+                    // Write
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                    using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    result = await Db2Execution.MergeFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         /// <summary>
@@ -759,50 +916,77 @@ namespace RepoDb
             CancellationToken cancellationToken)
             where TEntity : class
         {
-            // Identify the columns
-            var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                // Identify the columns
+                var entityList = entities.AsList();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
-                // Write
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
-                using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                var identityField = dbFields.GetIdentity()?.AsField();
-                result = await Db2Execution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+
+                    // Write
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                    using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    var identityField = dbFields.GetIdentity()?.AsField();
+                    result = await Db2Execution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -926,44 +1110,71 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var rows = GetDataRows(table, rowState)?.ToArray();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var rows = GetDataRows(table, rowState)?.ToArray();
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken, nullableFields: new[] { identityField }).ConfigureAwait(false);
-                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = await Db2Execution.MergeFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken, nullableFields: new[] { identityField }).ConfigureAwait(false);
+                    await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    result = await Db2Execution.MergeFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         /// <summary>
@@ -999,45 +1210,72 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                // Identify the columns
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                var identityField = dbFields.GetIdentity()?.AsField();
-                result = await Db2Execution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    var identityField = dbFields.GetIdentity()?.AsField();
+                    result = await Db2Execution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
@@ -1075,48 +1313,75 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
-
-            // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                // Identify the columns
+                pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+                var pseudoTableName = Db2Text.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
-                // Execute and return
-                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                var identityField = dbFields.GetIdentity()?.AsField();
-                result = await Db2Execution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
+
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
+                    await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                    var identityField = dbFields.GetIdentity()?.AsField();
+                    result = await Db2Execution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion

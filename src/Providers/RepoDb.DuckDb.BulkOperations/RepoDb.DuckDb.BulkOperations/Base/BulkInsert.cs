@@ -31,7 +31,7 @@ namespace RepoDb
         #region BulkInsertBase<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -95,7 +95,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -123,47 +123,73 @@ namespace RepoDb
             DuckDBTransaction transaction = null)
             where TEntity : class
         {
-            var entityList = entities.AsList();
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
+                var entityList = entities.AsList();
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
 
-                DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction);
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
-                using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyTimeout, batchSize);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
-                result = DuckDbExecution.InsertFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, insertFields, identityField, entityList, trace, traceKey, transaction);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+
+                    DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction);
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                    using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                    WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
+                    result = DuckDbExecution.InsertFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, insertFields, identityField, entityList, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -187,31 +213,50 @@ namespace RepoDb
             DuckDBTransaction transaction = null)
             where TEntity : class
         {
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Actual Execution
-            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
-            var entityList = entities.AsList();
-            var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
-            using var entityTable = BuildEntityDataTable(entityList, entityFields);
-            var result = WriteToServerInternal(connection,
-                tableName,
-                entityTable,
-                null,
-                mappings,
-                bulkCopyTimeout,
-                batchSize,
-                identityField);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
+                // Actual Execution
+                var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+                var entityList = entities.AsList();
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                result = WriteToServerInternal(connection,
+                    tableName,
+                    entityTable,
+                    null,
+                    mappings,
+                    bulkCopyTimeout,
+                    batchSize,
+                    identityField);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
+            }
         }
 
         #endregion
@@ -219,7 +264,7 @@ namespace RepoDb
         #region BulkInsertBase<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -321,41 +366,67 @@ namespace RepoDb
             string traceKey = DuckDbTraceKeys.DuckDbBulkInsert,
             DuckDBTransaction transaction = null)
         {
-            var rows = GetDataRows(table, rowState)?.ToArray();
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
+                var rows = GetDataRows(table, rowState)?.ToArray();
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
 
-                DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
-                result = DuckDbExecution.InsertFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+
+                    DuckDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction);
+                    WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
+                    result = DuckDbExecution.InsertFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                DuckDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         /// <summary>
@@ -385,28 +456,47 @@ namespace RepoDb
             string traceKey = DuckDbTraceKeys.DuckDbBulkInsert,
             DuckDBTransaction transaction = null)
         {
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Actual Execution
-            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
-            var result = WriteToServerInternal(connection,
-                tableName,
-                table,
-                rowState,
-                mappings,
-                bulkCopyTimeout,
-                batchSize,
-                identityField);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
+                // Actual Execution
+                var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+                result = WriteToServerInternal(connection,
+                    tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyTimeout,
+                    batchSize,
+                    identityField);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
+            }
         }
 
         #endregion
@@ -414,7 +504,7 @@ namespace RepoDb
         #region BulkInsertBase<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -440,31 +530,50 @@ namespace RepoDb
             string traceKey = DuckDbTraceKeys.DuckDbBulkInsert,
             DuckDBTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Actual Execution
-            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
-            var result = WriteToServerInternal(connection,
-                tableName,
-                reader,
-                mappings,
-                bulkCopyTimeout,
-                batchSize,
-                transaction,
-                identityBehavior == DuckDbBulkImportIdentityBehavior.KeepIdentity ? null : identityField);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
+                // Actual Execution
+                var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+                result = WriteToServerInternal(connection,
+                    tableName,
+                    reader,
+                    mappings,
+                    bulkCopyTimeout,
+                    batchSize,
+                    transaction,
+                    identityBehavior == DuckDbBulkImportIdentityBehavior.KeepIdentity ? null : identityField);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
+            }
         }
 
         #endregion
@@ -476,7 +585,7 @@ namespace RepoDb
         #region BulkInsertBaseAsync<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -544,7 +653,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -574,48 +683,75 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var entityList = entities.AsList();
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
+                var entityList = entities.AsList();
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
 
-                await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
-                using var entityTable = BuildEntityDataTable(entityList, entityFields);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-                // Execute and return
-                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
-                result = await DuckDbExecution.InsertFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, insertFields, identityField, entityList, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+
+                    await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                    using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
+                    result = await DuckDbExecution.InsertFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, insertFields, identityField, entityList, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -641,32 +777,52 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Actual Execution
-            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
-            var entityList = entities.AsList();
-            var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
-            using var entityTable = BuildEntityDataTable(entityList, entityFields);
-            var result = await WriteToServerAsyncInternal(connection,
-                tableName,
-                entityTable,
-                null,
-                mappings,
-                bulkCopyTimeout,
-                batchSize,
-                cancellationToken,
-                identityField).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                // Actual Execution
+                var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+                var entityList = entities.AsList();
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                result = await WriteToServerAsyncInternal(connection,
+                    tableName,
+                    entityTable,
+                    null,
+                    mappings,
+                    bulkCopyTimeout,
+                    batchSize,
+                    cancellationToken,
+                    identityField).ConfigureAwait(false);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
+            }
         }
 
         #endregion
@@ -674,7 +830,7 @@ namespace RepoDb
         #region BulkInsertBaseAsync<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -749,7 +905,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -779,45 +935,72 @@ namespace RepoDb
             DuckDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var rows = GetDataRows(table, rowState)?.ToArray();
-            var pseudoTableName = DuckDbText.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
+                var rows = GetDataRows(table, rowState)?.ToArray();
+                var pseudoTableName = DuckDbText.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
 
-                await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
-                result = await DuckDbExecution.InsertFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+
+                    await DuckDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
+                    result = await DuckDbExecution.InsertFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await DuckDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -843,29 +1026,49 @@ namespace RepoDb
             DuckDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Actual Execution
-            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
-            var result = await WriteToServerAsyncInternal(connection,
-                tableName,
-                table,
-                rowState,
-                mappings,
-                bulkCopyTimeout,
-                batchSize,
-                cancellationToken,
-                identityField).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                // Actual Execution
+                var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+                result = await WriteToServerAsyncInternal(connection,
+                    tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyTimeout,
+                    batchSize,
+                    cancellationToken,
+                    identityField).ConfigureAwait(false);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
+            }
         }
 
         #endregion
@@ -873,7 +1076,7 @@ namespace RepoDb
         #region BulkInsertBaseAsync<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -901,32 +1104,52 @@ namespace RepoDb
             DuckDBTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
 
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            // Actual Execution
-            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
-            var result = await WriteToServerAsyncInternal(connection,
-                tableName,
-                reader,
-                mappings,
-                bulkCopyTimeout,
-                batchSize,
-                cancellationToken,
-                transaction,
-                identityBehavior == DuckDbBulkImportIdentityBehavior.KeepIdentity ? null : identityField).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
+                // Actual Execution
+                var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+                result = await WriteToServerAsyncInternal(connection,
+                    tableName,
+                    reader,
+                    mappings,
+                    bulkCopyTimeout,
+                    batchSize,
+                    cancellationToken,
+                    transaction,
+                    identityBehavior == DuckDbBulkImportIdentityBehavior.KeepIdentity ? null : identityField).ConfigureAwait(false);
 
-            return result;
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
+            }
         }
 
         #endregion
@@ -936,7 +1159,7 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="dbFields"></param>

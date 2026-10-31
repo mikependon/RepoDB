@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -24,7 +25,7 @@ namespace RepoDb
         #region Sync
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TPrimaryKey"></typeparam>
         /// <param name="connection"></param>
@@ -66,7 +67,7 @@ namespace RepoDb
         #region Async
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TPrimaryKey"></typeparam>
         /// <param name="connection"></param>
@@ -111,7 +112,7 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -133,47 +134,73 @@ namespace RepoDb
             string traceKey,
             CockroachDbTransaction transaction)
         {
-            var pseudoTableName = CockroachDbText.GetPseudoTableNameForDeleteByKey(tableName, pseudoTableType, connection.GetDbSetting());
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierField = GetQualifierFields(tableName, dbFields).First();
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process - the pseudo table only ever needs the one qualifier column
-                CockroachDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction);
-                CockroachDbExecution.CreatePseudoTableIndex(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
-                CockroachDbExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                var pseudoTableName = CockroachDbText.GetPseudoTableNameForDeleteByKey(tableName, pseudoTableType, connection.GetDbSetting());
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierField = GetQualifierFields(tableName, dbFields).First();
 
-                using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
-                var mappings = new[] { new CockroachDbBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
-                WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize);
+                using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                result = CockroachDbExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process - the pseudo table only ever needs the one qualifier column
+                    CockroachDbExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction);
+                    CockroachDbExecution.CreatePseudoTableIndex(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
+                    CockroachDbExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+
+                    using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
+                    var mappings = new[] { new CockroachDbBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
+                    WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    result = CockroachDbExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        CockroachDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                CockroachDbExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -197,43 +224,70 @@ namespace RepoDb
             CockroachDbTransaction transaction,
             CancellationToken cancellationToken)
         {
-            var pseudoTableName = CockroachDbText.GetPseudoTableNameForDeleteByKey(tableName, pseudoTableType, connection.GetDbSetting());
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierField = GetQualifierFields(tableName, dbFields).First();
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process - the pseudo table only ever needs the one qualifier column
-                await CockroachDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await CockroachDbExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await CockroachDbExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                var pseudoTableName = CockroachDbText.GetPseudoTableNameForDeleteByKey(tableName, pseudoTableType, connection.GetDbSetting());
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierField = GetQualifierFields(tableName, dbFields).First();
 
-                using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
-                var mappings = new[] { new CockroachDbBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
-                await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                result = await CockroachDbExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process - the pseudo table only ever needs the one qualifier column
+                    await CockroachDbExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await CockroachDbExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await CockroachDbExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+
+                    using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
+                    var mappings = new[] { new CockroachDbBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    result = await CockroachDbExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await CockroachDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await CockroachDbExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion

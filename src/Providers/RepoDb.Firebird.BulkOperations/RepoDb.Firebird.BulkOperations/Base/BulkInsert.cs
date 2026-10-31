@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public static partial class FirebirdConnectionExtension
     {
@@ -33,7 +33,7 @@ namespace RepoDb
         #region BulkInsertBase<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -76,7 +76,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -102,37 +102,67 @@ namespace RepoDb
             FbTransaction transaction)
             where TEntity : class
         {
-            var pseudoTableName = FirebirdText.CreatePseudoTableName("I");
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-            var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
-                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
+                var pseudoTableName = FirebirdText.CreatePseudoTableName("I");
 
-                FirebirdExecution.CreatePseudoTable(connection, pseudoTableName, insertFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
 
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : insertFields;
-                using var entityTable = BuildEntityDataTable(entities, entityFields, includeRowOrder: true);
-                WriteToServerInternal(connection, pseudoTableName, entityTable, mappings: WithRowOrderMapping(mappings), bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-                result = FirebirdExecution.InsertFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, insertFields, identityField, entities, trace, traceKey, transaction);
+                try
+                {
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+                    var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
+
+                    FirebirdExecution.CreatePseudoTable(connection, pseudoTableName, insertFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : insertFields;
+                    using var entityTable = BuildEntityDataTable(entities, entityFields, includeRowOrder: true);
+                    WriteToServerInternal(connection, pseudoTableName, entityTable, mappings: WithRowOrderMapping(mappings), bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
+
+                    result = FirebirdExecution.InsertFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, insertFields, identityField, entities, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        FirebirdExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                FirebirdExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            Tracer.InvokeAfterExecution(traceResult, trace, result);
-            return result;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -156,19 +186,41 @@ namespace RepoDb
             FbTransaction transaction)
             where TEntity : class
         {
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
 
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var identityField = dbFields.GetIdentity()?.AsField();
-            var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
-            var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : insertFields;
-            using var entityTable = BuildEntityDataTable(entities, entityFields);
-            var writeMappings = mappings ?? insertFields.Select(f => new FirebirdCommandBatcherMapItem(f.Name, f.Name)).AsList();
-            var result = WriteToServerInternal(connection, tableName, entityTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            Tracer.InvokeAfterExecution(traceResult, trace, result);
-            return result;
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity()?.AsField();
+                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : insertFields;
+                using var entityTable = BuildEntityDataTable(entities, entityFields);
+                var writeMappings = mappings ?? insertFields.Select(f => new FirebirdCommandBatcherMapItem(f.Name, f.Name)).AsList();
+                result = WriteToServerInternal(connection, tableName, entityTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
+            }
         }
 
         #endregion
@@ -176,7 +228,7 @@ namespace RepoDb
         #region BulkInsertBase<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -223,7 +275,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -249,38 +301,68 @@ namespace RepoDb
             string traceKey,
             FbTransaction transaction)
         {
-            var rows = GetDataRows(table, rowState).AsList();
-            var pseudoTableName = FirebirdText.CreatePseudoTableName("I");
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-            var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
-                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
+                var rows = GetDataRows(table, rowState).AsList();
+                var pseudoTableName = FirebirdText.CreatePseudoTableName("I");
 
-                FirebirdExecution.CreatePseudoTable(connection, pseudoTableName, insertFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
 
-                using var orderedTable = AddRowOrderColumn(table, rows);
-                var writeMappings = mappings != null ? WithRowOrderMapping(mappings) : GetDefaultMappingsForDataTable(orderedTable, identityField).AsList();
-                WriteToServerInternal(connection, pseudoTableName, orderedTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-                result = FirebirdExecution.InsertFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction);
+                try
+                {
+                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                    var identityField = dbFields.GetIdentity().AsField();
+                    var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
+
+                    FirebirdExecution.CreatePseudoTable(connection, pseudoTableName, insertFields, dbFields, pseudoTableType, trace, traceKey, transaction);
+
+                    using var orderedTable = AddRowOrderColumn(table, rows);
+                    var writeMappings = mappings != null ? WithRowOrderMapping(mappings) : GetDefaultMappingsForDataTable(orderedTable, identityField).AsList();
+                    WriteToServerInternal(connection, pseudoTableName, orderedTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
+
+                    result = FirebirdExecution.InsertFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        FirebirdExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                FirebirdExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            Tracer.InvokeAfterExecution(traceResult, trace, result);
-            return result;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -304,15 +386,37 @@ namespace RepoDb
             string traceKey,
             FbTransaction transaction)
         {
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
 
-            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
-            var writeMappings = mappings ?? GetDefaultMappingsForDataTable(table, identityField).AsList();
-            var result = WriteToServerInternal(connection, tableName, table, rowState, writeMappings, bulkCopyTimeout, batchSize, transaction);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            Tracer.InvokeAfterExecution(traceResult, trace, result);
-            return result;
+                var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+                var writeMappings = mappings ?? GetDefaultMappingsForDataTable(table, identityField).AsList();
+                result = WriteToServerInternal(connection, tableName, table, rowState, writeMappings, bulkCopyTimeout, batchSize, transaction);
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
+            }
         }
 
         #endregion
@@ -320,7 +424,7 @@ namespace RepoDb
         #region BulkInsertBase<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -343,19 +447,41 @@ namespace RepoDb
             string traceKey = FirebirdTraceKeys.FirebirdBulkInsert,
             FbTransaction transaction = null)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
 
-            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
-            if (identityBehavior == FirebirdBulkImportIdentityBehavior.KeepIdentity)
-                identityField = null;
-            var result = WriteToServerInternal(connection, tableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, identityField).AsList(), bulkCopyTimeout, batchSize, transaction);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            Tracer.InvokeAfterExecution(traceResult, trace, result);
-            return result;
+                var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+                if (identityBehavior == FirebirdBulkImportIdentityBehavior.KeepIdentity)
+                    identityField = null;
+                result = WriteToServerInternal(connection, tableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, identityField).AsList(), bulkCopyTimeout, batchSize, transaction);
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
+            }
         }
 
         #endregion
@@ -367,7 +493,7 @@ namespace RepoDb
         #region BulkInsertBaseAsync<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -412,7 +538,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -440,37 +566,68 @@ namespace RepoDb
             CancellationToken cancellationToken)
             where TEntity : class
         {
-            var pseudoTableName = FirebirdText.CreatePseudoTableName("I");
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
-                var identityField = dbFields.GetIdentity().AsField();
-                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
+                var pseudoTableName = FirebirdText.CreatePseudoTableName("I");
 
-                await FirebirdExecution.CreatePseudoTableAsync(connection, pseudoTableName, insertFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+                traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : insertFields;
-                using var entityTable = BuildEntityDataTable(entities, entityFields, includeRowOrder: true);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, mappings: WithRowOrderMapping(mappings), bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-                result = await FirebirdExecution.InsertFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, insertFields, identityField, entities, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
+                    var identityField = dbFields.GetIdentity().AsField();
+                    var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
+
+                    await FirebirdExecution.CreatePseudoTableAsync(connection, pseudoTableName, insertFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+
+                    var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : insertFields;
+                    using var entityTable = BuildEntityDataTable(entities, entityFields, includeRowOrder: true);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, mappings: WithRowOrderMapping(mappings), bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    result = await FirebirdExecution.InsertFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, insertFields, identityField, entities, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        await FirebirdExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                await FirebirdExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-            return result;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -496,19 +653,42 @@ namespace RepoDb
             CancellationToken cancellationToken)
             where TEntity : class
         {
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
-            var identityField = dbFields.GetIdentity()?.AsField();
-            var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
-            var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : insertFields;
-            using var entityTable = BuildEntityDataTable(entities, entityFields);
-            var writeMappings = mappings ?? insertFields.Select(f => new FirebirdCommandBatcherMapItem(f.Name, f.Name)).AsList();
-            var result = await WriteToServerAsyncInternal(connection, tableName, entityTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-            return result;
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
+                var identityField = dbFields.GetIdentity()?.AsField();
+                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : insertFields;
+                using var entityTable = BuildEntityDataTable(entities, entityFields);
+                var writeMappings = mappings ?? insertFields.Select(f => new FirebirdCommandBatcherMapItem(f.Name, f.Name)).AsList();
+                result = await WriteToServerAsyncInternal(connection, tableName, entityTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
+            }
         }
 
         #endregion
@@ -516,7 +696,7 @@ namespace RepoDb
         #region BulkInsertBaseAsync<DataTable>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -565,7 +745,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -593,38 +773,69 @@ namespace RepoDb
             FbTransaction transaction,
             CancellationToken cancellationToken)
         {
-            var rows = GetDataRows(table, rowState).AsList();
-            var pseudoTableName = FirebirdText.CreatePseudoTableName("I");
-
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
-                var identityField = dbFields.GetIdentity().AsField();
-                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
+                var rows = GetDataRows(table, rowState).AsList();
+                var pseudoTableName = FirebirdText.CreatePseudoTableName("I");
 
-                await FirebirdExecution.CreatePseudoTableAsync(connection, pseudoTableName, insertFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+                traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-                using var orderedTable = AddRowOrderColumn(table, rows);
-                var writeMappings = mappings != null ? WithRowOrderMapping(mappings) : GetDefaultMappingsForDataTable(orderedTable, identityField).AsList();
-                await WriteToServerAsyncInternal(connection, pseudoTableName, orderedTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-                result = await FirebirdExecution.InsertFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false);
+                    var identityField = dbFields.GetIdentity().AsField();
+                    var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField).AsList();
+
+                    await FirebirdExecution.CreatePseudoTableAsync(connection, pseudoTableName, insertFields, dbFields, pseudoTableType, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+
+                    using var orderedTable = AddRowOrderColumn(table, rows);
+                    var writeMappings = mappings != null ? WithRowOrderMapping(mappings) : GetDefaultMappingsForDataTable(orderedTable, identityField).AsList();
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, orderedTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                    result = await FirebirdExecution.InsertFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        await FirebirdExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                await FirebirdExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-            return result;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -650,15 +861,38 @@ namespace RepoDb
             FbTransaction transaction,
             CancellationToken cancellationToken)
         {
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
-            var writeMappings = mappings ?? GetDefaultMappingsForDataTable(table, identityField).AsList();
-            var result = await WriteToServerAsyncInternal(connection, tableName, table, rowState, writeMappings, bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-            return result;
+                var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+                var writeMappings = mappings ?? GetDefaultMappingsForDataTable(table, identityField).AsList();
+                result = await WriteToServerAsyncInternal(connection, tableName, table, rowState, writeMappings, bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
+            }
         }
 
         #endregion
@@ -666,7 +900,7 @@ namespace RepoDb
         #region BulkInsertBaseAsync<DbDataReader>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -691,19 +925,42 @@ namespace RepoDb
             FbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Validate the source columns (based on the column mappings behavior), before any data is written
-            ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
+            try
+            {
+                // Validate the source columns (based on the column mappings behavior), before any data is written
+                ValidateColumnMappings(connection, tableName, reader, mappings?.Any() == true, transaction);
 
-            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
-            var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+                traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
 
-            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
-            if (identityBehavior == FirebirdBulkImportIdentityBehavior.KeepIdentity)
-                identityField = null;
-            var result = await WriteToServerAsyncInternal(connection, tableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, identityField).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
-            await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-            return result;
+                var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken).ConfigureAwait(false))?.GetIdentity()?.AsField();
+                if (identityBehavior == FirebirdBulkImportIdentityBehavior.KeepIdentity)
+                    identityField = null;
+                result = await WriteToServerAsyncInternal(connection, tableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, identityField).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken).ConfigureAwait(false);
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
+            }
+            finally
+            {
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
+            }
         }
 
         #endregion

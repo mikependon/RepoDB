@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 
 namespace RepoDb
 {
@@ -29,10 +30,30 @@ namespace RepoDb
             TimeSpan? executionTime = null,
             TResult result = default,
             CancellableTraceLog beforeExecutionLog = null)
-            : base(sessionId, key)
+            : this(sessionId, key, executionTime, result, beforeExecutionLog, null)
+        {
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="ResultTraceLog{TResult}"/> class for an execution, which may have failed.
+        /// </summary>
+        /// <param name="sessionId">The session identifier used by the current trace.</param>
+        /// <param name="key">The actual tracing key used by the operation.</param>
+        /// <param name="executionTime">The actual length of the actual execution.</param>
+        /// <param name="result">The actual result of the actual execution.</param>
+        /// <param name="beforeExecutionLog">The log that was written before the execution. The context of the execution is taken from it.</param>
+        /// <param name="error">The exception that made the execution fail, or <c>null</c> if it succeeded.</param>
+        internal ResultTraceLog(Guid sessionId,
+            string key,
+            TimeSpan? executionTime,
+            TResult result,
+            CancellableTraceLog beforeExecutionLog,
+            Exception error)
+            : base(sessionId, key, beforeExecutionLog?.Context, error == null ? TraceLevel.Info : TraceLevel.Error)
         {
             Result = result;
             BeforeExecutionLog = beforeExecutionLog;
+            Error = error;
             if (executionTime != null)
             {
                 ExecutionTime = executionTime.Value;
@@ -40,6 +61,12 @@ namespace RepoDb
         }
 
         #region Properties
+
+        /// <summary>
+        /// Gets the exception that made the execution fail, or <c>null</c> if it succeeded. The same exception is thrown back to the caller of the operation.
+        /// When it is set, the <see cref="Result"/> is not a result of the execution: it is the default value.
+        /// </summary>
+        public Exception Error { get; }
 
         /// <summary>
         /// Gets the actual length of the actual execution.

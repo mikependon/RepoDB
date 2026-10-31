@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -145,43 +146,69 @@ namespace RepoDb
             string traceKey,
             OracleTransaction transaction)
         {
-            var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierField = GetQualifierFields(tableName, dbFields).First();
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = Tracer
-                .InvokeBeforeExecution(traceKey, trace, command);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process - the pseudo table only ever needs the one qualifier column
-                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction);
-                OracleExecution.CreatePseudoTableIndex(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
-                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierField = GetQualifierFields(tableName, dbFields).First();
 
-                using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
-                var mappings = new[] { new OracleBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
-                WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                result = OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
+                // Before Execution
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process - the pseudo table only ever needs the one qualifier column
+                    OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction);
+                    OracleExecution.CreatePseudoTableIndex(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
+                    OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+
+                    using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
+                    var mappings = new[] { new OracleBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
+                    WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                    // Execute and return
+                    result = OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    Tracer.Cleanup(() =>
+                    {
+                        // Drop the pseudo table
+                        OracleExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                    },
+                        executionError);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                OracleExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Tracer.InvokeAfterExecution(traceResult,
+                    trace,
+                    result,
+                    executionError);
             }
-
-            // After Execution
-            Tracer
-                .InvokeAfterExecution(traceResult, trace, result);
-
-            return result;
         }
 
         /// <summary>
@@ -200,43 +227,70 @@ namespace RepoDb
             OracleTransaction transaction,
             CancellationToken cancellationToken)
         {
-            var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierField = GetQualifierFields(tableName, dbFields).First();
-
-            using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
-
-            // Before Execution
-            var traceResult = await Tracer
-                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
-
-            int result;
-
+            TraceResult traceResult = null;
+            int result = default;
+            Exception executionError = null;
             try
             {
-                // Bulk and post process - the pseudo table only ever needs the one qualifier column
-                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await OracleExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
-                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierField = GetQualifierFields(tableName, dbFields).First();
 
-                using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
-                var mappings = new[] { new OracleBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
-                await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+                using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
 
-                // Execute and return
-                result = await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                // Before Execution
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken).ConfigureAwait(false);
+
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                try
+                {
+                    // Bulk and post process - the pseudo table only ever needs the one qualifier column
+                    await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await OracleExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                    await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+
+                    using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
+                    var mappings = new[] { new OracleBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken).ConfigureAwait(false);
+
+                    // Execute and return
+                    result = await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    executionError = exception;
+                    throw;
+                }
+                finally
+                {
+                    await Tracer.CleanupAsync(async () =>
+                    {
+                        // Drop the pseudo table
+                        await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, (executionError == null ? cancellationToken : CancellationToken.None)).ConfigureAwait(false);
+                    },
+                        executionError).ConfigureAwait(false);
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                executionError ??= exception;
+                throw;
             }
             finally
             {
-                // Drop the pseudo table
-                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken).ConfigureAwait(false);
+                await Tracer.InvokeAfterExecutionAsync(traceResult,
+                    trace,
+                    result,
+                    cancellationToken,
+                    executionError).ConfigureAwait(false);
             }
-
-            // After Execution
-            await Tracer
-                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
