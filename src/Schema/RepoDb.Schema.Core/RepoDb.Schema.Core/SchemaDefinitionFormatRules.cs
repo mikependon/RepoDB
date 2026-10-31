@@ -28,7 +28,7 @@ namespace RepoDb.Schema
         {
             if (!string.Equals(definition.Format, SchemaDefinitionFormat.Name, StringComparison.Ordinal))
             {
-                findings.AddError($"The file is not a RepoDB schema definition: its format must be '{SchemaDefinitionFormat.Name}', but it is {Describe(definition.Format)}.");
+                findings.AddError($"The file is not a RepoDB schema definition: its format must be '{SchemaDefinitionFormat.Name}', but it is {Describe(definition.Format)}. Use a RepoDB schema definition or correct its format marker. Location: Format.");
             }
         }
 

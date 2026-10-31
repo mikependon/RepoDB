@@ -41,6 +41,24 @@ namespace RepoDb.Schema
         internal static string Describe(TableInfo table) =>
             string.IsNullOrWhiteSpace(table.Schema) ? table.Name : string.Concat(table.Schema, ".", table.Name);
 
+        /// <summary>Identifies a named object, or its one-based position when unnamed.</summary>
+        internal static string ObjectName(string name, int position) =>
+            string.IsNullOrWhiteSpace(name) ? $"#{position + 1} (unnamed)" : $"'{name}'";
+
+        /// <summary>Finds an object's position without conflating equal unnamed objects.</summary>
+        internal static int Position<T>(IList<T> items, T item) where T : class
+        {
+            for (var index = 0; index < items.Count; index++)
+                if (ReferenceEquals(items[index], item))
+                    return index;
+            return -1;
+        }
+
+        /// <summary>Builds a location within the definition model.</summary>
+        internal static string Location(TableSchema table, string collection, string name = null, string property = null) =>
+            $"Tables > {Describe(table.Table)} > {collection}" +
+            (name == null ? "" : $" > {name}") + (property == null ? "" : $" > {property}");
+
         /// <summary>
         /// Adds an error that was found in a table.
         /// </summary>

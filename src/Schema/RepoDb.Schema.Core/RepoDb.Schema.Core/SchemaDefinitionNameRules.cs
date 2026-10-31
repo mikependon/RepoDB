@@ -71,7 +71,7 @@ namespace RepoDb.Schema
                 .Select(group => group.Key);
             foreach (var name in duplicates)
             {
-                findings.AddError(table, $"The {kind} name '{name}' is used more than once.");
+                findings.AddError(table, $"The {kind} name '{name}' is used more than once. Give each {kind} a distinct name. Location: {DefinitionFindings.Location(table, kind == "index" ? "Indexes" : "Primary Key / Unique Constraints / Foreign Keys / Check Constraints", name, "Name")}.");
             }
         }
 
@@ -94,7 +94,7 @@ namespace RepoDb.Schema
             }
             foreach (var index in table.Indexes.Where(index => index.Name != null && keyNames.Contains(index.Name)))
             {
-                findings.AddError(table, $"The index '{index.Name}' has the name of the primary key or of a unique constraint.");
+                findings.AddError(table, $"The index '{index.Name}' has the name of the primary key or of a unique constraint. Rename the index so it differs from the key names. Location: {DefinitionFindings.Location(table, "Indexes", index.Name, "Name")}.");
             }
         }
 

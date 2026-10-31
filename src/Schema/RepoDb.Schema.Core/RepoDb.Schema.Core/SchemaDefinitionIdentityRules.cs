@@ -57,7 +57,7 @@ namespace RepoDb.Schema
                 .Select(group => group.Key);
             foreach (var identity in repeated)
             {
-                findings.AddError($"Duplicate table identity: the table '{DefinitionFindings.Describe(identity)}' is defined more than once.");
+                findings.AddError($"Duplicate table identity: the table '{DefinitionFindings.Describe(identity)}' is defined more than once. Remove the duplicate table or give it a distinct schema and name. Location: Tables > {DefinitionFindings.Describe(identity)}.");
             }
         }
 
@@ -73,7 +73,7 @@ namespace RepoDb.Schema
         {
             if (definition.RootTable == null || !tables.ContainsKey(definition.RootTable))
             {
-                findings.AddError("The root table definition is missing.");
+                findings.AddError($"The root table definition is missing. Select a Root Table that exists in Tables, or include its table definition. Location: Root Table ({(definition.RootTable == null ? "not selected" : DefinitionFindings.Describe(definition.RootTable))}).");
             }
         }
 
@@ -91,7 +91,7 @@ namespace RepoDb.Schema
             var distinct = new HashSet<TableInfo>(dependencies);
             if (distinct.Count != dependencies.Count || distinct.Any(tables.ContainsKey))
             {
-                findings.AddError("Invalid external dependency identities: they must be distinct, and must not be tables of the definition.");
+                findings.AddError($"Invalid external dependency identities: they must be distinct, and must not be tables of the definition. Remove duplicate entries and entries already included in Tables. Conflicting tables: {string.Join(", ", dependencies.GroupBy(item => item).Where(group => group.Count() > 1 || tables.ContainsKey(group.Key)).Select(group => DefinitionFindings.Describe(group.Key)))}. Location: External Dependencies.");
             }
         }
 

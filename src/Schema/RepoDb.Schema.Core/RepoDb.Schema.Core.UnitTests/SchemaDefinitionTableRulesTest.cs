@@ -93,7 +93,7 @@ namespace RepoDb.Schema.Core.UnitTests
 
             // Assert
             Assert.AreEqual(1, findings.Errors.Count);
-            StringAssert.Contains(findings.Errors[0], "A key or index contains invalid column references", StringComparison.Ordinal);
+            StringAssert.Contains(findings.Errors[0], "Replace these references with existing columns", StringComparison.Ordinal);
             StringAssert.Contains(findings.Errors[0], "primary key 'PK_Child'", StringComparison.Ordinal);
             StringAssert.Contains(findings.Errors[0], "(Missing)", StringComparison.Ordinal);
         }

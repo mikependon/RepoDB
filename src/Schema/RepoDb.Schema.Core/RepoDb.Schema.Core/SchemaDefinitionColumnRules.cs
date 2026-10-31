@@ -50,7 +50,7 @@ namespace RepoDb.Schema
         {
             if (table.Columns.Count == 0)
             {
-                findings.AddError(table, "The table has no columns.");
+                findings.AddError(table, $"The table has no columns. Add at least one column. Location: {DefinitionFindings.Location(table, "Columns")}.");
                 return;
             }
             ReportNullablePrimaryKeyColumns(table,
@@ -80,7 +80,7 @@ namespace RepoDb.Schema
                 .Select(column => column.Field.Name);
             foreach (var name in nullable)
             {
-                findings.AddWarning(table, $"The primary key column '{name}' is nullable, which most databases do not allow.");
+                findings.AddWarning(table, $"The primary key column '{name}' is nullable, which most databases do not allow. Make the column non-nullable or remove it from the primary key. Location: {DefinitionFindings.Location(table, "Columns", name, "IsNullable")}.");
             }
         }
 
@@ -95,11 +95,11 @@ namespace RepoDb.Schema
             var identities = table.Columns.Where(column => column.Field.IsIdentity).ToList();
             foreach (var column in identities.Where(column => !CanBeIdentity(column.Field.Type)))
             {
-                findings.AddError(table, $"The identity column '{column.Field.Name}' is not of a numeric type.");
+                findings.AddError(table, $"The identity column '{column.Field.Name}' is not of a numeric type. Choose a supported numeric type or disable identity generation. Location: {DefinitionFindings.Location(table, "Columns", column.Field.Name, "IsIdentity / Type")}.");
             }
             if (identities.Count > 1)
             {
-                findings.AddWarning(table, "The table has more than one identity column, which most databases do not allow.");
+                findings.AddWarning(table, $"The table has more than one identity column, which most databases do not allow: {string.Join(", ", identities.Select(column => column.Field.Name))}. Keep identity generation enabled on only one column if required by the destination. Location: {DefinitionFindings.Location(table, "Columns")}.");
             }
         }
 

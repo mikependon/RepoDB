@@ -67,11 +67,15 @@ namespace RepoDb.Schema
         {
             if (columns.Count != table.Columns.Count)
             {
-                findings.AddError(table, "Duplicate column name.");
+                var duplicates = table.Columns.GroupBy(column => column.Field.Name, StringComparer.Ordinal)
+                    .Where(group => group.Count() > 1).Select(group => group.Key);
+                findings.AddError(table, $"Duplicate column name: {string.Join(", ", duplicates)}. Give each column a unique name. Location: {DefinitionFindings.Location(table, "Columns")}.");
             }
             if (table.Columns.Any(column => column.Ordinal < 1) || table.Columns.Select(column => column.Ordinal).Distinct().Count() != table.Columns.Count)
             {
-                findings.AddError(table, "Invalid or duplicate column ordinal.");
+                var invalid = table.Columns.Where(column => column.Ordinal < 1 || table.Columns.Count(other => other.Ordinal == column.Ordinal) > 1)
+                    .Select(column => $"'{column.Field.Name}' (ordinal {column.Ordinal})");
+                findings.AddError(table, $"Invalid or duplicate column ordinal: {string.Join(", ", invalid)}. Assign each column a distinct ordinal greater than zero. Location: {DefinitionFindings.Location(table, "Columns")}.");
             }
         }
 
@@ -88,7 +92,8 @@ namespace RepoDb.Schema
             if (table.PrimaryKey != null)
             {
                 ReportInvalidColumnReferences(table,
-                    $"primary key '{table.PrimaryKey.Name}'",
+                    $"primary key {DefinitionFindings.ObjectName(table.PrimaryKey.Name, 0)}",
+                    DefinitionFindings.Location(table, "Primary Key", DefinitionFindings.ObjectName(table.PrimaryKey.Name, 0), "Columns"),
                     table.PrimaryKey.Columns,
                     columns,
                     "the table",
@@ -98,7 +103,8 @@ namespace RepoDb.Schema
             foreach (var constraint in table.UniqueConstraints)
             {
                 ReportInvalidColumnReferences(table,
-                    $"unique constraint '{constraint.Name}'",
+                    $"unique constraint {DefinitionFindings.ObjectName(constraint.Name, DefinitionFindings.Position(table.UniqueConstraints, constraint))}",
+                    DefinitionFindings.Location(table, "Unique Constraints", DefinitionFindings.ObjectName(constraint.Name, DefinitionFindings.Position(table.UniqueConstraints, constraint)), "Columns"),
                     constraint.Columns,
                     columns,
                     "the table",
@@ -108,14 +114,16 @@ namespace RepoDb.Schema
             foreach (var index in table.Indexes)
             {
                 ReportInvalidColumnReferences(table,
-                    $"index '{index.Name}'",
+                    $"index {DefinitionFindings.ObjectName(index.Name, DefinitionFindings.Position(table.Indexes, index))}",
+                    DefinitionFindings.Location(table, "Indexes", DefinitionFindings.ObjectName(index.Name, DefinitionFindings.Position(table.Indexes, index)), "Columns"),
                     index.Columns,
                     columns,
                     "the table",
                     false,
                     findings);
                 ReportInvalidColumnReferences(table,
-                    $"included columns of the index '{index.Name}'",
+                    $"included columns of the index {DefinitionFindings.ObjectName(index.Name, DefinitionFindings.Position(table.Indexes, index))}",
+                    DefinitionFindings.Location(table, "Indexes", DefinitionFindings.ObjectName(index.Name, DefinitionFindings.Position(table.Indexes, index)), "Included Columns"),
                     index.IncludedColumns,
                     columns,
                     "the table",
@@ -141,7 +149,8 @@ namespace RepoDb.Schema
             DefinitionFindings findings)
         {
             ReportInvalidColumnReferences(table,
-                $"foreign key '{foreignKey.Name}'",
+                $"foreign key {DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey))}",
+                DefinitionFindings.Location(table, "Foreign Keys", DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey)), "Columns"),
                 foreignKey.Columns,
                 columns,
                 "the table",
@@ -149,7 +158,7 @@ namespace RepoDb.Schema
                 findings);
             if (foreignKey.Columns.Count != foreignKey.ReferencedColumns.Count)
             {
-                findings.AddError(table, $"Foreign-key column counts differ: the foreign key '{foreignKey.Name}' has {foreignKey.Columns.Count} column(s) but references {foreignKey.ReferencedColumns.Count}.");
+                findings.AddError(table, $"Foreign-key column counts differ: the foreign key {DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey))} has {foreignKey.Columns.Count} column(s) but references {foreignKey.ReferencedColumns.Count}. Select the same number of source and referenced columns, pairing them in order. Location: {DefinitionFindings.Location(table, "Foreign Keys", DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey)))} > Columns / Referenced Columns.");
             }
             if (foreignKey.ReferencedTable != null)
             {
@@ -180,7 +189,8 @@ namespace RepoDb.Schema
                 var targetColumns = new HashSet<string>(target.Columns.Select(column => column.Field.Name),
                     StringComparer.Ordinal);
                 ReportInvalidColumnReferences(table,
-                    $"referenced columns of the foreign key '{foreignKey.Name}'",
+                    $"referenced columns of the foreign key {DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey))}",
+                    DefinitionFindings.Location(table, "Foreign Keys", DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey)), "Referenced Columns"),
                     foreignKey.ReferencedColumns,
                     targetColumns,
                     $"the table '{DefinitionFindings.Describe(target.Table)}'",
@@ -189,7 +199,7 @@ namespace RepoDb.Schema
             }
             else if (!external.Contains(foreignKey.ReferencedTable))
             {
-                findings.AddError(table, $"A foreign-key target is missing from the definition and external dependencies: the foreign key '{foreignKey.Name}' references the table '{DefinitionFindings.Describe(foreignKey.ReferencedTable)}'.");
+                findings.AddError(table, $"A foreign-key target is missing from the definition and external dependencies: the foreign key {DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey))} references the table '{DefinitionFindings.Describe(foreignKey.ReferencedTable)}'. Include that table in Tables, declare it in External Dependencies, or select an existing referenced table. Location: {DefinitionFindings.Location(table, "Foreign Keys", DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey)), "Referenced Table")}.");
             }
         }
 
@@ -198,6 +208,7 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="table">The table that has the key or the index.</param>
         /// <param name="owner">The description of the key or the index (i.e.: primary key 'PK_Orders').</param>
+        /// <param name="location">The location of the column selection in the definition.</param>
         /// <param name="names">The names of the columns of the key or the index.</param>
         /// <param name="columns">The names of the columns of the table that they refer to.</param>
         /// <param name="where">The description of the table that they refer to (i.e.: the table).</param>
@@ -205,6 +216,7 @@ namespace RepoDb.Schema
         /// <param name="findings">The findings that receive the problems.</param>
         private static void ReportInvalidColumnReferences(TableSchema table,
             string owner,
+            string location,
             IList<string> names,
             ISet<string> columns,
             string where,
@@ -213,18 +225,21 @@ namespace RepoDb.Schema
         {
             if (!allowEmpty && names.Count == 0)
             {
-                findings.AddError(table, $"A key or index contains invalid column references: the {owner} has no columns.");
+                var problem = owner.StartsWith("referenced columns", StringComparison.Ordinal)
+                    ? $"The {owner} selection is empty."
+                    : $"The {owner} has no columns.";
+                findings.AddError(table, $"{problem} Select at least one column from {where}. Location: {location}.");
                 return;
             }
             var repeated = names.GroupBy(name => name, StringComparer.Ordinal).Where(group => group.Count() > 1).Select(group => group.Key).ToList();
             if (repeated.Count > 0)
             {
-                findings.AddError(table, $"A key or index contains invalid column references: the {owner} repeats the columns ({string.Join(", ", repeated)}).");
+                findings.AddError(table, $"The {owner} repeats the columns ({string.Join(", ", repeated)}). Remove repeated column selections. Location: {location}.");
             }
             var unknown = names.Where(name => !columns.Contains(name)).Distinct(StringComparer.Ordinal).ToList();
             if (unknown.Count > 0)
             {
-                findings.AddError(table, $"A key or index contains invalid column references: the {owner} refers to the columns ({string.Join(", ", unknown)}) that {where} does not have.");
+                findings.AddError(table, $"The {owner} refers to the columns ({string.Join(", ", unknown)}) that {where} does not have. Replace these references with existing columns from {where}, or add the missing columns to that table. Location: {location}.");
             }
         }
 

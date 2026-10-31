@@ -60,13 +60,14 @@ namespace RepoDb.Schema
             {
                 if (string.IsNullOrWhiteSpace(constraint.Expression))
                 {
-                    findings.AddError(table, $"The check constraint '{constraint.Name}' has no expression.");
+                    findings.AddError(table, $"The check constraint {DefinitionFindings.ObjectName(constraint.Name, DefinitionFindings.Position(table.CheckConstraints, constraint))} has no expression. Enter a SQL check expression. Location: {DefinitionFindings.Location(table, "Check Constraints", DefinitionFindings.ObjectName(constraint.Name, DefinitionFindings.Position(table.CheckConstraints, constraint)), "Expression")}.");
                     continue;
                 }
                 CheckExpression(table,
                     columns,
                     constraint.Expression,
-                    $"check constraint '{constraint.Name}'",
+                    $"check constraint {DefinitionFindings.ObjectName(constraint.Name, DefinitionFindings.Position(table.CheckConstraints, constraint))}",
+                    DefinitionFindings.Location(table, "Check Constraints", DefinitionFindings.ObjectName(constraint.Name, DefinitionFindings.Position(table.CheckConstraints, constraint)), "Expression"),
                     findings);
             }
         }
@@ -87,6 +88,7 @@ namespace RepoDb.Schema
                     columns,
                     column.ComputedExpression,
                     $"computed column '{column.Field.Name}'",
+                    DefinitionFindings.Location(table, "Columns", column.Field.Name, "ComputedExpression"),
                     findings);
             }
         }
@@ -106,7 +108,8 @@ namespace RepoDb.Schema
                 CheckExpression(table,
                     columns,
                     index.Filter,
-                    $"filter of the index '{index.Name}'",
+                    $"filter of the index {DefinitionFindings.ObjectName(index.Name, DefinitionFindings.Position(table.Indexes, index))}",
+                    DefinitionFindings.Location(table, "Indexes", DefinitionFindings.ObjectName(index.Name, DefinitionFindings.Position(table.Indexes, index)), "Filter"),
                     findings);
             }
         }
@@ -118,18 +121,20 @@ namespace RepoDb.Schema
         /// <param name="columns">The names of the columns of the table.</param>
         /// <param name="expression">The SQL expression.</param>
         /// <param name="owner">The description of what has the expression (i.e.: check constraint 'CK_Age').</param>
+        /// <param name="location">The location of the expression in the definition.</param>
         /// <param name="findings">The findings that receive the problems.</param>
         private static void CheckExpression(TableSchema table,
             HashSet<string> columns,
             string expression,
             string owner,
+            string location,
             DefinitionFindings findings)
         {
             var unknown = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers(expression)
                 .Where(identifier => !columns.Contains(identifier));
             foreach (var identifier in unknown)
             {
-                findings.AddWarning(table, $"The {owner} refers to '{identifier}', which is not a column of the table. The expression is not parsed, so it may be something else.");
+                findings.AddWarning(table, $"The {owner} refers to '{identifier}', which is not a column of the table. The expression is not parsed, so it may be something else. Review the identifier against the table columns before changing the SQL expression. Location: {location}.");
             }
         }
 

@@ -66,7 +66,7 @@ namespace RepoDb.Schema
                 .Where(variants => variants.Count > 1);
             foreach (var variants in groups)
             {
-                findings.AddWarning(table, $"The {kind} names ({string.Join(", ", variants)}) differ only by case, which some databases treat as the same name.");
+                findings.AddWarning(table, $"The {kind} names ({string.Join(", ", variants)}) differ only by case, which some databases treat as the same name. Rename these objects to names that also differ when case is ignored if required by the destination. Location: {DefinitionFindings.Location(table, kind == "column" ? "Columns" : kind == "index" ? "Indexes" : "Primary Key / Unique Constraints / Foreign Keys / Check Constraints")}.");
             }
         }
 

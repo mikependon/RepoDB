@@ -36,7 +36,7 @@ namespace RepoDb.Schema
         {
             if (definition.Tables == null)
             {
-                return new ValidateDefinitionResult { Errors = { "The definition has no tables." } };
+                return new ValidateDefinitionResult { Errors = { "The definition has no tables. Add table definitions to the Tables collection. Location: Tables." } };
             }
             var findings = SchemaDefinitionStructureValidator.Validate(definition);
             if (findings.Errors.Count == 0)

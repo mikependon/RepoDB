@@ -46,7 +46,7 @@ namespace RepoDb.Schema
                 }
                 else
                 {
-                    findings.AddWarning(table, $"The referenced columns of the foreign key '{foreignKey.Name}' cannot be verified, as the table '{DefinitionFindings.Describe(foreignKey.ReferencedTable)}' is not part of the definition.");
+                    findings.AddWarning(table, $"The referenced columns of the foreign key {DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey))} cannot be verified, as the table '{DefinitionFindings.Describe(foreignKey.ReferencedTable)}' is not part of the definition. Include that table to validate its referenced columns and key. Location: {DefinitionFindings.Location(table, "Foreign Keys", DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey)), "Referenced Table")}.");
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace RepoDb.Schema
             {
                 return;
             }
-            findings.AddError(table, $"The foreign key '{foreignKey.Name}' references the columns ({string.Join(", ", foreignKey.ReferencedColumns)}) of the table '{DefinitionFindings.Describe(parent.Table)}', which are not its primary key or a unique key.");
+            findings.AddError(table, $"The foreign key {DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey))} references the columns ({string.Join(", ", foreignKey.ReferencedColumns)}) of the table '{DefinitionFindings.Describe(parent.Table)}', which are not its primary key or a unique key. Select columns belonging to a primary or unique key of the referenced table, or define a suitable unique key there. Location: {DefinitionFindings.Location(table, "Foreign Keys", DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey)), "Referenced Columns")}.");
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace RepoDb.Schema
                 var referenced = FindColumn(parent, foreignKey.ReferencedColumns[index]);
                 if (HaveDifferentTypes(child, referenced))
                 {
-                    findings.AddWarning(table, $"The column '{child.Field.Name}' of the foreign key '{foreignKey.Name}' is a {GetTypeName(child)}, but the column '{referenced.Field.Name}' that it references is a {GetTypeName(referenced)}.");
+                    findings.AddWarning(table, $"The column '{child.Field.Name}' of the foreign key {DefinitionFindings.ObjectName(foreignKey.Name, DefinitionFindings.Position(table.ForeignKeys, foreignKey))} is a {GetTypeName(child)}, but the column '{referenced.Field.Name}' that it references is a {GetTypeName(referenced)} on table '{DefinitionFindings.Describe(parent.Table)}'. Review the column types for compatibility. Locations: {DefinitionFindings.Location(table, "Columns", child.Field.Name, "Type")} and {DefinitionFindings.Location(parent, "Columns", referenced.Field.Name, "Type")}.");
                 }
             }
         }

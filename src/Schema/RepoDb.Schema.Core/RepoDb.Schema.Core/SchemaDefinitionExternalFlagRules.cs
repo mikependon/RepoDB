@@ -69,7 +69,7 @@ namespace RepoDb.Schema
                 var shouldBeExternal = foreignKey.ReferencedTable == null || !included.Contains(foreignKey.ReferencedTable);
                 if (!TryGetFlag(keyNodes[index], out var flag) || flag != shouldBeExternal)
                 {
-                    findings.AddError(table, $"A foreign-key external flag disagrees with the included tables: the foreign key '{foreignKey.Name}' should be {(shouldBeExternal ? "external" : "internal")}.");
+                    findings.AddError(table, $"A foreign-key external flag disagrees with the included tables: the foreign key {DefinitionFindings.ObjectName(foreignKey.Name, index)} should be {(shouldBeExternal ? "external" : "internal")}. Set the reference external flag to {(shouldBeExternal ? "true" : "false")} to match whether the referenced table is included in Tables. Location: {DefinitionFindings.Location(table, "Foreign Keys", DefinitionFindings.ObjectName(foreignKey.Name, index), "Reference > External")}.");
                 }
             }
         }

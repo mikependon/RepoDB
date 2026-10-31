@@ -68,7 +68,7 @@ namespace RepoDb.Schema
                 .Where(variants => variants.Count > 1);
             foreach (var variants in groups)
             {
-                findings.AddWarning($"The tables ({string.Join(", ", variants)}) differ only by case, which some databases treat as the same name.");
+                findings.AddWarning($"The tables ({string.Join(", ", variants)}) differ only by case, which some databases treat as the same name. Give these tables names that also differ when case is ignored if required by the destination. Location: Tables.");
             }
         }
 
@@ -87,7 +87,7 @@ namespace RepoDb.Schema
             foreach (var group in owners)
             {
                 var names = group.Select(item => DefinitionFindings.Describe(item.Table.Table));
-                findings.AddWarning($"The constraint name '{group.Key}' is used by more than one table ({string.Join(", ", names)}), but some databases require it to be unique in the whole schema.");
+                findings.AddWarning($"The constraint name '{group.Key}' is used by more than one table ({string.Join(", ", names)}), but some databases require it to be unique in the whole schema. Give these constraints distinct names if required by the destination. Location: Tables > each listed table > Primary Key / Unique Constraints / Foreign Keys / Check Constraints > {group.Key} > Name.");
             }
         }
 
