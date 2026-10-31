@@ -341,18 +341,16 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
         #region Overloads
 
         [TestMethod]
-        public void TestCopyDataToWithARegisteredConnection()
+        public void TestCopyDataToWithADestinationConnection()
         {
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 Helper.CreateTargetTables("Country");
-                var name = "Target-" + Guid.NewGuid().ToString("N");
-                ConnectionManager.Register(name, target);
 
                 // Act
-                var actual = source.CopyDataTo("Country", name).RowCount;
+                var actual = source.CopyDataTo("Country", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -361,18 +359,16 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToWithARegisteredConnectionAndATargetTable()
+        public void TestCopyDataToWithADestinationConnectionAndATargetTable()
         {
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
-                var name = "Target-" + Guid.NewGuid().ToString("N");
-                ConnectionManager.Register(name, target);
 
                 // Act
-                var actual = source.CopyDataTo("Currency", "CurrencyCopy", name).RowCount;
+                var actual = source.CopyDataTo("Currency", "CurrencyCopy", target).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -435,18 +431,16 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToOfAnEntityWithARegisteredConnection()
+        public void TestCopyDataToOfAnEntityWithADestinationConnection()
         {
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 Helper.CreateTargetTables("Currency");
-                var name = "Target-" + Guid.NewGuid().ToString("N");
-                ConnectionManager.Register(name, target);
 
                 // Act
-                var actual = source.CopyDataTo<Currency>(name, c => c.Code == "EUR").RowCount;
+                var actual = source.CopyDataTo<Currency>(target, c => c.Code == "EUR").RowCount;
 
                 // Assert
                 Assert.AreEqual(1, actual);
@@ -588,18 +582,16 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopyDataToAsyncWithARegisteredConnection()
+        public async Task TestCopyDataToAsyncWithADestinationConnection()
         {
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 Helper.CreateTargetTables("Country");
-                var name = "Target-" + Guid.NewGuid().ToString("N");
-                ConnectionManager.Register(name, target);
 
                 // Act
-                var actual = (await source.CopyDataToAsync("Country", name)).RowCount;
+                var actual = (await source.CopyDataToAsync("Country", target)).RowCount;
 
                 // Assert
                 Assert.AreEqual(3, actual);
@@ -626,18 +618,16 @@ namespace RepoDb.Data.CockroachDb.IntegrationTests
         }
 
         [TestMethod]
-        public async Task TestCopyDataToAsyncOfAnEntityWithATargetTableAndARegisteredConnection()
+        public async Task TestCopyDataToAsyncOfAnEntityWithATargetTableAndADestinationConnection()
         {
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 Helper.ExecuteOnTarget("CREATE TABLE \"public\".\"CurrencyCopy\" (\"Code\" CHAR(3) NOT NULL, \"Name\" varchar(50) NOT NULL, CONSTRAINT \"PK_CurrencyCopy\" PRIMARY KEY (\"Code\"));");
-                var name = "Target-" + Guid.NewGuid().ToString("N");
-                ConnectionManager.Register(name, target);
 
                 // Act
-                var actual = (await source.CopyDataToAsync<Currency>("CurrencyCopy", name, c => c.Code == "PHP")).RowCount;
+                var actual = (await source.CopyDataToAsync<Currency>("CurrencyCopy", target, c => c.Code == "PHP")).RowCount;
 
                 // Assert
                 Assert.AreEqual(1, actual);

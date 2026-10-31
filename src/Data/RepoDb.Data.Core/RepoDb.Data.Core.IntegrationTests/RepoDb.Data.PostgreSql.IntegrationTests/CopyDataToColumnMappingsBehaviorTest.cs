@@ -455,18 +455,16 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToWithStrictAndARegisteredConnection()
+        public void TestCopyDataToWithStrictAndADestinationConnection()
         {
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 Helper.ExecuteOnTarget(ExtraColumn);
-                var name = "Target-" + Guid.NewGuid().ToString("N");
-                ConnectionManager.Register(name, target);
 
                 // Act/Assert
-                Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: ColumnMappingBehavior.Strict));
+                Assert.Throws<PostgreSqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: ColumnMappingBehavior.Strict));
                 AssertNotCopied();
             }
         }

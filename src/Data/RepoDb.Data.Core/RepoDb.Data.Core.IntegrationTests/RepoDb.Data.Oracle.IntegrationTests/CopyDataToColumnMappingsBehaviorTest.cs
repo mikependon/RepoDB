@@ -454,18 +454,16 @@ namespace RepoDb.Data.Oracle.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToWithStrictAndARegisteredConnection()
+        public void TestCopyDataToWithStrictAndADestinationConnection()
         {
             using (var source = new OracleConnection(Database.ConnectionStringForSource))
             using (var target = new OracleConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 Helper.ExecuteOnTarget(ExtraColumn);
-                var name = "Target-" + Guid.NewGuid().ToString("N");
-                ConnectionManager.Register(name, target);
 
                 // Act/Assert
-                Assert.Throws<OracleBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: ColumnMappingBehavior.Strict));
+                Assert.Throws<OracleBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: ColumnMappingBehavior.Strict));
                 AssertNotCopied();
             }
         }

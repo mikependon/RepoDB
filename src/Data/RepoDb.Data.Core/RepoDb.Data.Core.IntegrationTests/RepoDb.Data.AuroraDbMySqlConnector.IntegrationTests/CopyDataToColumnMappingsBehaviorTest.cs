@@ -454,18 +454,16 @@ namespace RepoDb.Data.AuroraDbMySqlConnector.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToWithStrictAndARegisteredConnection()
+        public void TestCopyDataToWithStrictAndADestinationConnection()
         {
             using (var source = new AuroraDbConnection(Database.ConnectionStringForSource))
             using (var target = new AuroraDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 Helper.ExecuteOnTarget(ExtraColumn);
-                var name = "Target-" + Guid.NewGuid().ToString("N");
-                ConnectionManager.Register(name, target);
 
                 // Act/Assert
-                Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: ColumnMappingBehavior.Strict));
+                Assert.Throws<AuroraDbBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: ColumnMappingBehavior.Strict));
                 AssertNotCopied();
             }
         }

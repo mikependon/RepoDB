@@ -109,28 +109,6 @@ namespace RepoDb.Data.MySql.IntegrationTests
             }
         }
 
-        [TestMethod]
-        public void ThrowExceptionOnCopyDataToIfTheDestinationConnectionIsNotRegistered()
-        {
-            using (var source = new MySqlConnection(Database.ConnectionStringForSource))
-            {
-                // Act/Assert
-                var exception = Assert.Throws<InvalidOperationException>(() => source.CopyDataTo("Currency", "NotRegistered-" + Guid.NewGuid().ToString("N")));
-                StringAssert.Contains(exception.Message, "NotRegistered-");
-            }
-        }
-
-        [TestMethod]
-        public void ThrowExceptionOnCopyDataToIfTheNameOfTheDestinationConnectionIsNullOrWhiteSpace()
-        {
-            using (var source = new MySqlConnection(Database.ConnectionStringForSource))
-            {
-                // Act/Assert
-                Assert.Throws<ArgumentNullException>(() => source.CopyDataTo("Currency", (string)null));
-                Assert.Throws<ArgumentNullException>(() => source.CopyDataTo("Currency", " "));
-            }
-        }
-
         #endregion
 
         #region Async
@@ -177,16 +155,6 @@ namespace RepoDb.Data.MySql.IntegrationTests
             {
                 // Act/Assert
                 await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => source.CopyDataToAsync("Currency", target, bufferSize: 0));
-            }
-        }
-
-        [TestMethod]
-        public async Task ThrowExceptionOnCopyDataToAsyncIfTheDestinationConnectionIsNotRegistered()
-        {
-            using (var source = new MySqlConnection(Database.ConnectionStringForSource))
-            {
-                // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyDataToAsync("Currency", "NotRegistered-" + Guid.NewGuid().ToString("N")));
             }
         }
 

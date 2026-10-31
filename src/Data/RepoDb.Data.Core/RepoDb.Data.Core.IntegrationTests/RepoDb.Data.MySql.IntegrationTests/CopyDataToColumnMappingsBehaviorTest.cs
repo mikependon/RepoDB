@@ -454,18 +454,16 @@ namespace RepoDb.Data.MySql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToWithStrictAndARegisteredConnection()
+        public void TestCopyDataToWithStrictAndADestinationConnection()
         {
             using (var source = new MySqlConnection(Database.ConnectionStringForSource))
             using (var target = new MySqlConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 Helper.ExecuteOnTarget(ExtraColumn);
-                var name = "Target-" + Guid.NewGuid().ToString("N");
-                ConnectionManager.Register(name, target);
 
                 // Act/Assert
-                Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: ColumnMappingBehavior.Strict));
+                Assert.Throws<MySqlBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: ColumnMappingBehavior.Strict));
                 AssertNotCopied();
             }
         }

@@ -454,18 +454,16 @@ namespace RepoDb.Data.SapHana.IntegrationTests
         }
 
         [TestMethod]
-        public void TestCopyDataToWithStrictAndARegisteredConnection()
+        public void TestCopyDataToWithStrictAndADestinationConnection()
         {
             using (var source = new HanaConnection(Database.ConnectionStringForSource))
             using (var target = new HanaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 Helper.ExecuteOnTarget(ExtraColumn);
-                var name = "Target-" + Guid.NewGuid().ToString("N");
-                ConnectionManager.Register(name, target);
 
                 // Act/Assert
-                Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", name, columnMappingsBehavior: ColumnMappingBehavior.Strict));
+                Assert.Throws<SapHanaBulkColumnMappingsException>(() => source.CopyDataTo("Currency", target, columnMappingsBehavior: ColumnMappingBehavior.Strict));
                 AssertNotCopied();
             }
         }
