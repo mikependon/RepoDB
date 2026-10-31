@@ -49,7 +49,7 @@ namespace RepoDb
             TResult result,
             CancellableTraceLog beforeExecutionLog,
             Exception error)
-            : base(sessionId, key, beforeExecutionLog?.Context, error == null ? TraceLevel.Info : TraceLevel.Error)
+            : base(sessionId, key, beforeExecutionLog?.Context, GetLevel(executionTime, error))
         {
             Result = result;
             BeforeExecutionLog = beforeExecutionLog;
@@ -58,6 +58,18 @@ namespace RepoDb
             {
                 ExecutionTime = executionTime.Value;
             }
+        }
+
+        private static TraceLevel GetLevel(TimeSpan? executionTime, Exception error)
+        {
+            if (error != null)
+            {
+                return TraceLevel.Error;
+            }
+            var threshold = GlobalConfiguration.Options.TraceWarningThreshold;
+            return threshold.HasValue && executionTime.HasValue && executionTime.Value >= threshold.Value
+                ? TraceLevel.Warning
+                : TraceLevel.Info;
         }
 
         #region Properties
