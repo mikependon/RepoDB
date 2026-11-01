@@ -38,6 +38,103 @@ namespace RepoDb.UnitTests.Trace
 
         #region Public Methods
 
+        [TestMethod]
+        [DataRow(false)]
+        [DataRow(true)]
+        public async Task CommandTimeoutIsReportedExactlyOnce(bool asynchronous)
+        {
+            var failure = new TimeoutException("Command timed out.");
+            using var connection = new CustomTracedDbConnection { Failure = failure };
+            var trace = new RecordingTrace();
+            Exception actual = null;
+            try { await Execute(connection, trace, asynchronous).ConfigureAwait(false); }
+            catch (Exception error) { actual = error; }
+
+            Assert.AreSame(failure, actual);
+            Assert.AreEqual(1, connection.ExecutionCount);
+            Assert.AreEqual(1, trace.BeforeLogs.Count);
+            Assert.AreSame(failure, trace.AfterErrors.Single());
+            Assert.AreEqual(TraceLevel.Error, trace.AfterLevels.Single());
+        }
+
+        [TestMethod]
+        [DataRow(false)]
+        [DataRow(true)]
+        public async Task PreparationFailureReachesGlobalTracesDespiteObserverFailures(bool asynchronous)
+        {
+            using var execution = new TraceTestExecution();
+            var failure = new TimeoutException("Opening timed out.");
+            execution.Connection.OpenFailure = failure;
+            execution.First.OnBefore = () => throw new InvalidOperationException("Before failed.");
+            execution.First.ThrowOnAfter = new InvalidOperationException("After failed.");
+            execution.RegisterGlobal(execution.First);
+            execution.RegisterGlobal(execution.Second);
+            GlobalConfiguration.Options.UseRegisteredGlobalTraces = true;
+            Exception actual = null;
+            try
+            {
+                if (asynchronous) await execution.Connection.ExecuteNonQueryAsync(Statement);
+                else execution.Connection.ExecuteNonQuery(Statement);
+            }
+            catch (Exception error) { actual = error; }
+
+            Assert.AreSame(failure, actual);
+            Assert.AreSame(failure, execution.Second.AfterErrors.Single());
+            Assert.AreEqual(TraceLevel.Error, execution.Second.AfterLevels.Single());
+            Assert.AreEqual(1, execution.Second.BeforeLogs.Count);
+        }
+
+        [TestMethod]
+        public async Task CancelledOpeningStillReportsTheOriginalError()
+        {
+            using var connection = new CustomTracedDbConnection();
+            using var cancellation = new CancellationTokenSource();
+            cancellation.Cancel();
+            var trace = new RecordingTrace();
+            Exception actual = null;
+            try
+            {
+                await connection.ExecuteNonQueryAsync(Statement, trace: trace, cancellationToken: cancellation.Token);
+            }
+            catch (Exception error) { actual = error; }
+
+            Assert.IsInstanceOfType<OperationCanceledException>(actual);
+            Assert.AreSame(actual, trace.AfterErrors.Single());
+            Assert.AreEqual(TraceLevel.Error, trace.AfterLevels.Single());
+            Assert.AreEqual(CancellationToken.None, trace.AfterTokens.Single());
+            Assert.AreEqual(0, connection.ExecutionCount);
+        }
+
+        [TestMethod]
+        [DataRow(false, false)]
+        [DataRow(true, false)]
+        [DataRow(false, true)]
+        [DataRow(true, true)]
+        public async Task PreparationFailureIsTracedWithoutReplacingTheException(bool asynchronous, bool opening)
+        {
+            using var connection = new CustomTracedDbConnection();
+            var failure = new TimeoutException("Preparation timed out.");
+            if (opening) connection.OpenFailure = failure;
+            else connection.PreparationFailure = failure;
+            var trace = new RecordingTrace { ThrowOnAfter = new InvalidOperationException("Observer failed.") };
+            Exception actual = null;
+            try
+            {
+                await Execute(connection, trace, asynchronous).ConfigureAwait(false);
+            }
+            catch (Exception error) { actual = error; }
+
+            Assert.AreSame(failure, actual);
+            Assert.AreEqual(0, connection.ExecutionCount);
+            Assert.AreEqual(1, trace.BeforeLogs.Count);
+            Assert.AreSame(failure, trace.AfterErrors.Single());
+            Assert.AreEqual(TraceLevel.Error, trace.AfterLevels.Single());
+            Assert.AreSame(trace.BeforeLogs.Single(), trace.AfterBeforeLogs.Single());
+            Assert.AreEqual(Statement, trace.BeforeLogs.Single().Statement);
+            Assert.AreEqual("TestDatabase", trace.BeforeLogs.Single().Database);
+            if (asynchronous) Assert.AreEqual(CancellationToken.None, trace.AfterTokens.Single());
+        }
+
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {

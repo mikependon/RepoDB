@@ -10,6 +10,7 @@ using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Runtime.ExceptionServices;
 using System.Threading;
@@ -22,6 +23,62 @@ namespace RepoDb
     /// </summary>
     internal static class Tracer
     {
+        /// <summary>Times preparation without changing successful before-execution callbacks.</summary>
+        internal static TraceResult CreatePreparationTrace(string key, ITrace trace,
+            IDbConnection connection, string statement)
+        {
+            if (string.IsNullOrEmpty(key) || (trace == null && !GlobalConfiguration.Options.UseRegisteredGlobalTraces))
+            {
+                return null;
+            }
+            return new TraceResult(new CancellableTraceLog(Guid.NewGuid(), key, statement,
+                null, TraceContext.CaptureConnection(connection)));
+        }
+
+        /// <summary>Reports preparation failures as a correlated pair of notifications.</summary>
+        internal static void ReportPreparationFailure(TraceResult result, ITrace trace, Exception error)
+        {
+            if (result == null) return;
+            NotifyPreparationBefore(trace, result.CancellableTraceLog);
+            if (GlobalConfiguration.Options.UseRegisteredGlobalTraces)
+            {
+                foreach (var observer in GlobalTraceRegistration.GetTracers())
+                    NotifyPreparationBefore(observer, result.CancellableTraceLog);
+            }
+            InvokeAfterExecution<object>(result, trace, null, error);
+        }
+
+        /// <summary>Reports preparation failures independently of execution cancellation.</summary>
+        internal static async Task ReportPreparationFailureAsync(TraceResult result, ITrace trace, Exception error)
+        {
+            if (result == null) return;
+            await NotifyPreparationBeforeAsync(trace, result.CancellableTraceLog).ConfigureAwait(false);
+            if (GlobalConfiguration.Options.UseRegisteredGlobalTraces)
+            {
+                foreach (var observer in GlobalTraceRegistration.GetTracers())
+                    await NotifyPreparationBeforeAsync(observer, result.CancellableTraceLog).ConfigureAwait(false);
+            }
+            await InvokeAfterExecutionAsync<object>(result, trace, null, CancellationToken.None, error).ConfigureAwait(false);
+        }
+
+        // The operation has already failed. An observer must not replace that failure or
+        // prevent the remaining observers from receiving its completion notification.
+        private static void NotifyPreparationBefore(ITrace trace, CancellableTraceLog log)
+        {
+            try { trace?.BeforeExecution(log); }
+            catch (Exception) { }
+        }
+
+        private static async Task NotifyPreparationBeforeAsync(ITrace trace, CancellableTraceLog log)
+        {
+            try
+            {
+                if (trace != null)
+                    await trace.BeforeExecutionAsync(log, CancellationToken.None).ConfigureAwait(false);
+            }
+            catch (Exception) { }
+        }
+
         #region Public Methods
 
         /// <summary>

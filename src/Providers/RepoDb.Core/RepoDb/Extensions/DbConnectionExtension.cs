@@ -211,6 +211,8 @@ namespace RepoDb
             // Execute the actual method
             using var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -377,6 +379,8 @@ namespace RepoDb
             // Execute the actual method
             using var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -692,6 +696,8 @@ namespace RepoDb
             // Execute the actual method
             using var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -1017,6 +1023,8 @@ namespace RepoDb
             // Execute the actual method
             using var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -1180,6 +1188,8 @@ namespace RepoDb
             // Execute the actual method
             using var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -1359,6 +1369,8 @@ namespace RepoDb
             // Execute the actual method
             using var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -1688,6 +1700,8 @@ namespace RepoDb
             // Execute the actual method
             using var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -2028,6 +2042,8 @@ namespace RepoDb
             // Execute the actual method
             using var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -2205,6 +2221,8 @@ namespace RepoDb
             // Execute the actual method
             using var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -2394,6 +2412,8 @@ namespace RepoDb
             // Execute the actual method
             using var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -2733,6 +2753,8 @@ namespace RepoDb
             // Execute the actual method
             using var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -3083,6 +3105,8 @@ namespace RepoDb
             // Execute the actual method
             using var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -3462,6 +3486,8 @@ isDisposeConnection: false,
             var setting = DbSettingMapper.Get(connection);
             var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -3614,6 +3640,8 @@ isDisposeConnection: false,
             var setting = connection.GetDbSetting();
             var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -3764,6 +3792,8 @@ isDisposeConnection: false,
         {
             using var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -3887,6 +3917,8 @@ isDisposeConnection: false,
         {
             using var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -4154,6 +4186,8 @@ isDisposeConnection: false,
 
             using var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -4315,6 +4349,8 @@ isDisposeConnection: false,
 
             using var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
+                traceKey: traceKey,
+                trace: trace,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
@@ -5433,24 +5469,35 @@ isDisposeConnection: false,
             IDbTransaction transaction = null,
             [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType = null,
             DbFieldCollection dbFields = null,
-            bool skipCommandArrayParametersCheck = true)
+            bool skipCommandArrayParametersCheck = true,
+            string traceKey = null,
+            ITrace trace = null)
         {
-            // Validate
-            ValidateTransactionConnectionObject(connection, transaction);
+            var preparation = Tracer.CreatePreparationTrace(traceKey, trace, connection, commandText);
+            try
+            {
+                // Validate
+                ValidateTransactionConnectionObject(connection, transaction);
 
-            // Open
-            connection.EnsureOpen();
+                // Open
+                connection.EnsureOpen();
 
-            // Call
-            return CreateDbCommandForExecutionInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: entityType,
-                dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                // Call
+                return CreateDbCommandForExecutionInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    entityType: entityType,
+                    dbFields: dbFields,
+                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+            }
+            catch (Exception error)
+            {
+                Tracer.ReportPreparationFailure(preparation, trace, error);
+                throw;
+            }
         }
 
         /// <summary>
@@ -5476,24 +5523,35 @@ isDisposeConnection: false,
             CancellationToken cancellationToken = default,
             [DynamicallyAccessedMembers(Trimming.Entity)] Type entityType = null,
             DbFieldCollection dbFields = null,
-            bool skipCommandArrayParametersCheck = true)
+            bool skipCommandArrayParametersCheck = true,
+            string traceKey = null,
+            ITrace trace = null)
         {
-            // Validate
-            ValidateTransactionConnectionObject(connection, transaction);
+            var preparation = Tracer.CreatePreparationTrace(traceKey, trace, connection, commandText);
+            try
+            {
+                // Validate
+                ValidateTransactionConnectionObject(connection, transaction);
 
-            // Open
-            await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
+                // Open
+                await connection.EnsureOpenAsync(cancellationToken).ConfigureAwait(false);
 
-            // Call
-            return CreateDbCommandForExecutionInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: entityType,
-                dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                // Call
+                return CreateDbCommandForExecutionInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    entityType: entityType,
+                    dbFields: dbFields,
+                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+            }
+            catch (Exception error)
+            {
+                await Tracer.ReportPreparationFailureAsync(preparation, trace, error).ConfigureAwait(false);
+                throw;
+            }
         }
 
         /// <summary>

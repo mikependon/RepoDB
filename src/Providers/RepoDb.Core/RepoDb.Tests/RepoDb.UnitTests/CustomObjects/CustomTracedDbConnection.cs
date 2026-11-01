@@ -38,6 +38,16 @@ namespace RepoDb.UnitTests.CustomObjects
         /// </summary>
         public Exception Failure { get; set; }
 
+        public Exception OpenFailure { get; set; }
+
+        public Exception PreparationFailure { get; set; }
+
+        public override void Open()
+        {
+            if (OpenFailure != null) throw OpenFailure;
+            base.Open();
+        }
+
         /// <summary>
         /// Gets or sets the factory used to create command readers.
         /// </summary>
@@ -61,8 +71,10 @@ namespace RepoDb.UnitTests.CustomObjects
         /// Creates a command that is configured as the connection is.
         /// </summary>
         /// <returns>The command.</returns>
-        protected override DbCommand CreateDbCommand() =>
-            new CustomTracedDbCommand
+        protected override DbCommand CreateDbCommand()
+        {
+            if (PreparationFailure != null) throw PreparationFailure;
+            return new CustomTracedDbCommand
             {
                 Connection = this,
                 Delay = Delay,
@@ -72,6 +84,7 @@ namespace RepoDb.UnitTests.CustomObjects
                 RowsAffected = RowsAffected,
                 ScalarValue = ScalarValue
             };
+        }
 
         #endregion
     }

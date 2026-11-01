@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 
@@ -102,10 +103,13 @@ namespace RepoDb
         /// <param name="command">The command that is about to be executed.</param>
         /// <returns>The captured context.</returns>
         public static TraceContext Capture(DbCommand command)
+            => CaptureConnection(command?.Connection);
+
+        /// <summary>Captures context before a command or an open connection is available.</summary>
+        internal static TraceContext CaptureConnection(IDbConnection connection)
         {
             var activity = Activity.Current;
             var isW3C = activity?.IdFormat == ActivityIdFormat.W3C;
-            var connection = command?.Connection;
             return new TraceContext(Environment.CurrentManagedThreadId,
                 TraceEnvironment.MachineName,
                 TraceEnvironment.IpAddress,
@@ -124,7 +128,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection.</param>
         /// <returns>The name of the database, or <c>null</c> if it cannot be read.</returns>
-        private static string GetDatabase(DbConnection connection)
+        private static string GetDatabase(IDbConnection connection)
         {
             try
             {
