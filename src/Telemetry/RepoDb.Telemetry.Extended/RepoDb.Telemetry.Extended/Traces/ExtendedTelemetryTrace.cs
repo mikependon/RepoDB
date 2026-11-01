@@ -8,8 +8,10 @@
 
 using System;
 using System.Collections;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using RepoDb.Telemetry.Core;
 using Serilog;
 using Serilog.Events;
@@ -23,12 +25,12 @@ namespace RepoDb.Telemetry.Extended
     {
         #region Private Variables
 
+        private static volatile ExtendedTelemetryTrace _instance;
 #if NET9_0_OR_GREATER
         private static readonly System.Threading.Lock _syncLock = new System.Threading.Lock();
 #else
         private static readonly object _syncLock = new object();
 #endif
-        private static volatile ExtendedTelemetryTrace _instance;
 
         #endregion
 
@@ -56,8 +58,7 @@ namespace RepoDb.Telemetry.Extended
         /// <summary>
         /// Gets the trace initialized through global configuration.
         /// </summary>
-        public static ExtendedTelemetryTrace Instance
-            => _instance ?? throw new InvalidOperationException("Call UseExtendedTelemetry first.");
+        public static ExtendedTelemetryTrace Instance => _instance ?? throw new InvalidOperationException("Call UseExtendedTelemetry first.");
 
         #endregion
 
@@ -67,12 +68,11 @@ namespace RepoDb.Telemetry.Extended
         /// Creates the publisher using this trace's connection settings.
         /// </summary>
         /// <returns>The extended telemetry publisher.</returns>
-        public override TelemetryPublisherRepository GetPublisherRepository()
-            => new ExtendedTelemetryPublisherRepository(Option.Host,
-                Option.ApiKey,
-                ErrorCallback,
-                Logger,
-                Option.CertificateValidationCallback);
+        public override TelemetryPublisherRepository GetPublisherRepository() => new ExtendedTelemetryPublisherRepository(Option.Host,
+            Option.ApiKey,
+            ErrorCallback,
+            Logger,
+            Option.CertificateValidationCallback);
 
         #endregion
 
@@ -100,6 +100,7 @@ namespace RepoDb.Telemetry.Extended
                     trace.Start();
                     _instance = trace;
                 }
+
                 return _instance;
             }
         }
@@ -115,29 +116,17 @@ namespace RepoDb.Telemetry.Extended
         /// <returns>The enriched event.</returns>
         protected override TelemetryItem CreateTelemetryItem(CancellableTraceLog log)
         {
-            // The context is captured by the library when the operation starts. A log that carries none (i.e. one that is
-            // written by a provider that does not capture it) gets the values of the activity and of the thread that are current.
-            var activity = Activity.Current;
-            var isW3C = activity?.IdFormat == ActivityIdFormat.W3C;
-            var item = new ExtendedTelemetryItem
-            {
-                ConnectionType = log.ConnectionType,
-                Database = log.Database,
-                Operation = log.Key,
-                ParameterCount = log.Parameters?.Count() ?? 0,
-                SpanId = log.SpanId ?? (isW3C ? activity.SpanId.ToString() : null),
-                ThreadId = log.ThreadId != 0 ? log.ThreadId : Environment.CurrentManagedThreadId,
-                TraceId = log.TraceId ?? (isW3C ? activity.TraceId.ToString() : null)
-            };
+            var parameters = log.Parameters?.ToArray();
+            var item = CreateContextItem(log);
+            item.ParameterCount = parameters?.Length ?? 0;
+            item.Parameters = parameters?.Select(CreateParameter).ToList();
             ((ExtendedTelemetryOption)Option).Enrich?.Invoke(item,
                 log);
             return item;
         }
 
         /// <summary>
-        /// Completes the event with the outcome of the operation. If the operation has failed, the exception is recorded and the level is an error,
-        /// and the row counts are not recorded as the operation did not complete. Otherwise, the level of the trace is applied if it is not an information,
-        /// and the known row counts are recorded.
+        /// Records the final severity, error, and result metadata.
         /// </summary>
         /// <param name="item">The event being completed.</param>
         /// <param name="result">The operation result (the default value if the operation has failed).</param>
@@ -149,16 +138,19 @@ namespace RepoDb.Telemetry.Extended
             TraceLevel level)
         {
             var extended = (ExtendedTelemetryItem)item;
+            extended.TraceLevel = level;
             if (error != null)
             {
                 SetError(extended,
                     error);
                 return;
             }
+
             if (level != TraceLevel.Info)
             {
                 extended.Level = ToLogEventLevel(level);
             }
+
             base.CompleteTelemetryItem(item,
                 result,
                 error,
@@ -174,6 +166,12 @@ namespace RepoDb.Telemetry.Extended
             object result)
         {
             var extended = (ExtendedTelemetryItem)item;
+            extended.ResultType = result?.GetType().FullName;
+            if (((ExtendedTelemetryOption)Option).CaptureResultValues)
+            {
+                extended.Result = SnapshotValue(result);
+            }
+
             if (result is ICollection collection)
             {
                 extended.RowsReturned = collection.Count;
@@ -188,6 +186,64 @@ namespace RepoDb.Telemetry.Extended
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Copies the operation context.
+        /// </summary>
+        /// <param name="log">The command log.</param>
+        /// <returns>The context event.</returns>
+        private static ExtendedTelemetryItem CreateContextItem(CancellableTraceLog log)
+        {
+            var activity = Activity.Current;
+            var isW3C = activity?.IdFormat == ActivityIdFormat.W3C;
+            return new ExtendedTelemetryItem
+            {
+                ConnectionType = log.ConnectionType,
+                Database = log.Database,
+                Operation = log.Key,
+                TraceLevel = log.Level,
+                SpanId = log.SpanId ?? (isW3C ? activity.SpanId.ToString() : null),
+                ThreadId = log.ThreadId != 0 ? log.ThreadId : Environment.CurrentManagedThreadId,
+                TraceId = log.TraceId ?? (isW3C ? activity.TraceId.ToString() : null)
+            };
+        }
+
+        /// <summary>
+        /// Copies parameter metadata and its value.
+        /// </summary>
+        /// <param name="parameter">The command parameter.</param>
+        /// <returns>The parameter snapshot.</returns>
+        private TelemetryParameter CreateParameter(IDbDataParameter parameter)
+        {
+            if (parameter == null)
+            {
+                return null;
+            }
+
+            return new TelemetryParameter
+            {
+                Name = parameter.ParameterName,
+                DbType = parameter.DbType,
+                Direction = parameter.Direction,
+                IsNullable = parameter.IsNullable,
+                Size = parameter.Size,
+                Precision = parameter.Precision,
+                Scale = parameter.Scale,
+                SourceColumn = parameter.SourceColumn,
+                SourceVersion = parameter.SourceVersion,
+                ValueType = parameter.Value?.GetType().FullName,
+                Value = ((ExtendedTelemetryOption)Option).CaptureParameterValues ? SnapshotValue(parameter.Value) : null
+            };
+        }
+
+        /// <summary>
+        /// Captures a value using generated metadata.
+        /// </summary>
+        /// <param name="value">The value to capture.</param>
+        /// <returns>The captured JSON value.</returns>
+        private JsonElement? SnapshotValue(object value) => TelemetryValueSnapshot.Capture(value,
+            (ExtendedTelemetryOption)Option,
+            Logger);
 
         /// <summary>
         /// Records the exception that made the operation fail. The rows are not recorded, as the operation did not complete.
@@ -230,11 +286,8 @@ namespace RepoDb.Telemetry.Extended
         /// </summary>
         /// <param name="operation">The operation name.</param>
         /// <returns>Whether the operation returns an affected row count.</returns>
-        private static bool IsWriteOperation(string operation)
-            => operation is "Delete" or "DeleteAll" or "InsertAll" or
-                "Update" or "UpdateAll" or "MergeAll";
+        private static bool IsWriteOperation(string operation) => operation is "Delete" or "DeleteAll" or "InsertAll" or "Update" or "UpdateAll" or "MergeAll";
 
         #endregion
     }
 }
-

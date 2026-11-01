@@ -33,7 +33,6 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         {
         }
 
-
         /// <summary>
         /// Creates a result of an operation that has failed, paired with its command trace.
         /// </summary>
@@ -55,4 +54,3 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         #endregion
     }
 }
-

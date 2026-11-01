@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Text.Json;
 using RepoDb.Telemetry.Default;
 using Serilog.Events;
 
@@ -73,6 +74,26 @@ namespace RepoDb.Telemetry.Extended
         public int? ParameterCount { get; set; }
 
         /// <summary>
+        /// The command parameter metadata and optional value snapshots.
+        /// </summary>
+        public IList<TelemetryParameter> Parameters { get; set; }
+
+        /// <summary>
+        /// The CLR type of the operation result.
+        /// </summary>
+        public string ResultType { get; set; }
+
+        /// <summary>
+        /// The result snapshot, when enabled and supported. Deferred results are never consumed.
+        /// </summary>
+        public JsonElement? Result { get; set; }
+
+        /// <summary>
+        /// The original core severity, before mapping or enrichment.
+        /// </summary>
+        public System.Diagnostics.TraceLevel TraceLevel { get; set; }
+
+        /// <summary>
         /// The custom event properties. Values must have registered JSON metadata.
         /// </summary>
         public IDictionary<string, object> Properties { get; set; } = new Dictionary<string, object>(StringComparer.Ordinal);
@@ -110,4 +131,3 @@ namespace RepoDb.Telemetry.Extended
         #endregion
     }
 }
-

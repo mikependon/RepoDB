@@ -41,16 +41,14 @@ namespace RepoDb.Telemetry.Extended
             string groupName = "Default",
             Action<Exception> errorCallback = null,
             ILogger logger = null,
-            Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> certificateValidationCallback = null)
-            => globalConfiguration.UseExtendedTelemetry(new ExtendedTelemetryOption(applicationName)
-            {
-                ApiKey = apiKey,
-                CertificateValidationCallback = certificateValidationCallback,
-                Group = groupName,
-                Host = host
-            },
-                errorCallback,
-                logger);
+            Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> certificateValidationCallback = null) => globalConfiguration.UseExtendedTelemetry(new ExtendedTelemetryOption(applicationName) {
+            ApiKey = apiKey,
+            CertificateValidationCallback = certificateValidationCallback,
+            Group = groupName,
+            Host = host
+        },
+            errorCallback,
+            logger);
 
         /// <summary>
         /// Initializes and registers the global extended trace once.
@@ -70,10 +68,12 @@ namespace RepoDb.Telemetry.Extended
             {
                 throw new ArgumentNullException(nameof(globalConfiguration));
             }
+
             if (option == null)
             {
                 throw new ArgumentNullException(nameof(option));
             }
+
             ExtendedTelemetryTrace.Create(option,
                 errorCallback,
                 logger);
@@ -83,4 +83,3 @@ namespace RepoDb.Telemetry.Extended
         #endregion
     }
 }
-

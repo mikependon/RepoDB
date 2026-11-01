@@ -23,7 +23,7 @@ namespace RepoDb.Telemetry.Extended.UnitTests
     {
         #region Private Variables
 
-        private readonly HttpListener _listener = new HttpListener();
+        private readonly HttpListener _listener;
 
         #endregion
 
@@ -34,14 +34,7 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         /// </summary>
         public TestCollector()
         {
-            var socket = new TcpListener(IPAddress.Loopback,
-                0);
-            socket.Start();
-            var port = ((IPEndPoint)socket.LocalEndpoint).Port;
-            socket.Stop();
-            Host = $"http://127.0.0.1:{port}";
-            _listener.Prefixes.Add(Host + "/");
-            _listener.Start();
+            (_listener, Host) = CreateListener();
         }
 
         #endregion
@@ -63,6 +56,11 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         /// </summary>
         public string Path { get; private set; }
 
+        /// <summary>
+        /// Gets whether the received bytes have a gzip header.
+        /// </summary>
+        public bool IsGzipCompressed { get; private set; }
+
         #endregion
 
         #region Public Methods
@@ -81,7 +79,9 @@ namespace RepoDb.Telemetry.Extended.UnitTests
             var encoded = await reader.ReadToEndAsync();
             context.Response.StatusCode = statusCode;
             context.Response.Close();
-            using var stream = new MemoryStream(Convert.FromBase64String(encoded));
+            var compressed = Convert.FromBase64String(encoded);
+            IsGzipCompressed = compressed.Length >= 2 && compressed[0] == 0x1f && compressed[1] == 0x8b;
+            using var stream = new MemoryStream(compressed);
             using var gzip = new GZipStream(stream,
                 CompressionMode.Decompress);
             return await JsonDocument.ParseAsync(gzip);
@@ -96,6 +96,44 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         }
 
         #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Starts a listener, retrying ephemeral port conflicts.
+        /// </summary>
+        /// <returns>The listener and its host.</returns>
+        private static (HttpListener Listener, string Host) CreateListener()
+        {
+            for (var attempt = 0;; attempt++)
+            {
+                var host = GetAvailableHost();
+                var listener = new HttpListener();
+                listener.Prefixes.Add(host + "/");
+                try
+                {
+                    listener.Start();
+                    return (listener, host);
+                }
+                catch (HttpListenerException)when (attempt < 4)
+                {
+                    listener.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Resolves an available loopback port.
+        /// </summary>
+        /// <returns>The candidate collector host.</returns>
+        private static string GetAvailableHost()
+        {
+            using var socket = new TcpListener(IPAddress.Loopback,
+                0);
+            socket.Start();
+            return $"http://127.0.0.1:{((IPEndPoint)socket.LocalEndpoint).Port}";
+        }
+
+        #endregion
     }
 }
-

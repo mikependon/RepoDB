@@ -26,9 +26,21 @@ namespace RepoDb.Telemetry.Extended
     [JsonSerializable(typeof(DateTime))]
     [JsonSerializable(typeof(Guid))]
     [JsonSerializable(typeof(JsonElement))]
+    [JsonSerializable(typeof(byte[]))]
+    [JsonSerializable(typeof(string[]))]
+    [JsonSerializable(typeof(int[]))]
+    [JsonSerializable(typeof(long[]))]
+    [JsonSerializable(typeof(byte))]
+    [JsonSerializable(typeof(sbyte))]
+    [JsonSerializable(typeof(short))]
+    [JsonSerializable(typeof(ushort))]
+    [JsonSerializable(typeof(uint))]
+    [JsonSerializable(typeof(ulong))]
+    [JsonSerializable(typeof(float))]
+    [JsonSerializable(typeof(char))]
+    [JsonSerializable(typeof(DateTimeOffset))]
+    [JsonSerializable(typeof(TimeSpan))]
     internal partial class ExtendedTelemetryJsonSerializerContext : JsonSerializerContext
     {
-
     }
 }
-

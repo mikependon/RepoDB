@@ -7,6 +7,7 @@
     <Description>The extended telemetry package for RepoDB library.</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
+    <IsAotCompatible Condition="'$(TargetFramework)' != 'netstandard2.0'">true</IsAotCompatible>
     <PackageTags>orm hybrid-orm micro-orm telemetry</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDB/tree/master/src/Telemetry/RepoDb.Telemetry.Extended</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/telemetryextended</PackageReleaseNotes>

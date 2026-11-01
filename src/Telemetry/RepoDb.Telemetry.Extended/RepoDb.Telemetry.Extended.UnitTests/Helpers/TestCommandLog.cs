@@ -30,7 +30,6 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         {
         }
 
-
         /// <summary>
         /// Creates a test command with one parameter, and the context that the library captures when an operation starts.
         /// </summary>
@@ -49,4 +48,3 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         #endregion
     }
 }
-

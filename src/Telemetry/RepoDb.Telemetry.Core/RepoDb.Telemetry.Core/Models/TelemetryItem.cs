@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -15,6 +15,8 @@ namespace RepoDb.Telemetry.Core
     /// </summary>
     public class TelemetryItem
     {
+        #region Properties
+
         /// <summary>
         /// The name of the application that produces the telemetry.
         /// </summary>
@@ -46,6 +48,11 @@ namespace RepoDb.Telemetry.Core
         public bool IsCancelled { get; set; }
 
         /// <summary>
+        /// Whether cancellation requests that an exception be thrown.
+        /// </summary>
+        public bool IsThrowException { get; set; }
+
+        /// <summary>
         /// The name of the operation that has been executed. This can be Insert, Delete, Update, Query, etc.
         /// </summary>
         public string Operation { get; set; }
@@ -74,5 +81,7 @@ namespace RepoDb.Telemetry.Core
         /// The client machine name that has executed the operation. This is used to identify the machine that has executed the operation.
         /// </summary>
         public string Version { get; set; }
+
+        #endregion
     }
 }

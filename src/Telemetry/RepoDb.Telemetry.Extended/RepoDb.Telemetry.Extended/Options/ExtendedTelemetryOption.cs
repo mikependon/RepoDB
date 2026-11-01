@@ -7,6 +7,8 @@
 #endregion
 
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using RepoDb.Telemetry.Default;
 
 namespace RepoDb.Telemetry.Extended
@@ -37,7 +39,27 @@ namespace RepoDb.Telemetry.Extended
         /// </summary>
         public Action<ExtendedTelemetryItem, CancellableTraceLog> Enrich { get; set; }
 
+        /// <summary>
+        /// Whether parameter values are captured in addition to metadata.
+        /// </summary>
+        public bool CaptureParameterValues { get; set; } = true;
+
+        /// <summary>
+        /// Whether materialized result values are captured in addition to summaries.
+        /// </summary>
+        public bool CaptureResultValues { get; set; } = true;
+
+        /// <summary>
+        /// Supplies JSON snapshots for application types. Return null for unsupported values.
+        /// Deferred sequences and readers are excluded before this callback is invoked.
+        /// </summary>
+        public Func<object, JsonElement?> CaptureValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets generated metadata for application value types.
+        /// </summary>
+        public JsonSerializerContext ValueSerializerContext { get; set; }
+
         #endregion
     }
 }
-

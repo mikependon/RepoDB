@@ -14,7 +14,7 @@ using Serilog.Events;
 namespace RepoDb.Telemetry.Extended.UnitTests
 {
     /// <summary>
-    /// Verifies what ExtendedTelemetryTrace records from the context that the library captures when an operation starts, and from how the operation ends.
+    /// Verifies captured context and operation outcomes.
     /// </summary>
     [TestClass]
     public class ExtendedTelemetryTraceOutcomeTest
@@ -22,19 +22,22 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         #region Private Variables
 
         /// <summary>
-        /// The identifier of the trace that the captured context has.
-        /// </summary>
-        private const string CapturedTraceId = "0af7651916cd43dd8448eb211c80319c";
-
-        /// <summary>
         /// The identifier of the span that the captured context has.
         /// </summary>
         private const string CapturedSpanId = "b7ad6b7169203331";
+
+        /// <summary>
+        /// The identifier of the trace that the captured context has.
+        /// </summary>
+        private const string CapturedTraceId = "0af7651916cd43dd8448eb211c80319c";
 
         #endregion
 
         #region Public Methods
 
+        /// <summary>
+        /// Initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -42,29 +45,91 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         }
 
         /// <summary>
-        /// Verifies the context that the library captured is used, instead of the one that is current when the item is created.
+        /// Verifies traceid and spanid.
         /// </summary>
         [TestMethod]
-        public void UsesTheContextThatWasCapturedWhenTheOperationStarted()
+        public void CapturedContextPreservesTraceIdAndSpanId()
         {
+            // Setup
             using var activity = new Activity("Ambient").SetIdFormat(ActivityIdFormat.W3C).Start();
-            var trace = new ExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
             var log = new TestCommandLog(CreateContext());
+
+            // Act
             trace.BeforeExecution(log);
             var item = TraceTestHelper.GetItem(trace,
                 log);
+
+            // Assert
             Assert.AreEqual(CapturedTraceId,
                 item.TraceId);
             Assert.AreEqual(CapturedSpanId,
                 item.SpanId);
+        }
+
+        /// <summary>
+        /// Verifies threadid and connectiontype.
+        /// </summary>
+        [TestMethod]
+        public void CapturedContextPreservesThreadIdAndConnectionType()
+        {
+            // Setup
+            using var activity = new Activity("Ambient").SetIdFormat(ActivityIdFormat.W3C).Start();
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog(CreateContext());
+
+            // Act
+            trace.BeforeExecution(log);
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
             Assert.AreEqual(4242,
                 item.ThreadId);
             Assert.AreEqual("SqlConnection",
                 item.ConnectionType);
+        }
+
+        /// <summary>
+        /// Verifies database and client.
+        /// </summary>
+        [TestMethod]
+        public void CapturedContextPreservesDatabaseAndClient()
+        {
+            // Setup
+            using var activity = new Activity("Ambient").SetIdFormat(ActivityIdFormat.W3C).Start();
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog(CreateContext());
+
+            // Act
+            trace.BeforeExecution(log);
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
             Assert.AreEqual("Northwind",
                 item.Database);
             Assert.AreEqual("PC-01",
                 item.Client);
+        }
+
+        /// <summary>
+        /// Verifies ipaddress and traceid.
+        /// </summary>
+        [TestMethod]
+        public void CapturedContextPreservesIpAddressAndTraceId()
+        {
+            // Setup
+            using var activity = new Activity("Ambient").SetIdFormat(ActivityIdFormat.W3C).Start();
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog(CreateContext());
+
+            // Act
+            trace.BeforeExecution(log);
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
             Assert.AreEqual("10.0.0.7",
                 item.IpAddress);
             Assert.AreNotEqual(activity.TraceId.ToString(),
@@ -72,27 +137,89 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         }
 
         /// <summary>
-        /// Verifies a log without a context gets the activity and the thread that are current, and no connection information.
+        /// Verifies traceid and spanid.
         /// </summary>
         [TestMethod]
-        public void UsesTheActiveActivityAndThreadWhenTheLogHasNoContext()
+        public void MissingContextUsesTraceIdAndSpanId()
         {
+            // Setup
             using var activity = new Activity("Ambient").SetIdFormat(ActivityIdFormat.W3C).Start();
-            var trace = new ExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
             var log = new TestCommandLog();
+
+            // Act
             trace.BeforeExecution(log);
             var item = TraceTestHelper.GetItem(trace,
                 log);
+
+            // Assert
             Assert.AreEqual(activity.TraceId.ToString(),
                 item.TraceId);
             Assert.AreEqual(activity.SpanId.ToString(),
                 item.SpanId);
+        }
+
+        /// <summary>
+        /// Verifies threadid and connectiontype.
+        /// </summary>
+        [TestMethod]
+        public void MissingContextUsesThreadIdAndConnectionType()
+        {
+            // Setup
+            using var activity = new Activity("Ambient").SetIdFormat(ActivityIdFormat.W3C).Start();
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog();
+
+            // Act
+            trace.BeforeExecution(log);
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
             Assert.AreEqual(Environment.CurrentManagedThreadId,
                 item.ThreadId);
             Assert.IsNull(item.ConnectionType);
+        }
+
+        /// <summary>
+        /// Verifies database and client.
+        /// </summary>
+        [TestMethod]
+        public void MissingContextUsesDatabaseAndClient()
+        {
+            // Setup
+            using var activity = new Activity("Ambient").SetIdFormat(ActivityIdFormat.W3C).Start();
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog();
+
+            // Act
+            trace.BeforeExecution(log);
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
             Assert.IsNull(item.Database);
             Assert.AreEqual(Environment.MachineName,
                 item.Client);
+        }
+
+        /// <summary>
+        /// Verifies ipaddress.
+        /// </summary>
+        [TestMethod]
+        public void MissingContextUsesIpAddress()
+        {
+            // Setup
+            using var activity = new Activity("Ambient").SetIdFormat(ActivityIdFormat.W3C).Start();
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog();
+
+            // Act
+            trace.BeforeExecution(log);
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
             Assert.IsNull(item.IpAddress);
         }
 
@@ -102,18 +229,23 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         [TestMethod]
         public void EnrichmentCanReplaceTheCapturedConnectionTypeAndDatabase()
         {
-            var trace = new ExtendedTelemetryTrace(new ExtendedTelemetryOption("Test")
+            // Setup
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test") {
+                Enrich = (item,
+                log) =>
             {
-                Enrich = (item, log) =>
-                {
-                    item.ConnectionType = "WrappedConnection";
-                    item.Database = "Replaced";
-                }
+                item.ConnectionType = "WrappedConnection";
+                item.Database = "Replaced";
+            }
             });
             var log = new TestCommandLog(CreateContext());
+
+            // Act
             trace.BeforeExecution(log);
             var item = TraceTestHelper.GetItem(trace,
                 log);
+
+            // Assert
             Assert.AreEqual("WrappedConnection",
                 item.ConnectionType);
             Assert.AreEqual("Replaced",
@@ -121,32 +253,103 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         }
 
         /// <summary>
-        /// Verifies the exception of a failed operation is recorded, and the row counts are not.
+        /// Verifies level and errortype.
         /// </summary>
         [TestMethod]
-        public void RecordsTheErrorOfAFailedOperation()
+        public void RecordsTheErrorOfAFailedOperationLevelAndErrorType()
         {
+            // Setup
             var error = CreateThrownError();
-            var trace = new ExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
             var log = new TestCommandLog(CreateContext());
+
+            // Act
             trace.BeforeExecution(log);
             trace.AfterExecution(new TestResultLog<int>(log,
                 0,
                 error));
             var item = TraceTestHelper.GetItem(trace,
                 log);
+
+            // Assert
             Assert.AreEqual(LogEventLevel.Error,
                 item.Level);
             Assert.AreEqual(typeof(InvalidOperationException).FullName,
                 item.ErrorType);
+        }
+
+        /// <summary>
+        /// Verifies errormessage and errorstacktrace.
+        /// </summary>
+        [TestMethod]
+        public void RecordsTheErrorOfAFailedOperationErrorMessageAndErrorStackTrace()
+        {
+            // Setup
+            var error = CreateThrownError();
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog(CreateContext());
+
+            // Act
+            trace.BeforeExecution(log);
+            trace.AfterExecution(new TestResultLog<int>(log,
+                0,
+                error));
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
             Assert.AreEqual("The statement failed.",
                 item.ErrorMessage);
             Assert.IsFalse(string.IsNullOrEmpty(item.ErrorStackTrace));
+        }
+
+        /// <summary>
+        /// Verifies errorstacktrace and message.
+        /// </summary>
+        [TestMethod]
+        public void RecordsTheErrorOfAFailedOperationErrorStackTraceAndMessage()
+        {
+            // Setup
+            var error = CreateThrownError();
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog(CreateContext());
+
+            // Act
+            trace.BeforeExecution(log);
+            trace.AfterExecution(new TestResultLog<int>(log,
+                0,
+                error));
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
             StringAssert.Contains(item.ErrorStackTrace,
                 nameof(CreateThrownError),
                 StringComparison.Ordinal);
             Assert.AreEqual("The statement failed.",
                 item.Message);
+        }
+
+        /// <summary>
+        /// Verifies rowsaffected and rowsreturned.
+        /// </summary>
+        [TestMethod]
+        public void RecordsTheErrorOfAFailedOperationRowsAffectedAndRowsReturned()
+        {
+            // Setup
+            var error = CreateThrownError();
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog(CreateContext());
+
+            // Act
+            trace.BeforeExecution(log);
+            trace.AfterExecution(new TestResultLog<int>(log,
+                0,
+                error));
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
             Assert.IsNull(item.RowsAffected);
             Assert.IsNull(item.RowsReturned);
         }
@@ -157,21 +360,26 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         [TestMethod]
         public void KeepsTheMessageOfTheApplicationWhenTheOperationFails()
         {
-            var trace = new ExtendedTelemetryTrace(new ExtendedTelemetryOption("Test")
+            // Setup
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test") {
+                Enrich = (item,
+                log) =>
             {
-                Enrich = (item, log) =>
-                {
-                    item.Level = LogEventLevel.Warning;
-                    item.Message = "Deleting the warehouse.";
-                }
+                item.Level = LogEventLevel.Warning;
+                item.Message = "Deleting the warehouse.";
+            }
             });
             var log = new TestCommandLog(CreateContext());
+
+            // Act
             trace.BeforeExecution(log);
             trace.AfterExecution(new TestResultLog<int>(log,
                 0,
                 CreateThrownError()));
             var item = TraceTestHelper.GetItem(trace,
                 log);
+
+            // Assert
             Assert.AreEqual("Deleting the warehouse.",
                 item.Message);
             Assert.AreEqual("The statement failed.",
@@ -181,23 +389,68 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         }
 
         /// <summary>
-        /// Verifies a successful operation has no error, and keeps its level and row counts.
+        /// Verifies level and errortype.
         /// </summary>
         [TestMethod]
-        public void LeavesTheErrorEmptyWhenTheOperationSucceeds()
+        public void LeavesTheErrorEmptyWhenTheOperationSucceedsLevelAndErrorType()
         {
-            var trace = new ExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            // Setup
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
             var log = new TestCommandLog(CreateContext());
+
+            // Act
             trace.BeforeExecution(log);
             trace.AfterExecution(new TestResultLog<int>(log,
                 3));
             var item = TraceTestHelper.GetItem(trace,
                 log);
+
+            // Assert
             Assert.AreEqual(LogEventLevel.Information,
                 item.Level);
             Assert.IsNull(item.ErrorType);
+        }
+
+        /// <summary>
+        /// Verifies errormessage and errorstacktrace.
+        /// </summary>
+        [TestMethod]
+        public void LeavesTheErrorEmptyWhenTheOperationSucceedsErrorMessageAndErrorStackTrace()
+        {
+            // Setup
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog(CreateContext());
+
+            // Act
+            trace.BeforeExecution(log);
+            trace.AfterExecution(new TestResultLog<int>(log,
+                3));
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
             Assert.IsNull(item.ErrorMessage);
             Assert.IsNull(item.ErrorStackTrace);
+        }
+
+        /// <summary>
+        /// Verifies message and rowsaffected.
+        /// </summary>
+        [TestMethod]
+        public void LeavesTheErrorEmptyWhenTheOperationSucceedsMessageAndRowsAffected()
+        {
+            // Setup
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog(CreateContext());
+
+            // Act
+            trace.BeforeExecution(log);
+            trace.AfterExecution(new TestResultLog<int>(log,
+                3));
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
             Assert.IsNull(item.Message);
             Assert.AreEqual(3L,
                 item.RowsAffected);
@@ -216,14 +469,21 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         public void MapsTheLevelOfTheTrace(TraceLevel level,
             LogEventLevel expected)
         {
+            // Setup
             var trace = new ObservableExtendedTelemetryTrace();
             var item = new ExtendedTelemetryItem();
+
+            // Act
             trace.Complete(item,
                 0,
                 null,
                 level);
+
+            // Assert
             Assert.AreEqual(expected,
                 item.Level);
+            Assert.AreEqual(level,
+                item.TraceLevel);
         }
 
         /// <summary>
@@ -232,12 +492,20 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         [TestMethod]
         public void KeepsTheLevelOfTheApplicationForAnInformation()
         {
+            // Setup
             var trace = new ObservableExtendedTelemetryTrace();
-            var item = new ExtendedTelemetryItem { Level = LogEventLevel.Warning };
+            var item = new ExtendedTelemetryItem
+            {
+                Level = LogEventLevel.Warning
+            };
+
+            // Act
             trace.Complete(item,
                 0,
                 null,
                 TraceLevel.Info);
+
+            // Assert
             Assert.AreEqual(LogEventLevel.Warning,
                 item.Level);
         }
@@ -250,14 +518,13 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         /// Creates the context that the library captures when an operation starts.
         /// </summary>
         /// <returns>The context.</returns>
-        private static TraceContext CreateContext() =>
-            new TraceContext(4242,
-                "PC-01",
-                "10.0.0.7",
-                CapturedTraceId,
-                CapturedSpanId,
-                "SqlConnection",
-                "Northwind");
+        private static TraceContext CreateContext() => new TraceContext(4242,
+            "PC-01",
+            "10.0.0.7",
+            CapturedTraceId,
+            CapturedSpanId,
+            "SqlConnection",
+            "Northwind");
 
         /// <summary>
         /// Creates an exception that has been thrown, so it has a stack trace.

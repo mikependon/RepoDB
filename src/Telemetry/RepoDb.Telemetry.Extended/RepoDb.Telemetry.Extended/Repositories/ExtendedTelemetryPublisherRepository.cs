@@ -65,11 +65,9 @@ namespace RepoDb.Telemetry.Extended
         /// </summary>
         /// <param name="telemetryItems">The extended events to publish.</param>
         /// <returns>The complete JSON event array.</returns>
-        protected override string SerializeItems(IEnumerable<TelemetryItem> telemetryItems)
-            => JsonSerializer.Serialize(telemetryItems.Cast<ExtendedTelemetryItem>(),
-                ExtendedTelemetryJsonSerializerContext.Default.IEnumerableExtendedTelemetryItem);
+        protected override string SerializeItems(IEnumerable<TelemetryItem> telemetryItems) => JsonSerializer.Serialize(telemetryItems.Cast<ExtendedTelemetryItem>(),
+            ExtendedTelemetryJsonSerializerContext.Default.IEnumerableExtendedTelemetryItem);
 
         #endregion
     }
 }
-

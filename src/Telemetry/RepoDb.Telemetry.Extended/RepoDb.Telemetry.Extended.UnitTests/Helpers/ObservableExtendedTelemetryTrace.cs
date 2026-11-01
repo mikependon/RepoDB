@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using RepoDb.Telemetry.Core;
 
@@ -17,6 +18,12 @@ namespace RepoDb.Telemetry.Extended.UnitTests
     /// </summary>
     internal sealed class ObservableExtendedTelemetryTrace : ExtendedTelemetryTrace
     {
+        #region Private Variables
+
+        private readonly IDictionary<Guid, ExtendedTelemetryItem> _items = new Dictionary<Guid, ExtendedTelemetryItem>();
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -28,9 +35,33 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         {
         }
 
+        /// <summary>
+        /// Creates a trace with capture settings.
+        /// </summary>
+        /// <param name="option">The capture settings.</param>
+        /// <param name="errorCallback">The publishing error callback.</param>
+        public ObservableExtendedTelemetryTrace(ExtendedTelemetryOption option,
+            Action<Exception> errorCallback = null)
+            : base(option,
+                errorCallback)
+        {
+        }
+
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Publishes ready events.
+        /// </summary>
+        public void Flush() => PublishBufferedItems();
+
+        /// <summary>
+        /// Gets a captured event.
+        /// </summary>
+        /// <param name="log">The command log.</param>
+        /// <returns>The captured event.</returns>
+        public ExtendedTelemetryItem GetItem(CancellableTraceLog log) => _items[log.SessionId];
 
         /// <summary>
         /// Completes the item with the outcome of an operation.
@@ -48,6 +79,22 @@ namespace RepoDb.Telemetry.Extended.UnitTests
                 result,
                 error,
                 level);
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Remembers each captured event.
+        /// </summary>
+        /// <param name="log">The command log.</param>
+        /// <returns>The captured event.</returns>
+        protected override TelemetryItem CreateTelemetryItem(CancellableTraceLog log)
+        {
+            var item = (ExtendedTelemetryItem)base.CreateTelemetryItem(log);
+            _items[log.SessionId] = item;
+            return item;
         }
 
         #endregion

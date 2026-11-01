@@ -24,22 +24,28 @@ namespace RepoDb.Telemetry.Core
     /// </summary>
     public abstract class TelemetryTrace : ITrace
     {
-        #region Privates
+        #region Private Variables
 
-        private static readonly object _syncLock = new object();
-        private static bool _isPublishing = false;
-        private readonly Timer _timer;
-        private IDictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>> _beforeTraceLogs;
         private IDictionary<Guid, Tuple<DateTime, TimeSpan, object>> _afterTraceLogs;
-        private IPublisherRepository _publisherRepository;
-
         // The assembly that hosts/consumes the library (i.e. the client application), falling back to the
         // immediate caller if an entry assembly cannot be resolved (e.g. some test hosts or plugin scenarios).
         private static readonly Assembly _assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
-
+        private IDictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>> _beforeTraceLogs;
         // The machine/host name on which the application is running. Resolved once and cached, since it
         // does not change during the lifetime of the process.
         private static readonly string _client = GetClientMachineName();
+        private int _isPublishing;
+        private IPublisherRepository _publisherRepository;
+#if NET9_0_OR_GREATER
+        private static readonly System.Threading.Lock _syncLock = new System.Threading.Lock();
+#else
+        private static readonly object _syncLock = new object();
+#endif
+        private readonly Timer _timer;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TelemetryTrace"/> class.
@@ -47,8 +53,7 @@ namespace RepoDb.Telemetry.Core
         /// <param name="option">The telemetry option.</param>
         /// <param name="errorCallback">The callback to invoke when an error occurs.</param>
         /// <param name="logger">The logger to use for logging.</param>
-        protected TelemetryTrace(
-            TelemetryOption option,
+        protected TelemetryTrace(TelemetryOption option,
             Action<Exception> errorCallback = null,
             ILogger logger = null)
         {
@@ -62,22 +67,41 @@ namespace RepoDb.Telemetry.Core
 
         #endregion
 
-        #region Implementations
+        #region Properties
+
+        /// <summary>
+        /// Gets the option object that contains the information about the telemetry emitting.
+        /// </summary>
+        public TelemetryOption Option { get; }
+
+        /// <summary>
+        /// Gets the callback function to trigger when any error occurs.
+        /// </summary>
+        public Action<Exception> ErrorCallback { get; }
+
+        /// <summary>
+        /// Gets the instance of logger to use to where to log the internal events.
+        /// </summary>
+        public ILogger Logger { get; }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Starts the telemetry trace to capture the telemetry data and send it to the insights solution.
         /// </summary>
         public void Start()
         {
-            _timer.Change(Option.Frequency, Option.Frequency);
+            _timer.Change(Option.Frequency,
+                Option.Frequency);
         }
 
         /// <summary>
         /// The method that is called before the execution of the command.
         /// </summary>
         /// <param name="log">The instance of <see cref="CancellableTraceLog"/> class to log.</param>
-        public void BeforeExecution(
-            CancellableTraceLog log)
+        public void BeforeExecution(CancellableTraceLog log)
         {
             AddCancellableTraceLog(log);
         }
@@ -87,8 +111,7 @@ namespace RepoDb.Telemetry.Core
         /// </summary>
         /// <param name="log">The instance of <see cref="CancellableTraceLog"/> class to log.</param>
         /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-        public Task BeforeExecutionAsync(
-            CancellableTraceLog log,
+        public Task BeforeExecutionAsync(CancellableTraceLog log,
             CancellationToken cancellationToken = default)
         {
             AddCancellableTraceLog(log);
@@ -99,8 +122,7 @@ namespace RepoDb.Telemetry.Core
         /// The method that is called after the execution of the command.
         /// </summary>
         /// <param name="log">The instance of <see cref="ResultTraceLog{TResult}"/> class to log.</param>
-        public void AfterExecution<TResult>(
-            ResultTraceLog<TResult> log)
+        public void AfterExecution<TResult>(ResultTraceLog<TResult> log)
         {
             AddResultTraceLog(log);
         }
@@ -110,17 +132,12 @@ namespace RepoDb.Telemetry.Core
         /// </summary>
         /// <param name="log">The instance of <see cref="ResultTraceLog{TResult}"/> class to log.</param>
         /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-        public Task AfterExecutionAsync<TResult>(
-            ResultTraceLog<TResult> log,
+        public Task AfterExecutionAsync<TResult>(ResultTraceLog<TResult> log,
             CancellationToken cancellationToken = default)
         {
             AddResultTraceLog(log);
             return Task.CompletedTask;
         }
-
-        #endregion
-
-        #region Abstracts
 
         /// <summary>
         /// Gets the instance of <see cref="TelemetryPublisherRepository"/> that is used for publishing the telemetry data.
@@ -133,12 +150,16 @@ namespace RepoDb.Telemetry.Core
         #region Protected Methods
 
         /// <summary>
+        /// Publishes completed and cancelled operations.
+        /// </summary>
+        protected void PublishBufferedItems() => Callback(null);
+
+        /// <summary>
         /// Creates the telemetry item for an operation before execution.
         /// </summary>
         /// <param name="log">The operation being captured.</param>
         /// <returns>The telemetry item to populate and publish.</returns>
-        protected virtual TelemetryItem CreateTelemetryItem(CancellableTraceLog log)
-            => new TelemetryItem();
+        protected virtual TelemetryItem CreateTelemetryItem(CancellableTraceLog log) => new TelemetryItem();
 
         /// <summary>
         /// Captures result metadata without enumerating deferred results.
@@ -172,136 +193,204 @@ namespace RepoDb.Telemetry.Core
 
         #endregion
 
-        #region Properties
+        #region Private Methods
 
         /// <summary>
-        /// Gets the option object that contains the information about the telemetry emitting.
+        /// Publishes ready operations with final timing and cancellation.
         /// </summary>
-        public TelemetryOption Option { get; }
-
-        /// <summary>
-        /// Gets the callback function to trigger when any error occurs.
-        /// </summary>
-        public Action<Exception> ErrorCallback { get; }
-
-        /// <summary>
-        /// Gets the instance of logger to use to where to log the internal events.
-        /// </summary>
-        public ILogger Logger { get;  }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="state"></param>
-        private void Callback(
-            object state)
+        private void PublishReadyOperations()
         {
-            if (_isPublishing)
+            (var logs, var results) = Switch();
+            var items = new List<TelemetryItem>();
+            foreach (var entry in logs)
             {
-                return;
+                var item = entry.Value.Item2;
+                item.IsCancelled = entry.Value.Item1.IsCancelled;
+                item.IsThrowException = entry.Value.Item1.IsThrowException;
+                item.Elapsed = results.TryGetValue(entry.Key,
+                    out var result) ? result.Item2.TotalMilliseconds : (DateTime.UtcNow - item.StartTime).TotalMilliseconds;
+                items.Add(item);
             }
-            _isPublishing = true;
-            try
+
+            if (items.Count > 0)
             {
-                (var beforeTraceLogs, var afterTraceLogs) = Switch();
-                var items = new List<TelemetryItem>();
-                foreach (var kvp in beforeTraceLogs)
-                {
-                    (var log, var item) = kvp.Value;
-                    item.IsCancelled = log.IsCancelled;
-                    item.Elapsed = afterTraceLogs.ContainsKey(kvp.Key) ?
-                        afterTraceLogs[kvp.Key].Item2.TotalMilliseconds :
-                            (DateTime.UtcNow - item.StartTime).TotalMilliseconds;
-                    items.Add(item);
-                }
-                if (items.Count > 0)
-                {
-                    EnsurePublisherRepository().PublishMany(items);
-                }
-            }
-            finally
-            {
-                _isPublishing = false;
+                EnsurePublisherRepository().PublishMany(items);
             }
         }
 
         /// <summary>
-        /// 
+        /// Selects completed and cancelled command logs.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The ready command logs.</returns>
+        private IDictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>> GetReadyLogs()
+        {
+            var logs = new Dictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>>();
+            foreach (var entry in _beforeTraceLogs)
+            {
+                if (_afterTraceLogs.ContainsKey(entry.Key) || entry.Value.Item1.IsCancelled)
+                {
+                    logs.Add(entry.Key,
+                        entry.Value);
+                }
+            }
+
+            return logs;
+        }
+
+        /// <summary>
+        /// Removes ready logs and returns their outcomes.
+        /// </summary>
+        /// <param name="keys">The ready session identifiers.</param>
+        /// <returns>The ready outcomes.</returns>
+        private IDictionary<Guid, Tuple<DateTime, TimeSpan, object>> RemoveReadyResults(IEnumerable<Guid> keys)
+        {
+            var results = new Dictionary<Guid, Tuple<DateTime, TimeSpan, object>>();
+            foreach (var key in keys)
+            {
+                if (_afterTraceLogs.TryGetValue(key,
+                    out var outcome))
+                {
+                    results.Add(key,
+                        outcome);
+                }
+
+                _beforeTraceLogs.Remove(key);
+                _afterTraceLogs.Remove(key);
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Recovers the command log when needed.
+        /// </summary>
+        /// <typeparam name="TResult">The result type.</typeparam>
+        /// <param name="log">The result log.</param>
+        /// <returns>Whether the command log is buffered.</returns>
+        private bool EnsureBeforeExecutionLog<TResult>(ResultTraceLog<TResult> log)
+        {
+            if (!_beforeTraceLogs.ContainsKey(log.SessionId) && log.BeforeExecutionLog != null)
+            {
+                AddCancellableTraceLog(log.BeforeExecutionLog);
+            }
+
+            return _beforeTraceLogs.ContainsKey(log.SessionId);
+        }
+
+        /// <summary>
+        /// Copies common event fields.
+        /// </summary>
+        /// <param name="item">The event to populate.</param>
+        /// <param name="log">The command log.</param>
+        private void PopulateCommonFields(TelemetryItem item,
+            CancellableTraceLog log)
+        {
+            item.Application = Option.Application;
+            item.Group = Option.Group;
+            item.SessionId = log.SessionId;
+            item.Operation = log.Key;
+            item.StartTime = log.StartTime;
+            item.Statement = log.Statement;
+            item.Client = log.MachineName ?? _client;
+            item.IpAddress = log.IpAddress;
+            item.Source = _assembly?.GetName().Name;
+            item.Version = _assembly?.GetName().Version?.ToString();
+        }
+
+        /// <summary>
+        /// Publishes events during a timer tick.
+        /// </summary>
+        /// <param name="state">The timer state.</param>
+        private void Callback(object state)
+        {
+            if (Interlocked.CompareExchange(ref _isPublishing,
+                1,
+                0) != 0)
+            {
+                return;
+            }
+
+            try
+            {
+                PublishReadyOperations();
+            }
+            finally
+            {
+                Interlocked.Exchange(ref _isPublishing,
+                    0);
+            }
+        }
+
+        /// <summary>
+        /// Resolves the configured publisher.
+        /// </summary>
+        /// <returns>The configured publisher.</returns>
         private IPublisherRepository EnsurePublisherRepository()
         {
             if (_publisherRepository == null)
             {
                 _publisherRepository = GetPublisherRepository();
             }
+
             return _publisherRepository;
         }
 
         /// <summary>
-        /// 
+        /// Extracts completed and cancelled operations.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The buffered publishing state.</returns>
         private Tuple<IDictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>>, IDictionary<Guid, Tuple<DateTime, TimeSpan, object>>> Switch()
         {
             lock (_syncLock)
             {
-                var beforeTraceLogs = _beforeTraceLogs;
-                var afterTraceLogs = _afterTraceLogs;
-                _beforeTraceLogs = new Dictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>>();
-                _afterTraceLogs = new Dictionary<Guid, Tuple<DateTime, TimeSpan, object>>();
-                return Tuple.Create(beforeTraceLogs, afterTraceLogs);
+                var logs = GetReadyLogs();
+                var results = RemoveReadyResults(logs.Keys);
+                return Tuple.Create(logs,
+                    results);
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Add Cancellable Trace Log.
+        /// </summary>
 
-        #region Helpers
-
-        private void AddCancellableTraceLog(
-            CancellableTraceLog log)
+        /// <param name="log">The log.</param>
+        private void AddCancellableTraceLog(CancellableTraceLog log)
         {
             lock (_syncLock)
             {
                 if (!_beforeTraceLogs.ContainsKey(log.SessionId))
                 {
                     var item = CreateTelemetryItem(log);
-                    item.Application = Option.Application;
-                    item.Group = Option.Group;
-                    item.SessionId = log.SessionId;
-                    item.Operation = log.Key;
-                    item.StartTime = log.StartTime;
-                    item.Statement = log.Statement;
-                    item.Client = log.MachineName ?? _client;
-                    item.IpAddress = log.IpAddress;
-                    item.Source = _assembly?.GetName().Name;
-                    item.Version = _assembly?.GetName().Version?.ToString();
-                    _beforeTraceLogs[log.SessionId] = Tuple.Create(log, item);
+                    PopulateCommonFields(item,
+                        log);
+                    _beforeTraceLogs[log.SessionId] = Tuple.Create(log,
+                        item);
                 }
             }
         }
 
-        private void AddResultTraceLog<TResult>(
-            ResultTraceLog<TResult> log)
+        /// <summary>
+        /// Add Result Trace Log.
+        /// </summary>
+
+        /// <param name="log">The log.</param>
+        private void AddResultTraceLog<TResult>(ResultTraceLog<TResult> log)
         {
             lock (_syncLock)
             {
-                if (!_afterTraceLogs.ContainsKey(log.SessionId))
+                if (_afterTraceLogs.ContainsKey(log.SessionId) || !EnsureBeforeExecutionLog(log))
                 {
-                    var value = Tuple.Create<DateTime, TimeSpan, object>(DateTime.UtcNow, log.ExecutionTime, log.Result);
-                    _afterTraceLogs[log.SessionId] = value;
-                    if (_beforeTraceLogs.TryGetValue(log.SessionId, out var before))
-                    {
-                        CompleteTelemetryItem(before.Item2,
-                            log.Result,
-                            log.Error,
-                            log.Level);
-                    }
+                    return;
                 }
+
+                _afterTraceLogs[log.SessionId] = Tuple.Create<DateTime, TimeSpan, object>(DateTime.UtcNow,
+                    log.ExecutionTime,
+                    log.Result);
+                CompleteTelemetryItem(_beforeTraceLogs[log.SessionId].Item2,
+                    log.Result,
+                    log.Error,
+                    log.Level);
             }
         }
 
@@ -330,9 +419,7 @@ namespace RepoDb.Telemetry.Core
                 {
                     // Last resort: common environment variables set by the OS (HOSTNAME on Linux/macOS,
                     // COMPUTERNAME on Windows).
-                    return Environment.GetEnvironmentVariable("HOSTNAME")
-                        ?? Environment.GetEnvironmentVariable("COMPUTERNAME")
-                        ?? "Unknown";
+                    return Environment.GetEnvironmentVariable("HOSTNAME") ?? Environment.GetEnvironmentVariable("COMPUTERNAME") ?? "Unknown";
                 }
             }
         }

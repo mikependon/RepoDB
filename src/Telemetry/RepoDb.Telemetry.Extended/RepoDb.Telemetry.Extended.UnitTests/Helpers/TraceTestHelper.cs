@@ -8,7 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using RepoDb.Telemetry.Core;
 
 namespace RepoDb.Telemetry.Extended.UnitTests
@@ -29,10 +28,7 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         public static ExtendedTelemetryItem GetItem(ExtendedTelemetryTrace trace,
             CancellableTraceLog log)
         {
-            var field = typeof(TelemetryTrace).GetField("_beforeTraceLogs",
-                BindingFlags.Instance | BindingFlags.NonPublic);
-            var items = (IDictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>>)field.GetValue(trace);
-            return (ExtendedTelemetryItem)items[log.SessionId].Item2;
+            return ((ObservableExtendedTelemetryTrace)trace).GetItem(log);
         }
 
         /// <summary>
@@ -41,12 +37,9 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         /// <param name="trace">The trace to flush.</param>
         public static void Flush(ExtendedTelemetryTrace trace)
         {
-            typeof(TelemetryTrace).GetMethod("Callback",
-                BindingFlags.Instance | BindingFlags.NonPublic).Invoke(trace,
-                    new object[] { null });
+            ((ObservableExtendedTelemetryTrace)trace).Flush();
         }
 
         #endregion
     }
 }
-
