@@ -2477,5 +2477,115 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                     where: null));
         }
         #endregion
+
+        #region KeyDatabaseType
+
+        [TestMethod]
+        [DataRow(typeof(string), 1000, "NVARCHAR(1000)")]
+        [DataRow(typeof(string), null, "NVARCHAR(MAX)")]
+        [DataRow(typeof(string), -1, "NVARCHAR(MAX)")]
+        [DataRow(typeof(string), 4001, "NVARCHAR(MAX)")]
+        [DataRow(typeof(byte[]), 16, "VARBINARY(16)")]
+        [DataRow(typeof(byte[]), null, "VARBINARY(MAX)")]
+        [DataRow(typeof(int), 4, "INT")]
+        public void TestSqlServerStatementBuilderCreateInsertWithPrimaryKeyTypeFromSize(Type type, int? size, string expectedType)
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: false, isNullable: false, type, size, precision: null, scale: null, databaseType: null);
+
+            // Act
+            var actual = statementBuilder.CreateInsert(tableName: "Table",
+                fields: fields,
+                primaryField: primaryField,
+                identityField: null);
+
+            // Assert
+            Assert.AreEqual($"INSERT INTO [Table] ( [Field1], [Field2] ) VALUES ( @Field1, @Field2 ) ; SELECT CONVERT({expectedType}, @Field1) AS [Result] ;", actual, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        [DataRow(typeof(string), 1000, "NVARCHAR(1000)")]
+        [DataRow(typeof(string), null, "NVARCHAR(MAX)")]
+        [DataRow(typeof(string), -1, "NVARCHAR(MAX)")]
+        [DataRow(typeof(string), 4001, "NVARCHAR(MAX)")]
+        [DataRow(typeof(byte[]), 16, "VARBINARY(16)")]
+        [DataRow(typeof(byte[]), null, "VARBINARY(MAX)")]
+        [DataRow(typeof(int), 4, "INT")]
+        public void TestSqlServerStatementBuilderCreateInsertAllWithPrimaryKeyTypeFromSize(Type type, int? size, string expectedType)
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: false, isNullable: false, type, size, precision: null, scale: null, databaseType: null);
+
+            // Act
+            var actual = statementBuilder.CreateInsertAll(tableName: "Table",
+                fields: fields,
+                batchSize: 1,
+                primaryField: primaryField,
+                identityField: null);
+
+            // Assert
+            StringAssert.StartsWith(actual, $"DECLARE @__RepoDb_OutputTable TABLE ( [Id] INT IDENTITY(1,1), [Result] {expectedType} ) ; ", StringComparison.Ordinal);
+            StringAssert.Contains(actual, $"OUTPUT CONVERT({expectedType}, [INSERTED].[Field1]) INTO @__RepoDb_OutputTable ( [Result] ) ", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        [DataRow(typeof(string), 1000, "NVARCHAR(1000)")]
+        [DataRow(typeof(string), null, "NVARCHAR(MAX)")]
+        [DataRow(typeof(string), -1, "NVARCHAR(MAX)")]
+        [DataRow(typeof(string), 4001, "NVARCHAR(MAX)")]
+        [DataRow(typeof(byte[]), 16, "VARBINARY(16)")]
+        [DataRow(typeof(byte[]), null, "VARBINARY(MAX)")]
+        [DataRow(typeof(int), 4, "INT")]
+        public void TestSqlServerStatementBuilderCreateMergeWithPrimaryKeyTypeFromSize(Type type, int? size, string expectedType)
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: false, isNullable: false, type, size, precision: null, scale: null, databaseType: null);
+
+            // Act
+            var actual = statementBuilder.CreateMerge(tableName: "Table",
+                fields: fields,
+                qualifiers: Field.From("Field1"),
+                primaryField: primaryField,
+                identityField: null);
+
+            // Assert
+            StringAssert.StartsWith(actual, $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] {expectedType} ) ; ", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "OUTPUT INSERTED.[Field1] INTO @__RepoDb_OutputTable ( [Result] )", StringComparison.Ordinal);
+        }
+
+        [TestMethod]
+        [DataRow(typeof(string), 1000, "NVARCHAR(1000)")]
+        [DataRow(typeof(string), null, "NVARCHAR(MAX)")]
+        [DataRow(typeof(string), -1, "NVARCHAR(MAX)")]
+        [DataRow(typeof(string), 4001, "NVARCHAR(MAX)")]
+        [DataRow(typeof(byte[]), 16, "VARBINARY(16)")]
+        [DataRow(typeof(byte[]), null, "VARBINARY(MAX)")]
+        [DataRow(typeof(int), 4, "INT")]
+        public void TestSqlServerStatementBuilderCreateMergeAllWithPrimaryKeyTypeFromSize(Type type, int? size, string expectedType)
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var primaryField = new DbField("Field1", isPrimary: true, isIdentity: false, isNullable: false, type, size, precision: null, scale: null, databaseType: null);
+
+            // Act
+            var actual = statementBuilder.CreateMergeAll(tableName: "Table",
+                fields: fields,
+                qualifiers: Field.From("Field1"),
+                batchSize: 1,
+                primaryField: primaryField,
+                identityField: null);
+
+            // Assert
+            StringAssert.StartsWith(actual, $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] {expectedType}, [__RepoDb_OrderColumn] INT ) ; ", StringComparison.Ordinal);
+        }
+
+        #endregion
     }
 }

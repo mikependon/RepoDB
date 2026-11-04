@@ -9,6 +9,7 @@
 
 using RepoDb.Extensions;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System;
 using RepoDb.Exceptions;
@@ -41,6 +42,20 @@ namespace RepoDb.StatementBuilders
                 new SqlServerConvertFieldResolver(),
                 new ClientTypeToAverageableClientTypeResolver())
         { }
+
+        #region Private Variables
+
+        /// <summary>
+        /// The maximum length of the Unicode types (<c>NVARCHAR</c> and <c>NCHAR</c>) without <c>MAX</c>.
+        /// </summary>
+        private const int MaxUnicodeLength = 4000;
+
+        /// <summary>
+        /// The maximum length of the non-Unicode and binary types (<c>VARCHAR</c>, <c>CHAR</c> and <c>VARBINARY</c>) without <c>MAX</c>.
+        /// </summary>
+        private const int MaxAnsiLength = 8000;
+
+        #endregion
 
         #region CreateBatchQuery
 
@@ -225,14 +240,7 @@ namespace RepoDb.StatementBuilders
             // Set the return value
             if (keyColumn != null)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
-                string databaseType = null;
-
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
-                }
-
+                var databaseType = GetKeyDatabaseType(keyColumn);
                 var keyColumnText = (keyColumn == identityField || string.Equals(keyColumn.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase)) ? "SCOPE_IDENTITY()" :
                     keyColumn.Name.AsParameter(DbSetting);
                 returnValue = keyColumn != null ?
@@ -284,8 +292,7 @@ namespace RepoDb.StatementBuilders
             // Set the return value
             if (keyColumn != null)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
-                var databaseType = (dbType != null) ? new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value) : null;
+                var databaseType = GetKeyDatabaseType(keyColumn);
                 var returnValue = keyColumn == null ? "NULL" :
                     string.IsNullOrWhiteSpace(databaseType) ?
                         string.Concat("[INSERTED].", keyColumn.Name.AsQuoted(DbSetting)) :
@@ -437,8 +444,7 @@ namespace RepoDb.StatementBuilders
             // Set the output
             if (keyColumn != null)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
-                var databaseType = (dbType != null) ? new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value) : null;
+                var databaseType = GetKeyDatabaseType(keyColumn);
                 var resultType = string.IsNullOrWhiteSpace(databaseType) ? "SQL_VARIANT" : databaseType;
 
                 // SQL Server disallows an OUTPUT clause without INTO on a target table that has
@@ -562,8 +568,7 @@ namespace RepoDb.StatementBuilders
             string declare = null;
             if (keyColumn != null)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
-                var databaseType = (dbType != null) ? new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value) : null;
+                var databaseType = GetKeyDatabaseType(keyColumn);
                 var resultType = string.IsNullOrWhiteSpace(databaseType) ? "SQL_VARIANT" : databaseType;
 
                 declare = string.Concat("DECLARE @__RepoDb_OutputTable TABLE ( [Result] ", resultType, ", [__RepoDb_OrderColumn] INT ) ; ");
@@ -725,6 +730,56 @@ namespace RepoDb.StatementBuilders
 
             // Return the query
             return builder.GetString();
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Gets the database type that the returned key is converted to, and that holds it in the OUTPUT table.
+        /// The length of a string or binary key is read from the <see cref="DbField"/> of the key, as a type without a length
+        /// is not enough in SQL Server (a bare <c>NVARCHAR</c> is <c>NVARCHAR(1)</c> in a table variable, and <c>NVARCHAR(30)</c> in a <c>CONVERT</c>),
+        /// and it would truncate the key. The length is <c>MAX</c> if the size of the key is not known or does not fit the type.
+        /// </summary>
+        /// <param name="keyColumn">The key column that is returned.</param>
+        /// <returns>The database type of the key, or <c>null</c> if the type of the key cannot be resolved.</returns>
+        private static string GetKeyDatabaseType(DbField keyColumn)
+        {
+            var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
+            if (dbType == null)
+            {
+                return null;
+            }
+            return dbType.Value switch
+            {
+                DbType.String => GetSizedType("NVARCHAR", keyColumn.Size, MaxUnicodeLength),
+                DbType.StringFixedLength => GetSizedType("NCHAR", keyColumn.Size, MaxUnicodeLength, "NVARCHAR"),
+                DbType.AnsiString => GetSizedType("VARCHAR", keyColumn.Size, MaxAnsiLength),
+                DbType.AnsiStringFixedLength => GetSizedType("CHAR", keyColumn.Size, MaxAnsiLength, "VARCHAR"),
+                DbType.Binary => GetSizedType("VARBINARY", keyColumn.Size, MaxAnsiLength),
+                _ => new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value)
+            };
+        }
+
+        /// <summary>
+        /// Gets the database type with its length.
+        /// </summary>
+        /// <param name="typeName">The name of the database type.</param>
+        /// <param name="size">The size of the column from the database (<c>null</c>, <c>0</c> or <c>-1</c> if it is not known, or if the column is <c>MAX</c>).</param>
+        /// <param name="maxLength">The maximum length that the type allows without <c>MAX</c>.</param>
+        /// <param name="fallbackTypeName">The name of the type that is used with <c>MAX</c> if the type does not allow it (the fixed length types). The default is the given type.</param>
+        /// <returns>The database type with its length (i.e.: <c>NVARCHAR(500)</c> or <c>NVARCHAR(MAX)</c>).</returns>
+        private static string GetSizedType(string typeName,
+            int? size,
+            int maxLength,
+            string fallbackTypeName = null)
+        {
+            if (size.HasValue && size.Value > 0 && size.Value <= maxLength)
+            {
+                return string.Concat(typeName, "(", size.Value, ")");
+            }
+            return string.Concat(fallbackTypeName ?? typeName, "(MAX)");
         }
 
         #endregion
