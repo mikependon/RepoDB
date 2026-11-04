@@ -15,12 +15,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.AuroraDb.MySqlConnec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests", "RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests\RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests.csproj", "{E0EFCB8F-9A65-4D42-ABE1-D102F59D684B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.AuroraDb.MySqlConnector.BulkOperations.UnitTests", "RepoDb.AuroraDb.MySqlConnector.BulkOperations.UnitTests\RepoDb.AuroraDb.MySqlConnector.BulkOperations.UnitTests.csproj", "{4D2D67EC-BF6A-44D6-ABED-B18FDA6E624C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D2D67EC-BF6A-44D6-ABED-B18FDA6E624C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D2D67EC-BF6A-44D6-ABED-B18FDA6E624C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D2D67EC-BF6A-44D6-ABED-B18FDA6E624C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D2D67EC-BF6A-44D6-ABED-B18FDA6E624C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DEC46476-D8ED-4CE6-8373-603E62809993}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DEC46476-D8ED-4CE6-8373-603E62809993}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEC46476-D8ED-4CE6-8373-603E62809993}.Release|Any CPU.ActiveCfg = Release|Any CPU

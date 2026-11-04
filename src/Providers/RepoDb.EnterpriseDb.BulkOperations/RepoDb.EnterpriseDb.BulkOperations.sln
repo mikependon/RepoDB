@@ -15,12 +15,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.EnterpriseDb.BulkOpe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.EnterpriseDb.BulkOperations.IntegrationTests", "RepoDb.EnterpriseDb.BulkOperations.IntegrationTests\RepoDb.EnterpriseDb.BulkOperations.IntegrationTests.csproj", "{94676813-89D3-4D6E-B0A9-27F0F754DD5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.EnterpriseDb.BulkOperations.UnitTests", "RepoDb.EnterpriseDb.BulkOperations.UnitTests\RepoDb.EnterpriseDb.BulkOperations.UnitTests.csproj", "{FC787EF9-A834-47F1-9CE5-64448873280B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC787EF9-A834-47F1-9CE5-64448873280B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC787EF9-A834-47F1-9CE5-64448873280B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC787EF9-A834-47F1-9CE5-64448873280B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC787EF9-A834-47F1-9CE5-64448873280B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E6CC58C-61E0-4EB6-9D65-BA121FE84223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0E6CC58C-61E0-4EB6-9D65-BA121FE84223}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E6CC58C-61E0-4EB6-9D65-BA121FE84223}.Release|Any CPU.ActiveCfg = Release|Any CPU

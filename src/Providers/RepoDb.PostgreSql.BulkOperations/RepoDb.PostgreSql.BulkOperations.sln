@@ -18,12 +18,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql", "..\Rep
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql.BulkOperations.IntegrationTests", "RepoDb.PostgreSql.BulkOperations.IntegrationTests\RepoDb.PostgreSql.BulkOperations.IntegrationTests.csproj", "{5559DABE-3569-4289-8996-49922AFD8EF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.PostgreSql.BulkOperations.UnitTests", "RepoDb.PostgreSql.BulkOperations.UnitTests\RepoDb.PostgreSql.BulkOperations.UnitTests.csproj", "{0F3C087E-4498-4D8B-A778-72A2DDDA708F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F3C087E-4498-4D8B-A778-72A2DDDA708F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F3C087E-4498-4D8B-A778-72A2DDDA708F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F3C087E-4498-4D8B-A778-72A2DDDA708F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F3C087E-4498-4D8B-A778-72A2DDDA708F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF8E22D7-E51A-4D03-AFC8-71CBF8913A2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF8E22D7-E51A-4D03-AFC8-71CBF8913A2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF8E22D7-E51A-4D03-AFC8-71CBF8913A2A}.Release|Any CPU.ActiveCfg = Release|Any CPU

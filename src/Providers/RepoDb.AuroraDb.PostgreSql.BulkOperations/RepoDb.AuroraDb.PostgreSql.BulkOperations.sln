@@ -15,12 +15,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.AuroraDb.PostgreSql.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests", "RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests\RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests.csproj", "{104A6E59-F7B7-4FD5-96A8-EEA1C83D78D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.AuroraDb.PostgreSql.BulkOperations.UnitTests", "RepoDb.AuroraDb.PostgreSql.BulkOperations.UnitTests\RepoDb.AuroraDb.PostgreSql.BulkOperations.UnitTests.csproj", "{610D0A8B-01A7-42B4-8972-E8B0E38B2E2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{610D0A8B-01A7-42B4-8972-E8B0E38B2E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{610D0A8B-01A7-42B4-8972-E8B0E38B2E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{610D0A8B-01A7-42B4-8972-E8B0E38B2E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{610D0A8B-01A7-42B4-8972-E8B0E38B2E2C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{07CE53A3-8102-4974-B78B-2CF9AC403B85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{07CE53A3-8102-4974-B78B-2CF9AC403B85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07CE53A3-8102-4974-B78B-2CF9AC403B85}.Release|Any CPU.ActiveCfg = Release|Any CPU

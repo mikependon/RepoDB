@@ -16,12 +16,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Vertica.BulkOperatio
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Vertica.BulkOperations.UnitTests", "RepoDb.Vertica.BulkOperations.UnitTests\RepoDb.Vertica.BulkOperations.UnitTests.csproj", "{C5BB9C4E-B8E4-430B-AF21-2A30E68D7109}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5BB9C4E-B8E4-430B-AF21-2A30E68D7109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5BB9C4E-B8E4-430B-AF21-2A30E68D7109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5BB9C4E-B8E4-430B-AF21-2A30E68D7109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5BB9C4E-B8E4-430B-AF21-2A30E68D7109}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B2C3D4E5-2222-4A2B-9C3D-4E5F6A7B8C01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B2C3D4E5-2222-4A2B-9C3D-4E5F6A7B8C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2C3D4E5-2222-4A2B-9C3D-4E5F6A7B8C01}.Release|Any CPU.ActiveCfg = Release|Any CPU

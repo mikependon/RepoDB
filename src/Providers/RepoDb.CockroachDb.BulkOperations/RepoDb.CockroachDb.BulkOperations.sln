@@ -15,12 +15,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.CockroachDb.BulkOper
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.CockroachDb.BulkOperations.IntegrationTests", "RepoDb.CockroachDb.BulkOperations.IntegrationTests\RepoDb.CockroachDb.BulkOperations.IntegrationTests.csproj", "{4DA4D44C-8771-4D2A-9E31-0FD7722C23CB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.CockroachDb.BulkOperations.UnitTests", "RepoDb.CockroachDb.BulkOperations.UnitTests\RepoDb.CockroachDb.BulkOperations.UnitTests.csproj", "{4F4F0AE3-3886-463B-805A-42E6D76E55D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4F4F0AE3-3886-463B-805A-42E6D76E55D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F4F0AE3-3886-463B-805A-42E6D76E55D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F4F0AE3-3886-463B-805A-42E6D76E55D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F4F0AE3-3886-463B-805A-42E6D76E55D7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DE6302A7-3A92-4FBA-8D4F-2F728ACD5E3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DE6302A7-3A92-4FBA-8D4F-2F728ACD5E3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE6302A7-3A92-4FBA-8D4F-2F728ACD5E3C}.Release|Any CPU.ActiveCfg = Release|Any CPU

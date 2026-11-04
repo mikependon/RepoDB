@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MSTest" Version="4.5.1" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' == 'Windows_NT'">
+    <PackageReference Include="Net.IBM.Data.Db2" Version="10.0.0.300" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' != 'Windows_NT'">
+    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="10.0.0.300" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0' AND '$(OS)' == 'Windows_NT'">
+    <PackageReference Include="Net.IBM.Data.Db2" Version="9.0.0.400" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0' AND '$(OS)' != 'Windows_NT'">
+    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="9.0.0.400" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RepoDb.Db2.BulkOperations\RepoDb.Db2.BulkOperations.csproj" />
+  </ItemGroup>
+</Project>

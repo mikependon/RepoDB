@@ -18,12 +18,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb", "..\RepoDb.Core\Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SqlServer", "..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj", "{2E585ACE-7C41-9416-EA32-A391B1E19ED3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SqlServer.BulkOperations.UnitTests", "RepoDb.SqlServer.BulkOperations.UnitTests\RepoDb.SqlServer.BulkOperations.UnitTests.csproj", "{D9860EE1-253E-4DEE-95AB-34F76DA462FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D9860EE1-253E-4DEE-95AB-34F76DA462FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9860EE1-253E-4DEE-95AB-34F76DA462FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9860EE1-253E-4DEE-95AB-34F76DA462FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9860EE1-253E-4DEE-95AB-34F76DA462FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF8E22D7-E51A-4D03-AFC8-71CBF8913A2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF8E22D7-E51A-4D03-AFC8-71CBF8913A2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF8E22D7-E51A-4D03-AFC8-71CBF8913A2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
