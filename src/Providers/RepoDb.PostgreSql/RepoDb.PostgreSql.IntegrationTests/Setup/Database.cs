@@ -456,6 +456,37 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
 
         #endregion
 
+        #region KeylessTable
+
+        /// <summary>
+        /// Creates an isolated table without an identity or primary key.
+        /// </summary>
+        /// <returns>The created table name.</returns>
+        public static string CreateKeylessTable()
+        {
+            var tableName = "issue1388_" + Guid.NewGuid().ToString("N");
+            using var connection = new NpgsqlConnection(ConnectionString);
+            connection.ExecuteNonQuery($"CREATE TABLE public.\"{tableName}\" (tote_id INT NOT NULL, name TEXT NOT NULL)");
+            return tableName;
+        }
+
+        /// <summary>
+        /// Removes the isolated keyless table.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        public static void DropKeylessTable(string tableName)
+        {
+            if (tableName == null)
+            {
+                return;
+            }
+            using var builder = new NpgsqlCommandBuilder();
+            using var connection = new NpgsqlConnection(ConnectionString);
+            connection.ExecuteNonQuery($"DROP TABLE IF EXISTS public.{builder.QuoteIdentifier(tableName)}");
+        }
+
+        #endregion
+
         #region CompleteTable
 
         public static IEnumerable<CompleteTable> CreateCompleteTables(int count)

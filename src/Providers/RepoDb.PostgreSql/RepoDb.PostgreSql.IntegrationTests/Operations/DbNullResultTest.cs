@@ -1,0 +1,457 @@
+#region Copyright Attributions
+
+// Copyright (c) 2026 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Npgsql;
+using RepoDb.Enumerations;
+using RepoDb.PostgreSql.IntegrationTests.Models;
+using RepoDb.PostgreSql.IntegrationTests.Setup;
+using System.Threading.Tasks;
+
+namespace RepoDb.PostgreSql.IntegrationTests.Operations
+{
+    /// <summary>
+    /// Covers SQL NULL object results reported in issue #1388.
+    /// </summary>
+    [TestClass]
+    [DoNotParallelize]
+    public class DbNullResultTest
+    {
+        #region Private Variables
+
+        private ConversionType _previousConversionType;
+        private string _tableName;
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Verifies that the inserted row was persisted.
+        /// </summary>
+        /// <param name="connection">The database connection.</param>
+        private void AssertInsertedRow(NpgsqlConnection connection)
+        {
+            var count = connection.ExecuteScalar<long>($"SELECT COUNT(*) FROM public.\"{_tableName}\" WHERE tote_id = 1 AND name = 'x'");
+            Assert.AreEqual(1L,
+                count);
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Prepares an isolated table with default conversion settings.
+        /// </summary>
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            _previousConversionType = GlobalConfiguration.Options.ConversionType;
+            GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            _tableName = Database.CreateKeylessTable();
+        }
+
+        /// <summary>
+        /// Removes the test table and restores conversion settings.
+        /// </summary>
+        [TestCleanup]
+        public void Cleanup()
+        {
+            try
+            {
+                Database.DropKeylessTable(_tableName);
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = _previousConversionType;
+            }
+        }
+
+        /// <summary>
+        /// Verifies that inserting without an identity returns null.
+        /// </summary>
+        [TestMethod]
+        public void TestInsertWithoutIdentityReturnsNull()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var row = new KeylessRow { ToteId = 1, Name = "x" };
+
+
+            // Act
+            var result = connection.Insert(_tableName,
+                row);
+
+
+            // Assert
+            Assert.IsNull(result);
+            AssertInsertedRow(connection);
+        }
+
+        /// <summary>
+        /// Verifies that asynchronously inserting without an identity returns null.
+        /// </summary>
+        [TestMethod]
+        public async Task TestInsertAsyncWithoutIdentityReturnsNull()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var row = new KeylessRow { ToteId = 1, Name = "x" };
+
+
+            // Act
+            var result = await connection.InsertAsync(_tableName,
+                row);
+
+
+            // Assert
+            Assert.IsNull(result);
+            AssertInsertedRow(connection);
+        }
+
+        /// <summary>
+        /// Verifies that MAX over an empty set returns null.
+        /// </summary>
+        [TestMethod]
+        public void TestMaxOverEmptySetReturnsNull()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var field = new Field("tote_id");
+            var where = new QueryField("tote_id",
+                Operation.GreaterThan,
+                0);
+
+
+            // Act
+            var result = connection.Max(_tableName,
+                field,
+                where);
+
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        /// <summary>
+        /// Verifies that asynchronous MAX over an empty set returns null.
+        /// </summary>
+        [TestMethod]
+        public async Task TestMaxAsyncOverEmptySetReturnsNull()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var field = new Field("tote_id");
+            var where = new QueryField("tote_id",
+                Operation.GreaterThan,
+                0);
+
+
+            // Act
+            var result = await connection.MaxAsync(_tableName,
+                field,
+                where);
+
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        /// <summary>
+        /// Verifies the Sum result for an empty set.
+        /// </summary>
+        [TestMethod]
+        public void TestSumOverEmptySetReturnsNull()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var field = new Field("tote_id");
+            var where = new QueryField("tote_id",
+                Operation.GreaterThan,
+                0);
+
+
+            // Act
+            var result = connection.Sum(_tableName,
+                field,
+                where);
+
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        /// <summary>
+        /// Verifies the SumAsync result for an empty set.
+        /// </summary>
+        [TestMethod]
+        public async Task TestSumAsyncOverEmptySetReturnsNull()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var field = new Field("tote_id");
+            var where = new QueryField("tote_id",
+                Operation.GreaterThan,
+                0);
+
+
+            // Act
+            var result = await connection.SumAsync(_tableName,
+                field,
+                where);
+
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        /// <summary>
+        /// Verifies the Min result for an empty set.
+        /// </summary>
+        [TestMethod]
+        public void TestMinOverEmptySetReturnsNull()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var field = new Field("tote_id");
+            var where = new QueryField("tote_id",
+                Operation.GreaterThan,
+                0);
+
+
+            // Act
+            var result = connection.Min(_tableName,
+                field,
+                where);
+
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        /// <summary>
+        /// Verifies the MinAsync result for an empty set.
+        /// </summary>
+        [TestMethod]
+        public async Task TestMinAsyncOverEmptySetReturnsNull()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var field = new Field("tote_id");
+            var where = new QueryField("tote_id",
+                Operation.GreaterThan,
+                0);
+
+
+            // Act
+            var result = await connection.MinAsync(_tableName,
+                field,
+                where);
+
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        /// <summary>
+        /// Verifies the Average object result for an empty set.
+        /// </summary>
+        [TestMethod]
+        public void TestAverageOverEmptySetReturnsNull()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var field = new Field("tote_id");
+            var where = new QueryField("tote_id",
+                Operation.GreaterThan,
+                0);
+
+
+            // Act
+            var result = connection.Average<object>(_tableName,
+                field,
+                where);
+
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        /// <summary>
+        /// Verifies the AverageAsync object result for an empty set.
+        /// </summary>
+        [TestMethod]
+        public async Task TestAverageAsyncOverEmptySetReturnsNull()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var field = new Field("tote_id");
+            var where = new QueryField("tote_id",
+                Operation.GreaterThan,
+                0);
+
+
+            // Act
+            var result = await connection.AverageAsync<object>(_tableName,
+                field,
+                where);
+
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        /// <summary>
+        /// Verifies the Count result for an empty set.
+        /// </summary>
+        [TestMethod]
+        public void TestCountOverEmptySetReturnsZero()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var where = new QueryField("tote_id",
+                Operation.GreaterThan,
+                0);
+
+
+            // Act
+            var result = connection.Count(_tableName,
+                where);
+
+
+            // Assert
+            Assert.AreEqual(0L,
+                result);
+        }
+
+        /// <summary>
+        /// Verifies the CountAsync result for an empty set.
+        /// </summary>
+        [TestMethod]
+        public async Task TestCountAsyncOverEmptySetReturnsZero()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var where = new QueryField("tote_id",
+                Operation.GreaterThan,
+                0);
+
+
+            // Act
+            var result = await connection.CountAsync(_tableName,
+                where);
+
+
+            // Assert
+            Assert.AreEqual(0L,
+                result);
+        }
+
+        /// <summary>
+        /// Verifies the Exists result for an empty set.
+        /// </summary>
+        [TestMethod]
+        public void TestExistsOverEmptySetReturnsFalse()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var where = new QueryField("tote_id",
+                Operation.GreaterThan,
+                0);
+
+
+            // Act
+            var result = connection.Exists(_tableName,
+                where);
+
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        /// <summary>
+        /// Verifies the ExistsAsync result for an empty set.
+        /// </summary>
+        [TestMethod]
+        public async Task TestExistsAsyncOverEmptySetReturnsFalse()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var where = new QueryField("tote_id",
+                Operation.GreaterThan,
+                0);
+
+
+            // Act
+            var result = await connection.ExistsAsync(_tableName,
+                where);
+
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        /// <summary>
+        /// Verifies the InsertAll result without an identity.
+        /// </summary>
+        [TestMethod]
+        public void TestInsertAllWithoutIdentityReturnsInsertedCount()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var rows = new[]
+            {
+                new KeylessRow { ToteId = 1, Name = "x" },
+                new KeylessRow { ToteId = 2, Name = "y" }
+            };
+
+
+            // Act
+            var result = connection.InsertAll(_tableName,
+                rows);
+
+
+            // Assert
+            Assert.AreEqual(2,
+                result);
+            Assert.AreEqual(2L,
+                connection.ExecuteScalar<long>($"SELECT COUNT(*) FROM public.\"{_tableName}\""));
+        }
+
+        /// <summary>
+        /// Verifies the InsertAllAsync result without an identity.
+        /// </summary>
+        [TestMethod]
+        public async Task TestInsertAllAsyncWithoutIdentityReturnsInsertedCount()
+        {
+            // Setup
+            using var connection = new NpgsqlConnection(Database.ConnectionString);
+            var rows = new[]
+            {
+                new KeylessRow { ToteId = 1, Name = "x" },
+                new KeylessRow { ToteId = 2, Name = "y" }
+            };
+
+
+            // Act
+            var result = await connection.InsertAllAsync(_tableName,
+                rows);
+
+
+            // Assert
+            Assert.AreEqual(2,
+                result);
+            Assert.AreEqual(2L,
+                connection.ExecuteScalar<long>($"SELECT COUNT(*) FROM public.\"{_tableName}\""));
+        }
+
+        #endregion
+    }
+}
