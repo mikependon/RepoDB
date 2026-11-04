@@ -21,11 +21,9 @@ namespace RepoDb.SapHana.UnitTests.PropertyHandlers
             // Setup
             var handler = new SapHanaRealVectorToFloatArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Get(null,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -40,11 +38,9 @@ namespace RepoDb.SapHana.UnitTests.PropertyHandlers
             // Setup
             var handler = new SapHanaRealVectorToFloatArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Get(DBNull.Value,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -59,11 +55,9 @@ namespace RepoDb.SapHana.UnitTests.PropertyHandlers
             // Setup
             var handler = new SapHanaRealVectorToFloatArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Set(null,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -79,11 +73,9 @@ namespace RepoDb.SapHana.UnitTests.PropertyHandlers
             var handler = new SapHanaRealVectorToFloatArrayPropertyHandler();
             var expected = new float[] { 1, -2 };
 
-
             // Act
             var actual = handler.Get(expected,
                 null);
-
 
             // Assert
             Assert.AreSame(expected,
@@ -99,11 +91,9 @@ namespace RepoDb.SapHana.UnitTests.PropertyHandlers
             // Setup
             var handler = new SapHanaRealVectorToFloatArrayPropertyHandler();
 
-
             // Act
             Action action = () => handler.Get(42,
                 null);
-
 
             // Assert
             Assert.ThrowsExactly<ArgumentException>(action);
@@ -121,11 +111,9 @@ namespace RepoDb.SapHana.UnitTests.PropertyHandlers
             var stored = handler.Set(expected,
                 null);
 
-
             // Act
             var actual = handler.Get(stored,
                 null);
-
 
             // Assert
             CollectionAssert.AreEqual(expected,
@@ -141,11 +129,9 @@ namespace RepoDb.SapHana.UnitTests.PropertyHandlers
             // Setup
             var handler = new SapHanaRealVectorToFloatArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Get(new byte[] { 0, 0, 128, 63, 0, 0, 0, 192 },
                 null);
-
 
             // Assert
             CollectionAssert.AreEqual(new float[] { 1, -2 },
@@ -161,11 +147,9 @@ namespace RepoDb.SapHana.UnitTests.PropertyHandlers
             // Setup
             var handler = new SapHanaRealVectorToFloatArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Get(new byte[] { 2, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 192 },
                 null);
-
 
             // Assert
             CollectionAssert.AreEqual(new float[] { 1, -2 },
@@ -181,11 +165,9 @@ namespace RepoDb.SapHana.UnitTests.PropertyHandlers
             // Setup
             var handler = new SapHanaRealVectorToFloatArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Get(Array.Empty<byte>(),
                 null);
-
 
             // Assert
             Assert.HasCount(0,
@@ -195,21 +177,52 @@ namespace RepoDb.SapHana.UnitTests.PropertyHandlers
         /// <summary>
         /// Rejects incomplete floating point values.
         /// </summary>
-        /// <param name="length">The invalid byte count.</param>
-        [DataRow(1)]
-        [DataRow(3)]
-        [DataRow(5)]
         [TestMethod]
-        public void GetMisalignedBytesThrows(int length)
+        public void GetMisalignedBytesThrowsForOne()
         {
             // Setup
+            int length = 1;
             var handler = new SapHanaRealVectorToFloatArrayPropertyHandler();
-
 
             // Act
             Action action = () => handler.Get(new byte[length],
                 null);
 
+            // Assert
+            Assert.ThrowsExactly<ArgumentException>(action);
+        }
+
+        /// <summary>
+        /// Rejects incomplete floating point values.
+        /// </summary>
+        [TestMethod]
+        public void GetMisalignedBytesThrowsForThree()
+        {
+            // Setup
+            int length = 3;
+            var handler = new SapHanaRealVectorToFloatArrayPropertyHandler();
+
+            // Act
+            Action action = () => handler.Get(new byte[length],
+                null);
+
+            // Assert
+            Assert.ThrowsExactly<ArgumentException>(action);
+        }
+
+        /// <summary>
+        /// Rejects incomplete floating point values.
+        /// </summary>
+        [TestMethod]
+        public void GetMisalignedBytesThrowsForFive()
+        {
+            // Setup
+            int length = 5;
+            var handler = new SapHanaRealVectorToFloatArrayPropertyHandler();
+
+            // Act
+            Action action = () => handler.Get(new byte[length],
+                null);
 
             // Assert
             Assert.ThrowsExactly<ArgumentException>(action);

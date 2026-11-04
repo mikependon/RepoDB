@@ -15,115 +15,909 @@ namespace RepoDb.Oracle.UnitTests.Resolvers
         /// <summary>
         /// Resolves aliases independently of letter casing.
         /// </summary>
-        /// <param name="name">The database type name.</param>
-        /// <param name="expected">The expected CLR type.</param>
-        [DataRow("number",
-            typeof(decimal))]
-        [DataRow("NUMBER",
-            typeof(decimal))]
-        [DataRow("float",
-            typeof(decimal))]
-        [DataRow("FLOAT",
-            typeof(decimal))]
-        [DataRow("dec",
-            typeof(decimal))]
-        [DataRow("DEC",
-            typeof(decimal))]
-        [DataRow("decimal",
-            typeof(decimal))]
-        [DataRow("DECIMAL",
-            typeof(decimal))]
-        [DataRow("numeric",
-            typeof(decimal))]
-        [DataRow("NUMERIC",
-            typeof(decimal))]
-        [DataRow("binary_float",
-            typeof(float))]
-        [DataRow("BINARY_FLOAT",
-            typeof(float))]
-        [DataRow("binary_double",
-            typeof(double))]
-        [DataRow("BINARY_DOUBLE",
-            typeof(double))]
-        [DataRow("char",
-            typeof(string))]
-        [DataRow("CHAR",
-            typeof(string))]
-        [DataRow("nchar",
-            typeof(string))]
-        [DataRow("NCHAR",
-            typeof(string))]
-        [DataRow("varchar",
-            typeof(string))]
-        [DataRow("VARCHAR",
-            typeof(string))]
-        [DataRow("varchar2",
-            typeof(string))]
-        [DataRow("VARCHAR2",
-            typeof(string))]
-        [DataRow("nvarchar2",
-            typeof(string))]
-        [DataRow("NVARCHAR2",
-            typeof(string))]
-        [DataRow("long",
-            typeof(string))]
-        [DataRow("LONG",
-            typeof(string))]
-        [DataRow("clob",
-            typeof(string))]
-        [DataRow("CLOB",
-            typeof(string))]
-        [DataRow("nclob",
-            typeof(string))]
-        [DataRow("NCLOB",
-            typeof(string))]
-        [DataRow("rowid",
-            typeof(string))]
-        [DataRow("ROWID",
-            typeof(string))]
-        [DataRow("urowid",
-            typeof(string))]
-        [DataRow("UROWID",
-            typeof(string))]
-        [DataRow("xmltype",
-            typeof(string))]
-        [DataRow("XMLTYPE",
-            typeof(string))]
-        [DataRow("date",
-            typeof(DateTime))]
-        [DataRow("DATE",
-            typeof(DateTime))]
-        [DataRow("blob",
-            typeof(byte[]))]
-        [DataRow("BLOB",
-            typeof(byte[]))]
-        [DataRow("raw",
-            typeof(byte[]))]
-        [DataRow("RAW",
-            typeof(byte[]))]
-        [DataRow("long raw",
-            typeof(byte[]))]
-        [DataRow("LONG RAW",
-            typeof(byte[]))]
-        [DataRow("bfile",
-            typeof(byte[]))]
-        [DataRow("BFILE",
-            typeof(byte[]))]
-        [DataRow("boolean",
-            typeof(bool))]
-        [DataRow("BOOLEAN",
-            typeof(bool))]
         [TestMethod]
-        public void ResolveSupportedNameReturnsExpectedType(string name,
-            Type expected)
+        public void ResolveSupportedNameReturnsExpectedTypeForNumber()
         {
             // Setup
+            string name = "number";
+            Type expected = typeof(decimal);
             var resolver = new OracleDbTypeNameToClientTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNumberInUppercase()
+        {
+            // Setup
+            string name = "NUMBER";
+            Type expected = typeof(decimal);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForFloat()
+        {
+            // Setup
+            string name = "float";
+            Type expected = typeof(decimal);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForFloatInUppercase()
+        {
+            // Setup
+            string name = "FLOAT";
+            Type expected = typeof(decimal);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDec()
+        {
+            // Setup
+            string name = "dec";
+            Type expected = typeof(decimal);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecInUppercase()
+        {
+            // Setup
+            string name = "DEC";
+            Type expected = typeof(decimal);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecimal()
+        {
+            // Setup
+            string name = "decimal";
+            Type expected = typeof(decimal);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecimalInUppercase()
+        {
+            // Setup
+            string name = "DECIMAL";
+            Type expected = typeof(decimal);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNumeric()
+        {
+            // Setup
+            string name = "numeric";
+            Type expected = typeof(decimal);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNumericInUppercase()
+        {
+            // Setup
+            string name = "NUMERIC";
+            Type expected = typeof(decimal);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBinaryFloat()
+        {
+            // Setup
+            string name = "binary_float";
+            Type expected = typeof(float);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBinaryFloatInUppercase()
+        {
+            // Setup
+            string name = "BINARY_FLOAT";
+            Type expected = typeof(float);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBinaryDouble()
+        {
+            // Setup
+            string name = "binary_double";
+            Type expected = typeof(double);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBinaryDoubleInUppercase()
+        {
+            // Setup
+            string name = "BINARY_DOUBLE";
+            Type expected = typeof(double);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForChar()
+        {
+            // Setup
+            string name = "char";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForCharInUppercase()
+        {
+            // Setup
+            string name = "CHAR";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNchar()
+        {
+            // Setup
+            string name = "nchar";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNcharInUppercase()
+        {
+            // Setup
+            string name = "NCHAR";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarchar()
+        {
+            // Setup
+            string name = "varchar";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarcharInUppercase()
+        {
+            // Setup
+            string name = "VARCHAR";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarchar2()
+        {
+            // Setup
+            string name = "varchar2";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarchar2InUppercase()
+        {
+            // Setup
+            string name = "VARCHAR2";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNvarchar2()
+        {
+            // Setup
+            string name = "nvarchar2";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNvarchar2InUppercase()
+        {
+            // Setup
+            string name = "NVARCHAR2";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForLong()
+        {
+            // Setup
+            string name = "long";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForLongInUppercase()
+        {
+            // Setup
+            string name = "LONG";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForClob()
+        {
+            // Setup
+            string name = "clob";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForClobInUppercase()
+        {
+            // Setup
+            string name = "CLOB";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNclob()
+        {
+            // Setup
+            string name = "nclob";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNclobInUppercase()
+        {
+            // Setup
+            string name = "NCLOB";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRowid()
+        {
+            // Setup
+            string name = "rowid";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRowidInUppercase()
+        {
+            // Setup
+            string name = "ROWID";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForUrowid()
+        {
+            // Setup
+            string name = "urowid";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForUrowidInUppercase()
+        {
+            // Setup
+            string name = "UROWID";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForXmltype()
+        {
+            // Setup
+            string name = "xmltype";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForXmltypeInUppercase()
+        {
+            // Setup
+            string name = "XMLTYPE";
+            Type expected = typeof(string);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDate()
+        {
+            // Setup
+            string name = "date";
+            Type expected = typeof(DateTime);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDateInUppercase()
+        {
+            // Setup
+            string name = "DATE";
+            Type expected = typeof(DateTime);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBlob()
+        {
+            // Setup
+            string name = "blob";
+            Type expected = typeof(byte[]);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBlobInUppercase()
+        {
+            // Setup
+            string name = "BLOB";
+            Type expected = typeof(byte[]);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRaw()
+        {
+            // Setup
+            string name = "raw";
+            Type expected = typeof(byte[]);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRawInUppercase()
+        {
+            // Setup
+            string name = "RAW";
+            Type expected = typeof(byte[]);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForLongRaw()
+        {
+            // Setup
+            string name = "long raw";
+            Type expected = typeof(byte[]);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForLongRawInUppercase()
+        {
+            // Setup
+            string name = "LONG RAW";
+            Type expected = typeof(byte[]);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBfile()
+        {
+            // Setup
+            string name = "bfile";
+            Type expected = typeof(byte[]);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBfileInUppercase()
+        {
+            // Setup
+            string name = "BFILE";
+            Type expected = typeof(byte[]);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBoolean()
+        {
+            // Setup
+            string name = "boolean";
+            Type expected = typeof(bool);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBooleanInUppercase()
+        {
+            // Setup
+            string name = "BOOLEAN";
+            Type expected = typeof(bool);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(expected,
@@ -133,20 +927,51 @@ namespace RepoDb.Oracle.UnitTests.Resolvers
         /// <summary>
         /// Falls back for empty and unknown names.
         /// </summary>
-        /// <param name="name">The unsupported name.</param>
-        [DataRow("")]
-        [DataRow("__unsupported_type__")]
-        [DataRow("   ")]
         [TestMethod]
-        public void ResolveUnknownNameReturnsObject(string name)
+        public void ResolveUnknownNameReturnsObjectForEmptyString()
         {
             // Setup
+            string name = "";
             var resolver = new OracleDbTypeNameToClientTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(typeof(object),
+                actual);
+        }
+
+        /// <summary>
+        /// Falls back for empty and unknown names.
+        /// </summary>
+        [TestMethod]
+        public void ResolveUnknownNameReturnsObjectForUnsupportedType()
+        {
+            // Setup
+            string name = "__unsupported_type__";
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(typeof(object),
+                actual);
+        }
+
+        /// <summary>
+        /// Falls back for empty and unknown names.
+        /// </summary>
+        [TestMethod]
+        public void ResolveUnknownNameReturnsObjectForWhitespace()
+        {
+            // Setup
+            string name = "   ";
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(typeof(object),
@@ -162,10 +987,8 @@ namespace RepoDb.Oracle.UnitTests.Resolvers
             // Setup
             var resolver = new OracleDbTypeNameToClientTypeResolver();
 
-
             // Act
             var exception = Assert.ThrowsExactly<ArgumentNullException>(() => resolver.Resolve(null));
-
 
             // Assert
             Assert.AreEqual("dbTypeName",

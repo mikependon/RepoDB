@@ -21,7 +21,6 @@ namespace RepoDb.Oracle.BulkOperations.UnitTests.DbSettings
             // Act
             var setting = new OracleBulkOperationsDbSetting();
 
-
             // Assert
             Assert.AreEqual(OracleBulkColumnMappingsBehavior.Automatic,
                 setting.BulkColumnMappingsBehavior);
@@ -36,10 +35,8 @@ namespace RepoDb.Oracle.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new OracleBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = OracleBulkColumnMappingsBehavior.Automatic;
-
 
             // Assert
             Assert.AreEqual(OracleBulkColumnMappingsBehavior.Automatic,
@@ -55,10 +52,8 @@ namespace RepoDb.Oracle.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new OracleBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = OracleBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(OracleBulkColumnMappingsBehavior.Strict,
@@ -74,10 +69,8 @@ namespace RepoDb.Oracle.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new OracleBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = OracleBulkColumnMappingsBehavior.StrictBypass;
-
 
             // Assert
             Assert.AreEqual(OracleBulkColumnMappingsBehavior.StrictBypass,
@@ -94,10 +87,8 @@ namespace RepoDb.Oracle.BulkOperations.UnitTests.DbSettings
             var first = new OracleBulkOperationsDbSetting();
             var second = new OracleBulkOperationsDbSetting();
 
-
             // Act
             first.BulkColumnMappingsBehavior = OracleBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(OracleBulkColumnMappingsBehavior.Automatic,

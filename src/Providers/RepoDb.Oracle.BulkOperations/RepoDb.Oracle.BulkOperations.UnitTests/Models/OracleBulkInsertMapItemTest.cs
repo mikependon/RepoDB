@@ -23,7 +23,6 @@ namespace RepoDb.Oracle.BulkOperations.UnitTests.Models
             var mapping = new OracleBulkInsertMapItem("Source",
                 "Destination");
 
-
             // Assert
             Assert.AreEqual("Source",
                 mapping.SourceColumn,
@@ -39,7 +38,6 @@ namespace RepoDb.Oracle.BulkOperations.UnitTests.Models
             // Act
             var mapping = new OracleBulkInsertMapItem("Source",
                 "Destination");
-
 
             // Assert
             Assert.AreEqual("Destination",
@@ -58,10 +56,8 @@ namespace RepoDb.Oracle.BulkOperations.UnitTests.Models
                 "Destination");
             var expected = mapping.GetHashCode();
 
-
             // Act
             var actual = mapping.GetHashCode();
-
 
             // Assert
             Assert.AreEqual(expected,
@@ -77,12 +73,10 @@ namespace RepoDb.Oracle.BulkOperations.UnitTests.Models
             // Setup
             var expected = (OracleDbType)1;
 
-
             // Act
             var mapping = new OracleBulkInsertMapItem("Source",
                 "Destination",
                 expected);
-
 
             // Assert
             Assert.AreEqual(expected,
@@ -99,7 +93,6 @@ namespace RepoDb.Oracle.BulkOperations.UnitTests.Models
             var mapping = new OracleBulkInsertMapItem("Source",
                 "Destination");
 
-
             // Assert
             Assert.IsNull(mapping.OracleDbType);
         }
@@ -115,10 +108,8 @@ namespace RepoDb.Oracle.BulkOperations.UnitTests.Models
                 "Destination",
                 (OracleDbType)1);
 
-
             // Act
             var actual = mapping.ToString();
-
 
             // Assert
             StringAssert.Contains(actual,

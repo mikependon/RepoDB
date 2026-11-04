@@ -16,63 +16,436 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
         /// <summary>
         /// Resolves supported values and undefined enum values.
         /// </summary>
-        /// <param name="dbType">The provider type.</param>
-        /// <param name="expected">The expected SQL type name.</param>
-        [DataRow(DbType.Int64,
-            "BIGINT")]
-        [DataRow(DbType.Binary,
-            "VARBINARY(65000)")]
-        [DataRow(DbType.Boolean,
-            "BOOLEAN")]
-        [DataRow(DbType.String,
-            "VARCHAR(8191)")]
-        [DataRow(DbType.Date,
-            "DATE")]
-        [DataRow(DbType.DateTime,
-            "TIMESTAMP")]
-        [DataRow(DbType.DateTime2,
-            "TIMESTAMP")]
-        [DataRow(DbType.DateTimeOffset,
-            "TIMESTAMP WITH TIME ZONE")]
-        [DataRow(DbType.Decimal,
-            "DECIMAL(18,2)")]
-        [DataRow(DbType.Single,
-            "FLOAT")]
-        [DataRow(DbType.Double,
-            "DOUBLE PRECISION")]
-        [DataRow(DbType.Int32,
-            "INTEGER")]
-        [DataRow(DbType.Int16,
-            "SMALLINT")]
-        [DataRow(DbType.Time,
-            "TIME")]
-        [DataRow(DbType.Byte,
-            "SMALLINT")]
-        [DataRow(DbType.Guid,
-            "UUID")]
-        [DataRow(DbType.AnsiString,
-            "VARCHAR(8191)")]
-        [DataRow(DbType.AnsiStringFixedLength,
-            "CHAR(8191)")]
-        [DataRow(DbType.StringFixedLength,
-            "CHAR(8191)")]
-        [DataRow(DbType.Object,
-            "VARBINARY(65000)")]
-        [DataRow(DbType.Xml,
-            "LONG VARCHAR(1000000)")]
-        [DataRow((DbType)(-1),
-            "VARCHAR(8191)")]
         [TestMethod]
-        public void ResolveReturnsExpectedSqlTypeName(DbType dbType,
-            string expected)
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeInt64()
         {
             // Setup
+            DbType dbType = DbType.Int64;
+            string expected = "BIGINT";
             var resolver = new DbTypeToVerticaStringNameResolver();
-
 
             // Act
             var actual = resolver.Resolve(dbType);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeBinary()
+        {
+            // Setup
+            DbType dbType = DbType.Binary;
+            string expected = "VARBINARY(65000)";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeBoolean()
+        {
+            // Setup
+            DbType dbType = DbType.Boolean;
+            string expected = "BOOLEAN";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeString()
+        {
+            // Setup
+            DbType dbType = DbType.String;
+            string expected = "VARCHAR(8191)";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeDate()
+        {
+            // Setup
+            DbType dbType = DbType.Date;
+            string expected = "DATE";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeDateTime()
+        {
+            // Setup
+            DbType dbType = DbType.DateTime;
+            string expected = "TIMESTAMP";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeDateTime2()
+        {
+            // Setup
+            DbType dbType = DbType.DateTime2;
+            string expected = "TIMESTAMP";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeDateTimeOffset()
+        {
+            // Setup
+            DbType dbType = DbType.DateTimeOffset;
+            string expected = "TIMESTAMP WITH TIME ZONE";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeDecimal()
+        {
+            // Setup
+            DbType dbType = DbType.Decimal;
+            string expected = "DECIMAL(18,2)";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeSingle()
+        {
+            // Setup
+            DbType dbType = DbType.Single;
+            string expected = "FLOAT";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeDouble()
+        {
+            // Setup
+            DbType dbType = DbType.Double;
+            string expected = "DOUBLE PRECISION";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeInt32()
+        {
+            // Setup
+            DbType dbType = DbType.Int32;
+            string expected = "INTEGER";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeInt16()
+        {
+            // Setup
+            DbType dbType = DbType.Int16;
+            string expected = "SMALLINT";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeTime()
+        {
+            // Setup
+            DbType dbType = DbType.Time;
+            string expected = "TIME";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeByte()
+        {
+            // Setup
+            DbType dbType = DbType.Byte;
+            string expected = "SMALLINT";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeGuid()
+        {
+            // Setup
+            DbType dbType = DbType.Guid;
+            string expected = "UUID";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeAnsiString()
+        {
+            // Setup
+            DbType dbType = DbType.AnsiString;
+            string expected = "VARCHAR(8191)";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeAnsiStringFixedLength()
+        {
+            // Setup
+            DbType dbType = DbType.AnsiStringFixedLength;
+            string expected = "CHAR(8191)";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeStringFixedLength()
+        {
+            // Setup
+            DbType dbType = DbType.StringFixedLength;
+            string expected = "CHAR(8191)";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeObject()
+        {
+            // Setup
+            DbType dbType = DbType.Object;
+            string expected = "VARBINARY(65000)";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeXml()
+        {
+            // Setup
+            DbType dbType = DbType.Xml;
+            string expected = "LONG VARCHAR(1000000)";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeNegativeOne()
+        {
+            // Setup
+            DbType dbType = (DbType)(-1);
+            string expected = "VARCHAR(8191)";
+            var resolver = new DbTypeToVerticaStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
 
             // Assert
             Assert.AreEqual(expected,

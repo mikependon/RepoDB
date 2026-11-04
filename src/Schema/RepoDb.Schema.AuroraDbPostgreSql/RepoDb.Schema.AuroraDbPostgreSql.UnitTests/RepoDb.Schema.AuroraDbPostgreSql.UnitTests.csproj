@@ -25,4 +25,7 @@
     <Compile Include="..\..\ReadDefinitionTests\ReadDefinitionTest.cs" Link="Extensions\ReadDefinitionTest.cs" />
     <Compile Include="..\..\ReadDefinitionTests\LoadDefinitionTestBase.cs" Link="Extensions\LoadDefinitionTestBase.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\UnitTestHelpers\*.cs" Link="Helpers\%(Filename)%(Extension)" />
+  </ItemGroup>
 </Project>

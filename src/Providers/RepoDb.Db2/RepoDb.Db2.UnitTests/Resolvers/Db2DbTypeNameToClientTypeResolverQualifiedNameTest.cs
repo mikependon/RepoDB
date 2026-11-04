@@ -15,27 +15,73 @@ namespace RepoDb.Db2.UnitTests.Resolvers
         /// <summary>
         /// Handles qualified names and malformed wrappers.
         /// </summary>
-        /// <param name="name">The reported database type.</param>
-        /// <param name="expected">The expected CLR representation.</param>
-        [DataRow(" TIMESTAMP(6) ",
-            typeof(DateTime))]
-        [DataRow("TIMESTAMP(12) WITH TIME ZONE",
-            typeof(DateTimeOffset))]
-        [DataRow("timestamp with time zone",
-            typeof(DateTimeOffset))]
-        [DataRow("  integer  ",
-            typeof(int))]
         [TestMethod]
-        public void ResolveQualifiedNameReturnsExpectedType(string name,
-            Type expected)
+        public void ResolveQualifiedNameReturnsExpectedTypeForTimestamp6InUppercaseWithSurroundingWhitespace()
         {
             // Setup
+            string name = " TIMESTAMP(6) ";
+            Type expected = typeof(DateTime);
             var resolver = new Db2DbTypeNameToClientTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles qualified names and malformed wrappers.
+        /// </summary>
+        [TestMethod]
+        public void ResolveQualifiedNameReturnsExpectedTypeForTimestamp12WithTimeZoneInUppercase()
+        {
+            // Setup
+            string name = "TIMESTAMP(12) WITH TIME ZONE";
+            Type expected = typeof(DateTimeOffset);
+            var resolver = new Db2DbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles qualified names and malformed wrappers.
+        /// </summary>
+        [TestMethod]
+        public void ResolveQualifiedNameReturnsExpectedTypeForTimestampWithTimeZone()
+        {
+            // Setup
+            string name = "timestamp with time zone";
+            Type expected = typeof(DateTimeOffset);
+            var resolver = new Db2DbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles qualified names and malformed wrappers.
+        /// </summary>
+        [TestMethod]
+        public void ResolveQualifiedNameReturnsExpectedTypeForIntegerWithSurroundingWhitespace()
+        {
+            // Setup
+            string name = "  integer  ";
+            Type expected = typeof(int);
+            var resolver = new Db2DbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(expected,

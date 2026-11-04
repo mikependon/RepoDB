@@ -23,7 +23,6 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.Models
             var mapping = new PostgreSqlBulkInsertMapItem("Source",
                 "Destination");
 
-
             // Assert
             Assert.AreEqual("Source",
                 mapping.SourceColumn,
@@ -39,7 +38,6 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.Models
             // Act
             var mapping = new PostgreSqlBulkInsertMapItem("Source",
                 "Destination");
-
 
             // Assert
             Assert.AreEqual("Destination",
@@ -58,10 +56,8 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.Models
                 "Destination");
             var expected = mapping.GetHashCode();
 
-
             // Act
             var actual = mapping.GetHashCode();
-
 
             // Assert
             Assert.AreEqual(expected,
@@ -77,12 +73,10 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.Models
             // Setup
             var expected = (NpgsqlDbType)1;
 
-
             // Act
             var mapping = new PostgreSqlBulkInsertMapItem("Source",
                 "Destination",
                 expected);
-
 
             // Assert
             Assert.AreEqual(expected,
@@ -99,7 +93,6 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.Models
             var mapping = new PostgreSqlBulkInsertMapItem("Source",
                 "Destination");
 
-
             // Assert
             Assert.IsNull(mapping.NpgsqlDbType);
         }
@@ -115,10 +108,8 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.Models
                 "Destination",
                 (NpgsqlDbType)1);
 
-
             // Act
             var actual = mapping.ToString();
-
 
             // Assert
             StringAssert.Contains(actual,
@@ -135,12 +126,10 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.Models
             // Setup
             var expected = "CustomType";
 
-
             // Act
             var mapping = new PostgreSqlBulkInsertMapItem("Source",
                 "Destination",
                 expected);
-
 
             // Assert
             Assert.AreEqual(expected,
@@ -158,7 +147,6 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.Models
             var mapping = new PostgreSqlBulkInsertMapItem("Source",
                 "Destination");
 
-
             // Assert
             Assert.IsNull(mapping.DataTypeName);
         }
@@ -174,10 +162,8 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.Models
                 "Destination",
                 "CustomType");
 
-
             // Act
             var actual = mapping.ToString();
-
 
             // Assert
             StringAssert.Contains(actual,

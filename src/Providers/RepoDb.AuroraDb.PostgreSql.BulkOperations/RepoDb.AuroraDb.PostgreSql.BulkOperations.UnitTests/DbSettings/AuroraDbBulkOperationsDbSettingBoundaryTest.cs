@@ -21,7 +21,6 @@ namespace RepoDb.AuroraDb.PostgreSql.BulkOperations.UnitTests.DbSettings
             // Act
             var setting = new AuroraDbBulkOperationsDbSetting();
 
-
             // Assert
             Assert.AreEqual(AuroraDbBulkColumnMappingsBehavior.Automatic,
                 setting.BulkColumnMappingsBehavior);
@@ -36,10 +35,8 @@ namespace RepoDb.AuroraDb.PostgreSql.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new AuroraDbBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = AuroraDbBulkColumnMappingsBehavior.Automatic;
-
 
             // Assert
             Assert.AreEqual(AuroraDbBulkColumnMappingsBehavior.Automatic,
@@ -55,10 +52,8 @@ namespace RepoDb.AuroraDb.PostgreSql.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new AuroraDbBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = AuroraDbBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(AuroraDbBulkColumnMappingsBehavior.Strict,
@@ -74,10 +69,8 @@ namespace RepoDb.AuroraDb.PostgreSql.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new AuroraDbBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = AuroraDbBulkColumnMappingsBehavior.StrictBypass;
-
 
             // Assert
             Assert.AreEqual(AuroraDbBulkColumnMappingsBehavior.StrictBypass,
@@ -94,10 +87,8 @@ namespace RepoDb.AuroraDb.PostgreSql.BulkOperations.UnitTests.DbSettings
             var first = new AuroraDbBulkOperationsDbSetting();
             var second = new AuroraDbBulkOperationsDbSetting();
 
-
             // Act
             first.BulkColumnMappingsBehavior = AuroraDbBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(AuroraDbBulkColumnMappingsBehavior.Automatic,

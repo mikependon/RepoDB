@@ -17,20 +17,15 @@ namespace RepoDb.PostgreSql.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(null)]
-        [DataRow("")]
-        [DataRow("Column")]
         [TestMethod]
-        public void DataTypeNameAttributePreservesConfiguredValue(string value)
+        public void DataTypeNameAttributePreservesConfiguredValueForNull()
         {
             // Setup
+            string value = null;
             var attribute = new global::RepoDb.Attributes.Parameter.Npgsql.DataTypeNameAttribute(value);
-
 
             // Act
             var actual = attribute.DataTypeName;
-
 
             // Assert
             Assert.AreEqual(value,
@@ -41,19 +36,71 @@ namespace RepoDb.PostgreSql.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((NpgsqlDbType)0)]
-        [DataRow((NpgsqlDbType)1)]
         [TestMethod]
-        public void NpgsqlDbTypeAttributePreservesConfiguredValue(NpgsqlDbType value)
+        public void DataTypeNameAttributePreservesConfiguredValueForEmptyString()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.Npgsql.NpgsqlDbTypeAttribute(value);
+            string value = "";
+            var attribute = new global::RepoDb.Attributes.Parameter.Npgsql.DataTypeNameAttribute(value);
 
+            // Act
+            var actual = attribute.DataTypeName;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void DataTypeNameAttributePreservesConfiguredValueForColumnInMixedCase()
+        {
+            // Setup
+            string value = "Column";
+            var attribute = new global::RepoDb.Attributes.Parameter.Npgsql.DataTypeNameAttribute(value);
+
+            // Act
+            var actual = attribute.DataTypeName;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void NpgsqlDbTypeAttributePreservesConfiguredValueForNpgsqlDbTypeZero()
+        {
+            // Setup
+            NpgsqlDbType value = (NpgsqlDbType)0;
+            var attribute = new global::RepoDb.Attributes.Parameter.Npgsql.NpgsqlDbTypeAttribute(value);
 
             // Act
             var actual = attribute.NpgsqlDbType;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void NpgsqlDbTypeAttributePreservesConfiguredValueForNpgsqlDbTypeOne()
+        {
+            // Setup
+            NpgsqlDbType value = (NpgsqlDbType)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.Npgsql.NpgsqlDbTypeAttribute(value);
+
+            // Act
+            var actual = attribute.NpgsqlDbType;
 
             // Assert
             Assert.AreEqual(value,

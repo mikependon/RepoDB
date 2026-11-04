@@ -21,11 +21,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             // Setup
             var handler = new ClickHouseDecimalToDecimalPropertyHandler();
 
-
             // Act
             var actual = handler.Get(null,
                 null);
-
 
             // Assert
             Assert.AreEqual(0m,
@@ -41,11 +39,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             // Setup
             var handler = new ClickHouseDecimalToDecimalPropertyHandler();
 
-
             // Act
             var actual = handler.Get(DBNull.Value,
                 null);
-
 
             // Assert
             Assert.AreEqual(0m,
@@ -62,11 +58,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             var handler = new ClickHouseDecimalToDecimalPropertyHandler();
             const decimal expected = -123.456789m;
 
-
             // Act
             var actual = handler.Get(expected,
                 null);
-
 
             // Assert
             Assert.AreEqual(expected,
@@ -82,11 +76,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             // Setup
             var handler = new ClickHouseDecimalToDecimalPropertyHandler();
 
-
             // Act
             var actual = handler.Get("123.25",
                 null);
-
 
             // Assert
             Assert.AreEqual(123.25m,
@@ -102,11 +94,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             // Setup
             var handler = new ClickHouseDecimalToDecimalPropertyHandler();
 
-
             // Act
             Action action = () => handler.Get("invalid",
                 null);
-
 
             // Assert
             Assert.ThrowsExactly<FormatException>(action);
@@ -115,26 +105,89 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
         /// <summary>
         /// Round-trips the full decimal range through the driver type.
         /// </summary>
-        /// <param name="value">The exact decimal value.</param>
-        [DataRow("0")]
-        [DataRow("79228162514264337593543950335")]
-        [DataRow("-79228162514264337593543950335")]
-        [DataRow("0.0000000000000000000000000001")]
         [TestMethod]
-        public void SetThenGetPreservesDecimalBoundaries(string value)
+        public void SetThenGetPreservesDecimalBoundariesFor0()
         {
             // Setup
+            string value = "0";
             var handler = new ClickHouseDecimalToDecimalPropertyHandler();
             var expected = decimal.Parse(value,
                 System.Globalization.CultureInfo.InvariantCulture);
             var stored = handler.Set(expected,
                 null);
 
+            // Act
+            var actual = handler.Get(stored,
+                null);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Round-trips the full decimal range through the driver type.
+        /// </summary>
+        [TestMethod]
+        public void SetThenGetPreservesDecimalBoundariesForMaximumDecimalValue()
+        {
+            // Setup
+            string value = "79228162514264337593543950335";
+            var handler = new ClickHouseDecimalToDecimalPropertyHandler();
+            var expected = decimal.Parse(value,
+                System.Globalization.CultureInfo.InvariantCulture);
+            var stored = handler.Set(expected,
+                null);
 
             // Act
             var actual = handler.Get(stored,
                 null);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Round-trips the full decimal range through the driver type.
+        /// </summary>
+        [TestMethod]
+        public void SetThenGetPreservesDecimalBoundariesForMinimumDecimalValue()
+        {
+            // Setup
+            string value = "-79228162514264337593543950335";
+            var handler = new ClickHouseDecimalToDecimalPropertyHandler();
+            var expected = decimal.Parse(value,
+                System.Globalization.CultureInfo.InvariantCulture);
+            var stored = handler.Set(expected,
+                null);
+
+            // Act
+            var actual = handler.Get(stored,
+                null);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Round-trips the full decimal range through the driver type.
+        /// </summary>
+        [TestMethod]
+        public void SetThenGetPreservesDecimalBoundariesForSmallestPositiveDecimalValue()
+        {
+            // Setup
+            string value = "0.0000000000000000000000000001";
+            var handler = new ClickHouseDecimalToDecimalPropertyHandler();
+            var expected = decimal.Parse(value,
+                System.Globalization.CultureInfo.InvariantCulture);
+            var stored = handler.Set(expected,
+                null);
+
+            // Act
+            var actual = handler.Get(stored,
+                null);
 
             // Assert
             Assert.AreEqual(expected,
@@ -153,11 +206,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             var stored = textHandler.Set("99999999999999999999999999999999999999",
                 null);
 
-
             // Act
             Action action = () => handler.Get(stored,
                 null);
-
 
             // Assert
             Assert.ThrowsExactly<OverflowException>(action);

@@ -16,10 +16,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' == 'Windows_NT'">
-    <PackageReference Include="Net.IBM.Data.Db2" Version="10.0.0.200" PrivateAssets="all" />
+    <PackageReference Include="Net.IBM.Data.Db2" Version="10.0.0.300" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' != 'Windows_NT'">
-    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="10.0.0.200" />
+    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="10.0.0.300" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' != 'net10.0' AND '$(OS)' == 'Windows_NT'">
     <PackageReference Include="Net.IBM.Data.Db2" Version="9.0.0.400" PrivateAssets="all" />
@@ -36,5 +36,8 @@
   <ItemGroup>
     <Compile Include="..\..\ReadDefinitionTests\ReadDefinitionTest.cs" Link="Extensions\ReadDefinitionTest.cs" />
     <Compile Include="..\..\ReadDefinitionTests\LoadDefinitionTestBase.cs" Link="Extensions\LoadDefinitionTestBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\UnitTestHelpers\*.cs" Link="Helpers\%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

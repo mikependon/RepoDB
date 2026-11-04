@@ -21,11 +21,9 @@ namespace RepoDb.Oracle.UnitTests.PropertyHandlers
             // Setup
             var handler = new OracleVectorToDoubleArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Get(null,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -40,11 +38,9 @@ namespace RepoDb.Oracle.UnitTests.PropertyHandlers
             // Setup
             var handler = new OracleVectorToDoubleArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Get(DBNull.Value,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -59,11 +55,9 @@ namespace RepoDb.Oracle.UnitTests.PropertyHandlers
             // Setup
             var handler = new OracleVectorToDoubleArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Set(null,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -79,11 +73,9 @@ namespace RepoDb.Oracle.UnitTests.PropertyHandlers
             var handler = new OracleVectorToDoubleArrayPropertyHandler();
             var expected = new double[] { 1, -2 };
 
-
             // Act
             var actual = handler.Get(expected,
                 null);
-
 
             // Assert
             Assert.AreSame(expected,
@@ -99,11 +91,9 @@ namespace RepoDb.Oracle.UnitTests.PropertyHandlers
             // Setup
             var handler = new OracleVectorToDoubleArrayPropertyHandler();
 
-
             // Act
             Action action = () => handler.Get(42,
                 null);
-
 
             // Assert
             Assert.ThrowsExactly<ArgumentException>(action);
@@ -121,11 +111,9 @@ namespace RepoDb.Oracle.UnitTests.PropertyHandlers
             var stored = handler.Set(expected,
                 null);
 
-
             // Act
             var actual = handler.Get(stored,
                 null);
-
 
             // Assert
             CollectionAssert.AreEqual(expected,
@@ -142,11 +130,9 @@ namespace RepoDb.Oracle.UnitTests.PropertyHandlers
             var handler = new OracleVectorToDoubleArrayPropertyHandler();
             var expected = new double[] { 1, -2 };
 
-
             // Act
             var actual = handler.Get(new float[] { 1, -2 },
                 null);
-
 
             // Assert
             CollectionAssert.AreEqual(expected,
@@ -163,11 +149,9 @@ namespace RepoDb.Oracle.UnitTests.PropertyHandlers
             var handler = new OracleVectorToDoubleArrayPropertyHandler();
             var expected = new double[] { 1, -2 };
 
-
             // Act
             var actual = handler.Get("[1,-2]",
                 null);
-
 
             // Assert
             CollectionAssert.AreEqual(expected,
@@ -183,11 +167,9 @@ namespace RepoDb.Oracle.UnitTests.PropertyHandlers
             // Setup
             var handler = new OracleVectorToDoubleArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Get(string.Empty,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);

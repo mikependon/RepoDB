@@ -22,7 +22,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
             // Act
             var exception = new MariaDbBulkColumnMappingsException();
 
-
             // Assert
             StringAssert.Contains(exception.Message,
                 "not aligned",
@@ -38,10 +37,8 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
             // Setup
             const string message = "Custom mismatch";
 
-
             // Act
             var exception = new MariaDbBulkColumnMappingsException(message);
-
 
             // Assert
             Assert.AreEqual(message,
@@ -58,11 +55,9 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
             // Setup
             var cause = new InvalidOperationException("Original failure");
 
-
             // Act
             var exception = new MariaDbBulkColumnMappingsException("Mismatch",
                 cause);
-
 
             // Assert
             Assert.AreSame(cause,
@@ -78,7 +73,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
             // Act
             var exception = new MariaDbBulkColumnMappingsException("Mismatch",
                 new InvalidOperationException());
-
 
             // Assert
             Assert.HasCount(0,
@@ -97,7 +91,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
                 null,
                 null);
 
-
             // Assert
             Assert.HasCount(0,
                 exception.SourceColumnsNotInDestination);
@@ -112,7 +105,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
             // Act
             var exception = new MariaDbBulkColumnMappingsException("Mismatch",
                 new InvalidOperationException());
-
 
             // Assert
             Assert.HasCount(0,
@@ -131,7 +123,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
                 null,
                 null);
 
-
             // Assert
             Assert.HasCount(0,
                 exception.DestinationColumnsNotInSource);
@@ -148,7 +139,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
                 MariaDbBulkColumnMappingsBehavior.Strict,
                 new[] { "Extra" },
                 new[] { "Missing" });
-
 
             // Assert
             Assert.AreEqual("Orders",
@@ -168,7 +158,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
                 new[] { "Extra" },
                 new[] { "Missing" });
 
-
             // Assert
             Assert.AreEqual(MariaDbBulkColumnMappingsBehavior.Strict,
                 exception.Behavior);
@@ -185,7 +174,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
                 MariaDbBulkColumnMappingsBehavior.Strict,
                 new[] { "Extra" },
                 new[] { "Missing" });
-
 
             // Assert
             StringAssert.Contains(exception.Message,
@@ -205,7 +193,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
                 new[] { "Extra" },
                 new[] { "Missing" });
 
-
             // Assert
             StringAssert.Contains(exception.Message,
                 "'Missing'",
@@ -221,14 +208,12 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
             // Setup
             var columns = new[] { "Original" };
 
-
             // Act
             var exception = new MariaDbBulkColumnMappingsException("Orders",
                 MariaDbBulkColumnMappingsBehavior.Strict,
                 columns,
                 columns);
             columns[0] = "Changed";
-
 
             // Assert
             Assert.AreEqual("Original",
@@ -245,14 +230,12 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
             // Setup
             var columns = new[] { "Original" };
 
-
             // Act
             var exception = new MariaDbBulkColumnMappingsException("Orders",
                 MariaDbBulkColumnMappingsBehavior.Strict,
                 columns,
                 columns);
             columns[0] = "Changed";
-
 
             // Assert
             Assert.AreEqual("Original",
@@ -273,7 +256,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
                 null,
                 true);
 
-
             // Assert
             Assert.IsTrue(exception.IsOrderMismatch);
         }
@@ -292,7 +274,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Exceptions
                 true,
                 new[] { "Name", "Id" },
                 new[] { "Id", "Name" });
-
 
             // Assert
             StringAssert.Contains(exception.Message,

@@ -16,19 +16,15 @@ namespace RepoDb.MySqlConnector.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((MySqlDbType)0)]
-        [DataRow((MySqlDbType)1)]
         [TestMethod]
-        public void MySqlDbTypeAttributePreservesConfiguredValue(MySqlDbType value)
+        public void MySqlDbTypeAttributePreservesConfiguredValueForMySqlDbTypeZero()
         {
             // Setup
+            MySqlDbType value = (MySqlDbType)0;
             var attribute = new global::RepoDb.Attributes.Parameter.MySqlConnector.MySqlDbTypeAttribute(value);
-
 
             // Act
             var actual = attribute.MySqlDbType;
-
 
             // Assert
             Assert.AreEqual(value,
@@ -38,20 +34,33 @@ namespace RepoDb.MySqlConnector.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(null)]
-        [DataRow("")]
-        [DataRow("Column")]
         [TestMethod]
-        public void SourceColumnAttributePreservesConfiguredValue(string value)
+        public void MySqlDbTypeAttributePreservesConfiguredValueForMySqlDbTypeOne()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.MySqlConnector.SourceColumnAttribute(value);
+            MySqlDbType value = (MySqlDbType)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.MySqlConnector.MySqlDbTypeAttribute(value);
 
+            // Act
+            var actual = attribute.MySqlDbType;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnAttributePreservesConfiguredValueForNull()
+        {
+            // Setup
+            string value = null;
+            var attribute = new global::RepoDb.Attributes.Parameter.MySqlConnector.SourceColumnAttribute(value);
 
             // Act
             var actual = attribute.SourceColumn;
-
 
             // Assert
             Assert.AreEqual(value,
@@ -62,19 +71,53 @@ namespace RepoDb.MySqlConnector.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(false)]
-        [DataRow(true)]
         [TestMethod]
-        public void SourceColumnNullMappingAttributePreservesConfiguredValue(bool value)
+        public void SourceColumnAttributePreservesConfiguredValueForEmptyString()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.MySqlConnector.SourceColumnNullMappingAttribute(value);
+            string value = "";
+            var attribute = new global::RepoDb.Attributes.Parameter.MySqlConnector.SourceColumnAttribute(value);
 
+            // Act
+            var actual = attribute.SourceColumn;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnAttributePreservesConfiguredValueForColumnInMixedCase()
+        {
+            // Setup
+            string value = "Column";
+            var attribute = new global::RepoDb.Attributes.Parameter.MySqlConnector.SourceColumnAttribute(value);
+
+            // Act
+            var actual = attribute.SourceColumn;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnNullMappingAttributePreservesConfiguredValueForFalse()
+        {
+            // Setup
+            bool value = false;
+            var attribute = new global::RepoDb.Attributes.Parameter.MySqlConnector.SourceColumnNullMappingAttribute(value);
 
             // Act
             var actual = attribute.SourceColumnNullMapping;
-
 
             // Assert
             Assert.AreEqual(value,
@@ -84,19 +127,51 @@ namespace RepoDb.MySqlConnector.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((DataRowVersion)0)]
-        [DataRow((DataRowVersion)1)]
         [TestMethod]
-        public void SourceVersionAttributePreservesConfiguredValue(DataRowVersion value)
+        public void SourceColumnNullMappingAttributePreservesConfiguredValueForTrue()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.MySqlConnector.SourceVersionAttribute(value);
+            bool value = true;
+            var attribute = new global::RepoDb.Attributes.Parameter.MySqlConnector.SourceColumnNullMappingAttribute(value);
 
+            // Act
+            var actual = attribute.SourceColumnNullMapping;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceVersionAttributePreservesConfiguredValueForDataRowVersionZero()
+        {
+            // Setup
+            DataRowVersion value = (DataRowVersion)0;
+            var attribute = new global::RepoDb.Attributes.Parameter.MySqlConnector.SourceVersionAttribute(value);
 
             // Act
             var actual = attribute.SourceVersion;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceVersionAttributePreservesConfiguredValueForDataRowVersionOne()
+        {
+            // Setup
+            DataRowVersion value = (DataRowVersion)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.MySqlConnector.SourceVersionAttribute(value);
+
+            // Act
+            var actual = attribute.SourceVersion;
 
             // Assert
             Assert.AreEqual(value,

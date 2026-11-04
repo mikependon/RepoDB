@@ -21,7 +21,6 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.DbSettings
             // Act
             var setting = new PostgreSqlBulkOperationsDbSetting();
 
-
             // Assert
             Assert.AreEqual(PostgreSqlBulkColumnMappingsBehavior.Automatic,
                 setting.BulkColumnMappingsBehavior);
@@ -36,10 +35,8 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new PostgreSqlBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = PostgreSqlBulkColumnMappingsBehavior.Automatic;
-
 
             // Assert
             Assert.AreEqual(PostgreSqlBulkColumnMappingsBehavior.Automatic,
@@ -55,10 +52,8 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new PostgreSqlBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = PostgreSqlBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(PostgreSqlBulkColumnMappingsBehavior.Strict,
@@ -74,10 +69,8 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new PostgreSqlBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = PostgreSqlBulkColumnMappingsBehavior.StrictBypass;
-
 
             // Assert
             Assert.AreEqual(PostgreSqlBulkColumnMappingsBehavior.StrictBypass,
@@ -94,10 +87,8 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.DbSettings
             var first = new PostgreSqlBulkOperationsDbSetting();
             var second = new PostgreSqlBulkOperationsDbSetting();
 
-
             // Act
             first.BulkColumnMappingsBehavior = PostgreSqlBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(PostgreSqlBulkColumnMappingsBehavior.Automatic,

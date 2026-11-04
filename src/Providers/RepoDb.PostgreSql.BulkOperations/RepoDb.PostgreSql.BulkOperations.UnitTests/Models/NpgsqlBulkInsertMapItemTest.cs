@@ -23,7 +23,6 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.Models
             var mapping = new NpgsqlBulkInsertMapItem("Source",
                 "Destination");
 
-
             // Assert
             Assert.AreEqual("Source",
                 mapping.SourceColumn,
@@ -39,7 +38,6 @@ namespace RepoDb.PostgreSql.BulkOperations.UnitTests.Models
             // Act
             var mapping = new NpgsqlBulkInsertMapItem("Source",
                 "Destination");
-
 
             // Assert
             Assert.AreEqual("Destination",

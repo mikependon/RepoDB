@@ -16,19 +16,33 @@ namespace RepoDb.Firebird.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((FbCharset)0)]
-        [DataRow((FbCharset)1)]
         [TestMethod]
-        public void CharsetAttributePreservesConfiguredValue(FbCharset value)
+        public void CharsetAttributePreservesConfiguredValueForFbCharsetZero()
         {
             // Setup
+            FbCharset value = (FbCharset)0;
             var attribute = new global::RepoDb.Attributes.Parameter.Firebird.CharsetAttribute(value);
-
 
             // Act
             var actual = attribute.Charset;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void CharsetAttributePreservesConfiguredValueForFbCharsetOne()
+        {
+            // Setup
+            FbCharset value = (FbCharset)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.Firebird.CharsetAttribute(value);
+
+            // Act
+            var actual = attribute.Charset;
 
             // Assert
             Assert.AreEqual(value,
@@ -38,19 +52,33 @@ namespace RepoDb.Firebird.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((FbDbType)0)]
-        [DataRow((FbDbType)1)]
         [TestMethod]
-        public void FbDbTypeAttributePreservesConfiguredValue(FbDbType value)
+        public void FbDbTypeAttributePreservesConfiguredValueForFbDbTypeZero()
         {
             // Setup
+            FbDbType value = (FbDbType)0;
             var attribute = new global::RepoDb.Attributes.Parameter.Firebird.FbDbTypeAttribute(value);
-
 
             // Act
             var actual = attribute.FbDbType;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void FbDbTypeAttributePreservesConfiguredValueForFbDbTypeOne()
+        {
+            // Setup
+            FbDbType value = (FbDbType)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.Firebird.FbDbTypeAttribute(value);
+
+            // Act
+            var actual = attribute.FbDbType;
 
             // Assert
             Assert.AreEqual(value,
@@ -60,20 +88,15 @@ namespace RepoDb.Firebird.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(null)]
-        [DataRow("")]
-        [DataRow("Column")]
         [TestMethod]
-        public void SourceColumnAttributePreservesConfiguredValue(string value)
+        public void SourceColumnAttributePreservesConfiguredValueForNull()
         {
             // Setup
+            string value = null;
             var attribute = new global::RepoDb.Attributes.Parameter.Firebird.SourceColumnAttribute(value);
-
 
             // Act
             var actual = attribute.SourceColumn;
-
 
             // Assert
             Assert.AreEqual(value,
@@ -84,19 +107,53 @@ namespace RepoDb.Firebird.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(false)]
-        [DataRow(true)]
         [TestMethod]
-        public void SourceColumnNullMappingAttributePreservesConfiguredValue(bool value)
+        public void SourceColumnAttributePreservesConfiguredValueForEmptyString()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.Firebird.SourceColumnNullMappingAttribute(value);
+            string value = "";
+            var attribute = new global::RepoDb.Attributes.Parameter.Firebird.SourceColumnAttribute(value);
 
+            // Act
+            var actual = attribute.SourceColumn;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnAttributePreservesConfiguredValueForColumnInMixedCase()
+        {
+            // Setup
+            string value = "Column";
+            var attribute = new global::RepoDb.Attributes.Parameter.Firebird.SourceColumnAttribute(value);
+
+            // Act
+            var actual = attribute.SourceColumn;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnNullMappingAttributePreservesConfiguredValueForFalse()
+        {
+            // Setup
+            bool value = false;
+            var attribute = new global::RepoDb.Attributes.Parameter.Firebird.SourceColumnNullMappingAttribute(value);
 
             // Act
             var actual = attribute.SourceColumnNullMapping;
-
 
             // Assert
             Assert.AreEqual(value,
@@ -106,19 +163,51 @@ namespace RepoDb.Firebird.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((DataRowVersion)0)]
-        [DataRow((DataRowVersion)1)]
         [TestMethod]
-        public void SourceVersionAttributePreservesConfiguredValue(DataRowVersion value)
+        public void SourceColumnNullMappingAttributePreservesConfiguredValueForTrue()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.Firebird.SourceVersionAttribute(value);
+            bool value = true;
+            var attribute = new global::RepoDb.Attributes.Parameter.Firebird.SourceColumnNullMappingAttribute(value);
 
+            // Act
+            var actual = attribute.SourceColumnNullMapping;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceVersionAttributePreservesConfiguredValueForDataRowVersionZero()
+        {
+            // Setup
+            DataRowVersion value = (DataRowVersion)0;
+            var attribute = new global::RepoDb.Attributes.Parameter.Firebird.SourceVersionAttribute(value);
 
             // Act
             var actual = attribute.SourceVersion;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceVersionAttributePreservesConfiguredValueForDataRowVersionOne()
+        {
+            // Setup
+            DataRowVersion value = (DataRowVersion)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.Firebird.SourceVersionAttribute(value);
+
+            // Act
+            var actual = attribute.SourceVersion;
 
             // Assert
             Assert.AreEqual(value,

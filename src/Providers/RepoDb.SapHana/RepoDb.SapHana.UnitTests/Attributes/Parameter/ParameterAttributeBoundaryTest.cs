@@ -16,20 +16,33 @@ namespace RepoDb.SapHana.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(-1)]
-        [DataRow(0)]
-        [DataRow(int.MaxValue)]
         [TestMethod]
-        public void OffsetAttributePreservesConfiguredValue(int value)
+        public void OffsetAttributePreservesConfiguredValueForNegativeOne()
         {
             // Setup
+            int value = -1;
             var attribute = new global::RepoDb.Attributes.Parameter.SapHana.OffsetAttribute(value);
-
 
             // Act
             var actual = attribute.Offset;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void OffsetAttributePreservesConfiguredValueForZero()
+        {
+            // Setup
+            int value = 0;
+            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.OffsetAttribute(value);
+
+            // Act
+            var actual = attribute.Offset;
 
             // Assert
             Assert.AreEqual(value,
@@ -39,19 +52,51 @@ namespace RepoDb.SapHana.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((HanaDbType)0)]
-        [DataRow((HanaDbType)1)]
         [TestMethod]
-        public void SapHanaDbTypeAttributePreservesConfiguredValue(HanaDbType value)
+        public void OffsetAttributePreservesConfiguredValueForInt32MaxValue()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.SapHanaDbTypeAttribute(value);
+            int value = int.MaxValue;
+            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.OffsetAttribute(value);
 
+            // Act
+            var actual = attribute.Offset;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SapHanaDbTypeAttributePreservesConfiguredValueForHanaDbTypeZero()
+        {
+            // Setup
+            HanaDbType value = (HanaDbType)0;
+            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.SapHanaDbTypeAttribute(value);
 
             // Act
             var actual = attribute.HanaDbType;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SapHanaDbTypeAttributePreservesConfiguredValueForHanaDbTypeOne()
+        {
+            // Setup
+            HanaDbType value = (HanaDbType)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.SapHanaDbTypeAttribute(value);
+
+            // Act
+            var actual = attribute.HanaDbType;
 
             // Assert
             Assert.AreEqual(value,
@@ -61,20 +106,15 @@ namespace RepoDb.SapHana.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(null)]
-        [DataRow("")]
-        [DataRow("Column")]
         [TestMethod]
-        public void SourceColumnAttributePreservesConfiguredValue(string value)
+        public void SourceColumnAttributePreservesConfiguredValueForNull()
         {
             // Setup
+            string value = null;
             var attribute = new global::RepoDb.Attributes.Parameter.SapHana.SourceColumnAttribute(value);
-
 
             // Act
             var actual = attribute.SourceColumn;
-
 
             // Assert
             Assert.AreEqual(value,
@@ -85,19 +125,53 @@ namespace RepoDb.SapHana.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(false)]
-        [DataRow(true)]
         [TestMethod]
-        public void SourceColumnNullMappingAttributePreservesConfiguredValue(bool value)
+        public void SourceColumnAttributePreservesConfiguredValueForEmptyString()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.SourceColumnNullMappingAttribute(value);
+            string value = "";
+            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.SourceColumnAttribute(value);
 
+            // Act
+            var actual = attribute.SourceColumn;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnAttributePreservesConfiguredValueForColumnInMixedCase()
+        {
+            // Setup
+            string value = "Column";
+            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.SourceColumnAttribute(value);
+
+            // Act
+            var actual = attribute.SourceColumn;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnNullMappingAttributePreservesConfiguredValueForFalse()
+        {
+            // Setup
+            bool value = false;
+            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.SourceColumnNullMappingAttribute(value);
 
             // Act
             var actual = attribute.SourceColumnNullMapping;
-
 
             // Assert
             Assert.AreEqual(value,
@@ -107,19 +181,51 @@ namespace RepoDb.SapHana.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((DataRowVersion)0)]
-        [DataRow((DataRowVersion)1)]
         [TestMethod]
-        public void SourceVersionAttributePreservesConfiguredValue(DataRowVersion value)
+        public void SourceColumnNullMappingAttributePreservesConfiguredValueForTrue()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.SourceVersionAttribute(value);
+            bool value = true;
+            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.SourceColumnNullMappingAttribute(value);
 
+            // Act
+            var actual = attribute.SourceColumnNullMapping;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceVersionAttributePreservesConfiguredValueForDataRowVersionZero()
+        {
+            // Setup
+            DataRowVersion value = (DataRowVersion)0;
+            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.SourceVersionAttribute(value);
 
             // Act
             var actual = attribute.SourceVersion;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceVersionAttributePreservesConfiguredValueForDataRowVersionOne()
+        {
+            // Setup
+            DataRowVersion value = (DataRowVersion)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.SapHana.SourceVersionAttribute(value);
+
+            // Act
+            var actual = attribute.SourceVersion;
 
             // Assert
             Assert.AreEqual(value,

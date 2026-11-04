@@ -16,20 +16,15 @@ namespace RepoDb.Vertica.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(null)]
-        [DataRow("")]
-        [DataRow("Column")]
         [TestMethod]
-        public void SourceColumnAttributePreservesConfiguredValue(string value)
+        public void SourceColumnAttributePreservesConfiguredValueForNull()
         {
             // Setup
+            string value = null;
             var attribute = new global::RepoDb.Attributes.Parameter.Vertica.SourceColumnAttribute(value);
-
 
             // Act
             var actual = attribute.SourceColumn;
-
 
             // Assert
             Assert.AreEqual(value,
@@ -40,19 +35,71 @@ namespace RepoDb.Vertica.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(false)]
-        [DataRow(true)]
         [TestMethod]
-        public void SourceColumnNullMappingAttributePreservesConfiguredValue(bool value)
+        public void SourceColumnAttributePreservesConfiguredValueForEmptyString()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.Vertica.SourceColumnNullMappingAttribute(value);
+            string value = "";
+            var attribute = new global::RepoDb.Attributes.Parameter.Vertica.SourceColumnAttribute(value);
 
+            // Act
+            var actual = attribute.SourceColumn;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnAttributePreservesConfiguredValueForColumnInMixedCase()
+        {
+            // Setup
+            string value = "Column";
+            var attribute = new global::RepoDb.Attributes.Parameter.Vertica.SourceColumnAttribute(value);
+
+            // Act
+            var actual = attribute.SourceColumn;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnNullMappingAttributePreservesConfiguredValueForFalse()
+        {
+            // Setup
+            bool value = false;
+            var attribute = new global::RepoDb.Attributes.Parameter.Vertica.SourceColumnNullMappingAttribute(value);
 
             // Act
             var actual = attribute.SourceColumnNullMapping;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnNullMappingAttributePreservesConfiguredValueForTrue()
+        {
+            // Setup
+            bool value = true;
+            var attribute = new global::RepoDb.Attributes.Parameter.Vertica.SourceColumnNullMappingAttribute(value);
+
+            // Act
+            var actual = attribute.SourceColumnNullMapping;
 
             // Assert
             Assert.AreEqual(value,
@@ -62,19 +109,33 @@ namespace RepoDb.Vertica.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((DataRowVersion)0)]
-        [DataRow((DataRowVersion)1)]
         [TestMethod]
-        public void SourceVersionAttributePreservesConfiguredValue(DataRowVersion value)
+        public void SourceVersionAttributePreservesConfiguredValueForDataRowVersionZero()
         {
             // Setup
+            DataRowVersion value = (DataRowVersion)0;
             var attribute = new global::RepoDb.Attributes.Parameter.Vertica.SourceVersionAttribute(value);
-
 
             // Act
             var actual = attribute.SourceVersion;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceVersionAttributePreservesConfiguredValueForDataRowVersionOne()
+        {
+            // Setup
+            DataRowVersion value = (DataRowVersion)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.Vertica.SourceVersionAttribute(value);
+
+            // Act
+            var actual = attribute.SourceVersion;
 
             // Assert
             Assert.AreEqual(value,
@@ -84,19 +145,33 @@ namespace RepoDb.Vertica.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((VerticaType)0)]
-        [DataRow((VerticaType)1)]
         [TestMethod]
-        public void VerticaTypeAttributePreservesConfiguredValue(VerticaType value)
+        public void VerticaTypeAttributePreservesConfiguredValueForVerticaTypeZero()
         {
             // Setup
+            VerticaType value = (VerticaType)0;
             var attribute = new global::RepoDb.Attributes.Parameter.Vertica.VerticaTypeAttribute(value);
-
 
             // Act
             var actual = attribute.Type;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void VerticaTypeAttributePreservesConfiguredValueForVerticaTypeOne()
+        {
+            // Setup
+            VerticaType value = (VerticaType)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.Vertica.VerticaTypeAttribute(value);
+
+            // Act
+            var actual = attribute.Type;
 
             // Assert
             Assert.AreEqual(value,

@@ -22,11 +22,9 @@ namespace RepoDb.DuckDb.UnitTests.PropertyHandlers
             var handler = new DuckDbStreamToByteArrayPropertyHandler();
             var expected = new byte[] { 1, 2, 3 };
 
-
             // Act
             var actual = handler.Get(expected,
                 null);
-
 
             // Assert
             Assert.AreSame(expected,
@@ -44,11 +42,9 @@ namespace RepoDb.DuckDb.UnitTests.PropertyHandlers
             using var stream = new System.IO.MemoryStream(new byte[] { 1, 2, 3 });
             stream.Position = 1;
 
-
             // Act
             var actual = handler.Get(stream,
                 null);
-
 
             // Assert
             CollectionAssert.AreEqual(new byte[] { 2, 3 },
@@ -64,11 +60,9 @@ namespace RepoDb.DuckDb.UnitTests.PropertyHandlers
             // Setup
             var handler = new DuckDbStreamToByteArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Get(DBNull.Value,
                 null);
-
 
             // Assert
             Assert.HasCount(0,
@@ -85,11 +79,9 @@ namespace RepoDb.DuckDb.UnitTests.PropertyHandlers
             var handler = new DuckDbStreamToByteArrayPropertyHandler();
             var expected = new byte[] { 1, 2, 3 };
 
-
             // Act
             var actual = handler.Set(expected,
                 null);
-
 
             // Assert
             Assert.AreSame(expected,

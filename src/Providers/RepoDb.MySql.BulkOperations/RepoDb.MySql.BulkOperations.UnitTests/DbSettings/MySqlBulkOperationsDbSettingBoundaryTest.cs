@@ -21,7 +21,6 @@ namespace RepoDb.MySql.BulkOperations.UnitTests.DbSettings
             // Act
             var setting = new MySqlBulkOperationsDbSetting();
 
-
             // Assert
             Assert.AreEqual(MySqlBulkColumnMappingsBehavior.Automatic,
                 setting.BulkColumnMappingsBehavior);
@@ -36,10 +35,8 @@ namespace RepoDb.MySql.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new MySqlBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = MySqlBulkColumnMappingsBehavior.Automatic;
-
 
             // Assert
             Assert.AreEqual(MySqlBulkColumnMappingsBehavior.Automatic,
@@ -55,10 +52,8 @@ namespace RepoDb.MySql.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new MySqlBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = MySqlBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(MySqlBulkColumnMappingsBehavior.Strict,
@@ -74,10 +69,8 @@ namespace RepoDb.MySql.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new MySqlBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = MySqlBulkColumnMappingsBehavior.StrictBypass;
-
 
             // Assert
             Assert.AreEqual(MySqlBulkColumnMappingsBehavior.StrictBypass,
@@ -94,10 +87,8 @@ namespace RepoDb.MySql.BulkOperations.UnitTests.DbSettings
             var first = new MySqlBulkOperationsDbSetting();
             var second = new MySqlBulkOperationsDbSetting();
 
-
             // Act
             first.BulkColumnMappingsBehavior = MySqlBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(MySqlBulkColumnMappingsBehavior.Automatic,

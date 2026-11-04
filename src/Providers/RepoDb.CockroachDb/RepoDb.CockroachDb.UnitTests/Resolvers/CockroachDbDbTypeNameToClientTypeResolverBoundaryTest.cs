@@ -15,223 +15,1935 @@ namespace RepoDb.CockroachDb.UnitTests.Resolvers
         /// <summary>
         /// Resolves aliases independently of letter casing.
         /// </summary>
-        /// <param name="name">The database type name.</param>
-        /// <param name="expected">The expected CLR type.</param>
-        [DataRow("bigint",
-            typeof(Int64))]
-        [DataRow("BIGINT",
-            typeof(Int64))]
-        [DataRow("int8",
-            typeof(Int64))]
-        [DataRow("INT8",
-            typeof(Int64))]
-        [DataRow("array",
-            typeof(Array))]
-        [DataRow("ARRAY",
-            typeof(Array))]
-        [DataRow("character",
-            typeof(String))]
-        [DataRow("CHARACTER",
-            typeof(String))]
-        [DataRow("char",
-            typeof(String))]
-        [DataRow("CHAR",
-            typeof(String))]
-        [DataRow("character varying",
-            typeof(String))]
-        [DataRow("CHARACTER VARYING",
-            typeof(String))]
-        [DataRow("varchar",
-            typeof(String))]
-        [DataRow("VARCHAR",
-            typeof(String))]
-        [DataRow("citext",
-            typeof(String))]
-        [DataRow("CITEXT",
-            typeof(String))]
-        [DataRow("json",
-            typeof(String))]
-        [DataRow("JSON",
-            typeof(String))]
-        [DataRow("jsonb",
-            typeof(String))]
-        [DataRow("JSONB",
-            typeof(String))]
-        [DataRow("ltree",
-            typeof(String))]
-        [DataRow("LTREE",
-            typeof(String))]
-        [DataRow("name",
-            typeof(String))]
-        [DataRow("NAME",
-            typeof(String))]
-        [DataRow("regclass",
-            typeof(String))]
-        [DataRow("REGCLASS",
-            typeof(String))]
-        [DataRow("regnamespace",
-            typeof(String))]
-        [DataRow("REGNAMESPACE",
-            typeof(String))]
-        [DataRow("regproc",
-            typeof(String))]
-        [DataRow("REGPROC",
-            typeof(String))]
-        [DataRow("regprocedure",
-            typeof(String))]
-        [DataRow("REGPROCEDURE",
-            typeof(String))]
-        [DataRow("regrole",
-            typeof(String))]
-        [DataRow("REGROLE",
-            typeof(String))]
-        [DataRow("string",
-            typeof(String))]
-        [DataRow("STRING",
-            typeof(String))]
-        [DataRow("text",
-            typeof(String))]
-        [DataRow("TEXT",
-            typeof(String))]
-        [DataRow("boolean",
-            typeof(Boolean))]
-        [DataRow("BOOLEAN",
-            typeof(Boolean))]
-        [DataRow("bool",
-            typeof(Boolean))]
-        [DataRow("BOOL",
-            typeof(Boolean))]
-        [DataRow("bit",
-            typeof(System.Collections.BitArray))]
-        [DataRow("BIT",
-            typeof(System.Collections.BitArray))]
-        [DataRow("bit varying",
-            typeof(System.Collections.BitArray))]
-        [DataRow("BIT VARYING",
-            typeof(System.Collections.BitArray))]
-        [DataRow("varbit",
-            typeof(System.Collections.BitArray))]
-        [DataRow("VARBIT",
-            typeof(System.Collections.BitArray))]
-        [DataRow("bytea",
-            typeof(Byte[]))]
-        [DataRow("BYTEA",
-            typeof(Byte[]))]
-        [DataRow("bytes",
-            typeof(Byte[]))]
-        [DataRow("BYTES",
-            typeof(Byte[]))]
-        [DataRow("oid",
-            typeof(UInt32))]
-        [DataRow("OID",
-            typeof(UInt32))]
-        [DataRow("regtype",
-            typeof(UInt32))]
-        [DataRow("REGTYPE",
-            typeof(UInt32))]
-        [DataRow("date",
-            typeof(DateOnly))]
-        [DataRow("DATE",
-            typeof(DateOnly))]
-        [DataRow("timestamp without time zone",
-            typeof(DateTime))]
-        [DataRow("TIMESTAMP WITHOUT TIME ZONE",
-            typeof(DateTime))]
-        [DataRow("timestamp",
-            typeof(DateTime))]
-        [DataRow("TIMESTAMP",
-            typeof(DateTime))]
-        [DataRow("timestamp with time zone",
-            typeof(DateTimeOffset))]
-        [DataRow("TIMESTAMP WITH TIME ZONE",
-            typeof(DateTimeOffset))]
-        [DataRow("timestamptz",
-            typeof(DateTimeOffset))]
-        [DataRow("TIMESTAMPTZ",
-            typeof(DateTimeOffset))]
-        [DataRow("double precision",
-            typeof(Double))]
-        [DataRow("DOUBLE PRECISION",
-            typeof(Double))]
-        [DataRow("float8",
-            typeof(Double))]
-        [DataRow("FLOAT8",
-            typeof(Double))]
-        [DataRow("float",
-            typeof(Double))]
-        [DataRow("FLOAT",
-            typeof(Double))]
-        [DataRow("inet",
-            typeof(System.Net.IPAddress))]
-        [DataRow("INET",
-            typeof(System.Net.IPAddress))]
-        [DataRow("integer",
-            typeof(Int32))]
-        [DataRow("INTEGER",
-            typeof(Int32))]
-        [DataRow("int4",
-            typeof(Int32))]
-        [DataRow("INT4",
-            typeof(Int32))]
-        [DataRow("time without time zone",
-            typeof(TimeOnly))]
-        [DataRow("TIME WITHOUT TIME ZONE",
-            typeof(TimeOnly))]
-        [DataRow("time",
-            typeof(TimeOnly))]
-        [DataRow("TIME",
-            typeof(TimeOnly))]
-        [DataRow("interval",
-            typeof(TimeSpan))]
-        [DataRow("INTERVAL",
-            typeof(TimeSpan))]
-        [DataRow("numeric",
-            typeof(Decimal))]
-        [DataRow("NUMERIC",
-            typeof(Decimal))]
-        [DataRow("decimal",
-            typeof(Decimal))]
-        [DataRow("DECIMAL",
-            typeof(Decimal))]
-        [DataRow("real",
-            typeof(Single))]
-        [DataRow("REAL",
-            typeof(Single))]
-        [DataRow("float4",
-            typeof(Single))]
-        [DataRow("FLOAT4",
-            typeof(Single))]
-        [DataRow("smallint",
-            typeof(Int16))]
-        [DataRow("SMALLINT",
-            typeof(Int16))]
-        [DataRow("int2",
-            typeof(Int16))]
-        [DataRow("INT2",
-            typeof(Int16))]
-        [DataRow("timetz",
-            typeof(DateTimeOffset))]
-        [DataRow("TIMETZ",
-            typeof(DateTimeOffset))]
-        [DataRow("time with time zone",
-            typeof(DateTimeOffset))]
-        [DataRow("TIME WITH TIME ZONE",
-            typeof(DateTimeOffset))]
-        [DataRow("uuid",
-            typeof(Guid))]
-        [DataRow("UUID",
-            typeof(Guid))]
         [TestMethod]
-        public void ResolveSupportedNameReturnsExpectedType(string name,
-            Type expected)
+        public void ResolveSupportedNameReturnsExpectedTypeForBigint()
         {
             // Setup
+            string name = "bigint";
+            Type expected = typeof(Int64);
             var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBigintInUppercase()
+        {
+            // Setup
+            string name = "BIGINT";
+            Type expected = typeof(Int64);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInt8()
+        {
+            // Setup
+            string name = "int8";
+            Type expected = typeof(Int64);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInt8InUppercase()
+        {
+            // Setup
+            string name = "INT8";
+            Type expected = typeof(Int64);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForArray()
+        {
+            // Setup
+            string name = "array";
+            Type expected = typeof(Array);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForArrayInUppercase()
+        {
+            // Setup
+            string name = "ARRAY";
+            Type expected = typeof(Array);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForCharacter()
+        {
+            // Setup
+            string name = "character";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForCharacterInUppercase()
+        {
+            // Setup
+            string name = "CHARACTER";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForChar()
+        {
+            // Setup
+            string name = "char";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForCharInUppercase()
+        {
+            // Setup
+            string name = "CHAR";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForCharacterVarying()
+        {
+            // Setup
+            string name = "character varying";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForCharacterVaryingInUppercase()
+        {
+            // Setup
+            string name = "CHARACTER VARYING";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarchar()
+        {
+            // Setup
+            string name = "varchar";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarcharInUppercase()
+        {
+            // Setup
+            string name = "VARCHAR";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForCitext()
+        {
+            // Setup
+            string name = "citext";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForCitextInUppercase()
+        {
+            // Setup
+            string name = "CITEXT";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForJson()
+        {
+            // Setup
+            string name = "json";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForJsonInUppercase()
+        {
+            // Setup
+            string name = "JSON";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForJsonb()
+        {
+            // Setup
+            string name = "jsonb";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForJsonbInUppercase()
+        {
+            // Setup
+            string name = "JSONB";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForLtree()
+        {
+            // Setup
+            string name = "ltree";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForLtreeInUppercase()
+        {
+            // Setup
+            string name = "LTREE";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForName()
+        {
+            // Setup
+            string name = "name";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNameInUppercase()
+        {
+            // Setup
+            string name = "NAME";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRegclass()
+        {
+            // Setup
+            string name = "regclass";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRegclassInUppercase()
+        {
+            // Setup
+            string name = "REGCLASS";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRegnamespace()
+        {
+            // Setup
+            string name = "regnamespace";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRegnamespaceInUppercase()
+        {
+            // Setup
+            string name = "REGNAMESPACE";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRegproc()
+        {
+            // Setup
+            string name = "regproc";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRegprocInUppercase()
+        {
+            // Setup
+            string name = "REGPROC";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRegprocedure()
+        {
+            // Setup
+            string name = "regprocedure";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRegprocedureInUppercase()
+        {
+            // Setup
+            string name = "REGPROCEDURE";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRegrole()
+        {
+            // Setup
+            string name = "regrole";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRegroleInUppercase()
+        {
+            // Setup
+            string name = "REGROLE";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForString()
+        {
+            // Setup
+            string name = "string";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForStringInUppercase()
+        {
+            // Setup
+            string name = "STRING";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForText()
+        {
+            // Setup
+            string name = "text";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTextInUppercase()
+        {
+            // Setup
+            string name = "TEXT";
+            Type expected = typeof(String);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBoolean()
+        {
+            // Setup
+            string name = "boolean";
+            Type expected = typeof(Boolean);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBooleanInUppercase()
+        {
+            // Setup
+            string name = "BOOLEAN";
+            Type expected = typeof(Boolean);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBool()
+        {
+            // Setup
+            string name = "bool";
+            Type expected = typeof(Boolean);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBoolInUppercase()
+        {
+            // Setup
+            string name = "BOOL";
+            Type expected = typeof(Boolean);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBit()
+        {
+            // Setup
+            string name = "bit";
+            Type expected = typeof(System.Collections.BitArray);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBitInUppercase()
+        {
+            // Setup
+            string name = "BIT";
+            Type expected = typeof(System.Collections.BitArray);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBitVarying()
+        {
+            // Setup
+            string name = "bit varying";
+            Type expected = typeof(System.Collections.BitArray);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBitVaryingInUppercase()
+        {
+            // Setup
+            string name = "BIT VARYING";
+            Type expected = typeof(System.Collections.BitArray);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarbit()
+        {
+            // Setup
+            string name = "varbit";
+            Type expected = typeof(System.Collections.BitArray);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarbitInUppercase()
+        {
+            // Setup
+            string name = "VARBIT";
+            Type expected = typeof(System.Collections.BitArray);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBytea()
+        {
+            // Setup
+            string name = "bytea";
+            Type expected = typeof(Byte[]);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForByteaInUppercase()
+        {
+            // Setup
+            string name = "BYTEA";
+            Type expected = typeof(Byte[]);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBytes()
+        {
+            // Setup
+            string name = "bytes";
+            Type expected = typeof(Byte[]);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBytesInUppercase()
+        {
+            // Setup
+            string name = "BYTES";
+            Type expected = typeof(Byte[]);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForOid()
+        {
+            // Setup
+            string name = "oid";
+            Type expected = typeof(UInt32);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForOidInUppercase()
+        {
+            // Setup
+            string name = "OID";
+            Type expected = typeof(UInt32);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRegtype()
+        {
+            // Setup
+            string name = "regtype";
+            Type expected = typeof(UInt32);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRegtypeInUppercase()
+        {
+            // Setup
+            string name = "REGTYPE";
+            Type expected = typeof(UInt32);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDate()
+        {
+            // Setup
+            string name = "date";
+            Type expected = typeof(DateOnly);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDateInUppercase()
+        {
+            // Setup
+            string name = "DATE";
+            Type expected = typeof(DateOnly);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimestampWithoutTimeZone()
+        {
+            // Setup
+            string name = "timestamp without time zone";
+            Type expected = typeof(DateTime);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimestampWithoutTimeZoneInUppercase()
+        {
+            // Setup
+            string name = "TIMESTAMP WITHOUT TIME ZONE";
+            Type expected = typeof(DateTime);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimestamp()
+        {
+            // Setup
+            string name = "timestamp";
+            Type expected = typeof(DateTime);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimestampInUppercase()
+        {
+            // Setup
+            string name = "TIMESTAMP";
+            Type expected = typeof(DateTime);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimestampWithTimeZone()
+        {
+            // Setup
+            string name = "timestamp with time zone";
+            Type expected = typeof(DateTimeOffset);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimestampWithTimeZoneInUppercase()
+        {
+            // Setup
+            string name = "TIMESTAMP WITH TIME ZONE";
+            Type expected = typeof(DateTimeOffset);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimestamptz()
+        {
+            // Setup
+            string name = "timestamptz";
+            Type expected = typeof(DateTimeOffset);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimestamptzInUppercase()
+        {
+            // Setup
+            string name = "TIMESTAMPTZ";
+            Type expected = typeof(DateTimeOffset);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDoublePrecision()
+        {
+            // Setup
+            string name = "double precision";
+            Type expected = typeof(Double);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDoublePrecisionInUppercase()
+        {
+            // Setup
+            string name = "DOUBLE PRECISION";
+            Type expected = typeof(Double);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForFloat8()
+        {
+            // Setup
+            string name = "float8";
+            Type expected = typeof(Double);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForFloat8InUppercase()
+        {
+            // Setup
+            string name = "FLOAT8";
+            Type expected = typeof(Double);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForFloat()
+        {
+            // Setup
+            string name = "float";
+            Type expected = typeof(Double);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForFloatInUppercase()
+        {
+            // Setup
+            string name = "FLOAT";
+            Type expected = typeof(Double);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInet()
+        {
+            // Setup
+            string name = "inet";
+            Type expected = typeof(System.Net.IPAddress);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInetInUppercase()
+        {
+            // Setup
+            string name = "INET";
+            Type expected = typeof(System.Net.IPAddress);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInteger()
+        {
+            // Setup
+            string name = "integer";
+            Type expected = typeof(Int32);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForIntegerInUppercase()
+        {
+            // Setup
+            string name = "INTEGER";
+            Type expected = typeof(Int32);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInt4()
+        {
+            // Setup
+            string name = "int4";
+            Type expected = typeof(Int32);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInt4InUppercase()
+        {
+            // Setup
+            string name = "INT4";
+            Type expected = typeof(Int32);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimeWithoutTimeZone()
+        {
+            // Setup
+            string name = "time without time zone";
+            Type expected = typeof(TimeOnly);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimeWithoutTimeZoneInUppercase()
+        {
+            // Setup
+            string name = "TIME WITHOUT TIME ZONE";
+            Type expected = typeof(TimeOnly);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTime()
+        {
+            // Setup
+            string name = "time";
+            Type expected = typeof(TimeOnly);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimeInUppercase()
+        {
+            // Setup
+            string name = "TIME";
+            Type expected = typeof(TimeOnly);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInterval()
+        {
+            // Setup
+            string name = "interval";
+            Type expected = typeof(TimeSpan);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForIntervalInUppercase()
+        {
+            // Setup
+            string name = "INTERVAL";
+            Type expected = typeof(TimeSpan);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNumeric()
+        {
+            // Setup
+            string name = "numeric";
+            Type expected = typeof(Decimal);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNumericInUppercase()
+        {
+            // Setup
+            string name = "NUMERIC";
+            Type expected = typeof(Decimal);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecimal()
+        {
+            // Setup
+            string name = "decimal";
+            Type expected = typeof(Decimal);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecimalInUppercase()
+        {
+            // Setup
+            string name = "DECIMAL";
+            Type expected = typeof(Decimal);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForReal()
+        {
+            // Setup
+            string name = "real";
+            Type expected = typeof(Single);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRealInUppercase()
+        {
+            // Setup
+            string name = "REAL";
+            Type expected = typeof(Single);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForFloat4()
+        {
+            // Setup
+            string name = "float4";
+            Type expected = typeof(Single);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForFloat4InUppercase()
+        {
+            // Setup
+            string name = "FLOAT4";
+            Type expected = typeof(Single);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForSmallint()
+        {
+            // Setup
+            string name = "smallint";
+            Type expected = typeof(Int16);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForSmallintInUppercase()
+        {
+            // Setup
+            string name = "SMALLINT";
+            Type expected = typeof(Int16);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInt2()
+        {
+            // Setup
+            string name = "int2";
+            Type expected = typeof(Int16);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInt2InUppercase()
+        {
+            // Setup
+            string name = "INT2";
+            Type expected = typeof(Int16);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimetz()
+        {
+            // Setup
+            string name = "timetz";
+            Type expected = typeof(DateTimeOffset);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimetzInUppercase()
+        {
+            // Setup
+            string name = "TIMETZ";
+            Type expected = typeof(DateTimeOffset);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimeWithTimeZone()
+        {
+            // Setup
+            string name = "time with time zone";
+            Type expected = typeof(DateTimeOffset);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimeWithTimeZoneInUppercase()
+        {
+            // Setup
+            string name = "TIME WITH TIME ZONE";
+            Type expected = typeof(DateTimeOffset);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForUuid()
+        {
+            // Setup
+            string name = "uuid";
+            Type expected = typeof(Guid);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForUuidInUppercase()
+        {
+            // Setup
+            string name = "UUID";
+            Type expected = typeof(Guid);
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(expected,
@@ -241,20 +1953,51 @@ namespace RepoDb.CockroachDb.UnitTests.Resolvers
         /// <summary>
         /// Falls back for empty and unknown names.
         /// </summary>
-        /// <param name="name">The unsupported name.</param>
-        [DataRow("")]
-        [DataRow("__unsupported_type__")]
-        [DataRow("   ")]
         [TestMethod]
-        public void ResolveUnknownNameReturnsObject(string name)
+        public void ResolveUnknownNameReturnsObjectForEmptyString()
         {
             // Setup
+            string name = "";
             var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(typeof(object),
+                actual);
+        }
+
+        /// <summary>
+        /// Falls back for empty and unknown names.
+        /// </summary>
+        [TestMethod]
+        public void ResolveUnknownNameReturnsObjectForUnsupportedType()
+        {
+            // Setup
+            string name = "__unsupported_type__";
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(typeof(object),
+                actual);
+        }
+
+        /// <summary>
+        /// Falls back for empty and unknown names.
+        /// </summary>
+        [TestMethod]
+        public void ResolveUnknownNameReturnsObjectForWhitespace()
+        {
+            // Setup
+            string name = "   ";
+            var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(typeof(object),
@@ -270,10 +2013,8 @@ namespace RepoDb.CockroachDb.UnitTests.Resolvers
             // Setup
             var resolver = new CockroachDbDbTypeNameToClientTypeResolver();
 
-
             // Act
             var exception = Assert.ThrowsExactly<ArgumentNullException>(() => resolver.Resolve(null));
-
 
             // Assert
             Assert.AreEqual("dbTypeName",

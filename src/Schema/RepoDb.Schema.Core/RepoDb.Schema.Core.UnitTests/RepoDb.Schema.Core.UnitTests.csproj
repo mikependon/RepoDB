@@ -22,4 +22,7 @@
   <ItemGroup>
     <Compile Include="..\..\ReadDefinitionTests\ReadDefinitionTest.cs" Link="Extensions\ReadDefinitionTest.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\UnitTestHelpers\*.cs" Link="Helpers\%(Filename)%(Extension)" />
+  </ItemGroup>
 </Project>

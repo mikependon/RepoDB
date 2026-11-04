@@ -21,7 +21,6 @@ namespace RepoDb.Db2.BulkOperations.UnitTests.DbSettings
             // Act
             var setting = new Db2BulkOperationsDbSetting();
 
-
             // Assert
             Assert.AreEqual(Db2BulkColumnMappingsBehavior.Automatic,
                 setting.BulkColumnMappingsBehavior);
@@ -36,10 +35,8 @@ namespace RepoDb.Db2.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new Db2BulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = Db2BulkColumnMappingsBehavior.Automatic;
-
 
             // Assert
             Assert.AreEqual(Db2BulkColumnMappingsBehavior.Automatic,
@@ -55,10 +52,8 @@ namespace RepoDb.Db2.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new Db2BulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = Db2BulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(Db2BulkColumnMappingsBehavior.Strict,
@@ -74,10 +69,8 @@ namespace RepoDb.Db2.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new Db2BulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = Db2BulkColumnMappingsBehavior.StrictBypass;
-
 
             // Assert
             Assert.AreEqual(Db2BulkColumnMappingsBehavior.StrictBypass,
@@ -94,10 +87,8 @@ namespace RepoDb.Db2.BulkOperations.UnitTests.DbSettings
             var first = new Db2BulkOperationsDbSetting();
             var second = new Db2BulkOperationsDbSetting();
 
-
             // Act
             first.BulkColumnMappingsBehavior = Db2BulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(Db2BulkColumnMappingsBehavior.Automatic,

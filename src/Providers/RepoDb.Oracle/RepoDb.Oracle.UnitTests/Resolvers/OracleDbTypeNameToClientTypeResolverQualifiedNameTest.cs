@@ -15,31 +15,111 @@ namespace RepoDb.Oracle.UnitTests.Resolvers
         /// <summary>
         /// Handles qualified names and malformed wrappers.
         /// </summary>
-        /// <param name="name">The reported database type.</param>
-        /// <param name="expected">The expected CLR representation.</param>
-        [DataRow(" TIMESTAMP(6) ",
-            typeof(DateTime))]
-        [DataRow("TIMESTAMP(9) WITH TIME ZONE",
-            typeof(DateTimeOffset))]
-        [DataRow("TIMESTAMP(6) WITH LOCAL TIME ZONE",
-            typeof(DateTimeOffset))]
-        [DataRow("INTERVAL YEAR(2) TO MONTH",
-            typeof(TimeSpan))]
-        [DataRow("INTERVAL DAY(2) TO SECOND(6)",
-            typeof(TimeSpan))]
-        [DataRow("  NUMBER  ",
-            typeof(decimal))]
         [TestMethod]
-        public void ResolveQualifiedNameReturnsExpectedType(string name,
-            Type expected)
+        public void ResolveQualifiedNameReturnsExpectedTypeForTimestamp6InUppercaseWithSurroundingWhitespace()
         {
             // Setup
+            string name = " TIMESTAMP(6) ";
+            Type expected = typeof(DateTime);
             var resolver = new OracleDbTypeNameToClientTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles qualified names and malformed wrappers.
+        /// </summary>
+        [TestMethod]
+        public void ResolveQualifiedNameReturnsExpectedTypeForTimestamp9WithTimeZoneInUppercase()
+        {
+            // Setup
+            string name = "TIMESTAMP(9) WITH TIME ZONE";
+            Type expected = typeof(DateTimeOffset);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles qualified names and malformed wrappers.
+        /// </summary>
+        [TestMethod]
+        public void ResolveQualifiedNameReturnsExpectedTypeForTimestamp6WithLocalTimeZoneInUppercase()
+        {
+            // Setup
+            string name = "TIMESTAMP(6) WITH LOCAL TIME ZONE";
+            Type expected = typeof(DateTimeOffset);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles qualified names and malformed wrappers.
+        /// </summary>
+        [TestMethod]
+        public void ResolveQualifiedNameReturnsExpectedTypeForIntervalYear2ToMonthInUppercase()
+        {
+            // Setup
+            string name = "INTERVAL YEAR(2) TO MONTH";
+            Type expected = typeof(TimeSpan);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles qualified names and malformed wrappers.
+        /// </summary>
+        [TestMethod]
+        public void ResolveQualifiedNameReturnsExpectedTypeForIntervalDay2ToSecond6InUppercase()
+        {
+            // Setup
+            string name = "INTERVAL DAY(2) TO SECOND(6)";
+            Type expected = typeof(TimeSpan);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles qualified names and malformed wrappers.
+        /// </summary>
+        [TestMethod]
+        public void ResolveQualifiedNameReturnsExpectedTypeForNumberInUppercaseWithSurroundingWhitespace()
+        {
+            // Setup
+            string name = "  NUMBER  ";
+            Type expected = typeof(decimal);
+            var resolver = new OracleDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(expected,

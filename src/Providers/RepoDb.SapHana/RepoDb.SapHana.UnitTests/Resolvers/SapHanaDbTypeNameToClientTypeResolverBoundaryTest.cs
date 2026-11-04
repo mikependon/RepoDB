@@ -15,143 +15,1175 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
         /// <summary>
         /// Resolves aliases independently of letter casing.
         /// </summary>
-        /// <param name="name">The database type name.</param>
-        /// <param name="expected">The expected CLR type.</param>
-        [DataRow("tinyint",
-            typeof(byte))]
-        [DataRow("TINYINT",
-            typeof(byte))]
-        [DataRow("smallint",
-            typeof(short))]
-        [DataRow("SMALLINT",
-            typeof(short))]
-        [DataRow("integer",
-            typeof(int))]
-        [DataRow("INTEGER",
-            typeof(int))]
-        [DataRow("int",
-            typeof(int))]
-        [DataRow("INT",
-            typeof(int))]
-        [DataRow("bigint",
-            typeof(long))]
-        [DataRow("BIGINT",
-            typeof(long))]
-        [DataRow("decimal",
-            typeof(decimal))]
-        [DataRow("DECIMAL",
-            typeof(decimal))]
-        [DataRow("smalldecimal",
-            typeof(decimal))]
-        [DataRow("SMALLDECIMAL",
-            typeof(decimal))]
-        [DataRow("numeric",
-            typeof(decimal))]
-        [DataRow("NUMERIC",
-            typeof(decimal))]
-        [DataRow("real",
-            typeof(float))]
-        [DataRow("REAL",
-            typeof(float))]
-        [DataRow("float",
-            typeof(float))]
-        [DataRow("FLOAT",
-            typeof(float))]
-        [DataRow("double",
-            typeof(double))]
-        [DataRow("DOUBLE",
-            typeof(double))]
-        [DataRow("boolean",
-            typeof(bool))]
-        [DataRow("BOOLEAN",
-            typeof(bool))]
-        [DataRow("varchar",
-            typeof(string))]
-        [DataRow("VARCHAR",
-            typeof(string))]
-        [DataRow("nvarchar",
-            typeof(string))]
-        [DataRow("NVARCHAR",
-            typeof(string))]
-        [DataRow("alphanum",
-            typeof(string))]
-        [DataRow("ALPHANUM",
-            typeof(string))]
-        [DataRow("shorttext",
-            typeof(string))]
-        [DataRow("SHORTTEXT",
-            typeof(string))]
-        [DataRow("char",
-            typeof(string))]
-        [DataRow("CHAR",
-            typeof(string))]
-        [DataRow("nchar",
-            typeof(string))]
-        [DataRow("NCHAR",
-            typeof(string))]
-        [DataRow("text",
-            typeof(string))]
-        [DataRow("TEXT",
-            typeof(string))]
-        [DataRow("clob",
-            typeof(string))]
-        [DataRow("CLOB",
-            typeof(string))]
-        [DataRow("nclob",
-            typeof(string))]
-        [DataRow("NCLOB",
-            typeof(string))]
-        [DataRow("string",
-            typeof(string))]
-        [DataRow("STRING",
-            typeof(string))]
-        [DataRow("date",
-            typeof(DateTime))]
-        [DataRow("DATE",
-            typeof(DateTime))]
-        [DataRow("time",
-            typeof(TimeSpan))]
-        [DataRow("TIME",
-            typeof(TimeSpan))]
-        [DataRow("timestamp",
-            typeof(DateTime))]
-        [DataRow("TIMESTAMP",
-            typeof(DateTime))]
-        [DataRow("seconddate",
-            typeof(DateTime))]
-        [DataRow("SECONDDATE",
-            typeof(DateTime))]
-        [DataRow("blob",
-            typeof(byte[]))]
-        [DataRow("BLOB",
-            typeof(byte[]))]
-        [DataRow("varbinary",
-            typeof(byte[]))]
-        [DataRow("VARBINARY",
-            typeof(byte[]))]
-        [DataRow("binary",
-            typeof(byte[]))]
-        [DataRow("BINARY",
-            typeof(byte[]))]
-        [DataRow("bintext",
-            typeof(byte[]))]
-        [DataRow("BINTEXT",
-            typeof(byte[]))]
-        [DataRow("none",
-            typeof(object))]
-        [DataRow("NONE",
-            typeof(object))]
         [TestMethod]
-        public void ResolveSupportedNameReturnsExpectedType(string name,
-            Type expected)
+        public void ResolveSupportedNameReturnsExpectedTypeForTinyint()
         {
             // Setup
+            string name = "tinyint";
+            Type expected = typeof(byte);
             var resolver = new SapHanaDbTypeNameToClientTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTinyintInUppercase()
+        {
+            // Setup
+            string name = "TINYINT";
+            Type expected = typeof(byte);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForSmallint()
+        {
+            // Setup
+            string name = "smallint";
+            Type expected = typeof(short);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForSmallintInUppercase()
+        {
+            // Setup
+            string name = "SMALLINT";
+            Type expected = typeof(short);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInteger()
+        {
+            // Setup
+            string name = "integer";
+            Type expected = typeof(int);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForIntegerInUppercase()
+        {
+            // Setup
+            string name = "INTEGER";
+            Type expected = typeof(int);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInt()
+        {
+            // Setup
+            string name = "int";
+            Type expected = typeof(int);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForIntInUppercase()
+        {
+            // Setup
+            string name = "INT";
+            Type expected = typeof(int);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBigint()
+        {
+            // Setup
+            string name = "bigint";
+            Type expected = typeof(long);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBigintInUppercase()
+        {
+            // Setup
+            string name = "BIGINT";
+            Type expected = typeof(long);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecimal()
+        {
+            // Setup
+            string name = "decimal";
+            Type expected = typeof(decimal);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecimalInUppercase()
+        {
+            // Setup
+            string name = "DECIMAL";
+            Type expected = typeof(decimal);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForSmalldecimal()
+        {
+            // Setup
+            string name = "smalldecimal";
+            Type expected = typeof(decimal);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForSmalldecimalInUppercase()
+        {
+            // Setup
+            string name = "SMALLDECIMAL";
+            Type expected = typeof(decimal);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNumeric()
+        {
+            // Setup
+            string name = "numeric";
+            Type expected = typeof(decimal);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNumericInUppercase()
+        {
+            // Setup
+            string name = "NUMERIC";
+            Type expected = typeof(decimal);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForReal()
+        {
+            // Setup
+            string name = "real";
+            Type expected = typeof(float);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRealInUppercase()
+        {
+            // Setup
+            string name = "REAL";
+            Type expected = typeof(float);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForFloat()
+        {
+            // Setup
+            string name = "float";
+            Type expected = typeof(float);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForFloatInUppercase()
+        {
+            // Setup
+            string name = "FLOAT";
+            Type expected = typeof(float);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDouble()
+        {
+            // Setup
+            string name = "double";
+            Type expected = typeof(double);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDoubleInUppercase()
+        {
+            // Setup
+            string name = "DOUBLE";
+            Type expected = typeof(double);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBoolean()
+        {
+            // Setup
+            string name = "boolean";
+            Type expected = typeof(bool);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBooleanInUppercase()
+        {
+            // Setup
+            string name = "BOOLEAN";
+            Type expected = typeof(bool);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarchar()
+        {
+            // Setup
+            string name = "varchar";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarcharInUppercase()
+        {
+            // Setup
+            string name = "VARCHAR";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNvarchar()
+        {
+            // Setup
+            string name = "nvarchar";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNvarcharInUppercase()
+        {
+            // Setup
+            string name = "NVARCHAR";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForAlphanum()
+        {
+            // Setup
+            string name = "alphanum";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForAlphanumInUppercase()
+        {
+            // Setup
+            string name = "ALPHANUM";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForShorttext()
+        {
+            // Setup
+            string name = "shorttext";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForShorttextInUppercase()
+        {
+            // Setup
+            string name = "SHORTTEXT";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForChar()
+        {
+            // Setup
+            string name = "char";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForCharInUppercase()
+        {
+            // Setup
+            string name = "CHAR";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNchar()
+        {
+            // Setup
+            string name = "nchar";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNcharInUppercase()
+        {
+            // Setup
+            string name = "NCHAR";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForText()
+        {
+            // Setup
+            string name = "text";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTextInUppercase()
+        {
+            // Setup
+            string name = "TEXT";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForClob()
+        {
+            // Setup
+            string name = "clob";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForClobInUppercase()
+        {
+            // Setup
+            string name = "CLOB";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNclob()
+        {
+            // Setup
+            string name = "nclob";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNclobInUppercase()
+        {
+            // Setup
+            string name = "NCLOB";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForString()
+        {
+            // Setup
+            string name = "string";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForStringInUppercase()
+        {
+            // Setup
+            string name = "STRING";
+            Type expected = typeof(string);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDate()
+        {
+            // Setup
+            string name = "date";
+            Type expected = typeof(DateTime);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDateInUppercase()
+        {
+            // Setup
+            string name = "DATE";
+            Type expected = typeof(DateTime);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTime()
+        {
+            // Setup
+            string name = "time";
+            Type expected = typeof(TimeSpan);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimeInUppercase()
+        {
+            // Setup
+            string name = "TIME";
+            Type expected = typeof(TimeSpan);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimestamp()
+        {
+            // Setup
+            string name = "timestamp";
+            Type expected = typeof(DateTime);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimestampInUppercase()
+        {
+            // Setup
+            string name = "TIMESTAMP";
+            Type expected = typeof(DateTime);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForSeconddate()
+        {
+            // Setup
+            string name = "seconddate";
+            Type expected = typeof(DateTime);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForSeconddateInUppercase()
+        {
+            // Setup
+            string name = "SECONDDATE";
+            Type expected = typeof(DateTime);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBlob()
+        {
+            // Setup
+            string name = "blob";
+            Type expected = typeof(byte[]);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBlobInUppercase()
+        {
+            // Setup
+            string name = "BLOB";
+            Type expected = typeof(byte[]);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarbinary()
+        {
+            // Setup
+            string name = "varbinary";
+            Type expected = typeof(byte[]);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarbinaryInUppercase()
+        {
+            // Setup
+            string name = "VARBINARY";
+            Type expected = typeof(byte[]);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBinary()
+        {
+            // Setup
+            string name = "binary";
+            Type expected = typeof(byte[]);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBinaryInUppercase()
+        {
+            // Setup
+            string name = "BINARY";
+            Type expected = typeof(byte[]);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBintext()
+        {
+            // Setup
+            string name = "bintext";
+            Type expected = typeof(byte[]);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBintextInUppercase()
+        {
+            // Setup
+            string name = "BINTEXT";
+            Type expected = typeof(byte[]);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNone()
+        {
+            // Setup
+            string name = "none";
+            Type expected = typeof(object);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNoneInUppercase()
+        {
+            // Setup
+            string name = "NONE";
+            Type expected = typeof(object);
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(expected,
@@ -161,20 +1193,51 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
         /// <summary>
         /// Falls back for empty and unknown names.
         /// </summary>
-        /// <param name="name">The unsupported name.</param>
-        [DataRow("")]
-        [DataRow("__unsupported_type__")]
-        [DataRow("   ")]
         [TestMethod]
-        public void ResolveUnknownNameReturnsObject(string name)
+        public void ResolveUnknownNameReturnsObjectForEmptyString()
         {
             // Setup
+            string name = "";
             var resolver = new SapHanaDbTypeNameToClientTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(typeof(object),
+                actual);
+        }
+
+        /// <summary>
+        /// Falls back for empty and unknown names.
+        /// </summary>
+        [TestMethod]
+        public void ResolveUnknownNameReturnsObjectForUnsupportedType()
+        {
+            // Setup
+            string name = "__unsupported_type__";
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(typeof(object),
+                actual);
+        }
+
+        /// <summary>
+        /// Falls back for empty and unknown names.
+        /// </summary>
+        [TestMethod]
+        public void ResolveUnknownNameReturnsObjectForWhitespace()
+        {
+            // Setup
+            string name = "   ";
+            var resolver = new SapHanaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(typeof(object),
@@ -190,10 +1253,8 @@ namespace RepoDb.SapHana.UnitTests.Resolvers
             // Setup
             var resolver = new SapHanaDbTypeNameToClientTypeResolver();
 
-
             // Act
             var exception = Assert.ThrowsExactly<ArgumentNullException>(() => resolver.Resolve(null));
-
 
             // Assert
             Assert.AreEqual("dbTypeName",

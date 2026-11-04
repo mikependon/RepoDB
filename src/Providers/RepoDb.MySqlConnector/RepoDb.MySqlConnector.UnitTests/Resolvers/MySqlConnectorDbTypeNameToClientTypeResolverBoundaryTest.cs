@@ -15,203 +15,1745 @@ namespace RepoDb.MySqlConnector.UnitTests.Resolvers
         /// <summary>
         /// Resolves aliases independently of letter casing.
         /// </summary>
-        /// <param name="name">The database type name.</param>
-        /// <param name="expected">The expected CLR type.</param>
-        [DataRow("bigint",
-            typeof(long))]
-        [DataRow("BIGINT",
-            typeof(long))]
-        [DataRow("integer",
-            typeof(long))]
-        [DataRow("INTEGER",
-            typeof(long))]
-        [DataRow("blob",
-            typeof(byte[]))]
-        [DataRow("BLOB",
-            typeof(byte[]))]
-        [DataRow("blobasarray",
-            typeof(byte[]))]
-        [DataRow("BLOBASARRAY",
-            typeof(byte[]))]
-        [DataRow("binary",
-            typeof(byte[]))]
-        [DataRow("BINARY",
-            typeof(byte[]))]
-        [DataRow("longblob",
-            typeof(byte[]))]
-        [DataRow("LONGBLOB",
-            typeof(byte[]))]
-        [DataRow("mediumblob",
-            typeof(byte[]))]
-        [DataRow("MEDIUMBLOB",
-            typeof(byte[]))]
-        [DataRow("tinyblob",
-            typeof(byte[]))]
-        [DataRow("TINYBLOB",
-            typeof(byte[]))]
-        [DataRow("varbinary",
-            typeof(byte[]))]
-        [DataRow("VARBINARY",
-            typeof(byte[]))]
-        [DataRow("geometry",
-            typeof(byte[]))]
-        [DataRow("GEOMETRY",
-            typeof(byte[]))]
-        [DataRow("linestring",
-            typeof(byte[]))]
-        [DataRow("LINESTRING",
-            typeof(byte[]))]
-        [DataRow("multilinestring",
-            typeof(byte[]))]
-        [DataRow("MULTILINESTRING",
-            typeof(byte[]))]
-        [DataRow("multipoint",
-            typeof(byte[]))]
-        [DataRow("MULTIPOINT",
-            typeof(byte[]))]
-        [DataRow("multipolygon",
-            typeof(byte[]))]
-        [DataRow("MULTIPOLYGON",
-            typeof(byte[]))]
-        [DataRow("point",
-            typeof(byte[]))]
-        [DataRow("POINT",
-            typeof(byte[]))]
-        [DataRow("polygon",
-            typeof(byte[]))]
-        [DataRow("POLYGON",
-            typeof(byte[]))]
-        [DataRow("boolean",
-            typeof(bool))]
-        [DataRow("BOOLEAN",
-            typeof(bool))]
-        [DataRow("char",
-            typeof(string))]
-        [DataRow("CHAR",
-            typeof(string))]
-        [DataRow("json",
-            typeof(string))]
-        [DataRow("JSON",
-            typeof(string))]
-        [DataRow("longtext",
-            typeof(string))]
-        [DataRow("LONGTEXT",
-            typeof(string))]
-        [DataRow("mediumtext",
-            typeof(string))]
-        [DataRow("MEDIUMTEXT",
-            typeof(string))]
-        [DataRow("nchar",
-            typeof(string))]
-        [DataRow("NCHAR",
-            typeof(string))]
-        [DataRow("nvarchar",
-            typeof(string))]
-        [DataRow("NVARCHAR",
-            typeof(string))]
-        [DataRow("string",
-            typeof(string))]
-        [DataRow("STRING",
-            typeof(string))]
-        [DataRow("text",
-            typeof(string))]
-        [DataRow("TEXT",
-            typeof(string))]
-        [DataRow("tinytext",
-            typeof(string))]
-        [DataRow("TINYTEXT",
-            typeof(string))]
-        [DataRow("varchar",
-            typeof(string))]
-        [DataRow("VARCHAR",
-            typeof(string))]
-        [DataRow("date",
-            typeof(DateTime))]
-        [DataRow("DATE",
-            typeof(DateTime))]
-        [DataRow("datetime",
-            typeof(DateTime))]
-        [DataRow("DATETIME",
-            typeof(DateTime))]
-        [DataRow("datetime2",
-            typeof(DateTime))]
-        [DataRow("DATETIME2",
-            typeof(DateTime))]
-        [DataRow("timestamp",
-            typeof(DateTime))]
-        [DataRow("TIMESTAMP",
-            typeof(DateTime))]
-        [DataRow("time",
-            typeof(TimeSpan))]
-        [DataRow("TIME",
-            typeof(TimeSpan))]
-        [DataRow("decimal",
-            typeof(decimal))]
-        [DataRow("DECIMAL",
-            typeof(decimal))]
-        [DataRow("decimal2",
-            typeof(decimal))]
-        [DataRow("DECIMAL2",
-            typeof(decimal))]
-        [DataRow("numeric",
-            typeof(decimal))]
-        [DataRow("NUMERIC",
-            typeof(decimal))]
-        [DataRow("double",
-            typeof(double))]
-        [DataRow("DOUBLE",
-            typeof(double))]
-        [DataRow("real",
-            typeof(double))]
-        [DataRow("REAL",
-            typeof(double))]
-        [DataRow("float",
-            typeof(float))]
-        [DataRow("FLOAT",
-            typeof(float))]
-        [DataRow("int",
-            typeof(int))]
-        [DataRow("INT",
-            typeof(int))]
-        [DataRow("int2",
-            typeof(int))]
-        [DataRow("INT2",
-            typeof(int))]
-        [DataRow("mediumint",
-            typeof(int))]
-        [DataRow("MEDIUMINT",
-            typeof(int))]
-        [DataRow("year",
-            typeof(int))]
-        [DataRow("YEAR",
-            typeof(int))]
-        [DataRow("smallint",
-            typeof(short))]
-        [DataRow("SMALLINT",
-            typeof(short))]
-        [DataRow("tinyint",
-            typeof(sbyte))]
-        [DataRow("TINYINT",
-            typeof(sbyte))]
-        [DataRow("bit",
-            typeof(ulong))]
-        [DataRow("BIT",
-            typeof(ulong))]
-        [DataRow("none",
-            typeof(object))]
-        [DataRow("NONE",
-            typeof(object))]
         [TestMethod]
-        public void ResolveSupportedNameReturnsExpectedType(string name,
-            Type expected)
+        public void ResolveSupportedNameReturnsExpectedTypeForBigint()
         {
             // Setup
+            string name = "bigint";
+            Type expected = typeof(long);
             var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBigintInUppercase()
+        {
+            // Setup
+            string name = "BIGINT";
+            Type expected = typeof(long);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInteger()
+        {
+            // Setup
+            string name = "integer";
+            Type expected = typeof(long);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForIntegerInUppercase()
+        {
+            // Setup
+            string name = "INTEGER";
+            Type expected = typeof(long);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBlob()
+        {
+            // Setup
+            string name = "blob";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBlobInUppercase()
+        {
+            // Setup
+            string name = "BLOB";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBlobasarray()
+        {
+            // Setup
+            string name = "blobasarray";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBlobasarrayInUppercase()
+        {
+            // Setup
+            string name = "BLOBASARRAY";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBinary()
+        {
+            // Setup
+            string name = "binary";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBinaryInUppercase()
+        {
+            // Setup
+            string name = "BINARY";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForLongblob()
+        {
+            // Setup
+            string name = "longblob";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForLongblobInUppercase()
+        {
+            // Setup
+            string name = "LONGBLOB";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForMediumblob()
+        {
+            // Setup
+            string name = "mediumblob";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForMediumblobInUppercase()
+        {
+            // Setup
+            string name = "MEDIUMBLOB";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTinyblob()
+        {
+            // Setup
+            string name = "tinyblob";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTinyblobInUppercase()
+        {
+            // Setup
+            string name = "TINYBLOB";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarbinary()
+        {
+            // Setup
+            string name = "varbinary";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarbinaryInUppercase()
+        {
+            // Setup
+            string name = "VARBINARY";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForGeometry()
+        {
+            // Setup
+            string name = "geometry";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForGeometryInUppercase()
+        {
+            // Setup
+            string name = "GEOMETRY";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForLinestring()
+        {
+            // Setup
+            string name = "linestring";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForLinestringInUppercase()
+        {
+            // Setup
+            string name = "LINESTRING";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForMultilinestring()
+        {
+            // Setup
+            string name = "multilinestring";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForMultilinestringInUppercase()
+        {
+            // Setup
+            string name = "MULTILINESTRING";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForMultipoint()
+        {
+            // Setup
+            string name = "multipoint";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForMultipointInUppercase()
+        {
+            // Setup
+            string name = "MULTIPOINT";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForMultipolygon()
+        {
+            // Setup
+            string name = "multipolygon";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForMultipolygonInUppercase()
+        {
+            // Setup
+            string name = "MULTIPOLYGON";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForPoint()
+        {
+            // Setup
+            string name = "point";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForPointInUppercase()
+        {
+            // Setup
+            string name = "POINT";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForPolygon()
+        {
+            // Setup
+            string name = "polygon";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForPolygonInUppercase()
+        {
+            // Setup
+            string name = "POLYGON";
+            Type expected = typeof(byte[]);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBoolean()
+        {
+            // Setup
+            string name = "boolean";
+            Type expected = typeof(bool);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBooleanInUppercase()
+        {
+            // Setup
+            string name = "BOOLEAN";
+            Type expected = typeof(bool);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForChar()
+        {
+            // Setup
+            string name = "char";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForCharInUppercase()
+        {
+            // Setup
+            string name = "CHAR";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForJson()
+        {
+            // Setup
+            string name = "json";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForJsonInUppercase()
+        {
+            // Setup
+            string name = "JSON";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForLongtext()
+        {
+            // Setup
+            string name = "longtext";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForLongtextInUppercase()
+        {
+            // Setup
+            string name = "LONGTEXT";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForMediumtext()
+        {
+            // Setup
+            string name = "mediumtext";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForMediumtextInUppercase()
+        {
+            // Setup
+            string name = "MEDIUMTEXT";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNchar()
+        {
+            // Setup
+            string name = "nchar";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNcharInUppercase()
+        {
+            // Setup
+            string name = "NCHAR";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNvarchar()
+        {
+            // Setup
+            string name = "nvarchar";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNvarcharInUppercase()
+        {
+            // Setup
+            string name = "NVARCHAR";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForString()
+        {
+            // Setup
+            string name = "string";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForStringInUppercase()
+        {
+            // Setup
+            string name = "STRING";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForText()
+        {
+            // Setup
+            string name = "text";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTextInUppercase()
+        {
+            // Setup
+            string name = "TEXT";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTinytext()
+        {
+            // Setup
+            string name = "tinytext";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTinytextInUppercase()
+        {
+            // Setup
+            string name = "TINYTEXT";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarchar()
+        {
+            // Setup
+            string name = "varchar";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarcharInUppercase()
+        {
+            // Setup
+            string name = "VARCHAR";
+            Type expected = typeof(string);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDate()
+        {
+            // Setup
+            string name = "date";
+            Type expected = typeof(DateTime);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDateInUppercase()
+        {
+            // Setup
+            string name = "DATE";
+            Type expected = typeof(DateTime);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDatetime()
+        {
+            // Setup
+            string name = "datetime";
+            Type expected = typeof(DateTime);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDatetimeInUppercase()
+        {
+            // Setup
+            string name = "DATETIME";
+            Type expected = typeof(DateTime);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDatetime2()
+        {
+            // Setup
+            string name = "datetime2";
+            Type expected = typeof(DateTime);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDatetime2InUppercase()
+        {
+            // Setup
+            string name = "DATETIME2";
+            Type expected = typeof(DateTime);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimestamp()
+        {
+            // Setup
+            string name = "timestamp";
+            Type expected = typeof(DateTime);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimestampInUppercase()
+        {
+            // Setup
+            string name = "TIMESTAMP";
+            Type expected = typeof(DateTime);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTime()
+        {
+            // Setup
+            string name = "time";
+            Type expected = typeof(TimeSpan);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimeInUppercase()
+        {
+            // Setup
+            string name = "TIME";
+            Type expected = typeof(TimeSpan);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecimal()
+        {
+            // Setup
+            string name = "decimal";
+            Type expected = typeof(decimal);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecimalInUppercase()
+        {
+            // Setup
+            string name = "DECIMAL";
+            Type expected = typeof(decimal);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecimal2()
+        {
+            // Setup
+            string name = "decimal2";
+            Type expected = typeof(decimal);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecimal2InUppercase()
+        {
+            // Setup
+            string name = "DECIMAL2";
+            Type expected = typeof(decimal);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNumeric()
+        {
+            // Setup
+            string name = "numeric";
+            Type expected = typeof(decimal);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNumericInUppercase()
+        {
+            // Setup
+            string name = "NUMERIC";
+            Type expected = typeof(decimal);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDouble()
+        {
+            // Setup
+            string name = "double";
+            Type expected = typeof(double);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDoubleInUppercase()
+        {
+            // Setup
+            string name = "DOUBLE";
+            Type expected = typeof(double);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForReal()
+        {
+            // Setup
+            string name = "real";
+            Type expected = typeof(double);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRealInUppercase()
+        {
+            // Setup
+            string name = "REAL";
+            Type expected = typeof(double);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForFloat()
+        {
+            // Setup
+            string name = "float";
+            Type expected = typeof(float);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForFloatInUppercase()
+        {
+            // Setup
+            string name = "FLOAT";
+            Type expected = typeof(float);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInt()
+        {
+            // Setup
+            string name = "int";
+            Type expected = typeof(int);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForIntInUppercase()
+        {
+            // Setup
+            string name = "INT";
+            Type expected = typeof(int);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInt2()
+        {
+            // Setup
+            string name = "int2";
+            Type expected = typeof(int);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInt2InUppercase()
+        {
+            // Setup
+            string name = "INT2";
+            Type expected = typeof(int);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForMediumint()
+        {
+            // Setup
+            string name = "mediumint";
+            Type expected = typeof(int);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForMediumintInUppercase()
+        {
+            // Setup
+            string name = "MEDIUMINT";
+            Type expected = typeof(int);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForYear()
+        {
+            // Setup
+            string name = "year";
+            Type expected = typeof(int);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForYearInUppercase()
+        {
+            // Setup
+            string name = "YEAR";
+            Type expected = typeof(int);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForSmallint()
+        {
+            // Setup
+            string name = "smallint";
+            Type expected = typeof(short);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForSmallintInUppercase()
+        {
+            // Setup
+            string name = "SMALLINT";
+            Type expected = typeof(short);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTinyint()
+        {
+            // Setup
+            string name = "tinyint";
+            Type expected = typeof(sbyte);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTinyintInUppercase()
+        {
+            // Setup
+            string name = "TINYINT";
+            Type expected = typeof(sbyte);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBit()
+        {
+            // Setup
+            string name = "bit";
+            Type expected = typeof(ulong);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBitInUppercase()
+        {
+            // Setup
+            string name = "BIT";
+            Type expected = typeof(ulong);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNone()
+        {
+            // Setup
+            string name = "none";
+            Type expected = typeof(object);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNoneInUppercase()
+        {
+            // Setup
+            string name = "NONE";
+            Type expected = typeof(object);
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(expected,
@@ -221,20 +1763,51 @@ namespace RepoDb.MySqlConnector.UnitTests.Resolvers
         /// <summary>
         /// Falls back for empty and unknown names.
         /// </summary>
-        /// <param name="name">The unsupported name.</param>
-        [DataRow("")]
-        [DataRow("__unsupported_type__")]
-        [DataRow("   ")]
         [TestMethod]
-        public void ResolveUnknownNameReturnsObject(string name)
+        public void ResolveUnknownNameReturnsObjectForEmptyString()
         {
             // Setup
+            string name = "";
             var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(typeof(object),
+                actual);
+        }
+
+        /// <summary>
+        /// Falls back for empty and unknown names.
+        /// </summary>
+        [TestMethod]
+        public void ResolveUnknownNameReturnsObjectForUnsupportedType()
+        {
+            // Setup
+            string name = "__unsupported_type__";
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(typeof(object),
+                actual);
+        }
+
+        /// <summary>
+        /// Falls back for empty and unknown names.
+        /// </summary>
+        [TestMethod]
+        public void ResolveUnknownNameReturnsObjectForWhitespace()
+        {
+            // Setup
+            string name = "   ";
+            var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(typeof(object),
@@ -250,10 +1823,8 @@ namespace RepoDb.MySqlConnector.UnitTests.Resolvers
             // Setup
             var resolver = new MySqlConnectorDbTypeNameToClientTypeResolver();
 
-
             // Act
             var exception = Assert.ThrowsExactly<ArgumentNullException>(() => resolver.Resolve(null));
-
 
             // Assert
             Assert.AreEqual("dbTypeName",

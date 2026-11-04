@@ -15,28 +15,80 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
         /// <summary>
         /// Preserves embedded null characters and removes padding.
         /// </summary>
-        /// <param name="value">The padded input.</param>
-        /// <param name="expected">The unpadded text.</param>
-        [DataRow("text\0\0",
-            "text")]
-        [DataRow("\0\0",
-            "")]
-        [DataRow("a\0b\0",
-            "a\0b")]
-        [DataRow("",
-            "")]
         [TestMethod]
-        public void GetTextRemovesOnlyTrailingPadding(string value,
-            string expected)
+        public void GetTextRemovesOnlyTrailingPaddingForTextWithTrailingNullPadding()
         {
             // Setup
+            string value = "text\0\0";
+            string expected = "text";
             var handler = new ClickHouseFixedStringToStringPropertyHandler();
-
 
             // Act
             var actual = handler.Get(value,
                 null);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Preserves embedded null characters and removes padding.
+        /// </summary>
+        [TestMethod]
+        public void GetTextRemovesOnlyTrailingPaddingForEmptyContentWithTrailingNullPadding()
+        {
+            // Setup
+            string value = "\0\0";
+            string expected = "";
+            var handler = new ClickHouseFixedStringToStringPropertyHandler();
+
+            // Act
+            var actual = handler.Get(value,
+                null);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Preserves embedded null characters and removes padding.
+        /// </summary>
+        [TestMethod]
+        public void GetTextRemovesOnlyTrailingPaddingForABWithEmbeddedNullAndTrailingPadding()
+        {
+            // Setup
+            string value = "a\0b\0";
+            string expected = "a\0b";
+            var handler = new ClickHouseFixedStringToStringPropertyHandler();
+
+            // Act
+            var actual = handler.Get(value,
+                null);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Preserves embedded null characters and removes padding.
+        /// </summary>
+        [TestMethod]
+        public void GetTextRemovesOnlyTrailingPaddingForEmptyString()
+        {
+            // Setup
+            string value = "";
+            string expected = "";
+            var handler = new ClickHouseFixedStringToStringPropertyHandler();
+
+            // Act
+            var actual = handler.Get(value,
+                null);
 
             // Assert
             Assert.AreEqual(expected,
@@ -54,11 +106,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             var handler = new ClickHouseFixedStringToStringPropertyHandler();
             var bytes = System.Text.Encoding.UTF8.GetBytes("\u00E6\0\0");
 
-
             // Act
             var actual = handler.Get(bytes,
                 null);
-
 
             // Assert
             Assert.AreEqual("\u00E6",
@@ -75,11 +125,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             // Setup
             var handler = new ClickHouseFixedStringToStringPropertyHandler();
 
-
             // Act
             var actual = handler.Get(DBNull.Value,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -94,11 +142,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             // Setup
             var handler = new ClickHouseFixedStringToStringPropertyHandler();
 
-
             // Act
             Action action = () => handler.Get(42,
                 null);
-
 
             // Assert
             Assert.ThrowsExactly<ArgumentException>(action);
@@ -114,11 +160,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             var handler = new ClickHouseFixedStringToStringPropertyHandler();
             const string value = "text\0";
 
-
             // Act
             var actual = handler.Set(value,
                 null);
-
 
             // Assert
             Assert.AreEqual(value,

@@ -16,93 +16,700 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         /// <summary>
         /// Resolves CLR types to their provider representation.
         /// </summary>
-        /// <param name="type">The CLR type.</param>
-        /// <param name="expected">The expected provider type.</param>
-        [DataRow(typeof(NpgsqlBox),
-            NpgsqlDbType.Box)]
-        [DataRow(typeof(NpgsqlCircle),
-            NpgsqlDbType.Circle)]
-        [DataRow(typeof(NpgsqlLine),
-            NpgsqlDbType.Line)]
-        [DataRow(typeof(NpgsqlLogSequenceNumber),
-            NpgsqlDbType.PgLsn)]
-        [DataRow(typeof(NpgsqlLSeg),
-            NpgsqlDbType.LSeg)]
-        [DataRow(typeof(NpgsqlPath),
-            NpgsqlDbType.Path)]
-        [DataRow(typeof(NpgsqlPoint),
-            NpgsqlDbType.Point)]
-        [DataRow(typeof(NpgsqlPolygon),
-            NpgsqlDbType.Polygon)]
-        [DataRow(typeof(NpgsqlRange<DateTime>),
-            NpgsqlDbType.Unknown)]
-        [DataRow(typeof(NpgsqlRange<Decimal>),
-            NpgsqlDbType.Unknown)]
-        [DataRow(typeof(NpgsqlRange<Int32>),
-            NpgsqlDbType.Unknown)]
-        [DataRow(typeof(NpgsqlRange<Int64>),
-            NpgsqlDbType.Unknown)]
-        [DataRow(typeof(NpgsqlTid),
-            NpgsqlDbType.Tid)]
-        [DataRow(typeof(NpgsqlTsQuery),
-            NpgsqlDbType.TsQuery)]
-        [DataRow(typeof(NpgsqlTsVector),
-            NpgsqlDbType.TsVector)]
-        [DataRow(typeof(Array),
-            NpgsqlDbType.Unknown)]
-        [DataRow(typeof(Boolean),
-            NpgsqlDbType.Boolean)]
-        [DataRow(typeof(Byte[]),
-            NpgsqlDbType.Bytea)]
-        [DataRow(typeof(Char),
-            NpgsqlDbType.InternalChar)]
-        [DataRow(typeof(System.Collections.BitArray),
-            NpgsqlDbType.Bit)]
-        [DataRow(typeof(DateTime),
-            NpgsqlDbType.Timestamp)]
-        [DataRow(typeof(DateTimeOffset),
-            NpgsqlDbType.TimestampTz)]
-        [DataRow(typeof(DateOnly),
-            NpgsqlDbType.Date)]
-        [DataRow(typeof(TimeOnly),
-            NpgsqlDbType.Time)]
-        [DataRow(typeof(Decimal),
-            NpgsqlDbType.Money)]
-        [DataRow(typeof(Double),
-            NpgsqlDbType.Double)]
-        [DataRow(typeof(Guid),
-            NpgsqlDbType.Uuid)]
-        [DataRow(typeof(Int16),
-            NpgsqlDbType.Smallint)]
-        [DataRow(typeof(Int32),
-            NpgsqlDbType.Integer)]
-        [DataRow(typeof(Int64),
-            NpgsqlDbType.Bigint)]
-        [DataRow(typeof(System.Net.IPAddress),
-            NpgsqlDbType.Inet)]
-        [DataRow(typeof(System.Net.NetworkInformation.PhysicalAddress),
-            NpgsqlDbType.MacAddr)]
-        [DataRow(typeof(Single),
-            NpgsqlDbType.Real)]
-        [DataRow(typeof(String),
-            NpgsqlDbType.Char)]
-        [DataRow(typeof(TimeSpan),
-            NpgsqlDbType.Interval)]
-        [DataRow(typeof(UInt32),
-            NpgsqlDbType.Cid)]
-        [DataRow(typeof(ValueTuple<System.Net.IPAddress, Int32>),
-            NpgsqlDbType.Cidr)]
         [TestMethod]
-        public void ResolveSupportedTypeReturnsProviderType(Type type,
-            NpgsqlDbType expected)
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlBox()
         {
             // Setup
+            Type type = typeof(NpgsqlBox);
+            NpgsqlDbType expected = NpgsqlDbType.Box;
             var resolver = new ClientTypeToNpgsqlDbTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(type);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlCircle()
+        {
+            // Setup
+            Type type = typeof(NpgsqlCircle);
+            NpgsqlDbType expected = NpgsqlDbType.Circle;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlLine()
+        {
+            // Setup
+            Type type = typeof(NpgsqlLine);
+            NpgsqlDbType expected = NpgsqlDbType.Line;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlLogSequenceNumber()
+        {
+            // Setup
+            Type type = typeof(NpgsqlLogSequenceNumber);
+            NpgsqlDbType expected = NpgsqlDbType.PgLsn;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlLSeg()
+        {
+            // Setup
+            Type type = typeof(NpgsqlLSeg);
+            NpgsqlDbType expected = NpgsqlDbType.LSeg;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlPath()
+        {
+            // Setup
+            Type type = typeof(NpgsqlPath);
+            NpgsqlDbType expected = NpgsqlDbType.Path;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlPoint()
+        {
+            // Setup
+            Type type = typeof(NpgsqlPoint);
+            NpgsqlDbType expected = NpgsqlDbType.Point;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlPolygon()
+        {
+            // Setup
+            Type type = typeof(NpgsqlPolygon);
+            NpgsqlDbType expected = NpgsqlDbType.Polygon;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlRangeOfDateTime()
+        {
+            // Setup
+            Type type = typeof(NpgsqlRange<DateTime>);
+            NpgsqlDbType expected = NpgsqlDbType.Unknown;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlRangeOfDecimal()
+        {
+            // Setup
+            Type type = typeof(NpgsqlRange<Decimal>);
+            NpgsqlDbType expected = NpgsqlDbType.Unknown;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlRangeOfInt32()
+        {
+            // Setup
+            Type type = typeof(NpgsqlRange<Int32>);
+            NpgsqlDbType expected = NpgsqlDbType.Unknown;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlRangeOfInt64()
+        {
+            // Setup
+            Type type = typeof(NpgsqlRange<Int64>);
+            NpgsqlDbType expected = NpgsqlDbType.Unknown;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlTid()
+        {
+            // Setup
+            Type type = typeof(NpgsqlTid);
+            NpgsqlDbType expected = NpgsqlDbType.Tid;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlTsQuery()
+        {
+            // Setup
+            Type type = typeof(NpgsqlTsQuery);
+            NpgsqlDbType expected = NpgsqlDbType.TsQuery;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNpgsqlTsVector()
+        {
+            // Setup
+            Type type = typeof(NpgsqlTsVector);
+            NpgsqlDbType expected = NpgsqlDbType.TsVector;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForArray()
+        {
+            // Setup
+            Type type = typeof(Array);
+            NpgsqlDbType expected = NpgsqlDbType.Unknown;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForBoolean()
+        {
+            // Setup
+            Type type = typeof(Boolean);
+            NpgsqlDbType expected = NpgsqlDbType.Boolean;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForByteArray()
+        {
+            // Setup
+            Type type = typeof(Byte[]);
+            NpgsqlDbType expected = NpgsqlDbType.Bytea;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForChar()
+        {
+            // Setup
+            Type type = typeof(Char);
+            NpgsqlDbType expected = NpgsqlDbType.InternalChar;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForBitArray()
+        {
+            // Setup
+            Type type = typeof(System.Collections.BitArray);
+            NpgsqlDbType expected = NpgsqlDbType.Bit;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForDateTime()
+        {
+            // Setup
+            Type type = typeof(DateTime);
+            NpgsqlDbType expected = NpgsqlDbType.Timestamp;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForDateTimeOffset()
+        {
+            // Setup
+            Type type = typeof(DateTimeOffset);
+            NpgsqlDbType expected = NpgsqlDbType.TimestampTz;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForDateOnly()
+        {
+            // Setup
+            Type type = typeof(DateOnly);
+            NpgsqlDbType expected = NpgsqlDbType.Date;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForTimeOnly()
+        {
+            // Setup
+            Type type = typeof(TimeOnly);
+            NpgsqlDbType expected = NpgsqlDbType.Time;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForDecimal()
+        {
+            // Setup
+            Type type = typeof(Decimal);
+            NpgsqlDbType expected = NpgsqlDbType.Money;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForDouble()
+        {
+            // Setup
+            Type type = typeof(Double);
+            NpgsqlDbType expected = NpgsqlDbType.Double;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForGuid()
+        {
+            // Setup
+            Type type = typeof(Guid);
+            NpgsqlDbType expected = NpgsqlDbType.Uuid;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForInt16()
+        {
+            // Setup
+            Type type = typeof(Int16);
+            NpgsqlDbType expected = NpgsqlDbType.Smallint;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForInt32()
+        {
+            // Setup
+            Type type = typeof(Int32);
+            NpgsqlDbType expected = NpgsqlDbType.Integer;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForInt64()
+        {
+            // Setup
+            Type type = typeof(Int64);
+            NpgsqlDbType expected = NpgsqlDbType.Bigint;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForIPAddress()
+        {
+            // Setup
+            Type type = typeof(System.Net.IPAddress);
+            NpgsqlDbType expected = NpgsqlDbType.Inet;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForPhysicalAddress()
+        {
+            // Setup
+            Type type = typeof(System.Net.NetworkInformation.PhysicalAddress);
+            NpgsqlDbType expected = NpgsqlDbType.MacAddr;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForSingle()
+        {
+            // Setup
+            Type type = typeof(Single);
+            NpgsqlDbType expected = NpgsqlDbType.Real;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForString()
+        {
+            // Setup
+            Type type = typeof(String);
+            NpgsqlDbType expected = NpgsqlDbType.Char;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForTimeSpan()
+        {
+            // Setup
+            Type type = typeof(TimeSpan);
+            NpgsqlDbType expected = NpgsqlDbType.Interval;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForUInt32()
+        {
+            // Setup
+            Type type = typeof(UInt32);
+            NpgsqlDbType expected = NpgsqlDbType.Cid;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForValueTupleOfIPAddressAndInt32()
+        {
+            // Setup
+            Type type = typeof(ValueTuple<System.Net.IPAddress, Int32>);
+            NpgsqlDbType expected = NpgsqlDbType.Cidr;
+            var resolver = new ClientTypeToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
 
             // Assert
             Assert.AreEqual(expected,
@@ -118,10 +725,8 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             // Setup
             var resolver = new ClientTypeToNpgsqlDbTypeResolver();
 
-
             // Act
             var exception = Assert.ThrowsExactly<ArgumentNullException>(() => resolver.Resolve(null));
-
 
             // Assert
             Assert.AreEqual("type",
@@ -138,10 +743,8 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             // Setup
             var resolver = new ClientTypeToNpgsqlDbTypeResolver();
 
-
             // Act
             Action action = () => resolver.Resolve(typeof(Uri));
-
 
             // Assert
             Assert.ThrowsExactly<InvalidOperationException>(action);

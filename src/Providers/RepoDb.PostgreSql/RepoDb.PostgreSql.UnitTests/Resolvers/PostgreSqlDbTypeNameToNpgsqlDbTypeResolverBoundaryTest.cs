@@ -16,35 +16,149 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         /// <summary>
         /// Handles enum names, custom types and SQL aliases.
         /// </summary>
-        /// <param name="name">The database type name.</param>
-        /// <param name="expected">The expected provider type.</param>
-        [DataRow("Integer",
-            NpgsqlDbType.Integer)]
-        [DataRow("integer",
-            NpgsqlDbType.Integer)]
-        [DataRow("USER-DEFINED",
-            NpgsqlDbType.Unknown)]
-        [DataRow("user-defined",
-            NpgsqlDbType.Unknown)]
-        [DataRow("double precision",
-            NpgsqlDbType.Double)]
-        [DataRow("character varying",
-            NpgsqlDbType.Char)]
-        [DataRow("timestamp without time zone",
-            NpgsqlDbType.Timestamp)]
-        [DataRow("timestamp with time zone",
-            NpgsqlDbType.TimestampTz)]
         [TestMethod]
-        public void ResolveNameReturnsExpectedProviderType(string name,
-            NpgsqlDbType expected)
+        public void ResolveNameReturnsExpectedProviderTypeForIntegerInMixedCase()
         {
             // Setup
+            string name = "Integer";
+            NpgsqlDbType expected = NpgsqlDbType.Integer;
             var resolver = new PostgreSqlDbTypeNameToNpgsqlDbTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles enum names, custom types and SQL aliases.
+        /// </summary>
+        [TestMethod]
+        public void ResolveNameReturnsExpectedProviderTypeForInteger()
+        {
+            // Setup
+            string name = "integer";
+            NpgsqlDbType expected = NpgsqlDbType.Integer;
+            var resolver = new PostgreSqlDbTypeNameToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles enum names, custom types and SQL aliases.
+        /// </summary>
+        [TestMethod]
+        public void ResolveNameReturnsExpectedProviderTypeForUserDefinedInUppercase()
+        {
+            // Setup
+            string name = "USER-DEFINED";
+            NpgsqlDbType expected = NpgsqlDbType.Unknown;
+            var resolver = new PostgreSqlDbTypeNameToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles enum names, custom types and SQL aliases.
+        /// </summary>
+        [TestMethod]
+        public void ResolveNameReturnsExpectedProviderTypeForUserDefined()
+        {
+            // Setup
+            string name = "user-defined";
+            NpgsqlDbType expected = NpgsqlDbType.Unknown;
+            var resolver = new PostgreSqlDbTypeNameToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles enum names, custom types and SQL aliases.
+        /// </summary>
+        [TestMethod]
+        public void ResolveNameReturnsExpectedProviderTypeForDoublePrecision()
+        {
+            // Setup
+            string name = "double precision";
+            NpgsqlDbType expected = NpgsqlDbType.Double;
+            var resolver = new PostgreSqlDbTypeNameToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles enum names, custom types and SQL aliases.
+        /// </summary>
+        [TestMethod]
+        public void ResolveNameReturnsExpectedProviderTypeForCharacterVarying()
+        {
+            // Setup
+            string name = "character varying";
+            NpgsqlDbType expected = NpgsqlDbType.Char;
+            var resolver = new PostgreSqlDbTypeNameToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles enum names, custom types and SQL aliases.
+        /// </summary>
+        [TestMethod]
+        public void ResolveNameReturnsExpectedProviderTypeForTimestampWithoutTimeZone()
+        {
+            // Setup
+            string name = "timestamp without time zone";
+            NpgsqlDbType expected = NpgsqlDbType.Timestamp;
+            var resolver = new PostgreSqlDbTypeNameToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Handles enum names, custom types and SQL aliases.
+        /// </summary>
+        [TestMethod]
+        public void ResolveNameReturnsExpectedProviderTypeForTimestampWithTimeZone()
+        {
+            // Setup
+            string name = "timestamp with time zone";
+            NpgsqlDbType expected = NpgsqlDbType.TimestampTz;
+            var resolver = new PostgreSqlDbTypeNameToNpgsqlDbTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(expected,
@@ -54,20 +168,53 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         /// <summary>
         /// Rejects missing and blank type names.
         /// </summary>
-        /// <param name="name">The invalid type name.</param>
-        [DataRow(null)]
-        [DataRow("")]
-        [DataRow(" ")]
         [TestMethod]
-        public void ResolveBlankNameReportsArgument(string name)
+        public void ResolveBlankNameReportsArgumentForNull()
         {
             // Setup
+            string name = null;
             var resolver = new PostgreSqlDbTypeNameToNpgsqlDbTypeResolver();
-
 
             // Act
             var exception = Assert.ThrowsExactly<ArgumentNullException>(() => resolver.Resolve(name));
 
+            // Assert
+            Assert.AreEqual("dbTypeName",
+                exception.ParamName,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Rejects missing and blank type names.
+        /// </summary>
+        [TestMethod]
+        public void ResolveBlankNameReportsArgumentForEmptyString()
+        {
+            // Setup
+            string name = "";
+            var resolver = new PostgreSqlDbTypeNameToNpgsqlDbTypeResolver();
+
+            // Act
+            var exception = Assert.ThrowsExactly<ArgumentNullException>(() => resolver.Resolve(name));
+
+            // Assert
+            Assert.AreEqual("dbTypeName",
+                exception.ParamName,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Rejects missing and blank type names.
+        /// </summary>
+        [TestMethod]
+        public void ResolveBlankNameReportsArgumentForWhitespace()
+        {
+            // Setup
+            string name = " ";
+            var resolver = new PostgreSqlDbTypeNameToNpgsqlDbTypeResolver();
+
+            // Act
+            var exception = Assert.ThrowsExactly<ArgumentNullException>(() => resolver.Resolve(name));
 
             // Assert
             Assert.AreEqual("dbTypeName",
@@ -84,10 +231,8 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             // Setup
             var resolver = new PostgreSqlDbTypeNameToNpgsqlDbTypeResolver();
 
-
             // Act
             Action action = () => resolver.Resolve("__unsupported_type__");
-
 
             // Assert
             Assert.ThrowsExactly<InvalidOperationException>(action);

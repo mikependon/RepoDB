@@ -24,11 +24,9 @@ namespace RepoDb.Vertica.UnitTests.PropertyHandlers
                 11,
                 4).AddTicks(123456789);
 
-
             // Act
             var actual = handler.Get(value,
                 null);
-
 
             // Assert
             Assert.AreEqual(new DateTime(value.TimeOfDay.Ticks),
@@ -45,11 +43,9 @@ namespace RepoDb.Vertica.UnitTests.PropertyHandlers
             var handler = new TimeToDateTimePropertyHandler();
             var expected = DateTime.MaxValue;
 
-
             // Act
             var actual = handler.Set(expected,
                 null);
-
 
             // Assert
             Assert.AreEqual(expected,

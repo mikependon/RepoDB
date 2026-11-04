@@ -15,21 +15,52 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
         /// <summary>
         /// Treats absent and blank numeric text as null.
         /// </summary>
-        /// <param name="value">The blank input.</param>
-        [DataRow(null)]
-        [DataRow("")]
-        [DataRow(" ")]
         [TestMethod]
-        public void SetBlankTextReturnsNull(string value)
+        public void SetBlankTextReturnsNullForNull()
         {
             // Setup
+            string value = null;
             var handler = new ClickHouseDecimalToStringPropertyHandler();
-
 
             // Act
             var actual = handler.Set(value,
                 null);
 
+            // Assert
+            Assert.IsNull(actual);
+        }
+
+        /// <summary>
+        /// Treats absent and blank numeric text as null.
+        /// </summary>
+        [TestMethod]
+        public void SetBlankTextReturnsNullForEmptyString()
+        {
+            // Setup
+            string value = "";
+            var handler = new ClickHouseDecimalToStringPropertyHandler();
+
+            // Act
+            var actual = handler.Set(value,
+                null);
+
+            // Assert
+            Assert.IsNull(actual);
+        }
+
+        /// <summary>
+        /// Treats absent and blank numeric text as null.
+        /// </summary>
+        [TestMethod]
+        public void SetBlankTextReturnsNullForWhitespace()
+        {
+            // Setup
+            string value = " ";
+            var handler = new ClickHouseDecimalToStringPropertyHandler();
+
+            // Act
+            var actual = handler.Set(value,
+                null);
 
             // Assert
             Assert.IsNull(actual);
@@ -44,11 +75,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             // Setup
             var handler = new ClickHouseDecimalToStringPropertyHandler();
 
-
             // Act
             var actual = handler.Get(DBNull.Value,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -63,11 +92,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             // Setup
             var handler = new ClickHouseDecimalToStringPropertyHandler();
 
-
             // Act
             var actual = handler.Get(12.25m,
                 null);
-
 
             // Assert
             Assert.AreEqual("12.25",
@@ -84,11 +111,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             // Setup
             var handler = new ClickHouseDecimalToStringPropertyHandler();
 
-
             // Act
             var actual = handler.Get(42,
                 null);
-
 
             // Assert
             Assert.AreEqual("42",
@@ -108,11 +133,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             var stored = handler.Set("  " + expected + "  ",
                 null);
 
-
             // Act
             var actual = handler.Get(stored,
                 null);
-
 
             // Assert
             Assert.AreEqual(expected,
@@ -129,11 +152,9 @@ namespace RepoDb.ClickHouse.UnitTests.PropertyHandlers
             // Setup
             var handler = new ClickHouseDecimalToStringPropertyHandler();
 
-
             // Act
             Action action = () => handler.Set("invalid",
                 null);
-
 
             // Assert
             Assert.ThrowsExactly<FormatException>(action);

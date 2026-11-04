@@ -16,19 +16,33 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((SqliteType)0)]
-        [DataRow((SqliteType)1)]
         [TestMethod]
-        public void SqliteTypeAttributePreservesConfiguredValue(SqliteType value)
+        public void SqliteTypeAttributePreservesConfiguredValueForSqliteTypeZero()
         {
             // Setup
+            SqliteType value = (SqliteType)0;
             var attribute = new global::RepoDb.Attributes.Parameter.Sqlite.SqliteTypeAttribute(value);
-
 
             // Act
             var actual = attribute.SqliteType;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SqliteTypeAttributePreservesConfiguredValueForSqliteTypeOne()
+        {
+            // Setup
+            SqliteType value = (SqliteType)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.Sqlite.SqliteTypeAttribute(value);
+
+            // Act
+            var actual = attribute.SqliteType;
 
             // Assert
             Assert.AreEqual(value,

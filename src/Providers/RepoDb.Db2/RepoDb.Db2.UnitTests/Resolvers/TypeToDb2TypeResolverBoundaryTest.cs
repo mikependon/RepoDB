@@ -17,91 +17,681 @@ namespace RepoDb.Db2.UnitTests.Resolvers
         /// <summary>
         /// Resolves CLR types to their provider representation.
         /// </summary>
-        /// <param name="type">The CLR type.</param>
-        /// <param name="expected">The expected provider type.</param>
-        [DataRow(typeof(string),
-            DB2Type.VarChar)]
-        [DataRow(typeof(char),
-            DB2Type.Char)]
-        [DataRow(typeof(char?),
-            DB2Type.Char)]
-        [DataRow(typeof(bool),
-            DB2Type.SmallInt)]
-        [DataRow(typeof(bool?),
-            DB2Type.SmallInt)]
-        [DataRow(typeof(byte),
-            DB2Type.Byte)]
-        [DataRow(typeof(byte?),
-            DB2Type.Byte)]
-        [DataRow(typeof(sbyte),
-            DB2Type.SmallInt)]
-        [DataRow(typeof(sbyte?),
-            DB2Type.SmallInt)]
-        [DataRow(typeof(short),
-            DB2Type.SmallInt)]
-        [DataRow(typeof(short?),
-            DB2Type.SmallInt)]
-        [DataRow(typeof(ushort),
-            DB2Type.Integer)]
-        [DataRow(typeof(ushort?),
-            DB2Type.Integer)]
-        [DataRow(typeof(int),
-            DB2Type.Integer)]
-        [DataRow(typeof(int?),
-            DB2Type.Integer)]
-        [DataRow(typeof(uint),
-            DB2Type.BigInt)]
-        [DataRow(typeof(uint?),
-            DB2Type.BigInt)]
-        [DataRow(typeof(long),
-            DB2Type.BigInt)]
-        [DataRow(typeof(long?),
-            DB2Type.BigInt)]
-        [DataRow(typeof(ulong),
-            DB2Type.Decimal)]
-        [DataRow(typeof(ulong?),
-            DB2Type.Decimal)]
-        [DataRow(typeof(float),
-            DB2Type.Real)]
-        [DataRow(typeof(float?),
-            DB2Type.Real)]
-        [DataRow(typeof(double),
-            DB2Type.Double)]
-        [DataRow(typeof(double?),
-            DB2Type.Double)]
-        [DataRow(typeof(decimal),
-            DB2Type.Decimal)]
-        [DataRow(typeof(decimal?),
-            DB2Type.Decimal)]
-        [DataRow(typeof(DateTime),
-            DB2Type.Timestamp)]
-        [DataRow(typeof(DateTime?),
-            DB2Type.Timestamp)]
-        [DataRow(typeof(DateTimeOffset),
-            DB2Type.TimeStampWithTimeZone)]
-        [DataRow(typeof(DateTimeOffset?),
-            DB2Type.TimeStampWithTimeZone)]
-        [DataRow(typeof(TimeSpan),
-            DB2Type.Time)]
-        [DataRow(typeof(TimeSpan?),
-            DB2Type.Time)]
-        [DataRow(typeof(Guid),
-            DB2Type.Binary)]
-        [DataRow(typeof(Guid?),
-            DB2Type.Binary)]
-        [DataRow(typeof(byte[]),
-            DB2Type.Blob)]
         [TestMethod]
-        public void ResolveSupportedTypeReturnsProviderType(Type type,
-            DB2Type expected)
+        public void ResolveSupportedTypeReturnsProviderTypeForString()
         {
             // Setup
+            Type type = typeof(string);
+            DB2Type expected = DB2Type.VarChar;
             var resolver = new TypeToDb2TypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(type);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForChar()
+        {
+            // Setup
+            Type type = typeof(char);
+            DB2Type expected = DB2Type.Char;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableChar()
+        {
+            // Setup
+            Type type = typeof(char?);
+            DB2Type expected = DB2Type.Char;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForBoolean()
+        {
+            // Setup
+            Type type = typeof(bool);
+            DB2Type expected = DB2Type.SmallInt;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableBoolean()
+        {
+            // Setup
+            Type type = typeof(bool?);
+            DB2Type expected = DB2Type.SmallInt;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForByte()
+        {
+            // Setup
+            Type type = typeof(byte);
+            DB2Type expected = DB2Type.Byte;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableByte()
+        {
+            // Setup
+            Type type = typeof(byte?);
+            DB2Type expected = DB2Type.Byte;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForSByte()
+        {
+            // Setup
+            Type type = typeof(sbyte);
+            DB2Type expected = DB2Type.SmallInt;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableSByte()
+        {
+            // Setup
+            Type type = typeof(sbyte?);
+            DB2Type expected = DB2Type.SmallInt;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForInt16()
+        {
+            // Setup
+            Type type = typeof(short);
+            DB2Type expected = DB2Type.SmallInt;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableInt16()
+        {
+            // Setup
+            Type type = typeof(short?);
+            DB2Type expected = DB2Type.SmallInt;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForUInt16()
+        {
+            // Setup
+            Type type = typeof(ushort);
+            DB2Type expected = DB2Type.Integer;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableUInt16()
+        {
+            // Setup
+            Type type = typeof(ushort?);
+            DB2Type expected = DB2Type.Integer;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForInt32()
+        {
+            // Setup
+            Type type = typeof(int);
+            DB2Type expected = DB2Type.Integer;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableInt32()
+        {
+            // Setup
+            Type type = typeof(int?);
+            DB2Type expected = DB2Type.Integer;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForUInt32()
+        {
+            // Setup
+            Type type = typeof(uint);
+            DB2Type expected = DB2Type.BigInt;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableUInt32()
+        {
+            // Setup
+            Type type = typeof(uint?);
+            DB2Type expected = DB2Type.BigInt;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForInt64()
+        {
+            // Setup
+            Type type = typeof(long);
+            DB2Type expected = DB2Type.BigInt;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableInt64()
+        {
+            // Setup
+            Type type = typeof(long?);
+            DB2Type expected = DB2Type.BigInt;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForUInt64()
+        {
+            // Setup
+            Type type = typeof(ulong);
+            DB2Type expected = DB2Type.Decimal;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableUInt64()
+        {
+            // Setup
+            Type type = typeof(ulong?);
+            DB2Type expected = DB2Type.Decimal;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForSingle()
+        {
+            // Setup
+            Type type = typeof(float);
+            DB2Type expected = DB2Type.Real;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableSingle()
+        {
+            // Setup
+            Type type = typeof(float?);
+            DB2Type expected = DB2Type.Real;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForDouble()
+        {
+            // Setup
+            Type type = typeof(double);
+            DB2Type expected = DB2Type.Double;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableDouble()
+        {
+            // Setup
+            Type type = typeof(double?);
+            DB2Type expected = DB2Type.Double;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForDecimal()
+        {
+            // Setup
+            Type type = typeof(decimal);
+            DB2Type expected = DB2Type.Decimal;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableDecimal()
+        {
+            // Setup
+            Type type = typeof(decimal?);
+            DB2Type expected = DB2Type.Decimal;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForDateTime()
+        {
+            // Setup
+            Type type = typeof(DateTime);
+            DB2Type expected = DB2Type.Timestamp;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableDateTime()
+        {
+            // Setup
+            Type type = typeof(DateTime?);
+            DB2Type expected = DB2Type.Timestamp;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForDateTimeOffset()
+        {
+            // Setup
+            Type type = typeof(DateTimeOffset);
+            DB2Type expected = DB2Type.TimeStampWithTimeZone;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableDateTimeOffset()
+        {
+            // Setup
+            Type type = typeof(DateTimeOffset?);
+            DB2Type expected = DB2Type.TimeStampWithTimeZone;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForTimeSpan()
+        {
+            // Setup
+            Type type = typeof(TimeSpan);
+            DB2Type expected = DB2Type.Time;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableTimeSpan()
+        {
+            // Setup
+            Type type = typeof(TimeSpan?);
+            DB2Type expected = DB2Type.Time;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForGuid()
+        {
+            // Setup
+            Type type = typeof(Guid);
+            DB2Type expected = DB2Type.Binary;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForNullableGuid()
+        {
+            // Setup
+            Type type = typeof(Guid?);
+            DB2Type expected = DB2Type.Binary;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves CLR types to their provider representation.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedTypeReturnsProviderTypeForByteArray()
+        {
+            // Setup
+            Type type = typeof(byte[]);
+            DB2Type expected = DB2Type.Blob;
+            var resolver = new TypeToDb2TypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(type);
 
             // Assert
             Assert.AreEqual(expected,
@@ -117,10 +707,8 @@ namespace RepoDb.Db2.UnitTests.Resolvers
             // Setup
             var resolver = new TypeToDb2TypeResolver();
 
-
             // Act
             var exception = Assert.ThrowsExactly<ArgumentNullException>(() => resolver.Resolve(null));
-
 
             // Assert
             Assert.AreEqual("nullableType",
@@ -137,10 +725,8 @@ namespace RepoDb.Db2.UnitTests.Resolvers
             // Setup
             var resolver = new TypeToDb2TypeResolver();
 
-
             // Act
             var actual = resolver.Resolve(typeof(Uri));
-
 
             // Assert
             Assert.AreEqual(DB2Type.VarChar,

@@ -15,28 +15,77 @@ namespace RepoDb.MySqlConnector.UnitTests.PropertyHandlers
         /// <summary>
         /// Converts signed byte boundary values to booleans.
         /// </summary>
-        /// <param name="value">The signed byte.</param>
-        /// <param name="expected">The expected boolean.</param>
-        [DataRow((sbyte)0,
-            false)]
-        [DataRow((sbyte)1,
-            true)]
-        [DataRow(sbyte.MinValue,
-            true)]
-        [DataRow(sbyte.MaxValue,
-            true)]
         [TestMethod]
-        public void GetTreatsEveryNonzeroValueAsTrue(sbyte value,
-            bool expected)
+        public void GetTreatsEveryNonzeroValueAsTrueForSByteZero()
         {
             // Setup
+            sbyte value = (sbyte)0;
+            bool expected = false;
             var handler = new SByteToBooleanPropertyHandler();
-
 
             // Act
             var actual = handler.Get(value,
                 null);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Converts signed byte boundary values to booleans.
+        /// </summary>
+        [TestMethod]
+        public void GetTreatsEveryNonzeroValueAsTrueForSByteOne()
+        {
+            // Setup
+            sbyte value = (sbyte)1;
+            bool expected = true;
+            var handler = new SByteToBooleanPropertyHandler();
+
+            // Act
+            var actual = handler.Get(value,
+                null);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Converts signed byte boundary values to booleans.
+        /// </summary>
+        [TestMethod]
+        public void GetTreatsEveryNonzeroValueAsTrueForSByteMinValue()
+        {
+            // Setup
+            sbyte value = sbyte.MinValue;
+            bool expected = true;
+            var handler = new SByteToBooleanPropertyHandler();
+
+            // Act
+            var actual = handler.Get(value,
+                null);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Converts signed byte boundary values to booleans.
+        /// </summary>
+        [TestMethod]
+        public void GetTreatsEveryNonzeroValueAsTrueForSByteMaxValue()
+        {
+            // Setup
+            sbyte value = sbyte.MaxValue;
+            bool expected = true;
+            var handler = new SByteToBooleanPropertyHandler();
+
+            // Act
+            var actual = handler.Get(value,
+                null);
 
             // Assert
             Assert.AreEqual(expected,
@@ -46,24 +95,37 @@ namespace RepoDb.MySqlConnector.UnitTests.PropertyHandlers
         /// <summary>
         /// Writes zero or one for a boolean.
         /// </summary>
-        /// <param name="value">The boolean.</param>
-        /// <param name="expected">The expected byte.</param>
-        [DataRow(false,
-            (sbyte)0)]
-        [DataRow(true,
-            (sbyte)1)]
         [TestMethod]
-        public void SetProducesCanonicalByte(bool value,
-            sbyte expected)
+        public void SetProducesCanonicalByteForFalse()
         {
             // Setup
+            bool value = false;
+            sbyte expected = (sbyte)0;
             var handler = new SByteToBooleanPropertyHandler();
-
 
             // Act
             var actual = handler.Set(value,
                 null);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Writes zero or one for a boolean.
+        /// </summary>
+        [TestMethod]
+        public void SetProducesCanonicalByteForTrue()
+        {
+            // Setup
+            bool value = true;
+            sbyte expected = (sbyte)1;
+            var handler = new SByteToBooleanPropertyHandler();
+
+            // Act
+            var actual = handler.Set(value,
+                null);
 
             // Assert
             Assert.AreEqual(expected,

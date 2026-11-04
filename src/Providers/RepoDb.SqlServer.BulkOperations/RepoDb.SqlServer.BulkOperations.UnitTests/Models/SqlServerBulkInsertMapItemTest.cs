@@ -22,7 +22,6 @@ namespace RepoDb.SqlServer.BulkOperations.UnitTests.Models
             var mapping = new SqlServerBulkInsertMapItem("Source",
                 "Destination");
 
-
             // Assert
             Assert.AreEqual("Source",
                 mapping.SourceColumn,
@@ -38,7 +37,6 @@ namespace RepoDb.SqlServer.BulkOperations.UnitTests.Models
             // Act
             var mapping = new SqlServerBulkInsertMapItem("Source",
                 "Destination");
-
 
             // Assert
             Assert.AreEqual("Destination",

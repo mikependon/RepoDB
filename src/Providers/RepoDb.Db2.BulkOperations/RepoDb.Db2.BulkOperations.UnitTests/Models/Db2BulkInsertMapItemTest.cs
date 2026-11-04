@@ -23,7 +23,6 @@ namespace RepoDb.Db2.BulkOperations.UnitTests.Models
             var mapping = new Db2BulkInsertMapItem("Source",
                 "Destination");
 
-
             // Assert
             Assert.AreEqual("Source",
                 mapping.SourceColumn,
@@ -39,7 +38,6 @@ namespace RepoDb.Db2.BulkOperations.UnitTests.Models
             // Act
             var mapping = new Db2BulkInsertMapItem("Source",
                 "Destination");
-
 
             // Assert
             Assert.AreEqual("Destination",
@@ -58,10 +56,8 @@ namespace RepoDb.Db2.BulkOperations.UnitTests.Models
                 "Destination");
             var expected = mapping.GetHashCode();
 
-
             // Act
             var actual = mapping.GetHashCode();
-
 
             // Assert
             Assert.AreEqual(expected,
@@ -77,12 +73,10 @@ namespace RepoDb.Db2.BulkOperations.UnitTests.Models
             // Setup
             var expected = (DB2Type)1;
 
-
             // Act
             var mapping = new Db2BulkInsertMapItem("Source",
                 "Destination",
                 expected);
-
 
             // Assert
             Assert.AreEqual(expected,
@@ -99,7 +93,6 @@ namespace RepoDb.Db2.BulkOperations.UnitTests.Models
             var mapping = new Db2BulkInsertMapItem("Source",
                 "Destination");
 
-
             // Assert
             Assert.IsNull(mapping.DB2Type);
         }
@@ -115,10 +108,8 @@ namespace RepoDb.Db2.BulkOperations.UnitTests.Models
                 "Destination",
                 (DB2Type)1);
 
-
             // Act
             var actual = mapping.ToString();
-
 
             // Assert
             StringAssert.Contains(actual,

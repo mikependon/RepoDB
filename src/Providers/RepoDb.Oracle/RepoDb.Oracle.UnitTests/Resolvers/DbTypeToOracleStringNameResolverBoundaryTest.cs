@@ -16,63 +16,436 @@ namespace RepoDb.Oracle.UnitTests.Resolvers
         /// <summary>
         /// Resolves supported values and undefined enum values.
         /// </summary>
-        /// <param name="dbType">The provider type.</param>
-        /// <param name="expected">The expected SQL type name.</param>
-        [DataRow(DbType.Int64,
-            "NUMBER(19)")]
-        [DataRow(DbType.Binary,
-            "BLOB")]
-        [DataRow(DbType.Boolean,
-            "NUMBER(1)")]
-        [DataRow(DbType.String,
-            "NVARCHAR2(2000)")]
-        [DataRow(DbType.Date,
-            "DATE")]
-        [DataRow(DbType.DateTime,
-            "DATE")]
-        [DataRow(DbType.DateTime2,
-            "TIMESTAMP")]
-        [DataRow(DbType.DateTimeOffset,
-            "TIMESTAMP WITH TIME ZONE")]
-        [DataRow(DbType.Decimal,
-            "NUMBER(18,2)")]
-        [DataRow(DbType.Single,
-            "BINARY_FLOAT")]
-        [DataRow(DbType.Double,
-            "BINARY_DOUBLE")]
-        [DataRow(DbType.Int32,
-            "NUMBER(10)")]
-        [DataRow(DbType.Int16,
-            "NUMBER(5)")]
-        [DataRow(DbType.Time,
-            "INTERVAL DAY(0) TO SECOND(7)")]
-        [DataRow(DbType.Byte,
-            "NUMBER(3)")]
-        [DataRow(DbType.Guid,
-            "RAW(16)")]
-        [DataRow(DbType.AnsiString,
-            "VARCHAR2(2000)")]
-        [DataRow(DbType.AnsiStringFixedLength,
-            "CHAR(2000)")]
-        [DataRow(DbType.StringFixedLength,
-            "NCHAR(2000)")]
-        [DataRow(DbType.Object,
-            "BLOB")]
-        [DataRow(DbType.Xml,
-            "XMLTYPE")]
-        [DataRow((DbType)(-1),
-            "NVARCHAR2(2000)")]
         [TestMethod]
-        public void ResolveReturnsExpectedSqlTypeName(DbType dbType,
-            string expected)
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeInt64()
         {
             // Setup
+            DbType dbType = DbType.Int64;
+            string expected = "NUMBER(19)";
             var resolver = new DbTypeToOracleStringNameResolver();
-
 
             // Act
             var actual = resolver.Resolve(dbType);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeBinary()
+        {
+            // Setup
+            DbType dbType = DbType.Binary;
+            string expected = "BLOB";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeBoolean()
+        {
+            // Setup
+            DbType dbType = DbType.Boolean;
+            string expected = "NUMBER(1)";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeString()
+        {
+            // Setup
+            DbType dbType = DbType.String;
+            string expected = "NVARCHAR2(2000)";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeDate()
+        {
+            // Setup
+            DbType dbType = DbType.Date;
+            string expected = "DATE";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeDateTime()
+        {
+            // Setup
+            DbType dbType = DbType.DateTime;
+            string expected = "DATE";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeDateTime2()
+        {
+            // Setup
+            DbType dbType = DbType.DateTime2;
+            string expected = "TIMESTAMP";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeDateTimeOffset()
+        {
+            // Setup
+            DbType dbType = DbType.DateTimeOffset;
+            string expected = "TIMESTAMP WITH TIME ZONE";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeDecimal()
+        {
+            // Setup
+            DbType dbType = DbType.Decimal;
+            string expected = "NUMBER(18,2)";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeSingle()
+        {
+            // Setup
+            DbType dbType = DbType.Single;
+            string expected = "BINARY_FLOAT";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeDouble()
+        {
+            // Setup
+            DbType dbType = DbType.Double;
+            string expected = "BINARY_DOUBLE";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeInt32()
+        {
+            // Setup
+            DbType dbType = DbType.Int32;
+            string expected = "NUMBER(10)";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeInt16()
+        {
+            // Setup
+            DbType dbType = DbType.Int16;
+            string expected = "NUMBER(5)";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeTime()
+        {
+            // Setup
+            DbType dbType = DbType.Time;
+            string expected = "INTERVAL DAY(0) TO SECOND(7)";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeByte()
+        {
+            // Setup
+            DbType dbType = DbType.Byte;
+            string expected = "NUMBER(3)";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeGuid()
+        {
+            // Setup
+            DbType dbType = DbType.Guid;
+            string expected = "RAW(16)";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeAnsiString()
+        {
+            // Setup
+            DbType dbType = DbType.AnsiString;
+            string expected = "VARCHAR2(2000)";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeAnsiStringFixedLength()
+        {
+            // Setup
+            DbType dbType = DbType.AnsiStringFixedLength;
+            string expected = "CHAR(2000)";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeStringFixedLength()
+        {
+            // Setup
+            DbType dbType = DbType.StringFixedLength;
+            string expected = "NCHAR(2000)";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeObject()
+        {
+            // Setup
+            DbType dbType = DbType.Object;
+            string expected = "BLOB";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeXml()
+        {
+            // Setup
+            DbType dbType = DbType.Xml;
+            string expected = "XMLTYPE";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Resolves supported values and undefined enum values.
+        /// </summary>
+        [TestMethod]
+        public void ResolveReturnsExpectedSqlTypeNameForDbTypeNegativeOne()
+        {
+            // Setup
+            DbType dbType = (DbType)(-1);
+            string expected = "NVARCHAR2(2000)";
+            var resolver = new DbTypeToOracleStringNameResolver();
+
+            // Act
+            var actual = resolver.Resolve(dbType);
 
             // Assert
             Assert.AreEqual(expected,

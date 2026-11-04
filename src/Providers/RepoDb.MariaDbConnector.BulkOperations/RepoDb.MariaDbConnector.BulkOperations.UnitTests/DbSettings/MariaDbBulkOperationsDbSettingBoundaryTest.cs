@@ -21,7 +21,6 @@ namespace RepoDb.MariaDbConnector.BulkOperations.UnitTests.DbSettings
             // Act
             var setting = new MariaDbBulkOperationsDbSetting();
 
-
             // Assert
             Assert.AreEqual(MariaDbBulkColumnMappingsBehavior.Automatic,
                 setting.BulkColumnMappingsBehavior);
@@ -36,10 +35,8 @@ namespace RepoDb.MariaDbConnector.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new MariaDbBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = MariaDbBulkColumnMappingsBehavior.Automatic;
-
 
             // Assert
             Assert.AreEqual(MariaDbBulkColumnMappingsBehavior.Automatic,
@@ -55,10 +52,8 @@ namespace RepoDb.MariaDbConnector.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new MariaDbBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = MariaDbBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(MariaDbBulkColumnMappingsBehavior.Strict,
@@ -74,10 +69,8 @@ namespace RepoDb.MariaDbConnector.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new MariaDbBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = MariaDbBulkColumnMappingsBehavior.StrictBypass;
-
 
             // Assert
             Assert.AreEqual(MariaDbBulkColumnMappingsBehavior.StrictBypass,
@@ -94,10 +87,8 @@ namespace RepoDb.MariaDbConnector.BulkOperations.UnitTests.DbSettings
             var first = new MariaDbBulkOperationsDbSetting();
             var second = new MariaDbBulkOperationsDbSetting();
 
-
             // Act
             first.BulkColumnMappingsBehavior = MariaDbBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(MariaDbBulkColumnMappingsBehavior.Automatic,

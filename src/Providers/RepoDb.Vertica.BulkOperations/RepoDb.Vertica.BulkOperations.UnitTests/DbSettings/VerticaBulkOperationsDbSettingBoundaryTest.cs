@@ -21,7 +21,6 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.DbSettings
             // Act
             var setting = new VerticaBulkOperationsDbSetting();
 
-
             // Assert
             Assert.AreEqual(VerticaBulkColumnMappingsBehavior.Automatic,
                 setting.BulkColumnMappingsBehavior);
@@ -36,10 +35,8 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new VerticaBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = VerticaBulkColumnMappingsBehavior.Automatic;
-
 
             // Assert
             Assert.AreEqual(VerticaBulkColumnMappingsBehavior.Automatic,
@@ -55,10 +52,8 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new VerticaBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = VerticaBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(VerticaBulkColumnMappingsBehavior.Strict,
@@ -74,10 +69,8 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new VerticaBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = VerticaBulkColumnMappingsBehavior.StrictBypass;
-
 
             // Assert
             Assert.AreEqual(VerticaBulkColumnMappingsBehavior.StrictBypass,
@@ -94,10 +87,8 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.DbSettings
             var first = new VerticaBulkOperationsDbSetting();
             var second = new VerticaBulkOperationsDbSetting();
 
-
             // Act
             first.BulkColumnMappingsBehavior = VerticaBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(VerticaBulkColumnMappingsBehavior.Automatic,

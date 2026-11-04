@@ -22,7 +22,6 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
             // Act
             var exception = new VerticaBulkColumnMappingsException();
 
-
             // Assert
             StringAssert.Contains(exception.Message,
                 "not aligned",
@@ -38,10 +37,8 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
             // Setup
             const string message = "Custom mismatch";
 
-
             // Act
             var exception = new VerticaBulkColumnMappingsException(message);
-
 
             // Assert
             Assert.AreEqual(message,
@@ -58,11 +55,9 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
             // Setup
             var cause = new InvalidOperationException("Original failure");
 
-
             // Act
             var exception = new VerticaBulkColumnMappingsException("Mismatch",
                 cause);
-
 
             // Assert
             Assert.AreSame(cause,
@@ -78,7 +73,6 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
             // Act
             var exception = new VerticaBulkColumnMappingsException("Mismatch",
                 new InvalidOperationException());
-
 
             // Assert
             Assert.HasCount(0,
@@ -97,7 +91,6 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
                 null,
                 null);
 
-
             // Assert
             Assert.HasCount(0,
                 exception.SourceColumnsNotInDestination);
@@ -112,7 +105,6 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
             // Act
             var exception = new VerticaBulkColumnMappingsException("Mismatch",
                 new InvalidOperationException());
-
 
             // Assert
             Assert.HasCount(0,
@@ -131,7 +123,6 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
                 null,
                 null);
 
-
             // Assert
             Assert.HasCount(0,
                 exception.DestinationColumnsNotInSource);
@@ -148,7 +139,6 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
                 VerticaBulkColumnMappingsBehavior.Strict,
                 new[] { "Extra" },
                 new[] { "Missing" });
-
 
             // Assert
             Assert.AreEqual("Orders",
@@ -168,7 +158,6 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
                 new[] { "Extra" },
                 new[] { "Missing" });
 
-
             // Assert
             Assert.AreEqual(VerticaBulkColumnMappingsBehavior.Strict,
                 exception.Behavior);
@@ -185,7 +174,6 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
                 VerticaBulkColumnMappingsBehavior.Strict,
                 new[] { "Extra" },
                 new[] { "Missing" });
-
 
             // Assert
             StringAssert.Contains(exception.Message,
@@ -205,7 +193,6 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
                 new[] { "Extra" },
                 new[] { "Missing" });
 
-
             // Assert
             StringAssert.Contains(exception.Message,
                 "'Missing'",
@@ -221,14 +208,12 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
             // Setup
             var columns = new[] { "Original" };
 
-
             // Act
             var exception = new VerticaBulkColumnMappingsException("Orders",
                 VerticaBulkColumnMappingsBehavior.Strict,
                 columns,
                 columns);
             columns[0] = "Changed";
-
 
             // Assert
             Assert.AreEqual("Original",
@@ -245,14 +230,12 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
             // Setup
             var columns = new[] { "Original" };
 
-
             // Act
             var exception = new VerticaBulkColumnMappingsException("Orders",
                 VerticaBulkColumnMappingsBehavior.Strict,
                 columns,
                 columns);
             columns[0] = "Changed";
-
 
             // Assert
             Assert.AreEqual("Original",
@@ -273,7 +256,6 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
                 null,
                 true);
 
-
             // Assert
             Assert.IsTrue(exception.IsOrderMismatch);
         }
@@ -292,7 +274,6 @@ namespace RepoDb.Vertica.BulkOperations.UnitTests.Exceptions
                 true,
                 new[] { "Name", "Id" },
                 new[] { "Id", "Name" });
-
 
             // Assert
             StringAssert.Contains(exception.Message,

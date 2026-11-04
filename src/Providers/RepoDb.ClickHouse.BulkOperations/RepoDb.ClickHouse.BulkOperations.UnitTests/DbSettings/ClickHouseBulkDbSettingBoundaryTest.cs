@@ -21,7 +21,6 @@ namespace RepoDb.ClickHouse.BulkOperations.UnitTests.DbSettings
             // Act
             var setting = new ClickHouseBulkDbSetting();
 
-
             // Assert
             Assert.AreEqual(ClickHouseBulkColumnMappingsBehavior.Automatic,
                 setting.BulkColumnMappingsBehavior);
@@ -36,10 +35,8 @@ namespace RepoDb.ClickHouse.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new ClickHouseBulkDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = ClickHouseBulkColumnMappingsBehavior.Automatic;
-
 
             // Assert
             Assert.AreEqual(ClickHouseBulkColumnMappingsBehavior.Automatic,
@@ -55,10 +52,8 @@ namespace RepoDb.ClickHouse.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new ClickHouseBulkDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = ClickHouseBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(ClickHouseBulkColumnMappingsBehavior.Strict,
@@ -74,10 +69,8 @@ namespace RepoDb.ClickHouse.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new ClickHouseBulkDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = ClickHouseBulkColumnMappingsBehavior.StrictBypass;
-
 
             // Assert
             Assert.AreEqual(ClickHouseBulkColumnMappingsBehavior.StrictBypass,
@@ -94,10 +87,8 @@ namespace RepoDb.ClickHouse.BulkOperations.UnitTests.DbSettings
             var first = new ClickHouseBulkDbSetting();
             var second = new ClickHouseBulkDbSetting();
 
-
             // Act
             first.BulkColumnMappingsBehavior = ClickHouseBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(ClickHouseBulkColumnMappingsBehavior.Automatic,

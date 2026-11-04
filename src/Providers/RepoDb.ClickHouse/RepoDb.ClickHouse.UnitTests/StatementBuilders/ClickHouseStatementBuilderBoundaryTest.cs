@@ -17,23 +17,19 @@ namespace RepoDb.ClickHouse.UnitTests.StatementBuilders
         /// <summary>
         /// Rejects both absent and empty field lists.
         /// </summary>
-        /// <param name="empty">Whether to supply an empty list.</param>
-        [DataRow(false)]
-        [DataRow(true)]
         [TestMethod]
-        public void CreateBatchQueryRejectsMissingFields(bool empty)
+        public void CreateBatchQueryRejectsMissingFieldsForNullFields()
         {
             // Setup
+            bool empty = false;
             var builder = new ClickHouseStatementBuilder(new ClickHouseDbSetting());
             var fields = empty ? Array.Empty<Field>() : null;
-
 
             // Act
             Action action = () => builder.CreateBatchQuery("Table",
                 fields,
                 0,
                 10);
-
 
             // Assert
             Assert.ThrowsExactly<ArgumentNullException>(action);
@@ -42,16 +38,34 @@ namespace RepoDb.ClickHouse.UnitTests.StatementBuilders
         /// <summary>
         /// Rejects both absent and empty field lists.
         /// </summary>
-        /// <param name="empty">Whether to supply an empty list.</param>
-        [DataRow(false)]
-        [DataRow(true)]
         [TestMethod]
-        public void CreateSkipQueryRejectsMissingFields(bool empty)
+        public void CreateBatchQueryRejectsMissingFieldsForEmptyFields()
         {
             // Setup
+            bool empty = true;
             var builder = new ClickHouseStatementBuilder(new ClickHouseDbSetting());
             var fields = empty ? Array.Empty<Field>() : null;
 
+            // Act
+            Action action = () => builder.CreateBatchQuery("Table",
+                fields,
+                0,
+                10);
+
+            // Assert
+            Assert.ThrowsExactly<ArgumentNullException>(action);
+        }
+
+        /// <summary>
+        /// Rejects both absent and empty field lists.
+        /// </summary>
+        [TestMethod]
+        public void CreateSkipQueryRejectsMissingFieldsForNullFields()
+        {
+            // Setup
+            bool empty = false;
+            var builder = new ClickHouseStatementBuilder(new ClickHouseDbSetting());
+            var fields = empty ? Array.Empty<Field>() : null;
 
             // Act
             Action action = () => builder.CreateSkipQuery("Table",
@@ -59,6 +73,26 @@ namespace RepoDb.ClickHouse.UnitTests.StatementBuilders
                 0,
                 10);
 
+            // Assert
+            Assert.ThrowsExactly<ArgumentNullException>(action);
+        }
+
+        /// <summary>
+        /// Rejects both absent and empty field lists.
+        /// </summary>
+        [TestMethod]
+        public void CreateSkipQueryRejectsMissingFieldsForEmptyFields()
+        {
+            // Setup
+            bool empty = true;
+            var builder = new ClickHouseStatementBuilder(new ClickHouseDbSetting());
+            var fields = empty ? Array.Empty<Field>() : null;
+
+            // Act
+            Action action = () => builder.CreateSkipQuery("Table",
+                fields,
+                0,
+                10);
 
             // Assert
             Assert.ThrowsExactly<ArgumentNullException>(action);

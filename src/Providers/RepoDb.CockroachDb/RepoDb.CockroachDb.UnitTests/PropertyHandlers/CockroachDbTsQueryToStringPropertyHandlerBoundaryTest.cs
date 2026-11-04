@@ -21,11 +21,9 @@ namespace RepoDb.CockroachDb.UnitTests.PropertyHandlers
             // Setup
             var handler = new CockroachDbTsQueryToStringPropertyHandler();
 
-
             // Act
             var actual = handler.Get(null,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -40,11 +38,9 @@ namespace RepoDb.CockroachDb.UnitTests.PropertyHandlers
             // Setup
             var handler = new CockroachDbTsQueryToStringPropertyHandler();
 
-
             // Act
             var actual = handler.Get(DBNull.Value,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -59,11 +55,9 @@ namespace RepoDb.CockroachDb.UnitTests.PropertyHandlers
             // Setup
             var handler = new CockroachDbTsQueryToStringPropertyHandler();
 
-
             // Act
             var actual = handler.Get("'term'",
                 null);
-
 
             // Assert
             Assert.AreEqual("'term'",
@@ -80,11 +74,9 @@ namespace RepoDb.CockroachDb.UnitTests.PropertyHandlers
             // Setup
             var handler = new CockroachDbTsQueryToStringPropertyHandler();
 
-
             // Act
             var exception = Assert.ThrowsExactly<ArgumentException>(() => handler.Get(42,
                 null));
-
 
             // Assert
             Assert.AreEqual("input",
@@ -101,11 +93,9 @@ namespace RepoDb.CockroachDb.UnitTests.PropertyHandlers
             // Setup
             var handler = new CockroachDbTsQueryToStringPropertyHandler();
 
-
             // Act
             var actual = handler.Set(null,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -122,11 +112,9 @@ namespace RepoDb.CockroachDb.UnitTests.PropertyHandlers
             var value = handler.Set("'term'",
                 null);
 
-
             // Act
             var actual = handler.Get(value,
                 null);
-
 
             // Assert
             Assert.AreEqual("'term'",

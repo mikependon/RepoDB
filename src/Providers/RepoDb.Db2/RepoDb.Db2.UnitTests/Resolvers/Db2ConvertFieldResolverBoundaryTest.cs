@@ -23,11 +23,9 @@ namespace RepoDb.Db2.UnitTests.Resolvers
             var resolver = new Db2ConvertFieldResolver();
             var setting = new Db2DbSetting();
 
-
             // Act
             var actual = resolver.Resolve(null,
                 setting);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -44,11 +42,9 @@ namespace RepoDb.Db2.UnitTests.Resolvers
             var setting = new Db2DbSetting();
             var field = new Field("Value");
 
-
             // Act
             var actual = resolver.Resolve(field,
                 setting);
-
 
             // Assert
             Assert.AreEqual(setting.OpeningQuote + "Value" + setting.ClosingQuote,
@@ -68,11 +64,9 @@ namespace RepoDb.Db2.UnitTests.Resolvers
             var field = new Field("Value",
                 typeof(Uri));
 
-
             // Act
             var actual = resolver.Resolve(field,
                 setting);
-
 
             // Assert
             Assert.AreEqual(setting.OpeningQuote + "Value" + setting.ClosingQuote,

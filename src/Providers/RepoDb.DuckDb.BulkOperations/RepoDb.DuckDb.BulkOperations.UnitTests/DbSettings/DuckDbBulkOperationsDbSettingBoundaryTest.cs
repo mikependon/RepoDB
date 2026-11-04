@@ -21,7 +21,6 @@ namespace RepoDb.DuckDb.BulkOperations.UnitTests.DbSettings
             // Act
             var setting = new DuckDbBulkOperationsDbSetting();
 
-
             // Assert
             Assert.AreEqual(DuckDbBulkColumnMappingsBehavior.Automatic,
                 setting.BulkColumnMappingsBehavior);
@@ -36,10 +35,8 @@ namespace RepoDb.DuckDb.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new DuckDbBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = DuckDbBulkColumnMappingsBehavior.Automatic;
-
 
             // Assert
             Assert.AreEqual(DuckDbBulkColumnMappingsBehavior.Automatic,
@@ -55,10 +52,8 @@ namespace RepoDb.DuckDb.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new DuckDbBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = DuckDbBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(DuckDbBulkColumnMappingsBehavior.Strict,
@@ -74,10 +69,8 @@ namespace RepoDb.DuckDb.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new DuckDbBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = DuckDbBulkColumnMappingsBehavior.StrictBypass;
-
 
             // Assert
             Assert.AreEqual(DuckDbBulkColumnMappingsBehavior.StrictBypass,
@@ -94,10 +87,8 @@ namespace RepoDb.DuckDb.BulkOperations.UnitTests.DbSettings
             var first = new DuckDbBulkOperationsDbSetting();
             var second = new DuckDbBulkOperationsDbSetting();
 
-
             // Act
             first.BulkColumnMappingsBehavior = DuckDbBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(DuckDbBulkColumnMappingsBehavior.Automatic,

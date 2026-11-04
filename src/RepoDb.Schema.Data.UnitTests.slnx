@@ -1,0 +1,23 @@
+<Solution>
+  <Project Path="Data/RepoDb.Data.Core/RepoDb.Data.Core.UnitTests/RepoDb.Data.Core.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.AuroraDbMySqlConnector/RepoDb.Schema.AuroraDbMySqlConnector.UnitTests/RepoDb.Schema.AuroraDbMySqlConnector.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.AuroraDbPostgreSql/RepoDb.Schema.AuroraDbPostgreSql.UnitTests/RepoDb.Schema.AuroraDbPostgreSql.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.ClickHouse/RepoDb.Schema.ClickHouse.UnitTests/RepoDb.Schema.ClickHouse.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.CockroachDb/RepoDb.Schema.CockroachDb.UnitTests/RepoDb.Schema.CockroachDb.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.Core/RepoDb.Schema.Core.UnitTests/RepoDb.Schema.Core.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.Db2/RepoDb.Schema.Db2.UnitTests/RepoDb.Schema.Db2.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.DuckDb/RepoDb.Schema.DuckDb.UnitTests/RepoDb.Schema.DuckDb.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.Firebird/RepoDb.Schema.Firebird.UnitTests/RepoDb.Schema.Firebird.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.MariaDb/RepoDb.Schema.MariaDb.UnitTests/RepoDb.Schema.MariaDb.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.MariaDbConnector/RepoDb.Schema.MariaDbConnector.UnitTests/RepoDb.Schema.MariaDbConnector.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.MySql/RepoDb.Schema.MySql.UnitTests/RepoDb.Schema.MySql.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.MySqlConnector/RepoDb.Schema.MySqlConnector.UnitTests/RepoDb.Schema.MySqlConnector.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.Oracle/RepoDb.Schema.Oracle.UnitTests/RepoDb.Schema.Oracle.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.PostgreSql/RepoDb.Schema.PostgreSql.UnitTests/RepoDb.Schema.PostgreSql.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.SapHana/RepoDb.Schema.SapHana.UnitTests/RepoDb.Schema.SapHana.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.Sqlite.Ahtola/RepoDb.Schema.Sqlite.Ahtola.UnitTests/RepoDb.Schema.Sqlite.Ahtola.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.Sqlite.Microsoft/RepoDb.Schema.Sqlite.Microsoft.UnitTests/RepoDb.Schema.Sqlite.Microsoft.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.Sqlite.Turso/RepoDb.Schema.Sqlite.Turso.UnitTests/RepoDb.Schema.Sqlite.Turso.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.SqlServer/RepoDb.Schema.SqlServer.UnitTests/RepoDb.Schema.SqlServer.UnitTests.csproj" />
+  <Project Path="Schema/RepoDb.Schema.Vertica/RepoDb.Schema.Vertica.UnitTests/RepoDb.Schema.Vertica.UnitTests.csproj" />
+</Solution>

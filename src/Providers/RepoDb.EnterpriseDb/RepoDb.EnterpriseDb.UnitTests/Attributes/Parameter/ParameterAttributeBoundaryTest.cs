@@ -16,19 +16,33 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((DbType)0)]
-        [DataRow((DbType)1)]
         [TestMethod]
-        public void DbTypeAttributePreservesConfiguredValue(DbType value)
+        public void DbTypeAttributePreservesConfiguredValueForDbTypeZero()
         {
             // Setup
+            DbType value = (DbType)0;
             var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.DbTypeAttribute(value);
-
 
             // Act
             var actual = attribute.DbType;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void DbTypeAttributePreservesConfiguredValueForDbTypeOne()
+        {
+            // Setup
+            DbType value = (DbType)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.DbTypeAttribute(value);
+
+            // Act
+            var actual = attribute.DbType;
 
             // Assert
             Assert.AreEqual(value,
@@ -38,19 +52,33 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((ParameterDirection)0)]
-        [DataRow((ParameterDirection)1)]
         [TestMethod]
-        public void DirectionAttributePreservesConfiguredValue(ParameterDirection value)
+        public void DirectionAttributePreservesConfiguredValueForParameterDirectionZero()
         {
             // Setup
+            ParameterDirection value = (ParameterDirection)0;
             var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.DirectionAttribute(value);
-
 
             // Act
             var actual = attribute.Direction;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void DirectionAttributePreservesConfiguredValueForParameterDirectionOne()
+        {
+            // Setup
+            ParameterDirection value = (ParameterDirection)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.DirectionAttribute(value);
+
+            // Act
+            var actual = attribute.Direction;
 
             // Assert
             Assert.AreEqual(value,
@@ -60,19 +88,33 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((EDBType)0)]
-        [DataRow((EDBType)1)]
         [TestMethod]
-        public void EnterpriseDbTypeAttributePreservesConfiguredValue(EDBType value)
+        public void EnterpriseDbTypeAttributePreservesConfiguredValueForEDBTypeZero()
         {
             // Setup
+            EDBType value = (EDBType)0;
             var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.EnterpriseDbTypeAttribute(value);
-
 
             // Act
             var actual = attribute.EDBType;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void EnterpriseDbTypeAttributePreservesConfiguredValueForEDBTypeOne()
+        {
+            // Setup
+            EDBType value = (EDBType)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.EnterpriseDbTypeAttribute(value);
+
+            // Act
+            var actual = attribute.EDBType;
 
             // Assert
             Assert.AreEqual(value,
@@ -82,19 +124,33 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(false)]
-        [DataRow(true)]
         [TestMethod]
-        public void IsNullableAttributePreservesConfiguredValue(bool value)
+        public void IsNullableAttributePreservesConfiguredValueForFalse()
         {
             // Setup
+            bool value = false;
             var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.IsNullableAttribute(value);
-
 
             // Act
             var actual = attribute.IsNullable;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void IsNullableAttributePreservesConfiguredValueForTrue()
+        {
+            // Setup
+            bool value = true;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.IsNullableAttribute(value);
+
+            // Act
+            var actual = attribute.IsNullable;
 
             // Assert
             Assert.AreEqual(value,
@@ -104,20 +160,34 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(null)]
-        [DataRow("")]
-        [DataRow("Column")]
         [TestMethod]
-        public void ParameterNameAttributePreservesConfiguredValue(string value)
+        public void ParameterNameAttributePreservesConfiguredValueForNull()
         {
             // Setup
+            string value = null;
             var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.ParameterNameAttribute(value);
-
 
             // Act
             var actual = attribute.ParameterName;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void ParameterNameAttributePreservesConfiguredValueForEmptyString()
+        {
+            // Setup
+            string value = "";
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.ParameterNameAttribute(value);
+
+            // Act
+            var actual = attribute.ParameterName;
 
             // Assert
             Assert.AreEqual(value,
@@ -128,19 +198,52 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((byte)0)]
-        [DataRow((byte)255)]
         [TestMethod]
-        public void PrecisionAttributePreservesConfiguredValue(byte value)
+        public void ParameterNameAttributePreservesConfiguredValueForColumnInMixedCase()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.PrecisionAttribute(value);
+            string value = "Column";
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.ParameterNameAttribute(value);
 
+            // Act
+            var actual = attribute.ParameterName;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void PrecisionAttributePreservesConfiguredValueForByteZero()
+        {
+            // Setup
+            byte value = (byte)0;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.PrecisionAttribute(value);
 
             // Act
             var actual = attribute.Precision;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void PrecisionAttributePreservesConfiguredValueForByteValue255()
+        {
+            // Setup
+            byte value = (byte)255;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.PrecisionAttribute(value);
+
+            // Act
+            var actual = attribute.Precision;
 
             // Assert
             Assert.AreEqual(value,
@@ -150,19 +253,33 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((byte)0)]
-        [DataRow((byte)255)]
         [TestMethod]
-        public void ScaleAttributePreservesConfiguredValue(byte value)
+        public void ScaleAttributePreservesConfiguredValueForByteZero()
         {
             // Setup
+            byte value = (byte)0;
             var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.ScaleAttribute(value);
-
 
             // Act
             var actual = attribute.Scale;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void ScaleAttributePreservesConfiguredValueForByteValue255()
+        {
+            // Setup
+            byte value = (byte)255;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.ScaleAttribute(value);
+
+            // Act
+            var actual = attribute.Scale;
 
             // Assert
             Assert.AreEqual(value,
@@ -172,20 +289,33 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(-1)]
-        [DataRow(0)]
-        [DataRow(int.MaxValue)]
         [TestMethod]
-        public void SizeAttributePreservesConfiguredValue(int value)
+        public void SizeAttributePreservesConfiguredValueForNegativeOne()
         {
             // Setup
+            int value = -1;
             var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.SizeAttribute(value);
-
 
             // Act
             var actual = attribute.Size;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SizeAttributePreservesConfiguredValueForZero()
+        {
+            // Setup
+            int value = 0;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.SizeAttribute(value);
+
+            // Act
+            var actual = attribute.Size;
 
             // Assert
             Assert.AreEqual(value,
@@ -195,20 +325,33 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(null)]
-        [DataRow("")]
-        [DataRow("Column")]
         [TestMethod]
-        public void SourceColumnAttributePreservesConfiguredValue(string value)
+        public void SizeAttributePreservesConfiguredValueForInt32MaxValue()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.SourceColumnAttribute(value);
+            int value = int.MaxValue;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.SizeAttribute(value);
 
+            // Act
+            var actual = attribute.Size;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnAttributePreservesConfiguredValueForNull()
+        {
+            // Setup
+            string value = null;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.SourceColumnAttribute(value);
 
             // Act
             var actual = attribute.SourceColumn;
-
 
             // Assert
             Assert.AreEqual(value,
@@ -219,19 +362,71 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(false)]
-        [DataRow(true)]
         [TestMethod]
-        public void SourceColumnNullMappingAttributePreservesConfiguredValue(bool value)
+        public void SourceColumnAttributePreservesConfiguredValueForEmptyString()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.SourceColumnNullMappingAttribute(value);
+            string value = "";
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.SourceColumnAttribute(value);
 
+            // Act
+            var actual = attribute.SourceColumn;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnAttributePreservesConfiguredValueForColumnInMixedCase()
+        {
+            // Setup
+            string value = "Column";
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.SourceColumnAttribute(value);
+
+            // Act
+            var actual = attribute.SourceColumn;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnNullMappingAttributePreservesConfiguredValueForFalse()
+        {
+            // Setup
+            bool value = false;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.SourceColumnNullMappingAttribute(value);
 
             // Act
             var actual = attribute.SourceColumnNullMapping;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnNullMappingAttributePreservesConfiguredValueForTrue()
+        {
+            // Setup
+            bool value = true;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.SourceColumnNullMappingAttribute(value);
+
+            // Act
+            var actual = attribute.SourceColumnNullMapping;
 
             // Assert
             Assert.AreEqual(value,
@@ -241,19 +436,33 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow((DataRowVersion)0)]
-        [DataRow((DataRowVersion)1)]
         [TestMethod]
-        public void SourceVersionAttributePreservesConfiguredValue(DataRowVersion value)
+        public void SourceVersionAttributePreservesConfiguredValueForDataRowVersionZero()
         {
             // Setup
+            DataRowVersion value = (DataRowVersion)0;
             var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.SourceVersionAttribute(value);
-
 
             // Act
             var actual = attribute.SourceVersion;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceVersionAttributePreservesConfiguredValueForDataRowVersionOne()
+        {
+            // Setup
+            DataRowVersion value = (DataRowVersion)1;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.SourceVersionAttribute(value);
+
+            // Act
+            var actual = attribute.SourceVersion;
 
             // Assert
             Assert.AreEqual(value,
@@ -263,19 +472,33 @@ namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(null)]
-        [DataRow(42)]
         [TestMethod]
-        public void ValueAttributePreservesConfiguredValue(object value)
+        public void ValueAttributePreservesConfiguredValueForNull()
         {
             // Setup
+            object value = null;
             var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.ValueAttribute(value);
-
 
             // Act
             var actual = attribute.Value;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void ValueAttributePreservesConfiguredValueForValue42()
+        {
+            // Setup
+            object value = 42;
+            var attribute = new global::RepoDb.Attributes.Parameter.EnterpriseDb.ValueAttribute(value);
+
+            // Act
+            var actual = attribute.Value;
 
             // Assert
             Assert.AreEqual(value,

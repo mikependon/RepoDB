@@ -15,87 +15,643 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
         /// <summary>
         /// Resolves aliases independently of letter casing.
         /// </summary>
-        /// <param name="name">The database type name.</param>
-        /// <param name="expected">The expected CLR type.</param>
-        [DataRow("bigint",
-            typeof(long))]
-        [DataRow("BIGINT",
-            typeof(long))]
-        [DataRow("integer",
-            typeof(long))]
-        [DataRow("INTEGER",
-            typeof(long))]
-        [DataRow("blob",
-            typeof(byte[]))]
-        [DataRow("BLOB",
-            typeof(byte[]))]
-        [DataRow("boolean",
-            typeof(long))]
-        [DataRow("BOOLEAN",
-            typeof(long))]
-        [DataRow("char",
-            typeof(string))]
-        [DataRow("CHAR",
-            typeof(string))]
-        [DataRow("string",
-            typeof(string))]
-        [DataRow("STRING",
-            typeof(string))]
-        [DataRow("text",
-            typeof(string))]
-        [DataRow("TEXT",
-            typeof(string))]
-        [DataRow("varchar",
-            typeof(string))]
-        [DataRow("VARCHAR",
-            typeof(string))]
-        [DataRow("date",
-            typeof(DateTime))]
-        [DataRow("DATE",
-            typeof(DateTime))]
-        [DataRow("datetime",
-            typeof(DateTime))]
-        [DataRow("DATETIME",
-            typeof(DateTime))]
-        [DataRow("time",
-            typeof(DateTime))]
-        [DataRow("TIME",
-            typeof(DateTime))]
-        [DataRow("decimal",
-            typeof(decimal))]
-        [DataRow("DECIMAL",
-            typeof(decimal))]
-        [DataRow("numeric",
-            typeof(decimal))]
-        [DataRow("NUMERIC",
-            typeof(decimal))]
-        [DataRow("double",
-            typeof(double))]
-        [DataRow("DOUBLE",
-            typeof(double))]
-        [DataRow("real",
-            typeof(double))]
-        [DataRow("REAL",
-            typeof(double))]
-        [DataRow("int",
-            typeof(int))]
-        [DataRow("INT",
-            typeof(int))]
-        [DataRow("none",
-            typeof(object))]
-        [DataRow("NONE",
-            typeof(object))]
         [TestMethod]
-        public void ResolveSupportedNameReturnsExpectedType(string name,
-            Type expected)
+        public void ResolveSupportedNameReturnsExpectedTypeForBigint()
         {
             // Setup
+            string name = "bigint";
+            Type expected = typeof(long);
             var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBigintInUppercase()
+        {
+            // Setup
+            string name = "BIGINT";
+            Type expected = typeof(long);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInteger()
+        {
+            // Setup
+            string name = "integer";
+            Type expected = typeof(long);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForIntegerInUppercase()
+        {
+            // Setup
+            string name = "INTEGER";
+            Type expected = typeof(long);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBlob()
+        {
+            // Setup
+            string name = "blob";
+            Type expected = typeof(byte[]);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBlobInUppercase()
+        {
+            // Setup
+            string name = "BLOB";
+            Type expected = typeof(byte[]);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBoolean()
+        {
+            // Setup
+            string name = "boolean";
+            Type expected = typeof(long);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForBooleanInUppercase()
+        {
+            // Setup
+            string name = "BOOLEAN";
+            Type expected = typeof(long);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForChar()
+        {
+            // Setup
+            string name = "char";
+            Type expected = typeof(string);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForCharInUppercase()
+        {
+            // Setup
+            string name = "CHAR";
+            Type expected = typeof(string);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForString()
+        {
+            // Setup
+            string name = "string";
+            Type expected = typeof(string);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForStringInUppercase()
+        {
+            // Setup
+            string name = "STRING";
+            Type expected = typeof(string);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForText()
+        {
+            // Setup
+            string name = "text";
+            Type expected = typeof(string);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTextInUppercase()
+        {
+            // Setup
+            string name = "TEXT";
+            Type expected = typeof(string);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarchar()
+        {
+            // Setup
+            string name = "varchar";
+            Type expected = typeof(string);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForVarcharInUppercase()
+        {
+            // Setup
+            string name = "VARCHAR";
+            Type expected = typeof(string);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDate()
+        {
+            // Setup
+            string name = "date";
+            Type expected = typeof(DateTime);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDateInUppercase()
+        {
+            // Setup
+            string name = "DATE";
+            Type expected = typeof(DateTime);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDatetime()
+        {
+            // Setup
+            string name = "datetime";
+            Type expected = typeof(DateTime);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDatetimeInUppercase()
+        {
+            // Setup
+            string name = "DATETIME";
+            Type expected = typeof(DateTime);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTime()
+        {
+            // Setup
+            string name = "time";
+            Type expected = typeof(DateTime);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForTimeInUppercase()
+        {
+            // Setup
+            string name = "TIME";
+            Type expected = typeof(DateTime);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecimal()
+        {
+            // Setup
+            string name = "decimal";
+            Type expected = typeof(decimal);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDecimalInUppercase()
+        {
+            // Setup
+            string name = "DECIMAL";
+            Type expected = typeof(decimal);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNumeric()
+        {
+            // Setup
+            string name = "numeric";
+            Type expected = typeof(decimal);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNumericInUppercase()
+        {
+            // Setup
+            string name = "NUMERIC";
+            Type expected = typeof(decimal);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDouble()
+        {
+            // Setup
+            string name = "double";
+            Type expected = typeof(double);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForDoubleInUppercase()
+        {
+            // Setup
+            string name = "DOUBLE";
+            Type expected = typeof(double);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForReal()
+        {
+            // Setup
+            string name = "real";
+            Type expected = typeof(double);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForRealInUppercase()
+        {
+            // Setup
+            string name = "REAL";
+            Type expected = typeof(double);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForInt()
+        {
+            // Setup
+            string name = "int";
+            Type expected = typeof(int);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForIntInUppercase()
+        {
+            // Setup
+            string name = "INT";
+            Type expected = typeof(int);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNone()
+        {
+            // Setup
+            string name = "none";
+            Type expected = typeof(object);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(expected,
+                actual);
+        }
+
+        /// <summary>
+        /// Resolves aliases independently of letter casing.
+        /// </summary>
+        [TestMethod]
+        public void ResolveSupportedNameReturnsExpectedTypeForNoneInUppercase()
+        {
+            // Setup
+            string name = "NONE";
+            Type expected = typeof(object);
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(expected,
@@ -105,20 +661,51 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
         /// <summary>
         /// Falls back for empty and unknown names.
         /// </summary>
-        /// <param name="name">The unsupported name.</param>
-        [DataRow("")]
-        [DataRow("__unsupported_type__")]
-        [DataRow("   ")]
         [TestMethod]
-        public void ResolveUnknownNameReturnsObject(string name)
+        public void ResolveUnknownNameReturnsObjectForEmptyString()
         {
             // Setup
+            string name = "";
             var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
-
 
             // Act
             var actual = resolver.Resolve(name);
 
+            // Assert
+            Assert.AreEqual(typeof(object),
+                actual);
+        }
+
+        /// <summary>
+        /// Falls back for empty and unknown names.
+        /// </summary>
+        [TestMethod]
+        public void ResolveUnknownNameReturnsObjectForUnsupportedType()
+        {
+            // Setup
+            string name = "__unsupported_type__";
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
+
+            // Assert
+            Assert.AreEqual(typeof(object),
+                actual);
+        }
+
+        /// <summary>
+        /// Falls back for empty and unknown names.
+        /// </summary>
+        [TestMethod]
+        public void ResolveUnknownNameReturnsObjectForWhitespace()
+        {
+            // Setup
+            string name = "   ";
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
+
+            // Act
+            var actual = resolver.Resolve(name);
 
             // Assert
             Assert.AreEqual(typeof(object),
@@ -134,10 +721,8 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
             // Setup
             var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
-
             // Act
             var exception = Assert.ThrowsExactly<ArgumentNullException>(() => resolver.Resolve(null));
-
 
             // Assert
             Assert.AreEqual("dbTypeName",

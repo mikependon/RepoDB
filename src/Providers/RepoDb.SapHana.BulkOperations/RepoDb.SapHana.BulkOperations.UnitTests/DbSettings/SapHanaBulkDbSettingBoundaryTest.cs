@@ -21,7 +21,6 @@ namespace RepoDb.SapHana.BulkOperations.UnitTests.DbSettings
             // Act
             var setting = new SapHanaBulkDbSetting();
 
-
             // Assert
             Assert.AreEqual(SapHanaBulkColumnMappingsBehavior.Automatic,
                 setting.BulkColumnMappingsBehavior);
@@ -36,10 +35,8 @@ namespace RepoDb.SapHana.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new SapHanaBulkDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = SapHanaBulkColumnMappingsBehavior.Automatic;
-
 
             // Assert
             Assert.AreEqual(SapHanaBulkColumnMappingsBehavior.Automatic,
@@ -55,10 +52,8 @@ namespace RepoDb.SapHana.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new SapHanaBulkDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = SapHanaBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(SapHanaBulkColumnMappingsBehavior.Strict,
@@ -74,10 +69,8 @@ namespace RepoDb.SapHana.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new SapHanaBulkDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = SapHanaBulkColumnMappingsBehavior.StrictBypass;
-
 
             // Assert
             Assert.AreEqual(SapHanaBulkColumnMappingsBehavior.StrictBypass,
@@ -94,10 +87,8 @@ namespace RepoDb.SapHana.BulkOperations.UnitTests.DbSettings
             var first = new SapHanaBulkDbSetting();
             var second = new SapHanaBulkDbSetting();
 
-
             // Act
             first.BulkColumnMappingsBehavior = SapHanaBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(SapHanaBulkColumnMappingsBehavior.Automatic,

@@ -16,20 +16,34 @@ namespace RepoDb.ClickHouse.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(null)]
-        [DataRow("")]
-        [DataRow("Column")]
         [TestMethod]
-        public void ClickHouseTypeAttributePreservesConfiguredValue(string value)
+        public void ClickHouseTypeAttributePreservesConfiguredValueForNull()
         {
             // Setup
+            string value = null;
             var attribute = new global::RepoDb.Attributes.Parameter.ClickHouse.ClickHouseTypeAttribute(value);
-
 
             // Act
             var actual = attribute.ClickHouseType;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void ClickHouseTypeAttributePreservesConfiguredValueForEmptyString()
+        {
+            // Setup
+            string value = "";
+            var attribute = new global::RepoDb.Attributes.Parameter.ClickHouse.ClickHouseTypeAttribute(value);
+
+            // Act
+            var actual = attribute.ClickHouseType;
 
             // Assert
             Assert.AreEqual(value,
@@ -40,20 +54,53 @@ namespace RepoDb.ClickHouse.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(null)]
-        [DataRow("")]
-        [DataRow("Column")]
         [TestMethod]
-        public void SourceColumnAttributePreservesConfiguredValue(string value)
+        public void ClickHouseTypeAttributePreservesConfiguredValueForColumnInMixedCase()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.ClickHouse.SourceColumnAttribute(value);
+            string value = "Column";
+            var attribute = new global::RepoDb.Attributes.Parameter.ClickHouse.ClickHouseTypeAttribute(value);
 
+            // Act
+            var actual = attribute.ClickHouseType;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnAttributePreservesConfiguredValueForNull()
+        {
+            // Setup
+            string value = null;
+            var attribute = new global::RepoDb.Attributes.Parameter.ClickHouse.SourceColumnAttribute(value);
 
             // Act
             var actual = attribute.SourceColumn;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnAttributePreservesConfiguredValueForEmptyString()
+        {
+            // Setup
+            string value = "";
+            var attribute = new global::RepoDb.Attributes.Parameter.ClickHouse.SourceColumnAttribute(value);
+
+            // Act
+            var actual = attribute.SourceColumn;
 
             // Assert
             Assert.AreEqual(value,
@@ -64,19 +111,52 @@ namespace RepoDb.ClickHouse.UnitTests.Attributes.Parameter
         /// <summary>
         /// Retains the value supplied to the parameter attribute.
         /// </summary>
-        /// <param name="value">The configured parameter value.</param>
-        [DataRow(false)]
-        [DataRow(true)]
         [TestMethod]
-        public void SourceColumnNullMappingAttributePreservesConfiguredValue(bool value)
+        public void SourceColumnAttributePreservesConfiguredValueForColumnInMixedCase()
         {
             // Setup
-            var attribute = new global::RepoDb.Attributes.Parameter.ClickHouse.SourceColumnNullMappingAttribute(value);
+            string value = "Column";
+            var attribute = new global::RepoDb.Attributes.Parameter.ClickHouse.SourceColumnAttribute(value);
 
+            // Act
+            var actual = attribute.SourceColumn;
+
+            // Assert
+            Assert.AreEqual(value,
+                actual,
+                StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnNullMappingAttributePreservesConfiguredValueForFalse()
+        {
+            // Setup
+            bool value = false;
+            var attribute = new global::RepoDb.Attributes.Parameter.ClickHouse.SourceColumnNullMappingAttribute(value);
 
             // Act
             var actual = attribute.SourceColumnNullMapping;
 
+            // Assert
+            Assert.AreEqual(value,
+                actual);
+        }
+
+        /// <summary>
+        /// Retains the value supplied to the parameter attribute.
+        /// </summary>
+        [TestMethod]
+        public void SourceColumnNullMappingAttributePreservesConfiguredValueForTrue()
+        {
+            // Setup
+            bool value = true;
+            var attribute = new global::RepoDb.Attributes.Parameter.ClickHouse.SourceColumnNullMappingAttribute(value);
+
+            // Act
+            var actual = attribute.SourceColumnNullMapping;
 
             // Assert
             Assert.AreEqual(value,

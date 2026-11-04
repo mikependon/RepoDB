@@ -23,7 +23,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Models
             var mapping = new MariaDbBulkInsertMapItem("Source",
                 "Destination");
 
-
             // Assert
             Assert.AreEqual("Source",
                 mapping.SourceColumn,
@@ -39,7 +38,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Models
             // Act
             var mapping = new MariaDbBulkInsertMapItem("Source",
                 "Destination");
-
 
             // Assert
             Assert.AreEqual("Destination",
@@ -58,10 +56,8 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Models
                 "Destination");
             var expected = mapping.GetHashCode();
 
-
             // Act
             var actual = mapping.GetHashCode();
-
 
             // Assert
             Assert.AreEqual(expected,
@@ -77,12 +73,10 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Models
             // Setup
             var expected = (MariaDbType)1;
 
-
             // Act
             var mapping = new MariaDbBulkInsertMapItem("Source",
                 "Destination",
                 expected);
-
 
             // Assert
             Assert.AreEqual(expected,
@@ -99,7 +93,6 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Models
             var mapping = new MariaDbBulkInsertMapItem("Source",
                 "Destination");
 
-
             // Assert
             Assert.IsNull(mapping.MariaDbType);
         }
@@ -115,10 +108,8 @@ namespace RepoDb.MariaDb.BulkOperations.UnitTests.Models
                 "Destination",
                 (MariaDbType)1);
 
-
             // Act
             var actual = mapping.ToString();
-
 
             // Assert
             StringAssert.Contains(actual,

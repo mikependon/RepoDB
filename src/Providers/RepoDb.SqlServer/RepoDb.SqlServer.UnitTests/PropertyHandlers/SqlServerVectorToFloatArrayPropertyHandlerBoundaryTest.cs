@@ -21,11 +21,9 @@ namespace RepoDb.SqlServer.UnitTests.PropertyHandlers
             // Setup
             var handler = new SqlServerVectorToFloatArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Get(null,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -40,11 +38,9 @@ namespace RepoDb.SqlServer.UnitTests.PropertyHandlers
             // Setup
             var handler = new SqlServerVectorToFloatArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Get(DBNull.Value,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -59,11 +55,9 @@ namespace RepoDb.SqlServer.UnitTests.PropertyHandlers
             // Setup
             var handler = new SqlServerVectorToFloatArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Set(null,
                 null);
-
 
             // Assert
             Assert.IsNull(actual);
@@ -78,11 +72,9 @@ namespace RepoDb.SqlServer.UnitTests.PropertyHandlers
             // Setup
             var handler = new SqlServerVectorToFloatArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Set(new float[] { 1.25f, -2f },
                 null);
-
 
             // Assert
             Assert.AreEqual("[1.25,-2]",
@@ -98,11 +90,9 @@ namespace RepoDb.SqlServer.UnitTests.PropertyHandlers
             // Setup
             var handler = new SqlServerVectorToFloatArrayPropertyHandler();
 
-
             // Act
             var actual = handler.Set(Array.Empty<float>(),
                 null);
-
 
             // Assert
             Assert.AreEqual("[]",
@@ -120,11 +110,9 @@ namespace RepoDb.SqlServer.UnitTests.PropertyHandlers
             var expected = new float[] { 1.25f, -2f };
             var vector = new Microsoft.Data.SqlTypes.SqlVector<float>(expected);
 
-
             // Act
             var actual = handler.Get(vector,
                 null);
-
 
             // Assert
             CollectionAssert.AreEqual(expected,

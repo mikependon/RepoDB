@@ -21,7 +21,6 @@ namespace RepoDb.Firebird.BulkOperations.UnitTests.DbSettings
             // Act
             var setting = new FirebirdBulkOperationsDbSetting();
 
-
             // Assert
             Assert.AreEqual(FirebirdBulkColumnMappingsBehavior.Automatic,
                 setting.BulkColumnMappingsBehavior);
@@ -36,10 +35,8 @@ namespace RepoDb.Firebird.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new FirebirdBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = FirebirdBulkColumnMappingsBehavior.Automatic;
-
 
             // Assert
             Assert.AreEqual(FirebirdBulkColumnMappingsBehavior.Automatic,
@@ -55,10 +52,8 @@ namespace RepoDb.Firebird.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new FirebirdBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = FirebirdBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(FirebirdBulkColumnMappingsBehavior.Strict,
@@ -74,10 +69,8 @@ namespace RepoDb.Firebird.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new FirebirdBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = FirebirdBulkColumnMappingsBehavior.StrictBypass;
-
 
             // Assert
             Assert.AreEqual(FirebirdBulkColumnMappingsBehavior.StrictBypass,
@@ -94,10 +87,8 @@ namespace RepoDb.Firebird.BulkOperations.UnitTests.DbSettings
             var first = new FirebirdBulkOperationsDbSetting();
             var second = new FirebirdBulkOperationsDbSetting();
 
-
             // Act
             first.BulkColumnMappingsBehavior = FirebirdBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(FirebirdBulkColumnMappingsBehavior.Automatic,

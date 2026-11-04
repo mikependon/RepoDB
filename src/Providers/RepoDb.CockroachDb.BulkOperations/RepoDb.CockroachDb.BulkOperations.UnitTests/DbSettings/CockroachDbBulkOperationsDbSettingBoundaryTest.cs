@@ -21,7 +21,6 @@ namespace RepoDb.CockroachDb.BulkOperations.UnitTests.DbSettings
             // Act
             var setting = new CockroachDbBulkOperationsDbSetting();
 
-
             // Assert
             Assert.AreEqual(CockroachDbBulkColumnMappingsBehavior.Automatic,
                 setting.BulkColumnMappingsBehavior);
@@ -36,10 +35,8 @@ namespace RepoDb.CockroachDb.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new CockroachDbBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = CockroachDbBulkColumnMappingsBehavior.Automatic;
-
 
             // Assert
             Assert.AreEqual(CockroachDbBulkColumnMappingsBehavior.Automatic,
@@ -55,10 +52,8 @@ namespace RepoDb.CockroachDb.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new CockroachDbBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = CockroachDbBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(CockroachDbBulkColumnMappingsBehavior.Strict,
@@ -74,10 +69,8 @@ namespace RepoDb.CockroachDb.BulkOperations.UnitTests.DbSettings
             // Setup
             var setting = new CockroachDbBulkOperationsDbSetting();
 
-
             // Act
             setting.BulkColumnMappingsBehavior = CockroachDbBulkColumnMappingsBehavior.StrictBypass;
-
 
             // Assert
             Assert.AreEqual(CockroachDbBulkColumnMappingsBehavior.StrictBypass,
@@ -94,10 +87,8 @@ namespace RepoDb.CockroachDb.BulkOperations.UnitTests.DbSettings
             var first = new CockroachDbBulkOperationsDbSetting();
             var second = new CockroachDbBulkOperationsDbSetting();
 
-
             // Act
             first.BulkColumnMappingsBehavior = CockroachDbBulkColumnMappingsBehavior.Strict;
-
 
             // Assert
             Assert.AreEqual(CockroachDbBulkColumnMappingsBehavior.Automatic,
