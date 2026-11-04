@@ -16,9 +16,6 @@ using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
 {
-    /// <summary>
-    /// Verifies property handler null results under default conversion settings.
-    /// </summary>
     [TestClass]
     [DoNotParallelize]
     public class DbNullPropertyHandlerTest
@@ -33,9 +30,6 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
 
         #region Public Methods
 
-        /// <summary>
-        /// Starts an isolated transaction with default conversion settings.
-        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -47,9 +41,6 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
             _transaction = _connection.BeginTransaction();
         }
 
-        /// <summary>
-        /// Rolls back the test rows and restores conversion settings.
-        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
@@ -64,15 +55,11 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
             }
         }
 
-        /// <summary>
-        /// Verifies a null ColumnTsVector round trip.
-        /// </summary>
         [TestMethod]
         public void TestColumnTsVectorWithNull()
         {
             // Setup
             var entity = new PostgreSqlTsVectorEntity { ColumnTsVector = null };
-
 
             // Act
             var id = _connection.Insert<PostgreSqlTsVectorEntity, long>(entity,
@@ -81,22 +68,17 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
                 transaction: _transaction);
             var result = rows.Single();
 
-
             // Assert
             Assert.AreEqual(id,
                 result.Id);
             Assert.IsNull(result.ColumnTsVector);
         }
 
-        /// <summary>
-        /// Verifies a null ColumnTsVector round trip asynchronously.
-        /// </summary>
         [TestMethod]
         public async Task TestColumnTsVectorAsyncWithNull()
         {
             // Setup
             var entity = new PostgreSqlTsVectorEntity { ColumnTsVector = null };
-
 
             // Act
             var id = await _connection.InsertAsync<PostgreSqlTsVectorEntity, long>(entity,
@@ -105,22 +87,17 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
                 transaction: _transaction);
             var result = rows.Single();
 
-
             // Assert
             Assert.AreEqual(id,
                 result.Id);
             Assert.IsNull(result.ColumnTsVector);
         }
 
-        /// <summary>
-        /// Verifies a null ColumnTsQuery round trip.
-        /// </summary>
         [TestMethod]
         public void TestColumnTsQueryWithNull()
         {
             // Setup
             var entity = new PostgreSqlTsQueryEntity { ColumnTsQuery = null };
-
 
             // Act
             var id = _connection.Insert<PostgreSqlTsQueryEntity, long>(entity,
@@ -129,22 +106,17 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
                 transaction: _transaction);
             var result = rows.Single();
 
-
             // Assert
             Assert.AreEqual(id,
                 result.Id);
             Assert.IsNull(result.ColumnTsQuery);
         }
 
-        /// <summary>
-        /// Verifies a null ColumnTsQuery round trip asynchronously.
-        /// </summary>
         [TestMethod]
         public async Task TestColumnTsQueryAsyncWithNull()
         {
             // Setup
             var entity = new PostgreSqlTsQueryEntity { ColumnTsQuery = null };
-
 
             // Act
             var id = await _connection.InsertAsync<PostgreSqlTsQueryEntity, long>(entity,
@@ -152,7 +124,6 @@ namespace RepoDb.PostgreSql.IntegrationTests.PropertyHandlers
             var rows = await _connection.QueryAsync<PostgreSqlTsQueryEntity>(row => row.Id == id,
                 transaction: _transaction);
             var result = rows.Single();
-
 
             // Assert
             Assert.AreEqual(id,

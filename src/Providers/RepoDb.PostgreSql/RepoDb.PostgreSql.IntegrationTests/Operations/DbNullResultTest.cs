@@ -15,9 +15,6 @@ using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
 {
-    /// <summary>
-    /// Covers SQL NULL object results reported in issue #1388.
-    /// </summary>
     [TestClass]
     [DoNotParallelize]
     public class DbNullResultTest
@@ -31,10 +28,6 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
         #region Private Methods
 
-        /// <summary>
-        /// Verifies that the inserted row was persisted.
-        /// </summary>
-        /// <param name="connection">The database connection.</param>
         private void AssertInsertedRow(NpgsqlConnection connection)
         {
             var count = connection.ExecuteScalar<long>($"SELECT COUNT(*) FROM public.\"{_tableName}\" WHERE tote_id = 1 AND name = 'x'");
@@ -46,9 +39,6 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
         #region Public Methods
 
-        /// <summary>
-        /// Prepares an isolated table with default conversion settings.
-        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -58,9 +48,6 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             _tableName = Database.CreateKeylessTable();
         }
 
-        /// <summary>
-        /// Removes the test table and restores conversion settings.
-        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
@@ -74,9 +61,6 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        /// <summary>
-        /// Verifies that inserting without an identity returns null.
-        /// </summary>
         [TestMethod]
         public void TestInsertWithoutIdentityReturnsNull()
         {
@@ -84,20 +68,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using var connection = new NpgsqlConnection(Database.ConnectionString);
             var row = new KeylessRow { ToteId = 1, Name = "x" };
 
-
             // Act
             var result = connection.Insert(_tableName,
                 row);
-
 
             // Assert
             Assert.IsNull(result);
             AssertInsertedRow(connection);
         }
 
-        /// <summary>
-        /// Verifies that asynchronously inserting without an identity returns null.
-        /// </summary>
         [TestMethod]
         public async Task TestInsertAsyncWithoutIdentityReturnsNull()
         {
@@ -105,20 +84,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using var connection = new NpgsqlConnection(Database.ConnectionString);
             var row = new KeylessRow { ToteId = 1, Name = "x" };
 
-
             // Act
             var result = await connection.InsertAsync(_tableName,
                 row);
-
 
             // Assert
             Assert.IsNull(result);
             AssertInsertedRow(connection);
         }
 
-        /// <summary>
-        /// Verifies that MAX over an empty set returns null.
-        /// </summary>
         [TestMethod]
         public void TestMaxOverEmptySetReturnsNull()
         {
@@ -129,20 +103,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Operation.GreaterThan,
                 0);
 
-
             // Act
             var result = connection.Max(_tableName,
                 field,
                 where);
 
-
             // Assert
             Assert.IsNull(result);
         }
 
-        /// <summary>
-        /// Verifies that asynchronous MAX over an empty set returns null.
-        /// </summary>
         [TestMethod]
         public async Task TestMaxAsyncOverEmptySetReturnsNull()
         {
@@ -153,20 +122,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Operation.GreaterThan,
                 0);
 
-
             // Act
             var result = await connection.MaxAsync(_tableName,
                 field,
                 where);
 
-
             // Assert
             Assert.IsNull(result);
         }
 
-        /// <summary>
-        /// Verifies the Sum result for an empty set.
-        /// </summary>
         [TestMethod]
         public void TestSumOverEmptySetReturnsNull()
         {
@@ -177,20 +141,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Operation.GreaterThan,
                 0);
 
-
             // Act
             var result = connection.Sum(_tableName,
                 field,
                 where);
 
-
             // Assert
             Assert.IsNull(result);
         }
 
-        /// <summary>
-        /// Verifies the SumAsync result for an empty set.
-        /// </summary>
         [TestMethod]
         public async Task TestSumAsyncOverEmptySetReturnsNull()
         {
@@ -201,20 +160,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Operation.GreaterThan,
                 0);
 
-
             // Act
             var result = await connection.SumAsync(_tableName,
                 field,
                 where);
 
-
             // Assert
             Assert.IsNull(result);
         }
 
-        /// <summary>
-        /// Verifies the Min result for an empty set.
-        /// </summary>
         [TestMethod]
         public void TestMinOverEmptySetReturnsNull()
         {
@@ -225,20 +179,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Operation.GreaterThan,
                 0);
 
-
             // Act
             var result = connection.Min(_tableName,
                 field,
                 where);
 
-
             // Assert
             Assert.IsNull(result);
         }
 
-        /// <summary>
-        /// Verifies the MinAsync result for an empty set.
-        /// </summary>
         [TestMethod]
         public async Task TestMinAsyncOverEmptySetReturnsNull()
         {
@@ -249,20 +198,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Operation.GreaterThan,
                 0);
 
-
             // Act
             var result = await connection.MinAsync(_tableName,
                 field,
                 where);
 
-
             // Assert
             Assert.IsNull(result);
         }
 
-        /// <summary>
-        /// Verifies the Average object result for an empty set.
-        /// </summary>
         [TestMethod]
         public void TestAverageOverEmptySetReturnsNull()
         {
@@ -273,20 +217,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Operation.GreaterThan,
                 0);
 
-
             // Act
             var result = connection.Average<object>(_tableName,
                 field,
                 where);
 
-
             // Assert
             Assert.IsNull(result);
         }
 
-        /// <summary>
-        /// Verifies the AverageAsync object result for an empty set.
-        /// </summary>
         [TestMethod]
         public async Task TestAverageAsyncOverEmptySetReturnsNull()
         {
@@ -297,20 +236,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Operation.GreaterThan,
                 0);
 
-
             // Act
             var result = await connection.AverageAsync<object>(_tableName,
                 field,
                 where);
 
-
             // Assert
             Assert.IsNull(result);
         }
 
-        /// <summary>
-        /// Verifies the Count result for an empty set.
-        /// </summary>
         [TestMethod]
         public void TestCountOverEmptySetReturnsZero()
         {
@@ -320,20 +254,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Operation.GreaterThan,
                 0);
 
-
             // Act
             var result = connection.Count(_tableName,
                 where);
-
 
             // Assert
             Assert.AreEqual(0L,
                 result);
         }
 
-        /// <summary>
-        /// Verifies the CountAsync result for an empty set.
-        /// </summary>
         [TestMethod]
         public async Task TestCountAsyncOverEmptySetReturnsZero()
         {
@@ -343,20 +272,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Operation.GreaterThan,
                 0);
 
-
             // Act
             var result = await connection.CountAsync(_tableName,
                 where);
-
 
             // Assert
             Assert.AreEqual(0L,
                 result);
         }
 
-        /// <summary>
-        /// Verifies the Exists result for an empty set.
-        /// </summary>
         [TestMethod]
         public void TestExistsOverEmptySetReturnsFalse()
         {
@@ -366,19 +290,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Operation.GreaterThan,
                 0);
 
-
             // Act
             var result = connection.Exists(_tableName,
                 where);
-
 
             // Assert
             Assert.IsFalse(result);
         }
 
-        /// <summary>
-        /// Verifies the ExistsAsync result for an empty set.
-        /// </summary>
         [TestMethod]
         public async Task TestExistsAsyncOverEmptySetReturnsFalse()
         {
@@ -388,19 +307,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Operation.GreaterThan,
                 0);
 
-
             // Act
             var result = await connection.ExistsAsync(_tableName,
                 where);
-
 
             // Assert
             Assert.IsFalse(result);
         }
 
-        /// <summary>
-        /// Verifies the InsertAll result without an identity.
-        /// </summary>
         [TestMethod]
         public void TestInsertAllWithoutIdentityReturnsInsertedCount()
         {
@@ -412,11 +326,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new KeylessRow { ToteId = 2, Name = "y" }
             };
 
-
             // Act
             var result = connection.InsertAll(_tableName,
                 rows);
-
 
             // Assert
             Assert.AreEqual(2,
@@ -425,9 +337,6 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 connection.ExecuteScalar<long>($"SELECT COUNT(*) FROM public.\"{_tableName}\""));
         }
 
-        /// <summary>
-        /// Verifies the InsertAllAsync result without an identity.
-        /// </summary>
         [TestMethod]
         public async Task TestInsertAllAsyncWithoutIdentityReturnsInsertedCount()
         {
@@ -439,11 +348,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new KeylessRow { ToteId = 2, Name = "y" }
             };
 
-
             // Act
             var result = await connection.InsertAllAsync(_tableName,
                 rows);
-
 
             // Assert
             Assert.AreEqual(2,
