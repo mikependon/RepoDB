@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from a DuckDb database or from another database engine.
     /// A statement has no terminator, and a DDL statement is part of the transaction (it can be rolled back). DuckDB can not add a foreign key to an existing table, so the foreign keys are part of the statement that creates the table (see <see cref="ComposeAddForeignKey"/>), and the tables must be created after the tables that they reference. DuckDB has no identity column, so an identity column is a column with a sequence as its default. DuckDB does not keep the names of the constraints, so the constraints are not named.
     /// </summary>
-    public class DuckDbSchemaComposer : ISchemaComposer
+    public class DuckDbSchemaComposer : ISchemaComposer, ISchemaCreationSupport
     {
         #region Private Variables
 
@@ -31,7 +31,34 @@ namespace RepoDb.Schema
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Gets the statement that creates a schema (the placeholder <c>{0}</c> takes the quoted name of the schema).
+        /// </summary>
+        public string CreateSchemaSql => DuckDbSchemaText.CreateSchemaSql;
+
+        /// <summary>
+        /// Gets the statement that counts the schemas that have a name (the placeholder <c>{0}</c> takes the name of the parameter with its prefix).
+        /// </summary>
+        public string SchemaExistsSql => DuckDbSchemaText.SchemaExistsSql;
+
+        /// <summary>
+        /// Gets the prefix of the parameters of the destination database.
+        /// </summary>
+        public string SchemaParameterPrefix => "$";
+
+        #endregion
+
         #region Public Methods
+
+        /// <summary>
+        /// Quotes the name of the schema in the dialect of the destination database.
+        /// </summary>
+        /// <param name="schemaName">The name of the schema.</param>
+        /// <returns>The quoted name of the schema.</returns>
+        public string QuoteSchemaName(string schemaName) =>
+            DuckDbSchemaHelper.Quote(schemaName);
 
         /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.

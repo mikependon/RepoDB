@@ -89,6 +89,13 @@ namespace RepoDb.Schema
             var composer = Composer(connection);
             var tables = CreateTables(definition,
                 composer, connection.GetDbSetting(), schemaMappingMode);
+            SchemaCreator.Create(connection,
+                composer,
+                tables,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction);
             var copy = SchemaPlanExecutor.Execute(startTime,
                 tables,
                 composer,
@@ -140,6 +147,14 @@ namespace RepoDb.Schema
             var composer = Composer(connection);
             var tables = CreateTables(definition,
                 composer, connection.GetDbSetting(), schemaMappingMode);
+            await SchemaCreator.CreateAsync(connection,
+                composer,
+                tables,
+                commandTimeout,
+                traceKey,
+                trace,
+                transaction,
+                cancellationToken).ConfigureAwait(false);
             var copy = await SchemaPlanExecutor.ExecuteAsync(startTime,
                 tables,
                 composer,

@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from a PostgreSQL database or from another database engine.
     /// The collations are not composed, as they are specific to the database that they came from.
     /// </summary>
-    public class PostgreSqlSchemaComposer : ISchemaComposer, IConstraintCheckSupport
+    public class PostgreSqlSchemaComposer : ISchemaComposer, ISchemaCreationSupport, IConstraintCheckSupport
     {
         #region Private Variables
 
@@ -30,7 +30,34 @@ namespace RepoDb.Schema
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Gets the statement that creates a schema (the placeholder <c>{0}</c> takes the quoted name of the schema).
+        /// </summary>
+        public string CreateSchemaSql => PostgreSqlSchemaText.CreateSchemaSql;
+
+        /// <summary>
+        /// Gets the statement that counts the schemas that have a name (the placeholder <c>{0}</c> takes the name of the parameter with its prefix).
+        /// </summary>
+        public string SchemaExistsSql => PostgreSqlSchemaText.SchemaExistsSql;
+
+        /// <summary>
+        /// Gets the prefix of the parameters of the destination database.
+        /// </summary>
+        public string SchemaParameterPrefix => "@";
+
+        #endregion
+
         #region Public Methods
+
+        /// <summary>
+        /// Quotes the name of the schema in the dialect of the destination database.
+        /// </summary>
+        /// <param name="schemaName">The name of the schema.</param>
+        /// <returns>The quoted name of the schema.</returns>
+        public string QuoteSchemaName(string schemaName) =>
+            PostgreSqlSchemaHelper.Quote(schemaName);
 
         /// <summary>
         /// Composes the statement that stops PostgreSQL from checking the foreign keys, for the session of the connection that executes it.

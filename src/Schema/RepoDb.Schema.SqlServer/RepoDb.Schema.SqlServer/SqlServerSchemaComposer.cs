@@ -20,7 +20,7 @@ namespace RepoDb.Schema
     /// An <see cref="ISchemaComposer"/> that composes the T-SQL statements, in the dialect of SQL Server, that create the objects of a table.
     /// The column types are mapped on a best-effort basis, so the schema can come from a SQL Server database or from another database engine.
     /// </summary>
-    public class SqlServerSchemaComposer : ISchemaComposer
+    public class SqlServerSchemaComposer : ISchemaComposer, ISchemaCreationSupport
     {
         #region Private Variables
 
@@ -29,7 +29,34 @@ namespace RepoDb.Schema
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Gets the statement that creates a schema (the placeholder <c>{0}</c> takes the quoted name of the schema).
+        /// </summary>
+        public string CreateSchemaSql => SqlServerSchemaText.CreateSchemaSql;
+
+        /// <summary>
+        /// Gets the statement that counts the schemas that have a name (the placeholder <c>{0}</c> takes the name of the parameter with its prefix).
+        /// </summary>
+        public string SchemaExistsSql => SqlServerSchemaText.SchemaExistsSql;
+
+        /// <summary>
+        /// Gets the prefix of the parameters of the destination database.
+        /// </summary>
+        public string SchemaParameterPrefix => "@";
+
+        #endregion
+
         #region Public Methods
+
+        /// <summary>
+        /// Quotes the name of the schema in the dialect of the destination database.
+        /// </summary>
+        /// <param name="schemaName">The name of the schema.</param>
+        /// <returns>The quoted name of the schema.</returns>
+        public string QuoteSchemaName(string schemaName) =>
+            SqlServerSchemaHelper.Quote(schemaName);
 
         /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.
