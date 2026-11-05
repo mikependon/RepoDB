@@ -38,6 +38,31 @@ namespace RepoDb
 
         #endregion
 
+        #region Private Methods
+
+        /// <summary>
+        /// Checks whether a null or <see cref="DBNull.Value"/> is converted into the default value of the target type instead of an exception.
+        /// </summary>
+        /// <param name="type">The target type.</param>
+        /// <param name="forceAutomatic">Force the automatic conversion.</param>
+        /// <returns><c>true</c> if the default value is returned.</returns>
+        private static bool CanReturnDefault(Type type,
+            bool forceAutomatic) =>
+            forceAutomatic ||
+            GlobalConfiguration.Options.ConversionType == ConversionType.Automatic ||
+            IsNullableOrReferenceType(type);
+
+        /// <summary>
+        /// Checks whether the type accepts a null, which are the nullable value types and the reference types (including <see cref="object"/>).
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <returns><c>true</c> if the type accepts a null.</returns>
+        private static bool IsNullableOrReferenceType(Type type) =>
+            !type.IsValueType ||
+            Nullable.GetUnderlyingType(type) != null;
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -87,8 +112,8 @@ namespace RepoDb
             }
             if (value == null || value == DBNull.Value)
             {
-                if (forceAutomatic || GlobalConfiguration.Options.ConversionType == ConversionType.Automatic ||
-                    Nullable.GetUnderlyingType(typeof(T)) != null)
+                if (CanReturnDefault(typeof(T),
+                    forceAutomatic))
                 {
                     return default;
                 }
@@ -137,8 +162,8 @@ namespace RepoDb
             }
             if (value == null || value == DBNull.Value)
             {
-                if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic ||
-                    Nullable.GetUnderlyingType(type) != null)
+                if (CanReturnDefault(type,
+                    forceAutomatic: false))
                 {
                     return null;
                 }
