@@ -237,7 +237,8 @@ namespace RepoDb.Schema
             {
                 SkipUnsupported(table,
                     table.Schema.ForeignKeys.Where(foreignKey => !CanBeReferenced(foreignKey)).ToList(),
-                    composer);
+                    composer,
+                    destinationConnection.GetDbSetting());
             }
 
             IndexNameResolver.Resolve(tables,
@@ -318,7 +319,8 @@ namespace RepoDb.Schema
 
                 SkipUnsupported(table,
                     unreferenced,
-                    composer);
+                    composer,
+                    destinationConnection.GetDbSetting());
             }
 
             await IndexNameResolver.ResolveAsync(tables,
@@ -336,10 +338,14 @@ namespace RepoDb.Schema
         /// <param name="table">The state of the table.</param>
         /// <param name="foreignKeys">The foreign keys of the table that reference a table that is not copied and does not exist in the destination.</param>
         /// <param name="composer">The composer of the destination database.</param>
+        /// <param name="setting">The setting of the destination database, which adapts the check constraints that come from a database with another dialect.</param>
         internal static void SkipUnsupported(PlanTable table,
             IList<ForeignKeyInfo> foreignKeys,
-            ISchemaComposer composer)
+            ISchemaComposer composer,
+            IDbSetting setting)
         {
+            SchemaExpressionAdapter.Adapt(table,
+                setting);
             // The default values that the destination can not create are not left out here (the composer does not write them): they are reported
             if (composer is IColumnDefaultSupport defaultSupport)
             {
