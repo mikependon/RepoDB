@@ -45,7 +45,7 @@ namespace RepoDb.Telemetry.Extended
         public bool CaptureParameterValues { get; set; } = true;
 
         /// <summary>
-        /// Whether materialized result values are captured in addition to summaries.
+        /// Whether the number of results (rows) of the operation is captured in addition to summaries.
         /// </summary>
         public bool CaptureResultValues { get; set; } = true;
 

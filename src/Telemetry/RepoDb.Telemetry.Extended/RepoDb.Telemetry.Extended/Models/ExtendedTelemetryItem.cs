@@ -84,9 +84,9 @@ namespace RepoDb.Telemetry.Extended
         public string ResultType { get; set; }
 
         /// <summary>
-        /// The result snapshot, when enabled and supported. Deferred results are never consumed.
+        /// The number of results (rows) of the operation, when it returns a materialized collection. Deferred results are never consumed.
         /// </summary>
-        public JsonElement? Result { get; set; }
+        public int? Result { get; set; }
 
         /// <summary>
         /// The original core severity, before mapping or enrichment.

@@ -169,7 +169,7 @@ namespace RepoDb.Telemetry.Extended
             extended.ResultType = result?.GetType().FullName;
             if (((ExtendedTelemetryOption)Option).CaptureResultValues)
             {
-                extended.Result = SnapshotValue(result);
+                extended.Result = (result as ICollection)?.Count;
             }
 
             if (result is ICollection collection)

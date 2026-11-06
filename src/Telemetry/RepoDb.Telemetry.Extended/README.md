@@ -45,7 +45,7 @@ Collection results expose `RowsReturned` without enumeration. Numeric results fr
 known write operations expose `RowsAffected`. Scalar values and deferred sequences
 leave row counts unknown. `Parameters` records parameter names, database types, directions,
 sizes, precision, scale, source metadata, nullability, and CLR value types. `ResultType`
-records the runtime result type. Parameter and materialized result values are enabled by default.
+records the runtime result type. Parameter values and the result count (`Result`, the number of rows of a materialized collection) are enabled by default.
 Set `CaptureParameterValues` and/or `CaptureResultValues` to false on `ExtendedTelemetryOption`
 to disable value capture. Built-in JSON metadata supports common scalar values and byte, string,
 int, and long arrays. Other materialized collections and dictionaries are traversed without

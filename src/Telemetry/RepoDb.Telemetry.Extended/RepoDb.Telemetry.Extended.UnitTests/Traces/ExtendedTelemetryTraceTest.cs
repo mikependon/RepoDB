@@ -233,7 +233,7 @@ namespace RepoDb.Telemetry.Extended.UnitTests
 
             // Act
             var captured = CaptureResult(trace,
-                42).Result.HasValue;
+                new List<int> { 1, 2 }).Result.HasValue;
 
             // Assert
             Assert.AreEqual(enabled,
@@ -261,10 +261,10 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         }
 
         /// <summary>
-        /// Verifies captures scalar result.
+        /// Verifies a scalar result is not counted.
         /// </summary>
         [TestMethod]
-        public void CapturesScalarResult()
+        public void ScalarResultIsNotCounted()
         {
             // Setup
             var trace = new ObservableExtendedTelemetryTrace();
@@ -275,8 +275,7 @@ namespace RepoDb.Telemetry.Extended.UnitTests
                 "ExecuteScalar");
 
             // Assert
-            Assert.AreEqual(42,
-                item.Result.Value.GetInt32());
+            Assert.IsNull(item.Result);
         }
 
         /// <summary>
@@ -299,7 +298,7 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         }
 
         /// <summary>
-        /// Verifies captures materialized rows.
+        /// Verifies counts the materialized rows as the result.
         /// </summary>
         [TestMethod]
         public void CapturesMaterializedRows()
@@ -314,7 +313,7 @@ namespace RepoDb.Telemetry.Extended.UnitTests
 
             // Assert
             Assert.AreEqual(2,
-                item.Result.Value.GetArrayLength());
+                item.Result);
         }
 
         /// <summary>
@@ -410,10 +409,10 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         }
 
         /// <summary>
-        /// Verifies null result is captured.
+        /// Verifies null result is not counted.
         /// </summary>
         [TestMethod]
-        public void NullResultIsCaptured()
+        public void NullResultIsNotCounted()
         {
             // Setup
             var trace = new ObservableExtendedTelemetryTrace();
@@ -424,15 +423,14 @@ namespace RepoDb.Telemetry.Extended.UnitTests
                 "Query");
 
             // Assert
-            Assert.AreEqual(JsonValueKind.Null,
-                item.Result.Value.ValueKind);
+            Assert.IsNull(item.Result);
         }
 
         /// <summary>
-        /// Verifies database null is captured.
+        /// Verifies database null is not counted.
         /// </summary>
         [TestMethod]
-        public void DatabaseNullIsCaptured()
+        public void DatabaseNullIsNotCounted()
         {
             // Setup
             var trace = new ObservableExtendedTelemetryTrace();
@@ -443,12 +441,11 @@ namespace RepoDb.Telemetry.Extended.UnitTests
                 "Query");
 
             // Assert
-            Assert.AreEqual(JsonValueKind.Null,
-                item.Result.Value.ValueKind);
+            Assert.IsNull(item.Result);
         }
 
         /// <summary>
-        /// Verifies nested deferred values remain unconsumed.
+        /// Verifies nested deferred values remain unconsumed while the outer collection is counted.
         /// </summary>
         [TestMethod]
         public void NestedDeferredValuesRemainUnconsumed()
@@ -462,15 +459,15 @@ namespace RepoDb.Telemetry.Extended.UnitTests
                 "Query");
 
             // Assert
-            Assert.AreEqual(JsonValueKind.Null,
-                item.Result.Value[0].ValueKind);
+            Assert.AreEqual(2,
+                item.Result);
         }
 
         /// <summary>
-        /// Verifies dictionary values are captured.
+        /// Verifies a dictionary result is counted by its entries.
         /// </summary>
         [TestMethod]
-        public void DictionaryValuesAreCaptured()
+        public void DictionaryResultIsCountedByItsEntries()
         {
             // Setup
             var trace = new ObservableExtendedTelemetryTrace();
@@ -483,55 +480,15 @@ namespace RepoDb.Telemetry.Extended.UnitTests
                 "Query");
 
             // Assert
-            Assert.AreEqual(42,
-                item.Result.Value.GetProperty("Id").GetInt32());
+            Assert.AreEqual(1,
+                item.Result);
         }
 
         /// <summary>
-        /// Verifies custom snapshot failure does not fail execution.
+        /// Verifies application rows are counted.
         /// </summary>
         [TestMethod]
-        public void CustomSnapshotFailureDoesNotFailExecution()
-        {
-            // Setup
-            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test") {
-                CaptureValue = value => throw new InvalidOperationException("Snapshot failed")
-            });
-
-            // Act
-            var item = CaptureResult(trace,
-                42);
-
-            // Assert
-            Assert.IsNull(item.Result);
-        }
-
-        /// <summary>
-        /// Verifies custom snapshot uses generated metadata.
-        /// </summary>
-        [TestMethod]
-        public void CustomSnapshotUsesGeneratedMetadata()
-        {
-            // Setup
-            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test") {
-                CaptureValue = value => JsonSerializer.SerializeToElement((int[])value,
-                TestValueJsonSerializerContext.Default.Int32Array)
-            });
-
-            // Act
-            var item = CaptureResult(trace,
-                new[] { 1, 2 });
-
-            // Assert
-            Assert.AreEqual(2,
-                item.Result.Value.GetArrayLength());
-        }
-
-        /// <summary>
-        /// Verifies application rows use generated metadata.
-        /// </summary>
-        [TestMethod]
-        public void ApplicationRowsUseGeneratedMetadata()
+        public void ApplicationRowsAreCounted()
         {
             // Setup
             var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test") {
@@ -547,22 +504,17 @@ namespace RepoDb.Telemetry.Extended.UnitTests
             // Act
             var item = CaptureResult(trace,
                 new List<TestResultRow> { row });
-            row.Name = "Changed";
 
             // Assert
-            Assert.AreEqual("Employee",
-                item.Result.Value[0].GetProperty("Name").GetString());
-            Assert.AreEqual(42,
-                item.Result.Value[0].GetProperty("Id").GetInt32());
-            Assert.IsFalse(item.Result.Value[0].TryGetProperty("Deferred",
-                out _));
+            Assert.AreEqual(1,
+                item.Result);
         }
 
         /// <summary>
-        /// Verifies unregistered application types are omitted.
+        /// Verifies a result that is not a collection is not counted.
         /// </summary>
         [TestMethod]
-        public void UnregisteredApplicationTypesAreOmitted()
+        public void NonCollectionResultIsNotCounted()
         {
             // Setup
             var trace = new ObservableExtendedTelemetryTrace();
@@ -574,8 +526,7 @@ namespace RepoDb.Telemetry.Extended.UnitTests
             });
 
             // Assert
-            Assert.AreEqual(JsonValueKind.Null,
-                item.Result.Value.ValueKind);
+            Assert.IsNull(item.Result);
         }
 
         /// <summary>

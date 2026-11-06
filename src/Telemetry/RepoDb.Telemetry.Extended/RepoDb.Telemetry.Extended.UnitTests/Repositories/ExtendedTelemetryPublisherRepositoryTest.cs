@@ -130,7 +130,7 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         [DataRow("Application", "\"PayrollSystem\"")]
         [DataRow("Elapsed", "320")]
         [DataRow("RowsAffected", "3")]
-        [DataRow("Result", "3")]
+        [DataRow("Result", "null")]
         [DataRow("ResultType", "\"System.Int32\"")]
         [DataRow("TraceLevel", "3")]
         [DataRow("Database", "\"Northwind\"")]
