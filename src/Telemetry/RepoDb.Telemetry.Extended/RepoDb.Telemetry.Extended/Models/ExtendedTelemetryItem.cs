@@ -69,6 +69,11 @@ namespace RepoDb.Telemetry.Extended
         public string Message { get; set; }
 
         /// <summary>
+        /// Gets or sets the change of the memory (the working set) of the process during the operation, or <c>null</c> if it is not recorded.
+        /// </summary>
+        public long? MemoryBytes { get; set; }
+
+        /// <summary>
         /// The number of command parameters.
         /// </summary>
         public int? ParameterCount { get; set; }
@@ -77,6 +82,11 @@ namespace RepoDb.Telemetry.Extended
         /// The command parameter metadata and optional value snapshots.
         /// </summary>
         public IList<TelemetryParameter> Parameters { get; set; }
+
+        /// <summary>
+        /// Gets or sets the bytes that the process has read during the operation, or <c>null</c> if they are not recorded.
+        /// </summary>
+        public long? ReadBytes { get; set; }
 
         /// <summary>
         /// The CLR type of the operation result.
@@ -127,6 +137,11 @@ namespace RepoDb.Telemetry.Extended
         /// The current distributed tracing trace identifier.
         /// </summary>
         public string TraceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the bytes that the process has written during the operation, or <c>null</c> if they are not recorded.
+        /// </summary>
+        public long? WriteBytes { get; set; }
 
         #endregion
     }

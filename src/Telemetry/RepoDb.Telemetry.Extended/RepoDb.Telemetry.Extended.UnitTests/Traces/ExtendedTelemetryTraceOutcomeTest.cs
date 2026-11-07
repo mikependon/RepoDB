@@ -355,6 +355,53 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         }
 
         /// <summary>
+        /// Verifies the memory and process I/O of the operation are recorded.
+        /// </summary>
+        [TestMethod]
+        public void RecordsTheMemoryAndTheIoOfTheOperation()
+        {
+            // Setup
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog(CreateContext());
+
+            // Act
+            trace.BeforeExecution(log);
+            trace.AfterExecution(new TestResultLog<int>(log,
+                1,
+                new ResourceUsage(4096, 10, 20)));
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
+            Assert.AreEqual(4096L, item.MemoryBytes);
+            Assert.AreEqual(10L, item.ReadBytes);
+            Assert.AreEqual(20L, item.WriteBytes);
+        }
+
+        /// <summary>
+        /// Verifies the memory and process I/O are left empty if they are not recorded.
+        /// </summary>
+        [TestMethod]
+        public void LeavesTheMemoryAndTheIoEmptyIfTheyAreNotRecorded()
+        {
+            // Setup
+            var trace = new ObservableExtendedTelemetryTrace(new ExtendedTelemetryOption("Test"));
+            var log = new TestCommandLog(CreateContext());
+
+            // Act
+            trace.BeforeExecution(log);
+            trace.AfterExecution(new TestResultLog<int>(log,
+                1));
+            var item = TraceTestHelper.GetItem(trace,
+                log);
+
+            // Assert
+            Assert.IsNull(item.MemoryBytes);
+            Assert.IsNull(item.ReadBytes);
+            Assert.IsNull(item.WriteBytes);
+        }
+
+        /// <summary>
         /// Verifies the message that the application gave is kept, and the level is an error even if the application gave another one.
         /// </summary>
         [TestMethod]

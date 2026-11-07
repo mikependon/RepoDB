@@ -51,6 +51,25 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         {
         }
 
+        /// <summary>
+        /// Creates a result of an operation that used memory and process I/O, paired with its command trace.
+        /// </summary>
+        /// <param name="log">The original command.</param>
+        /// <param name="result">The returned result.</param>
+        /// <param name="resourceUsage">The memory and process I/O used by the operation.</param>
+        internal TestResultLog(CancellableTraceLog log,
+            TResult result,
+            ResourceUsage resourceUsage)
+            : base(log.SessionId,
+                log.Key,
+                TimeSpan.FromMilliseconds(320),
+                result,
+                log,
+                null,
+                resourceUsage)
+        {
+        }
+
         #endregion
     }
 }

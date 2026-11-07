@@ -334,6 +334,41 @@ namespace RepoDb.Telemetry.Extended.UnitTests
         }
 
         /// <summary>
+        /// Verifies defaults memory and process I/O.
+        /// </summary>
+        [TestMethod]
+        public void DefaultsMemoryAndIo()
+        {
+            // Setup
+            var item = new ExtendedTelemetryItem();
+
+            // Assert
+            Assert.IsNull(item.MemoryBytes);
+            Assert.IsNull(item.ReadBytes);
+            Assert.IsNull(item.WriteBytes);
+        }
+
+        /// <summary>
+        /// Verifies keeps memory and process I/O.
+        /// </summary>
+        [TestMethod]
+        public void KeepsMemoryAndIo()
+        {
+            // Act
+            var item = new ExtendedTelemetryItem
+            {
+                MemoryBytes = 1,
+                ReadBytes = 2,
+                WriteBytes = 3
+            };
+
+            // Assert
+            Assert.AreEqual(1L, item.MemoryBytes);
+            Assert.AreEqual(2L, item.ReadBytes);
+            Assert.AreEqual(3L, item.WriteBytes);
+        }
+
+        /// <summary>
         /// Verifies inherits default item.
         /// </summary>
         [TestMethod]

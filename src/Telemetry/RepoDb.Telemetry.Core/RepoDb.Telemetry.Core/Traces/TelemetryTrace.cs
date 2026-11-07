@@ -191,6 +191,27 @@ namespace RepoDb.Telemetry.Core
             }
         }
 
+        /// <summary>
+        /// Completes the telemetry item with the memory and process I/O that were used by the operation. It does nothing more than
+        /// completing the item by default.
+        /// </summary>
+        /// <param name="item">The telemetry item being completed.</param>
+        /// <param name="result">The result of the operation (the default value if it failed).</param>
+        /// <param name="error">The exception that made the operation fail, or <c>null</c> if it succeeded.</param>
+        /// <param name="level">The level of the log of the operation.</param>
+        /// <param name="resourceUsage">The memory and process I/O used by the operation, or <c>null</c> if they are not recorded.</param>
+        protected virtual void CompleteTelemetryItem(TelemetryItem item,
+            object result,
+            Exception error,
+            TraceLevel level,
+            ResourceUsage resourceUsage)
+        {
+            CompleteTelemetryItem(item,
+                result,
+                error,
+                level);
+        }
+
         #endregion
 
         #region Private Methods
@@ -390,7 +411,8 @@ namespace RepoDb.Telemetry.Core
                 CompleteTelemetryItem(_beforeTraceLogs[log.SessionId].Item2,
                     log.Result,
                     log.Error,
-                    log.Level);
+                    log.Level,
+                    log.ResourceUsage);
             }
         }
 

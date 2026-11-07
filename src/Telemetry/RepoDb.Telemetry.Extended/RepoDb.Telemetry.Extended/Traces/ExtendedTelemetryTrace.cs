@@ -158,6 +158,31 @@ namespace RepoDb.Telemetry.Extended
         }
 
         /// <summary>
+        /// Records the memory and process I/O used by the operation, together with the final severity, error, and result metadata.
+        /// </summary>
+        /// <param name="item">The event being completed.</param>
+        /// <param name="result">The operation result (the default value if the operation has failed).</param>
+        /// <param name="error">The exception that made the operation fail, or <c>null</c> if it succeeded.</param>
+        /// <param name="level">The level of the log of the operation.</param>
+        /// <param name="resourceUsage">The memory and process I/O used by the operation, or <c>null</c> if they are not recorded.</param>
+        protected override void CompleteTelemetryItem(TelemetryItem item,
+            object result,
+            Exception error,
+            TraceLevel level,
+            ResourceUsage resourceUsage)
+        {
+            var extended = (ExtendedTelemetryItem)item;
+            extended.MemoryBytes = resourceUsage?.MemoryBytes;
+            extended.ReadBytes = resourceUsage?.ReadBytes;
+            extended.WriteBytes = resourceUsage?.WriteBytes;
+            base.CompleteTelemetryItem(item,
+                result,
+                error,
+                level,
+                resourceUsage);
+        }
+
+        /// <summary>
         /// Records known row counts without enumerating or consuming operation results.
         /// </summary>
         /// <param name="item">The event being completed.</param>
