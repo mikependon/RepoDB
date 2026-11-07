@@ -30,6 +30,13 @@ namespace RepoDb
         /// </summary>
         private readonly Stopwatch _watch = Stopwatch.StartNew();
 
+        /// <summary>
+        /// The reading of the memory and the process I/O when the execution started, or <c>null</c> if they are not recorded.
+        /// </summary>
+        private readonly ResourceUsageSnapshot? _usageStart = GlobalConfiguration.Options.TraceResourceUsage
+            ? ResourceUsageSnapshot.Capture()
+            : null;
+
         #endregion
 
         #region Properties
@@ -59,7 +66,7 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="key"></param>
         /// <param name="command"></param>
@@ -74,6 +81,17 @@ namespace RepoDb
                     GetParameters(command),
                     TraceContext.Capture(command)));
         }
+
+        /// <summary>
+        /// Gets the memory and the process I/O that were used since the execution started.
+        /// </summary>
+        /// <returns>The usage, or <c>null</c> if it is not recorded.</returns>
+        public ResourceUsage GetResourceUsage() =>
+            _usageStart.HasValue ? ResourceUsageSnapshot.Capture().Subtract(_usageStart.Value) : null;
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// 

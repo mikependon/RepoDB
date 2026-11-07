@@ -260,7 +260,8 @@ namespace RepoDb
                 result.Elapsed,
                 error == null ? value : default,
                 result.CancellableTraceLog,
-                error);
+                error,
+                result.GetResourceUsage());
 
             var observerError = NotifyAfterExecution(trace,
                 log);
@@ -313,7 +314,8 @@ namespace RepoDb
                 result.Elapsed,
                 error == null ? value : default,
                 result.CancellableTraceLog,
-                error);
+                error,
+                result.GetResourceUsage());
 
             var observerError = await NotifyAfterExecutionAsync(trace,
                 log,

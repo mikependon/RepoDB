@@ -43,14 +43,17 @@ namespace RepoDb
         /// <param name="result">The actual result of the actual execution.</param>
         /// <param name="beforeExecutionLog">The log that was written before the execution. The context of the execution is taken from it.</param>
         /// <param name="error">The exception that made the execution fail, or <c>null</c> if it succeeded.</param>
+        /// <param name="resourceUsage">The memory and the process I/O used during the execution, or <c>null</c> if they are not recorded.</param>
         internal ResultTraceLog(Guid sessionId,
             string key,
             TimeSpan? executionTime,
             TResult result,
             CancellableTraceLog beforeExecutionLog,
-            Exception error)
+            Exception error,
+            ResourceUsage resourceUsage = null)
             : base(sessionId, key, beforeExecutionLog?.Context, GetLevel(executionTime, error))
         {
+            ResourceUsage = resourceUsage;
             Result = result;
             BeforeExecutionLog = beforeExecutionLog;
             Error = error;
@@ -84,6 +87,12 @@ namespace RepoDb
         /// Gets the actual length of the actual execution.
         /// </summary>
         public TimeSpan ExecutionTime { get; }
+
+        /// <summary>
+        /// Gets the memory and the process I/O that were used during the execution, or <c>null</c> if
+        /// <see cref="RepoDb.Options.GlobalConfigurationOptions.TraceResourceUsage"/> is not enabled.
+        /// </summary>
+        public ResourceUsage ResourceUsage { get; }
 
         /// <summary>
         /// Gets the actual result of the actual execution.

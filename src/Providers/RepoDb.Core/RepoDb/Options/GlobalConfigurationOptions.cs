@@ -50,6 +50,11 @@ namespace RepoDb.Options
         public KeyColumnReturnBehavior KeyColumnReturnBehavior { get; set; } = KeyColumnReturnBehavior.IdentityOrElsePrimary;
 
         /// <summary>
+        /// Gets or sets whether the memory and process I/O used by an execution are recorded in the <see cref="ResultTraceLog{TResult}"/>.
+        /// </summary>
+        public bool TraceResourceUsage { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets the duration threshold for trace warnings, or <c>null</c> to disable them.
         /// </summary>
         public TimeSpan? TraceWarningThreshold { get; set; } = TimeSpan.FromSeconds(1);

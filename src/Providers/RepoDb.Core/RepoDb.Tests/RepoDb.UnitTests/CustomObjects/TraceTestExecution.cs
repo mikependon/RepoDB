@@ -26,6 +26,7 @@ namespace RepoDb.UnitTests.CustomObjects
 
         private readonly ConversionType _conversionType = GlobalConfiguration.Options.ConversionType;
         private readonly bool _useGlobalTraces = GlobalConfiguration.Options.UseRegisteredGlobalTraces;
+        private readonly bool _traceResourceUsage = GlobalConfiguration.Options.TraceResourceUsage;
         private readonly TimeSpan? _warningThreshold = GlobalConfiguration.Options.TraceWarningThreshold;
         private readonly IList<ITrace> _globalTraces = new List<ITrace>();
 
@@ -170,6 +171,7 @@ namespace RepoDb.UnitTests.CustomObjects
             }
             GlobalConfiguration.Options.ConversionType = _conversionType;
             GlobalConfiguration.Options.UseRegisteredGlobalTraces = _useGlobalTraces;
+            GlobalConfiguration.Options.TraceResourceUsage = _traceResourceUsage;
             GlobalConfiguration.Options.TraceWarningThreshold = _warningThreshold;
             DbSettingMapper.Add<CustomTracedDbConnection>(new CustomDbSetting(), true);
             Activity.Dispose();
