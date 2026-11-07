@@ -64,7 +64,7 @@ namespace RepoDb.Schema
         #region Private Methods
 
         /// <summary>
-        /// Reports the primary key columns that are nullable. Most databases refuse them, but some (i.e.: SQLite) allow them, so it is a warning.
+        /// Reports the primary key columns that are nullable. Most databases refuse them, but some allow them, so it is a warning.
         /// </summary>
         /// <param name="table">The table to be checked.</param>
         /// <param name="findings">The findings that receive the problems.</param>

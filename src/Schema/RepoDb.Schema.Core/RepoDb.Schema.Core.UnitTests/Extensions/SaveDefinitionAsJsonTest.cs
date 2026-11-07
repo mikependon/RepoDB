@@ -447,6 +447,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             var connection = new CustomDbConnection();
             Invoice.Columns[1].Field = new DbField("Name", false, false, true, typeof(string), 100, null, null, "varchar", false, "Other");
+            Invoice.Columns[1].IsUnicode = null;
 
             // Act
             connection.SaveDefinitionAsJson("sales.Invoice", Filename);

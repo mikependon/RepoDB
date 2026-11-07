@@ -20,7 +20,7 @@ namespace RepoDb.Schema
     /// An <see cref="ISchemaComposer"/> that composes the SQL statements, in the dialect of MariaDB, that create the objects of a table.
     /// The column types are mapped on a best-effort basis, so the schema can come from a MariaDB database or from another database engine.
     /// </summary>
-    public class MariaDbSchemaComposer : ISchemaComposer, ISchemaCreationSupport, ICheckConstraintSupport, IColumnDefaultSupport, IConstraintCheckSupport
+    public class MariaDbSchemaComposer : ISchemaComposer, ISchemaCreationSupport, ISchemaValueSupport, ICheckConstraintSupport, IColumnDefaultSupport, IConstraintCheckSupport
     {
         #region Private Variables
 
@@ -45,6 +45,11 @@ namespace RepoDb.Schema
         /// Gets the prefix of the parameters of the destination database.
         /// </summary>
         public string SchemaParameterPrefix => "@";
+
+        /// <summary>
+        /// Gets the formatter that writes the typed values in the format of MariaDB.
+        /// </summary>
+        public ISchemaValueFormatter ValueFormatter { get; } = new MariaDbSchemaValueFormatter();
 
         #endregion
 
@@ -91,7 +96,9 @@ namespace RepoDb.Schema
         /// <param name="checkConstraint">The check constraint of the source table.</param>
         /// <returns>The reason, or <c>null</c> if the check constraint can be created.</returns>
         public string GetUnsupportedReason(CheckConstraintInfo checkConstraint) =>
-            SchemaExpression.GetNonDeterministicReason(checkConstraint, "MariaDB");
+            SchemaExpression.GetNonDeterministicReason(checkConstraint,
+                "MariaDB",
+                SchemaDialectMapper.GetAll(MariaDbSchemaDialect.Instance));
 
         /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.

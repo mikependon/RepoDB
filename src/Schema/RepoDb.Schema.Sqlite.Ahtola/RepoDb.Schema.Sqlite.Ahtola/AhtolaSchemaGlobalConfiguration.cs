@@ -28,6 +28,8 @@ namespace RepoDb.Schema.Sqlite.Ahtola
         {
             globalConfiguration.UseAhtola();
             SchemaComposerMapper.Add<SqliteConnection>(new AhtolaSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<SqliteConnection>().Provider,
+                AhtolaSchemaDialect.Instance);
             return globalConfiguration;
         }
 

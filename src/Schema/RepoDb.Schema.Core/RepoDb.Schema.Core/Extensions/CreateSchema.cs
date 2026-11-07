@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// Creates a schema in a database for the <c>CreateSchema</c> extension methods of the providers that support the schemas: the schema is created only if it does not exist yet, so
     /// calling it again is not an error. The provider gives its own statements (a schema cannot be a parameter of a statement, so its name is quoted by the provider into the statement).
     /// </summary>
-    internal static class CreateSchemaExtension
+    public static class CreateSchemaExtension
     {
         #region Constants
 

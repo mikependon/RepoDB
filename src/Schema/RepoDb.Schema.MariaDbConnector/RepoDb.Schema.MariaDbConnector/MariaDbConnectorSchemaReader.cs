@@ -655,7 +655,8 @@ namespace RepoDb.Schema
                 Field = field,
                 Ordinal = Int(r, "Ordinal"),
                 DefaultExpression = defaultDefinition,
-                DefaultValue = SchemaDefaultValue.Classify(defaultDefinition),
+                DefaultValue = SchemaDefaultValue.Classify(defaultDefinition,
+                    MariaDbConnectorSchemaDialect.Instance),
                 ComputedExpression = Text(r, "ComputedDefinition"),
                 Collation = Text(r, "Collation"),
                 Comment = Text(r, "Comment")

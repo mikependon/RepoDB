@@ -28,6 +28,8 @@ namespace RepoDb.Schema.Sqlite.Microsoft
         {
             globalConfiguration.UseSqlite();
             SchemaComposerMapper.Add<SqliteConnection>(new SqliteSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<SqliteConnection>().Provider,
+                SqliteSchemaDialect.Instance);
             return globalConfiguration;
         }
 

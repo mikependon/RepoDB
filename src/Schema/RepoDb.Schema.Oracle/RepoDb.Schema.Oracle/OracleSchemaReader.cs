@@ -657,7 +657,8 @@ namespace RepoDb.Schema
                 IdentitySeed = identitySeed,
                 IdentityIncrement = NullableLong(r, "IdentityIncrement"),
                 DefaultExpression = string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition,
-                DefaultValue = SchemaDefaultValue.Classify(string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition),
+                DefaultValue = SchemaDefaultValue.Classify(string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition,
+                    OracleSchemaDialect.Instance),
                 ComputedExpression = Text(r, "ComputedDefinition")?.Trim(),
                 Collation = Text(r, "CollationName")
             }, r);

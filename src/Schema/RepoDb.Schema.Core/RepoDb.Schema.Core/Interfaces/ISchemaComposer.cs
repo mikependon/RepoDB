@@ -124,7 +124,7 @@ namespace RepoDb.Schema
 
         /// <summary>
         /// Composes the statement that checks whether a foreign key exists in a table of the destination database.
-        /// A database that can not add a foreign key to a table that exists (i.e.: SQLite) does not compose it, so the foreign keys of the tables that exist are not aligned.
+        /// A database that can not add a foreign key to a table that exists does not compose it, so the foreign keys of the tables that exist are not aligned.
         /// </summary>
         /// <param name="tableName">The name of the table (see <see cref="ComposeName"/>).</param>
         /// <param name="foreignKeyName">The name of the foreign key.</param>

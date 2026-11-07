@@ -28,6 +28,8 @@ namespace RepoDb.Schema.Vertica
         {
             globalConfiguration.UseVertica();
             SchemaComposerMapper.Add<VerticaConnection>(new VerticaSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<VerticaConnection>().Provider,
+                VerticaSchemaDialect.Instance);
             return globalConfiguration;
         }
 

@@ -28,6 +28,8 @@ namespace RepoDb.Schema.DuckDb
         {
             globalConfiguration.UseDuckDb();
             SchemaComposerMapper.Add<DuckDBConnection>(new DuckDbSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<DuckDBConnection>().Provider,
+                DuckDbSchemaDialect.Instance);
             return globalConfiguration;
         }
 

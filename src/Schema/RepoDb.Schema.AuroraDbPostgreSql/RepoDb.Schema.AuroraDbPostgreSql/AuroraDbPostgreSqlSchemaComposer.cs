@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from a PostgreSQL database or from another database engine.
     /// The collations are not composed, as they are specific to the database that they came from.
     /// </summary>
-    public class AuroraDbPostgreSqlSchemaComposer : ISchemaComposer, ISchemaCreationSupport, IConstraintCheckSupport
+    public class AuroraDbPostgreSqlSchemaComposer : ISchemaComposer, ISchemaCreationSupport, ISchemaValueSupport, IConstraintCheckSupport
     {
         #region Private Variables
 
@@ -46,6 +46,11 @@ namespace RepoDb.Schema
         /// Gets the prefix of the parameters of the destination database.
         /// </summary>
         public string SchemaParameterPrefix => "@";
+
+        /// <summary>
+        /// Gets the formatter that writes the typed values and the kinds of default values in the format of Aurora PostgreSQL.
+        /// </summary>
+        public ISchemaValueFormatter ValueFormatter { get; } = new AuroraDbPostgreSqlSchemaValueFormatter();
 
         #endregion
 

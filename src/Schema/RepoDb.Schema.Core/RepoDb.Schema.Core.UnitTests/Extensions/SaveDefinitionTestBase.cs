@@ -50,7 +50,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             Invoice.Columns.Add(new ColumnInfo
             {
                 Field = new DbField("Name", false, false, true, typeof(string), 100, null, null, "nvarchar", false, "SqlServer"),
-                Ordinal = 1, Collation = "Latin1_General_100_CI_AS"
+                Ordinal = 1, Collation = "Latin1_General_100_CI_AS", IsUnicode = true, CharacterSet = "UTF-16", LengthUnit = "utf16CodeUnits"
             });
             Invoice.PrimaryKey = new PrimaryKeyInfo("PK_Invoice") { Columns = new[] { "Name", "Amount" }, IsClustered = false };
             Invoice.UniqueConstraints.Add(new UniqueConstraintInfo("UQ_Invoice") { Columns = new[] { "Name", "Amount" } });

@@ -664,17 +664,18 @@ namespace RepoDb.Schema
                 defaultDefinition != null,
                 Provider);
 
-            return SchemaColumnMetadata.Apply(new ColumnInfo
+            return AuroraDbPostgreSqlSchemaColumnMetadata.Apply(SchemaColumnMetadata.Apply(new ColumnInfo
             {
                 Field = field,
                 Ordinal = Int(r, "Ordinal"),
                 DefaultExpression = defaultDefinition,
-                DefaultValue = SchemaDefaultValue.Classify(defaultDefinition),
+                DefaultValue = SchemaDefaultValue.Classify(defaultDefinition,
+                    AuroraDbPostgreSqlSchemaDialect.Instance),
                 IdentitySeed = NullableLong(r, "IdentitySeed"),
                 IdentityIncrement = NullableLong(r, "IdentityIncrement"),
                 ComputedExpression = Text(r, "ComputedDefinition"),
                 Comment = Text(r, "Comment")
-            }, r);
+            }, r));
         }
 
         /// <summary>

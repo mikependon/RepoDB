@@ -28,6 +28,8 @@ namespace RepoDb.Schema.CockroachDb
         {
             globalConfiguration.UseCockroachDb();
             SchemaComposerMapper.Add<CockroachDbConnection>(new CockroachDbSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<CockroachDbConnection>().Provider,
+                CockroachDbSchemaDialect.Instance);
             return globalConfiguration;
         }
 

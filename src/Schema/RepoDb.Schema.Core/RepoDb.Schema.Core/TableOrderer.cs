@@ -17,7 +17,7 @@ namespace RepoDb.Schema
     /// A class that orders the tables by the foreign keys that they have, and builds the relationships between them.
     /// It is shared by the schema readers, as only the way that a table is identified is different between the databases.
     /// </summary>
-    internal static class TableOrderer
+    public static class TableOrderer
     {
         #region Public Methods
 
@@ -30,7 +30,7 @@ namespace RepoDb.Schema
         /// <param name="tableKey">Gets the key that identifies a table (the same table must always have the same key).</param>
         /// <param name="referenceKey">Gets the key of a table from the identity that a foreign key uses to reference it (see <see cref="ForeignKeyInfo.ReferencedTable"/>).</param>
         /// <returns>The ordered relationships, one per table.</returns>
-        internal static IList<RelationshipInfo> Order(IList<TableSchema> schemas,
+        public static IList<RelationshipInfo> Order(IList<TableSchema> schemas,
             Func<TableSchema, string> tableKey,
             Func<TableInfo, string> referenceKey)
         {

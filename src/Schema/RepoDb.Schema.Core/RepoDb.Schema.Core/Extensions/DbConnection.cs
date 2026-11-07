@@ -346,6 +346,9 @@ namespace RepoDb.Schema
         {
             SchemaExpressionAdapter.Adapt(table,
                 setting);
+            SchemaDefaultAdapter.Adapt(table,
+                composer,
+                setting);
             // The default values that the destination can not create are not left out here (the composer does not write them): they are reported
             if (composer is IColumnDefaultSupport defaultSupport)
             {

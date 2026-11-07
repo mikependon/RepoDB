@@ -20,7 +20,7 @@ namespace RepoDb.Schema
     /// An <see cref="ISchemaComposer"/> that composes the SQL statements, in the dialect of MySQL, that create the objects of a table.
     /// The column types are mapped on a best-effort basis, so the schema can come from a MySQL database or from another database engine.
     /// </summary>
-    public class MySqlConnectorSchemaComposer : ISchemaComposer, ISchemaCreationSupport, ICheckConstraintSupport, IColumnDefaultSupport, IConstraintCheckSupport
+    public class MySqlConnectorSchemaComposer : ISchemaComposer, ISchemaCreationSupport, ISchemaValueSupport, ICheckConstraintSupport, IColumnDefaultSupport, IConstraintCheckSupport
     {
         #region Private Variables
 
@@ -45,6 +45,11 @@ namespace RepoDb.Schema
         /// Gets the prefix of the parameters of the destination database.
         /// </summary>
         public string SchemaParameterPrefix => "@";
+
+        /// <summary>
+        /// Gets the formatter that writes the typed values in the format of MySQL (MySqlConnector).
+        /// </summary>
+        public ISchemaValueFormatter ValueFormatter { get; } = new MySqlConnectorSchemaValueFormatter();
 
         #endregion
 
@@ -91,7 +96,9 @@ namespace RepoDb.Schema
         /// <param name="checkConstraint">The check constraint of the source table.</param>
         /// <returns>The reason, or <c>null</c> if the check constraint can be created.</returns>
         public string GetUnsupportedReason(CheckConstraintInfo checkConstraint) =>
-            SchemaExpression.GetNonDeterministicReason(checkConstraint, "MySQL");
+            SchemaExpression.GetNonDeterministicReason(checkConstraint,
+                "MySQL",
+                SchemaDialectMapper.GetAll(MySqlConnectorSchemaDialect.Instance));
 
         /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.

@@ -659,7 +659,8 @@ namespace RepoDb.Schema
                 Field = field,
                 Ordinal = Int(r, "Ordinal"),
                 DefaultExpression = isDefault ? expression : null,
-                DefaultValue = SchemaDefaultValue.Classify(isDefault ? expression : null),
+                DefaultValue = SchemaDefaultValue.Classify(isDefault ? expression : null,
+                    ClickHouseSchemaDialect.Instance),
                 ComputedExpression = isComputed ? expression : null
             }, r);
         }

@@ -28,6 +28,8 @@ namespace RepoDb.Schema.Oracle
         {
             globalConfiguration.UseOracle();
             SchemaComposerMapper.Add<OracleConnection>(new OracleSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<OracleConnection>().Provider,
+                OracleSchemaDialect.Instance);
             return globalConfiguration;
         }
 

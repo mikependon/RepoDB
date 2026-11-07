@@ -684,7 +684,8 @@ namespace RepoDb.Schema
                 IdentitySeed = NullableLong(r, "IdentitySeed"),
                 IdentityIncrement = NullableLong(r, "IdentityIncrement"),
                 DefaultExpression = string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition,
-                DefaultValue = SchemaDefaultValue.Classify(string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition)
+                DefaultValue = SchemaDefaultValue.Classify(string.IsNullOrWhiteSpace(defaultDefinition) ? null : defaultDefinition,
+                    DuckDbSchemaDialect.Instance)
             }, r);
         }
 

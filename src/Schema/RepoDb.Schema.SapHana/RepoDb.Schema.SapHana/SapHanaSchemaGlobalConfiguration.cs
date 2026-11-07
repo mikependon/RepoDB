@@ -28,6 +28,8 @@ namespace RepoDb.Schema.SapHana
         {
             globalConfiguration.UseSapHana();
             SchemaComposerMapper.Add<HanaConnection>(new SapHanaSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<HanaConnection>().Provider,
+                SapHanaSchemaDialect.Instance);
             return globalConfiguration;
         }
 

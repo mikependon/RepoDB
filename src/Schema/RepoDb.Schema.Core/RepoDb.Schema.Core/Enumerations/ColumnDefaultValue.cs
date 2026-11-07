@@ -11,7 +11,7 @@ namespace RepoDb.Schema.Enumerations
     /// <summary>
     /// An enumeration that is used to define what the default value of a column is, independent of the database that it is read from. The schema reader sets it
     /// when the schema is extracted (see <see cref="SchemaDefaultValue.Classify"/>), so the composer of another database can create the equivalent default value:
-    /// <c>getdate()</c> of SQL Server, <c>now()</c> of PostgreSQL and <c>SYSDATE</c> of Oracle are all <see cref="CurrentTimestamp"/>.
+    /// <c>getdate()</c>, <c>now()</c> and <c>SYSDATE</c> of the different databases are all <see cref="CurrentTimestamp"/>.
     /// </summary>
     public enum ColumnDefaultValue
     {

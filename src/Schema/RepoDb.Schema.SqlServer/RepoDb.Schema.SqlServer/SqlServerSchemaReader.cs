@@ -669,18 +669,20 @@ namespace RepoDb.Schema
                 Text(r, "DefaultDefinition") != null,
                 Provider);
 
-            return SchemaColumnMetadata.Apply(new ColumnInfo
+            return SqlServerSchemaColumnMetadata.Apply(SchemaColumnMetadata.Apply(new ColumnInfo
             {
                 Field = field,
                 Ordinal = Int(r, "Ordinal"),
                 DefaultExpression = Text(r, "DefaultDefinition"),
-                DefaultValue = SchemaDefaultValue.Classify(Text(r, "DefaultDefinition")),
+                DefaultValue = SchemaDefaultValue.Classify(Text(r, "DefaultDefinition"),
+                    SqlServerSchemaDialect.Instance),
                 IdentitySeed = NullableLong(r, "IdentitySeed"),
                 IdentityIncrement = NullableLong(r, "IdentityIncrement"),
                 ComputedExpression = Text(r, "ComputedDefinition"),
                 Collation = Text(r, "Collation"),
                 Comment = Text(r, "Comment")
-            }, r);
+            }, r),
+                r);
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// A class that resolves the names of the indexes that are going to be created in a destination database where the name of an index must be unique in the whole schema
     /// (or database), see <see cref="RepoDb.Interfaces.IDbSetting.AreIndexNamesUniquePerSchema"/>. The source database may allow the same name for the indexes of different tables
-    /// (i.e.: <c>PostalCode</c> in <c>Customers</c> and <c>Employees</c> of SQL Server): the index whose name is already used is created with the name of its table as a prefix
+    /// (i.e.: <c>PostalCode</c> in <c>Customers</c> and <c>Employees</c> of a database): the index whose name is already used is created with the name of its table as a prefix
     /// (i.e.: <c>Employees_PostalCode</c>), so it is not lost.
     /// </summary>
     internal static class IndexNameResolver
@@ -53,7 +53,7 @@ namespace RepoDb.Schema
                 return;
             }
 
-            var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var used = GetTableNames(tables);
             foreach (var table in tables)
             {
                 RemoveRenamedIndexes(table,
@@ -105,7 +105,7 @@ namespace RepoDb.Schema
                 return;
             }
 
-            var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var used = GetTableNames(tables);
             foreach (var table in tables)
             {
                 await RemoveRenamedIndexesAsync(table,
@@ -140,6 +140,16 @@ namespace RepoDb.Schema
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Gets the names of the tables of the plan, as the names that an index can not take: the tables and the indexes share the names of the destination database where the name of an index is unique in the whole schema.
+        /// </summary>
+        /// <param name="tables">The state of the tables.</param>
+        /// <returns>The names that are used, without case.</returns>
+        private static HashSet<string> GetTableNames(IEnumerable<PlanTable> tables) =>
+            new HashSet<string>(tables.Select(table => table.Schema.Table.Name),
+                StringComparer.OrdinalIgnoreCase);
+
 
         /// <summary>
         /// Removes from the missing indexes of the table that is aligned the indexes that the table already has under the name that an earlier copy gave them

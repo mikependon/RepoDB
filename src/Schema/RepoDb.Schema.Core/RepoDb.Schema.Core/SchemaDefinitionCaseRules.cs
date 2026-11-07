@@ -14,8 +14,8 @@ using RepoDb.Schema.Models;
 namespace RepoDb.Schema
 {
     /// <summary>
-    /// Warns about the names of a table that differ only by case (i.e.: <c>Name</c> and <c>name</c>). Some databases (i.e.: SQL Server and MySQL)
-    /// treat them as the same name, so the table could not be created there, while others (i.e.: PostgreSQL) keep them apart. It is only a warning for that reason.
+    /// Warns about the names of a table that differ only by case (i.e.: <c>Name</c> and <c>name</c>). Some databases
+    /// treat them as the same name, so the table could not be created there, while others keep them apart. It is only a warning for that reason.
     /// </summary>
     internal static class SchemaDefinitionCaseRules
     {

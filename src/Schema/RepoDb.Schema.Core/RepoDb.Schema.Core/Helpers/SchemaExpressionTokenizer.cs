@@ -46,21 +46,16 @@ namespace RepoDb.Schema
             char.IsLetter(value) || value == '_';
 
         /// <summary>
-        /// Reads the operator at the position: the cast operator is one token and any other character is a token by itself.
+        /// Reads the operator at the position, which is a token by itself.
         /// </summary>
         /// <param name="expression">The SQL expression.</param>
         /// <param name="position">The position to read from, which is moved after the token.</param>
         /// <returns>The token.</returns>
         private static SchemaExpressionToken ReadOperator(string expression,
-            ref int position)
-        {
-            var length = expression[position] == ':' && position + 1 < expression.Length && expression[position + 1] == ':' ? 2 : 1;
-            var token = new SchemaExpressionToken(SchemaExpressionTokenKind.Other,
-                expression.Substring(position,
-                    length));
-            position += length;
-            return token;
-        }
+            ref int position) =>
+            new SchemaExpressionToken(SchemaExpressionTokenKind.Other,
+                expression.Substring(position++,
+                    1));
 
         /// <summary>
         /// Reads a text between quotes, where a doubled closing quote is a quote of the text. A text that is not closed is read, to the end, as any other text.
@@ -111,7 +106,7 @@ namespace RepoDb.Schema
         /// <returns>The token.</returns>
         private static SchemaExpressionToken ReadToken(string expression,
             ref int position,
-            IReadOnlyList<(char Open, char Close)> quotes)
+            IReadOnlyList<SchemaIdentifierQuote> quotes)
         {
             var current = expression[position];
             foreach (var quote in quotes)
@@ -191,7 +186,7 @@ namespace RepoDb.Schema
         /// <param name="quotes">The identifier quotes of the source database.</param>
         /// <returns>The tokens of the expression.</returns>
         public static IList<SchemaExpressionToken> Tokenize(string expression,
-            IReadOnlyList<(char Open, char Close)> quotes)
+            IReadOnlyList<SchemaIdentifierQuote> quotes)
         {
             var tokens = new List<SchemaExpressionToken>();
             var position = 0;

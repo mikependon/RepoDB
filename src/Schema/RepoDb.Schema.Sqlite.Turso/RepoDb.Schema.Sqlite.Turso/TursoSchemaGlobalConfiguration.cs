@@ -28,6 +28,8 @@ namespace RepoDb.Schema.Sqlite.Turso
         {
             globalConfiguration.UseTurso();
             SchemaComposerMapper.Add<SqliteConnection>(new TursoSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<SqliteConnection>().Provider,
+                TursoSchemaDialect.Instance);
             return globalConfiguration;
         }
 

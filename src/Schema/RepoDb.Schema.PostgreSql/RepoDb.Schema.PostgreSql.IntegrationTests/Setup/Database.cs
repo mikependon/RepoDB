@@ -57,6 +57,10 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests.Setup
                 .Setup()
                 .UsePostgreSqlSchema();
 
+            // The definitions of the tests come from SQL Server, so its dialect is known
+            SchemaDialectMapper.Add("MSSQL",
+                SqlServerSchemaDialect.Instance);
+
             // Create databases, the source tables and the target schemas
             CreateDatabases();
             CreateSourceTables();
