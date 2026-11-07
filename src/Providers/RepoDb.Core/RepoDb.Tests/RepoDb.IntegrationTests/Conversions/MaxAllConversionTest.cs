@@ -105,13 +105,15 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnSqlConnectionMaxAllViaTEntityWithStrictConversionOnNoRows()
+        public void TestSqlConnectionMaxAllViaTEntityStrictConversionOnNoRowsReturnsNull()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
+                // Act
+                var result = connection.MaxAll<IdentityTable>(e => e.ColumnInt);
+
                 // Assert
-                Assert.Throws<InvalidCastException>(() =>
-                    connection.MaxAll<IdentityTable>(e => e.ColumnInt));
+                Assert.IsNull(result);
             }
         }
 
@@ -296,14 +298,16 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnSqlConnectionMaxAllViaTableNameWithStrictConversionOnNoRows()
+        public void TestSqlConnectionMaxAllViaTableNameStrictConversionOnNoRowsReturnsNull()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
+                // Act
+                var result = connection.MaxAll(ClassMappedNameCache.Get<IdentityTable>(),
+                        new Field("ColumnInt"));
+
                 // Assert
-                Assert.Throws<InvalidCastException>(() =>
-                    connection.MaxAll(ClassMappedNameCache.Get<IdentityTable>(),
-                        new Field("ColumnInt")));
+                Assert.IsNull(result);
             }
         }
 

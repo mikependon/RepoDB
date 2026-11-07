@@ -105,13 +105,15 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnSqlConnectionMinAllViaTEntityWithStrictConversionOnNoRows()
+        public void TestSqlConnectionMinAllViaTEntityStrictConversionOnNoRowsReturnsNull()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
+                // Act
+                var result = connection.MinAll<IdentityTable>(e => e.ColumnInt);
+
                 // Assert
-                Assert.Throws<InvalidCastException>(() =>
-                    connection.MinAll<IdentityTable>(e => e.ColumnInt));
+                Assert.IsNull(result);
             }
         }
 
@@ -276,14 +278,16 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnSqlConnectionMinAllViaTableNameWithStrictConversionOnNoRows()
+        public void TestSqlConnectionMinAllViaTableNameStrictConversionOnNoRowsReturnsNull()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
+                // Act
+                var result = connection.MinAll(ClassMappedNameCache.Get<IdentityTable>(),
+                        new Field("ColumnInt"));
+
                 // Assert
-                Assert.Throws<InvalidCastException>(() =>
-                    connection.MinAll(ClassMappedNameCache.Get<IdentityTable>(),
-                        new Field("ColumnInt")));
+                Assert.IsNull(result);
             }
         }
 

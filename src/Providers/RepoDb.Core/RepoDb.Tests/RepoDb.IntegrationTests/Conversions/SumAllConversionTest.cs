@@ -105,13 +105,15 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnSqlConnectionSumAllViaTEntityWithStrictConversionOnNoRows()
+        public void TestSqlConnectionSumAllViaTEntityStrictConversionOnNoRowsReturnsNull()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
+                // Act
+                var result = connection.SumAll<IdentityTable>(e => e.ColumnInt);
+
                 // Assert
-                Assert.Throws<InvalidCastException>(() =>
-                    connection.SumAll<IdentityTable>(e => e.ColumnInt));
+                Assert.IsNull(result);
             }
         }
 
@@ -276,14 +278,16 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnSqlConnectionSumAllViaTableNameWithStrictConversionOnNoRows()
+        public void TestSqlConnectionSumAllViaTableNameStrictConversionOnNoRowsReturnsNull()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
+                // Act
+                var result = connection.SumAll(ClassMappedNameCache.Get<IdentityTable>(),
+                        new Field("ColumnInt"));
+
                 // Assert
-                Assert.Throws<InvalidCastException>(() =>
-                    connection.SumAll(ClassMappedNameCache.Get<IdentityTable>(),
-                        new Field("ColumnInt")));
+                Assert.IsNull(result);
             }
         }
 
