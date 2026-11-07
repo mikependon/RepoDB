@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from a CockroachDB database or from another database engine.
     /// The collations are not composed, as they are specific to the database that they came from.
     /// </summary>
-    public class CockroachDbSchemaComposer : ISchemaComposer, ISchemaCreationSupport, ICheckConstraintSupport
+    public class CockroachDbSchemaComposer : ISchemaComposer, ISchemaCreationSupport, ISchemaValueSupport, ICheckConstraintSupport
     {
         #region Private Variables
 
@@ -47,6 +47,11 @@ namespace RepoDb.Schema
         /// </summary>
         public string SchemaParameterPrefix => "@";
 
+        /// <summary>
+        /// Gets the formatter that writes the typed values and the kinds of default values in the format of CockroachDB.
+        /// </summary>
+        public ISchemaValueFormatter ValueFormatter { get; } = new CockroachDbSchemaValueFormatter();
+
         #endregion
 
         #region Public Methods
@@ -65,7 +70,9 @@ namespace RepoDb.Schema
         /// <param name="checkConstraint">The check constraint of the source table.</param>
         /// <returns>The reason, or <c>null</c> if the check constraint can be created.</returns>
         public string GetUnsupportedReason(CheckConstraintInfo checkConstraint) =>
-            SchemaExpression.GetNonDeterministicReason(checkConstraint, "CockroachDB");
+            SchemaExpression.GetNonDeterministicReason(checkConstraint,
+                "CockroachDB",
+                SchemaDialectMapper.GetAll(CockroachDbSchemaDialect.Instance));
 
         /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.

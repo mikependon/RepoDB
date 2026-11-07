@@ -29,6 +29,8 @@ namespace RepoDb.Schema.ClickHouse
         {
             globalConfiguration.UseClickHouse();
             SchemaComposerMapper.Add<ClickHouseConnection>(new ClickHouseSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<ClickHouseConnection>().Provider,
+                ClickHouseSchemaDialect.Instance);
             return globalConfiguration;
         }
 

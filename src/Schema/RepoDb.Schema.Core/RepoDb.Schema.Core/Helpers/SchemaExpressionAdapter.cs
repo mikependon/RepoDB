@@ -26,12 +26,12 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="table">The state of the table, which receives the warning.</param>
         /// <param name="checkConstraint">The check constraint of the source table.</param>
-        /// <param name="quotes">The identifier quotes of the source database.</param>
+        /// <param name="source">The dialect of the source database.</param>
         /// <param name="destination">The setting of the destination database.</param>
         /// <returns>The check constraint for the destination database, or <c>null</c> if it is left out.</returns>
         private static CheckConstraintInfo AdaptCheckConstraint(PlanTable table,
             CheckConstraintInfo checkConstraint,
-            IReadOnlyList<(char Open, char Close)> quotes,
+            ISchemaDialect source,
             IDbSetting destination)
         {
             if (string.IsNullOrWhiteSpace(checkConstraint.Expression))
@@ -40,8 +40,9 @@ namespace RepoDb.Schema
             }
 
             var tokens = SchemaExpressionTokenizer.Tokenize(checkConstraint.Expression,
-                quotes);
-            var usage = SchemaExpressionTranslator.FindNonPortable(tokens);
+                source.IdentifierQuotes);
+            var usage = SchemaExpressionTranslator.FindNonPortable(tokens,
+                source.NonPortableOperators);
             if (usage == null)
             {
                 return new CheckConstraintInfo(checkConstraint.Name)
@@ -79,7 +80,7 @@ namespace RepoDb.Schema
 
         /// <summary>
         /// Adapts the check constraints of the table to the destination database, if the table comes from a database with another dialect.
-        /// The check constraints are left as they are if the provider of the table or of the destination is not known, or if both have the same dialect.
+        /// The check constraints are left as they are if the dialect of the table or of the destination is not registered (see <see cref="SchemaDialectMapper"/>), or if both are of the same family.
         /// The schema that was read is not changed: the table gets a new schema.
         /// </summary>
         /// <param name="table">The state of the table.</param>
@@ -87,18 +88,17 @@ namespace RepoDb.Schema
         public static void Adapt(PlanTable table,
             IDbSetting destination)
         {
-            var source = SchemaExpressionDialect.GetFamily(table.Schema.Table.Provider);
-            var target = SchemaExpressionDialect.GetFamily(destination?.Provider);
-            if (source == null || target == null || source == target || table.Schema.CheckConstraints.Count == 0)
+            var source = SchemaDialectMapper.Get(table.Schema.Table.Provider);
+            var target = SchemaDialectMapper.Get(destination?.Provider);
+            if (source == null || target == null || source.Family == target.Family || table.Schema.CheckConstraints.Count == 0)
             {
                 return;
             }
 
-            var quotes = SchemaExpressionDialect.GetQuotes(source);
             table.Schema = WithCheckConstraints(table.Schema,
                 table.Schema.CheckConstraints.Select(checkConstraint => AdaptCheckConstraint(table,
                     checkConstraint,
-                    quotes,
+                    source,
                     destination)).Where(checkConstraint => checkConstraint != null).ToList());
         }
 

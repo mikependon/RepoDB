@@ -29,6 +29,8 @@ namespace RepoDb.Schema.AuroraDbPostgreSql
         {
             globalConfiguration.UseAuroraDb();
             SchemaComposerMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<AuroraDbConnection>().Provider,
+                AuroraDbPostgreSqlSchemaDialect.Instance);
             return globalConfiguration;
         }
 

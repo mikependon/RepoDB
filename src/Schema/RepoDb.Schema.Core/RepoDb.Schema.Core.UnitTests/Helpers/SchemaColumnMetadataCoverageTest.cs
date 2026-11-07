@@ -98,24 +98,6 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         }
 
         /// <summary>
-        /// Leaves ambiguous character encodings unspecified.
-        /// </summary>
-        [TestMethod]
-        public void ApplyPreservesUnknownUnicodeForSqlAscii()
-        {
-            // Setup
-            var column = CreateColumn("varchar");
-
-            // Act
-            var actual = Apply(column,
-                "CharacterSet",
-                "sql_ascii");
-
-            // Assert
-            Assert.IsNull(actual.IsUnicode);
-        }
-
-        /// <summary>
         /// Reads precision and negative scale beyond byte limits.
         /// </summary>
         [TestMethod]
@@ -191,101 +173,6 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
             // Assert
             Assert.AreEqual(6,
                 actual.TemporalPrecision);
-        }
-
-        /// <summary>
-        /// Distinguishes UTF-8 from legacy SQL Server code pages.
-        /// </summary>
-        [TestMethod]
-        public void ApplySqlServerCodePageDefinesEncodingForValue65001()
-        {
-            // Setup
-            int codePage = 65001;
-            string charset = "UTF-8";
-            bool unicode = true;
-            var column = CreateColumn("varchar",
-                "SqlServer");
-
-            // Act
-            var actual = Apply(column,
-                "CodePage",
-                codePage);
-
-            // Assert
-            Assert.AreEqual(charset,
-                actual.CharacterSet,
-                StringComparer.Ordinal);
-            Assert.AreEqual(unicode,
-                actual.IsUnicode);
-        }
-
-        /// <summary>
-        /// Distinguishes UTF-8 from legacy SQL Server code pages.
-        /// </summary>
-        [TestMethod]
-        public void ApplySqlServerCodePageDefinesEncodingForValue1252()
-        {
-            // Setup
-            int codePage = 1252;
-            string charset = "CP1252";
-            bool unicode = false;
-            var column = CreateColumn("varchar",
-                "SqlServer");
-
-            // Act
-            var actual = Apply(column,
-                "CodePage",
-                codePage);
-
-            // Assert
-            Assert.AreEqual(charset,
-                actual.CharacterSet,
-                StringComparer.Ordinal);
-            Assert.AreEqual(unicode,
-                actual.IsUnicode);
-        }
-
-        /// <summary>
-        /// Uses collation metadata when no code page is available.
-        /// </summary>
-        [TestMethod]
-        public void ApplySqlServerFallsBackToUtf8Collation()
-        {
-            // Setup
-            var column = CreateColumn("varchar",
-                "SqlServer");
-            column.Collation = "Latin1_General_100_CI_AS_SC_UTF8";
-
-            // Act
-            var actual = Apply(column,
-                "CodePage",
-                DBNull.Value);
-
-            // Assert
-            Assert.AreEqual("UTF-8",
-                actual.CharacterSet,
-                StringComparer.Ordinal);
-        }
-
-        /// <summary>
-        /// Identifies SQL Server national character columns.
-        /// </summary>
-        [TestMethod]
-        public void ApplySqlServerNvarcharUsesUtf16()
-        {
-            // Setup
-            var column = CreateColumn("nvarchar",
-                "SqlServer");
-
-            // Act
-            var actual = Apply(column,
-                "CodePage",
-                DBNull.Value);
-
-            // Assert
-            Assert.AreEqual("UTF-16",
-                actual.CharacterSet,
-                StringComparer.Ordinal);
         }
 
         #endregion

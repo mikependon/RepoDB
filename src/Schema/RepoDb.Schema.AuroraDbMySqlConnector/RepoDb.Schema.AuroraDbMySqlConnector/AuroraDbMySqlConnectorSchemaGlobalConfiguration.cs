@@ -29,6 +29,8 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector
         {
             globalConfiguration.UseAuroraDb();
             SchemaComposerMapper.Add<AuroraDbConnection>(new AuroraDbMySqlConnectorSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<AuroraDbConnection>().Provider,
+                AuroraDbMySqlConnectorSchemaDialect.Instance);
             return globalConfiguration;
         }
 

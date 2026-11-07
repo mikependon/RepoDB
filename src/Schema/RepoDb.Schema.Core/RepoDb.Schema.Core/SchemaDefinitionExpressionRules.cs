@@ -130,7 +130,8 @@ namespace RepoDb.Schema
             string location,
             DefinitionFindings findings)
         {
-            var unknown = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers(expression)
+            var unknown = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers(expression,
+                (SchemaDialectMapper.Get(table.Table?.Provider) ?? SchemaDialect.Standard).IdentifierQuotes)
                 .Where(identifier => !columns.Contains(identifier));
             foreach (var identifier in unknown)
             {

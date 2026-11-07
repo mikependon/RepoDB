@@ -28,6 +28,8 @@ namespace RepoDb.Schema.MySqlConnector
         {
             globalConfiguration.UseMySqlConnector();
             SchemaComposerMapper.Add<MySqlConnection>(new MySqlConnectorSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<MySqlConnection>().Provider,
+                MySqlConnectorSchemaDialect.Instance);
             return globalConfiguration;
         }
 

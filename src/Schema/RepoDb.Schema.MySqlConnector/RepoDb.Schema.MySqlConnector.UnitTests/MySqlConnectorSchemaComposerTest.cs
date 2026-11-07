@@ -9,6 +9,7 @@
 using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
 
@@ -1185,12 +1186,25 @@ namespace RepoDb.Schema.MySqlConnector.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlConnectorSchemaComposerGetUnsupportedReasonRefusesTheFunctionsOfOtherDatabases()
+        public void TestMySqlConnectorSchemaComposerGetUnsupportedReasonRefusesTheFunctionsOfTheDialectsThatAreRegistered()
         {
-            // Act/Assert
-            StringAssert.Contains(GetUnsupportedReason("([BirthDate]<getdate())"), "getdate()", StringComparison.Ordinal);
-            StringAssert.Contains(GetUnsupportedReason("Id <> newid()"), "newid()", StringComparison.Ordinal);
-            StringAssert.Contains(GetUnsupportedReason("Score < RAND()"), "RAND".ToLowerInvariant() + "()", StringComparison.Ordinal);
+            // Setup
+            var other = new Mock<ISchemaDialect>();
+            other.SetupGet(item => item.NonDeterministicFunctions).Returns(new[] { "getdate", "newid", "rand" });
+            other.SetupGet(item => item.NonDeterministicKeywords).Returns(new string[0]);
+            SchemaDialectMapper.Add("OtherDatabase",
+                other.Object);
+
+            // Act
+            var getdate = GetUnsupportedReason("([BirthDate]<getdate())");
+            var newid = GetUnsupportedReason("Id <> newid()");
+            var rand = GetUnsupportedReason("Score < RAND()");
+            SchemaDialectMapper.Remove("OtherDatabase");
+
+            // Assert
+            StringAssert.Contains(getdate, "getdate()", StringComparison.Ordinal);
+            StringAssert.Contains(newid, "newid()", StringComparison.Ordinal);
+            StringAssert.Contains(rand, "rand()", StringComparison.Ordinal);
         }
 
         [TestMethod]

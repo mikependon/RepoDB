@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from a Db2 database or from another database engine.
     /// A statement has no terminator, and a DDL statement is part of the transaction (it can be rolled back).
     /// </summary>
-    public class Db2SchemaComposer : ISchemaComposer, ISchemaCreationSupport, ICheckConstraintSupport
+    public class Db2SchemaComposer : ISchemaComposer, ISchemaCreationSupport, ICheckConstraintSupport, ISchemaValueSupport
     {
         #region Private Variables
 
@@ -32,6 +32,11 @@ namespace RepoDb.Schema
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets the formatter that writes the typed values and the kinds of default values in the format of Db2.
+        /// </summary>
+        public ISchemaValueFormatter ValueFormatter { get; } = new Db2SchemaValueFormatter();
 
         /// <summary>
         /// Gets the statement that creates a schema (the placeholder <c>{0}</c> takes the quoted name of the schema).
@@ -66,7 +71,9 @@ namespace RepoDb.Schema
         /// <param name="checkConstraint">The check constraint of the source table.</param>
         /// <returns>The reason, or <c>null</c> if the check constraint can be created.</returns>
         public string GetUnsupportedReason(CheckConstraintInfo checkConstraint) =>
-            SchemaExpression.GetNonDeterministicReason(checkConstraint, "Db2");
+            SchemaExpression.GetNonDeterministicReason(checkConstraint,
+                "Db2",
+                SchemaDialectMapper.GetAll(Db2SchemaDialect.Instance));
 
         /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.

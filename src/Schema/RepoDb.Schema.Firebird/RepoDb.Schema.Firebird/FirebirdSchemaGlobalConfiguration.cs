@@ -28,6 +28,8 @@ namespace RepoDb.Schema.Firebird
         {
             globalConfiguration.UseFirebird();
             SchemaComposerMapper.Add<FbConnection>(new FirebirdSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<FbConnection>().Provider,
+                FirebirdSchemaDialect.Instance);
             return globalConfiguration;
         }
 

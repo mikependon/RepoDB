@@ -21,12 +21,21 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from a Firebird database or from another database engine.
     /// A statement has no terminator, and a DDL statement is part of the transaction (it can be rolled back). Firebird has no schema, so a table with a schema is not supported.
     /// </summary>
-    public class FirebirdSchemaComposer : ISchemaComposer
+    public class FirebirdSchemaComposer : ISchemaComposer, ISchemaValueSupport
     {
         #region Private Variables
 
         private readonly DbTypeNameToFirebirdTypeNameResolver _typeNameResolver = new DbTypeNameToFirebirdTypeNameResolver();
         private readonly ClientTypeToFirebirdTypeNameResolver _clientTypeResolver = new ClientTypeToFirebirdTypeNameResolver();
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the formatter that writes the typed values and the kinds of default values in the format of Firebird.
+        /// </summary>
+        public ISchemaValueFormatter ValueFormatter { get; } = new FirebirdSchemaValueFormatter();
 
         #endregion
 

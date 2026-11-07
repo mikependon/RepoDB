@@ -28,6 +28,8 @@ namespace RepoDb.Schema.MariaDbConnector
         {
             globalConfiguration.UseMariaDbConnector();
             SchemaComposerMapper.Add<MariaDbConnection>(new MariaDbConnectorSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<MariaDbConnection>().Provider,
+                MariaDbConnectorSchemaDialect.Instance);
             return globalConfiguration;
         }
 

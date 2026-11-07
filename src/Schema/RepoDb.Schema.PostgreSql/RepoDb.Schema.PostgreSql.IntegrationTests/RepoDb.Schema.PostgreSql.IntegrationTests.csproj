@@ -19,5 +19,6 @@
     <ProjectReference Include="..\..\..\Providers\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
     <ProjectReference Include="..\..\RepoDb.Schema.Core\RepoDb.Schema.Core\RepoDb.Schema.Core.csproj" />
     <ProjectReference Include="..\RepoDb.Schema.PostgreSql\RepoDb.Schema.PostgreSql.csproj" />
+    <ProjectReference Include="..\..\RepoDb.Schema.SqlServer\RepoDb.Schema.SqlServer\RepoDb.Schema.SqlServer.csproj" />
   </ItemGroup>
 </Project>

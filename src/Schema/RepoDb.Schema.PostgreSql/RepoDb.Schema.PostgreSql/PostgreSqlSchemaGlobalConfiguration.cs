@@ -28,6 +28,8 @@ namespace RepoDb.Schema.PostgreSql
         {
             globalConfiguration.UsePostgreSql();
             SchemaComposerMapper.Add<NpgsqlConnection>(new PostgreSqlSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<NpgsqlConnection>().Provider,
+                PostgreSqlSchemaDialect.Instance);
             return globalConfiguration;
         }
 

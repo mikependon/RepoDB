@@ -14,10 +14,10 @@ namespace RepoDb.Schema
 {
     /// <summary>
     /// A class that decides whether the collation of a column can be written in the destination database. The names of the collations belong to a database provider
-    /// (i.e.: <c>SQL_Latin1_General_CP1_CI_AS</c> is a SQL Server collation that MySQL rejects as an unknown collation), so a collation is only kept when the column is read
+    /// (i.e.: a collation of one database can be rejected by another as an unknown collation), so a collation is only kept when the column is read
     /// from a database of a provider that the destination understands; otherwise it is left out and the destination uses its default collation.
     /// </summary>
-    internal static class SchemaCollation
+    public static class SchemaCollation
     {
         #region Public Methods
 

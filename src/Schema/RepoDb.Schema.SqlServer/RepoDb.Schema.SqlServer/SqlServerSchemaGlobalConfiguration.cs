@@ -28,6 +28,8 @@ namespace RepoDb.Schema.SqlServer
         {
             globalConfiguration.UseSqlServer();
             SchemaComposerMapper.Add<SqlConnection>(new SqlServerSchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<SqlConnection>().Provider,
+                SqlServerSchemaDialect.Instance);
             return globalConfiguration;
         }
 

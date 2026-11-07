@@ -8,6 +8,7 @@
 
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Schema.Core.UnitTests.CustomObjects;
 
 namespace RepoDb.Schema.Core.UnitTests
 {
@@ -28,7 +29,8 @@ namespace RepoDb.Schema.Core.UnitTests
             string expected)
         {
             // Act
-            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers(expression);
+            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers(expression,
+                CustomSchemaDialect.Instance.IdentifierQuotes);
 
             // Assert
             Assert.AreEqual(1, actual.Count);
@@ -39,7 +41,8 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestSchemaDefinitionExpressionScannerFindsAllTheIdentifiersInOrderWithoutRepeats()
         {
             // Act
-            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers("[B] > [A] AND [B] < [C]");
+            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers("[B] > [A] AND [B] < [C]",
+                CustomSchemaDialect.Instance.IdentifierQuotes);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "B", "A", "C" }, actual.ToArray());
@@ -49,7 +52,8 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestSchemaDefinitionExpressionScannerSkipsTheStringLiterals()
         {
             // Act
-            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers("[Name] <> '[NotAColumn]' AND [Code] <> 'it''s [Hidden]'");
+            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers("[Name] <> '[NotAColumn]' AND [Code] <> 'it''s [Hidden]'",
+                CustomSchemaDialect.Instance.IdentifierQuotes);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Name", "Code" }, actual.ToArray());
@@ -59,7 +63,8 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestSchemaDefinitionExpressionScannerSkipsTheQualifiedNames()
         {
             // Act
-            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers("[dbo].[Other] > 0 AND [Column] > T.[Qualified] AND [Own] > 0");
+            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers("[dbo].[Other] > 0 AND [Column] > T.[Qualified] AND [Own] > 0",
+                CustomSchemaDialect.Instance.IdentifierQuotes);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Column", "Own" }, actual.ToArray());
@@ -69,7 +74,8 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestSchemaDefinitionExpressionScannerSkipsTheFunctionCalls()
         {
             // Act
-            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers("[Total] > [dbo].[Limit]([Amount]) AND \"Round\" (1) > 0");
+            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers("[Total] > [dbo].[Limit]([Amount]) AND \"Round\" (1) > 0",
+                CustomSchemaDialect.Instance.IdentifierQuotes);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Total", "Amount" }, actual.ToArray());
@@ -79,7 +85,8 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestSchemaDefinitionExpressionScannerUnescapesTheDoubledClosingQuote()
         {
             // Act
-            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers("[Odd]]Name] > 0 AND \"Say \"\"Hi\"\"\" > 0");
+            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers("[Odd]]Name] > 0 AND \"Say \"\"Hi\"\"\" > 0",
+                CustomSchemaDialect.Instance.IdentifierQuotes);
 
             // Assert
             CollectionAssert.AreEqual(new[] { "Odd]Name", "Say \"Hi\"" }, actual.ToArray());
@@ -89,7 +96,8 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestSchemaDefinitionExpressionScannerIgnoresTheUnquotedNames()
         {
             // Act
-            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers("age > 0 AND length(name) > 3");
+            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers("age > 0 AND length(name) > 3",
+                CustomSchemaDialect.Instance.IdentifierQuotes);
 
             // Assert
             Assert.AreEqual(0, actual.Count);
@@ -101,7 +109,8 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestSchemaDefinitionExpressionScannerWithNoExpression(string expression)
         {
             // Act
-            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers(expression);
+            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers(expression,
+                CustomSchemaDialect.Instance.IdentifierQuotes);
 
             // Assert
             Assert.AreEqual(0, actual.Count);
@@ -113,7 +122,8 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestSchemaDefinitionExpressionScannerDoesNotFailOnAnUnclosedQuote(string expression)
         {
             // Act
-            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers(expression);
+            var actual = SchemaDefinitionExpressionScanner.GetQuotedIdentifiers(expression,
+                CustomSchemaDialect.Instance.IdentifierQuotes);
 
             // Assert
             Assert.IsTrue(actual.Count <= 1);

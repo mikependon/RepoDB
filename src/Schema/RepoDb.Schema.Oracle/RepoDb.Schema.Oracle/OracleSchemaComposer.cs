@@ -21,13 +21,22 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from an Oracle database or from another database engine.
     /// A statement has no terminator (Oracle does not accept the <c>;</c> from the client), and a DDL statement is committed by the server.
     /// </summary>
-    public class OracleSchemaComposer : ISchemaComposer, ICheckConstraintSupport
+    public class OracleSchemaComposer : ISchemaComposer, ICheckConstraintSupport, ISchemaValueSupport
     {
         #region Private Variables
 
         private const string CurrentSchema = "SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA')";
         private readonly DbTypeNameToOracleTypeNameResolver _typeNameResolver = new DbTypeNameToOracleTypeNameResolver();
         private readonly ClientTypeToOracleTypeNameResolver _clientTypeResolver = new ClientTypeToOracleTypeNameResolver();
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the formatter that writes the typed values and the kinds of default values in the format of Oracle.
+        /// </summary>
+        public ISchemaValueFormatter ValueFormatter { get; } = new OracleSchemaValueFormatter();
 
         #endregion
 
@@ -39,7 +48,9 @@ namespace RepoDb.Schema
         /// <param name="checkConstraint">The check constraint of the source table.</param>
         /// <returns>The reason, or <c>null</c> if the check constraint can be created.</returns>
         public string GetUnsupportedReason(CheckConstraintInfo checkConstraint) =>
-            SchemaExpression.GetNonDeterministicReason(checkConstraint, "Oracle");
+            SchemaExpression.GetNonDeterministicReason(checkConstraint,
+                "Oracle",
+                SchemaDialectMapper.GetAll(OracleSchemaDialect.Instance));
 
         /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.

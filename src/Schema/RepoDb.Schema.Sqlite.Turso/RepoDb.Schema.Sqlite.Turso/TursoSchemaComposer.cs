@@ -21,12 +21,21 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from a SQLite database or from another database engine.
     /// SQLite can not add a foreign key to an existing table, so the foreign keys are part of the statement that creates the table (see <see cref="ComposeAddForeignKey"/>).
     /// </summary>
-    public class TursoSchemaComposer : ISchemaComposer, ICheckConstraintSupport
+    public class TursoSchemaComposer : ISchemaComposer, ICheckConstraintSupport, ISchemaValueSupport
     {
         #region Private Variables
 
         private readonly DbTypeNameToSqliteTypeNameResolver _typeNameResolver = new DbTypeNameToSqliteTypeNameResolver();
         private readonly ClientTypeToSqliteTypeNameResolver _clientTypeResolver = new ClientTypeToSqliteTypeNameResolver();
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the formatter that writes the typed values and the kinds of default values in the format of SQLite.
+        /// </summary>
+        public ISchemaValueFormatter ValueFormatter { get; } = new TursoSchemaValueFormatter();
 
         #endregion
 
@@ -38,7 +47,9 @@ namespace RepoDb.Schema
         /// <param name="checkConstraint">The check constraint of the source table.</param>
         /// <returns>The reason, or <c>null</c> if the check constraint can be created.</returns>
         public string GetUnsupportedReason(CheckConstraintInfo checkConstraint) =>
-            SchemaExpression.GetNonDeterministicReason(checkConstraint, "SQLite");
+            SchemaExpression.GetNonDeterministicReason(checkConstraint,
+                "SQLite",
+                SchemaDialectMapper.GetAll(TursoSchemaDialect.Instance));
 
         /// <summary>
         /// Composes the whole script that creates the table, its indexes and its foreign keys, as an ordered list of statements.

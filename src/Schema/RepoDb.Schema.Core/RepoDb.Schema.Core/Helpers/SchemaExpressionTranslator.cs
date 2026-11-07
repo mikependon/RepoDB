@@ -41,14 +41,19 @@ namespace RepoDb.Schema
         /// </summary>
         /// <param name="tokens">The tokens of the expression.</param>
         /// <param name="index">The position of the token.</param>
+        /// <param name="operators">The operators of the source dialect that the other dialects do not have.</param>
         /// <returns>The function (i.e.: <c>getdate()</c>) or the operator that is not portable, or <c>null</c> if the token is portable.</returns>
         private static string GetNonPortableUsage(IList<SchemaExpressionToken> tokens,
-            int index)
+            int index,
+            IEnumerable<string> operators)
         {
             var token = tokens[index];
-            if (token.Kind == SchemaExpressionTokenKind.Other && token.Text == "::")
+            var found = token.Kind == SchemaExpressionTokenKind.Other ? operators.FirstOrDefault(item => IsOperatorAt(tokens,
+                index,
+                item)) : null;
+            if (found != null)
             {
-                return token.Text;
+                return found;
             }
 
             return token.Kind == SchemaExpressionTokenKind.Word && !Keywords.Contains(token.Text) && !PortableFunctions.Contains(token.Text) && IsCall(tokens,
@@ -77,6 +82,19 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
+        /// Checks whether the operator starts at the position, as the characters of the tokens that follow.
+        /// </summary>
+        /// <param name="tokens">The tokens of the expression.</param>
+        /// <param name="index">The position of the first character of the operator.</param>
+        /// <param name="operatorText">The operator.</param>
+        /// <returns><c>true</c> if the operator starts at the position.</returns>
+        private static bool IsOperatorAt(IList<SchemaExpressionToken> tokens,
+            int index,
+            string operatorText) =>
+            operatorText.Length > 0 && index + operatorText.Length <= tokens.Count && !operatorText.Where((character,
+                offset) => tokens[index + offset].Kind != SchemaExpressionTokenKind.Other || tokens[index + offset].Text != character.ToString()).Any();
+
+        /// <summary>
         /// Quotes the name with the quotes of the destination database, where a closing quote inside of the name is doubled.
         /// </summary>
         /// <param name="name">The name without the quotes.</param>
@@ -101,11 +119,14 @@ namespace RepoDb.Schema
         /// Only the functions that the databases share (see the portable functions) are carried.
         /// </summary>
         /// <param name="tokens">The tokens of the expression.</param>
-        /// <returns>The function (i.e.: <c>getdate()</c>) or the operator (<c>::</c>), or <c>null</c> if the expression is portable.</returns>
-        public static string FindNonPortable(IList<SchemaExpressionToken> tokens) =>
+        /// <param name="operators">The operators of the source dialect that the other dialects do not have (see <see cref="ISchemaDialect.NonPortableOperators"/>).</param>
+        /// <returns>The function (i.e.: <c>getdate()</c>) or the operator, or <c>null</c> if the expression is portable.</returns>
+        public static string FindNonPortable(IList<SchemaExpressionToken> tokens,
+            IEnumerable<string> operators) =>
             Enumerable.Range(0,
                 tokens.Count).Select(index => GetNonPortableUsage(tokens,
-                    index)).FirstOrDefault(usage => usage != null);
+                    index,
+                    operators ?? Enumerable.Empty<string>())).FirstOrDefault(usage => usage != null);
 
         /// <summary>
         /// Puts the tokens back together, with the quoted names quoted with the quotes of the destination database.

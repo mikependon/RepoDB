@@ -11,7 +11,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// A class that holds the constant values of the schema operation tracking keys.
     /// </summary>
-    internal static class SchemaTraceKeys
+    public static class SchemaTraceKeys
     {
         #region Constants
 

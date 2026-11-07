@@ -20,7 +20,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// Serializes a RepoDB schema definition as JSON, YAML, or XML.
     /// </summary>
-    internal static class SchemaDefinitionSerializer
+    public static class SchemaDefinitionSerializer
     {
         #region Public Methods
 
@@ -30,7 +30,7 @@ namespace RepoDb.Schema
         /// <param name="definition">The schema definition to serialize.</param>
         /// <param name="format">The output format: json, yaml, or xml.</param>
         /// <returns>The serialized schema definition.</returns>
-        internal static string Serialize(JsonObject definition,
+        public static string Serialize(JsonObject definition,
             string format)
         {
             if (string.Equals(format,

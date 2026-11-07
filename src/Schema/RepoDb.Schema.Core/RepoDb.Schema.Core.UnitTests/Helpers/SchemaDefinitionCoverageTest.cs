@@ -478,51 +478,6 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         }
 
         /// <summary>
-        /// Infers UTF-16 defaults for national character columns.
-        /// </summary>
-        [TestMethod]
-        public void CreateInfersSqlServerUnicodeMetadata()
-        {
-            // Setup
-            var column = CreateColumn(typeof(string),
-                "nvarchar",
-                "SqlServer");
-
-            // Act
-            var actual = ColumnType(column);
-
-            // Assert
-            Assert.AreEqual("UTF-16",
-                actual["characterSet"].GetValue<string>(),
-                StringComparer.Ordinal);
-            Assert.AreEqual("utf16CodeUnits",
-                actual["lengthUnit"].GetValue<string>(),
-                StringComparer.Ordinal);
-        }
-
-        /// <summary>
-        /// Infers UTF-8 defaults from varchar collation metadata.
-        /// </summary>
-        [TestMethod]
-        public void CreateInfersSqlServerUtf8Collation()
-        {
-            // Setup
-            var column = CreateColumn(typeof(string),
-                "varchar",
-                "SqlServer");
-            column.Collation = "Latin1_General_100_CI_AS_SC_UTF8";
-
-            // Act
-            var actual = ColumnType(column);
-
-            // Assert
-            Assert.IsTrue(actual["unicode"].GetValue<bool>());
-            Assert.AreEqual("UTF-8",
-                actual["characterSet"].GetValue<string>(),
-                StringComparer.Ordinal);
-        }
-
-        /// <summary>
         /// Keeps explicit metadata ahead of provider defaults.
         /// </summary>
         [TestMethod]

@@ -17,7 +17,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// Reads additional column metadata from optional provider catalog fields.
     /// </summary>
-    internal static class SchemaColumnMetadata
+    public static class SchemaColumnMetadata
     {
         #region Public Methods
 
@@ -27,7 +27,7 @@ namespace RepoDb.Schema
         /// <param name="column">The column whose metadata is updated.</param>
         /// <param name="record">The provider catalog record.</param>
         /// <returns>The column with its additional metadata.</returns>
-        internal static ColumnInfo Apply(ColumnInfo column,
+        public static ColumnInfo Apply(ColumnInfo column,
             IDataRecord record)
         {
             var field = column.Field;
@@ -60,9 +60,7 @@ namespace RepoDb.Schema
                         "ucs2",
                         StringComparison.Ordinal))
                     column.IsUnicode = true;
-                else if (!string.Equals(encoding,
-                    "sql_ascii",
-                    StringComparison.Ordinal))
+                else
                     column.IsUnicode = false;
                 column.LengthUnit = "characters";
             }
@@ -72,18 +70,8 @@ namespace RepoDb.Schema
             if (temporal != null)
                 column.TemporalPrecision = Convert.ToInt32(temporal,
                     CultureInfo.InvariantCulture);
-            if (string.Equals(field.Provider,
-                "SqlServer",
-                StringComparison.OrdinalIgnoreCase))
-                ApplySqlServer(column,
-                    Read(record,
-                        "CodePage"));
             return column;
         }
-
-        #endregion
-
-        #region Private Methods
 
         /// <summary>
         /// Reads an optional catalog field without requiring every provider to project it.
@@ -91,7 +79,7 @@ namespace RepoDb.Schema
         /// <param name="record">The catalog record.</param>
         /// <param name="name">The name of the optional field.</param>
         /// <returns>The field value, or null if the field is absent or contains a database null.</returns>
-        private static object Read(IDataRecord record,
+        public static object Read(IDataRecord record,
             string name)
         {
             for (var i = 0; i < record.FieldCount; i++)
@@ -102,70 +90,9 @@ namespace RepoDb.Schema
             return null;
         }
 
-        /// <summary>
-        /// Applies the SQL Server character encoding and temporal precision metadata.
-        /// </summary>
-        /// <param name="column">The column whose metadata is updated.</param>
-        /// <param name="codePage">The code page reported by the catalog, or null.</param>
-        private static void ApplySqlServer(ColumnInfo column,
-            object codePage)
-        {
-            var field = column.Field;
-            var text = field.Type == typeof(string) || field.Type == typeof(char);
-            var native = field.DatabaseType?.ToLowerInvariant().Split('(',
-                ' ')[0];
-            if (string.Equals(field.Provider,
-                "SqlServer",
-                StringComparison.OrdinalIgnoreCase))
-            {
-                if (text && (string.Equals(native,
-                    "nvarchar",
-                    StringComparison.Ordinal) || string.Equals(native,
-                        "nchar",
-                        StringComparison.Ordinal) || string.Equals(native,
-                        "ntext",
-                        StringComparison.Ordinal)))
-                {
-                    column.IsUnicode = true;
-                    column.CharacterSet = "UTF-16";
-                    column.LengthUnit = "utf16CodeUnits";
-                }
-                else if (text && (string.Equals(native,
-                    "varchar",
-                    StringComparison.Ordinal) || string.Equals(native,
-                        "char",
-                        StringComparison.Ordinal) || string.Equals(native,
-                        "text",
-                        StringComparison.Ordinal)))
-                {
-                    column.LengthUnit = "bytes";
-                    if (codePage != null && Convert.ToInt32(codePage,
-                        CultureInfo.InvariantCulture) > 0)
-                    {
-                        var number = Convert.ToInt32(codePage,
-                            CultureInfo.InvariantCulture);
-                        column.IsUnicode = number == 65001;
-                        column.CharacterSet = number == 65001 ? "UTF-8" : "CP" + number.ToString(CultureInfo.InvariantCulture);
-                    }
-                    else if (column.Collation != null)
-                    {
-                        column.IsUnicode = column.Collation.EndsWith("_UTF8",
-                            StringComparison.OrdinalIgnoreCase);
-                        if (column.IsUnicode == true)
-                            column.CharacterSet = "UTF-8";
-                    }
-                }
+        #endregion
 
-                if (string.Equals(native,
-                    "datetime2",
-                    StringComparison.Ordinal) || string.Equals(native,
-                        "datetimeoffset",
-                        StringComparison.Ordinal) || string.Equals(native,
-                        "time",
-                        StringComparison.Ordinal))
-                    column.TemporalPrecision = field.Scale;
-            }
-        }
+        #region Private Methods
 
         /// <summary>
         /// Reads the full numeric precision and scale from a native type declaration.

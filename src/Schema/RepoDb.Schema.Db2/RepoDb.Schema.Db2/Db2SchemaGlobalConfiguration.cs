@@ -28,6 +28,8 @@ namespace RepoDb.Schema.Db2
         {
             globalConfiguration.UseDb2();
             SchemaComposerMapper.Add<DB2Connection>(new Db2SchemaComposer(), force: true);
+            SchemaDialectMapper.Add(DbSettingMapper.Get<DB2Connection>().Provider,
+                Db2SchemaDialect.Instance);
             return globalConfiguration;
         }
 

@@ -89,7 +89,6 @@ namespace RepoDb.Schema.MariaDb.UnitTests
             // Act/Assert
             Assert.AreEqual("0", Compose(ColumnDefaultValue.Literal, "((0))", "int"));
             Assert.AreEqual("'N/A'", Compose(ColumnDefaultValue.Literal, "(N'N/A')", "varchar(10)"));
-            Assert.AreEqual("'abc'", Compose(ColumnDefaultValue.Literal, "'abc'::character varying", "varchar(10)", "PGSQL"));
         }
 
         [TestMethod]

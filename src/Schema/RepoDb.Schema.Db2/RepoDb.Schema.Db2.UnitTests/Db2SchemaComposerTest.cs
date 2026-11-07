@@ -9,6 +9,7 @@
 using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
 
@@ -1161,24 +1162,37 @@ namespace RepoDb.Schema.Db2.UnitTests
             new Db2SchemaComposer().GetUnsupportedReason(new CheckConstraintInfo("CK_Test") { Expression = expression });
 
         [TestMethod]
-        public void TestDb2SchemaComposerGetUnsupportedReasonRefusesAFunctionThatIsNotDeterministic()
+        public void TestDb2SchemaComposerGetUnsupportedReasonRefusesAKeywordWithASpaceThatIsNotDeterministic()
         {
             // Act
-            var actual = GetUnsupportedReason("BirthDate < now()");
+            var actual = GetUnsupportedReason("BirthDate < CURRENT TIMESTAMP");
 
             // Assert
             Assert.IsNotNull(actual);
-            StringAssert.Contains(actual, "now()", StringComparison.Ordinal);
+            StringAssert.Contains(actual, "current timestamp", StringComparison.Ordinal);
             StringAssert.Contains(actual, "Db2", StringComparison.Ordinal);
         }
 
         [TestMethod]
-        public void TestDb2SchemaComposerGetUnsupportedReasonRefusesTheFunctionsOfOtherDatabases()
+        public void TestDb2SchemaComposerGetUnsupportedReasonRefusesTheFunctionsOfTheDialectsThatAreRegistered()
         {
-            // Act/Assert
-            StringAssert.Contains(GetUnsupportedReason("([BirthDate]<getdate())"), "getdate()", StringComparison.Ordinal);
-            StringAssert.Contains(GetUnsupportedReason("Id <> newid()"), "newid()", StringComparison.Ordinal);
-            StringAssert.Contains(GetUnsupportedReason("Score < RAND()"), "RAND".ToLowerInvariant() + "()", StringComparison.Ordinal);
+            // Setup
+            var other = new Mock<ISchemaDialect>();
+            other.SetupGet(item => item.NonDeterministicFunctions).Returns(new[] { "getdate", "newid", "rand" });
+            other.SetupGet(item => item.NonDeterministicKeywords).Returns(new string[0]);
+            SchemaDialectMapper.Add("OtherDatabase",
+                other.Object);
+
+            // Act
+            var getdate = GetUnsupportedReason("([BirthDate]<getdate())");
+            var newid = GetUnsupportedReason("Id <> newid()");
+            var rand = GetUnsupportedReason("Score < RAND()");
+            SchemaDialectMapper.Remove("OtherDatabase");
+
+            // Assert
+            StringAssert.Contains(getdate, "getdate()", StringComparison.Ordinal);
+            StringAssert.Contains(newid, "newid()", StringComparison.Ordinal);
+            StringAssert.Contains(rand, "rand()", StringComparison.Ordinal);
         }
 
         [TestMethod]

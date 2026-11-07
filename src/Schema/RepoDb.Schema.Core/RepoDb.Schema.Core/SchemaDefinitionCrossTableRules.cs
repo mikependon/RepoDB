@@ -15,7 +15,7 @@ namespace RepoDb.Schema
 {
     /// <summary>
     /// Warns about the names that are used by more than one table of the same schema: tables whose names differ only by case, and constraint names that more than one table uses.
-    /// Some databases (i.e.: SQL Server and PostgreSQL) require the name of a constraint to be unique in the whole schema, while others do not, so these are warnings.
+    /// Some databases require the name of a constraint to be unique in the whole schema, while others do not, so these are warnings.
     /// The names of the indexes are not checked, as the load of a definition renames the indexes whose name is already used when the destination requires it.
     /// </summary>
     internal static class SchemaDefinitionCrossTableRules

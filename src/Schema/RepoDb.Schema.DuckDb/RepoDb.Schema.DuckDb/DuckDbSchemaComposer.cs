@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from a DuckDb database or from another database engine.
     /// A statement has no terminator, and a DDL statement is part of the transaction (it can be rolled back). DuckDB can not add a foreign key to an existing table, so the foreign keys are part of the statement that creates the table (see <see cref="ComposeAddForeignKey"/>), and the tables must be created after the tables that they reference. DuckDB has no identity column, so an identity column is a column with a sequence as its default. DuckDB does not keep the names of the constraints, so the constraints are not named.
     /// </summary>
-    public class DuckDbSchemaComposer : ISchemaComposer, ISchemaCreationSupport
+    public class DuckDbSchemaComposer : ISchemaComposer, ISchemaCreationSupport, ISchemaValueSupport
     {
         #region Private Variables
 
@@ -32,6 +32,11 @@ namespace RepoDb.Schema
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets the formatter that writes the typed values and the kinds of default values in the format of DuckDB.
+        /// </summary>
+        public ISchemaValueFormatter ValueFormatter { get; } = new DuckDbSchemaValueFormatter();
 
         /// <summary>
         /// Gets the statement that creates a schema (the placeholder <c>{0}</c> takes the quoted name of the schema).

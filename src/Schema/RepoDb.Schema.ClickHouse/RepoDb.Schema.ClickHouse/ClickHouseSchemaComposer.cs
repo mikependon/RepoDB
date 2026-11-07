@@ -21,12 +21,21 @@ namespace RepoDb.Schema
     /// A statement has no terminator. ClickHouse has no transactions, no foreign keys, no unique constraints and no identity column, so those are not composed
     /// (the statement of a foreign key is empty). The table is a <c>MergeTree</c> that is ordered by its primary key, and an index is a data skipping index.
     /// </summary>
-    public class ClickHouseSchemaComposer : ISchemaComposer
+    public class ClickHouseSchemaComposer : ISchemaComposer, ISchemaValueSupport
     {
         #region Private Variables
 
         private readonly DbTypeNameToClickHouseTypeNameResolver _typeNameResolver = new DbTypeNameToClickHouseTypeNameResolver();
         private readonly ClientTypeToClickHouseTypeNameResolver _clientTypeResolver = new ClientTypeToClickHouseTypeNameResolver();
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the formatter that writes the typed values and the kinds of default values in the format of ClickHouse.
+        /// </summary>
+        public ISchemaValueFormatter ValueFormatter { get; } = new ClickHouseSchemaValueFormatter();
 
         #endregion
 

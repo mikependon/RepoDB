@@ -124,6 +124,51 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         }
 
         [TestMethod]
+        public void TestCopyTableSchemasToRenamesTheIndexWhoseNameIsTheNameOfATableOfTheCopy()
+        {
+            // Setup
+            MapReader(GetSchema("Customers", "Region"), GetSchema("Region"));
+            MapComposer(true);
+            var destination = GetDestination();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Region" }, destination);
+
+            // Assert
+            CollectionAssert.Contains(destination.ExecutedCommands.ToList(), "CREATE INDEX Customers_Region ON Customers;");
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemasToRenamesTheIndexWhoseNameIsTheNameOfATableOfTheCopyWithSomeCases()
+        {
+            // Setup
+            MapReader(GetSchema("Customers", "REGION"), GetSchema("Region"));
+            MapComposer(true);
+            var destination = GetDestination();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Region" }, destination);
+
+            // Assert
+            CollectionAssert.Contains(destination.ExecutedCommands.ToList(), "CREATE INDEX Customers_REGION ON Customers;");
+        }
+
+        [TestMethod]
+        public void TestCopyTableSchemasToKeepsTheIndexNamedLikeATableIfTheIndexNamesAreUniqueInTheirTable()
+        {
+            // Setup
+            MapReader(GetSchema("Customers", "Region"), GetSchema("Region"));
+            MapComposer(false);
+            var destination = GetDestination();
+
+            // Act
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Customers", "Region" }, destination);
+
+            // Assert
+            CollectionAssert.Contains(destination.ExecutedCommands.ToList(), "CREATE INDEX Region ON Customers;");
+        }
+
+        [TestMethod]
         public void TestCopyTableSchemasToKeepsTheNamesOfTheIndexesIfTheyAreUniqueInTheirTable()
         {
             // Setup

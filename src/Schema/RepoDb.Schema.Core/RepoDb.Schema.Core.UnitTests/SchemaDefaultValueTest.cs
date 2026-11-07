@@ -7,6 +7,7 @@
 #endregion
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Schema.Core.UnitTests.CustomObjects;
 using RepoDb.Schema.Enumerations;
 
 namespace RepoDb.Schema.Core.UnitTests
@@ -21,7 +22,8 @@ namespace RepoDb.Schema.Core.UnitTests
         {
             foreach (var expression in expressions)
             {
-                Assert.AreEqual(expected, SchemaDefaultValue.Classify(expression), $"'{expression}'");
+                Assert.AreEqual(expected, SchemaDefaultValue.Classify(expression,
+                    CustomSchemaDialect.Instance), $"'{expression}'");
             }
         }
 
@@ -37,7 +39,7 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestSchemaDefaultValueClassifyFindsTheLiteralsWithoutTheParenthesesOfSqlServer()
+        public void TestSchemaDefaultValueClassifyFindsTheLiteralsWithoutTheParenthesesThatWrapThem()
         {
             // Act/Assert
             AssertAll(ColumnDefaultValue.Literal, "((0))", "(0)", "0", "1", "-1", "((3.14))", "(('N/A'))", "('N/A')", "'N/A'", "N'text'", "('it''s')", "''", "(1E5)");
@@ -47,7 +49,7 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestSchemaDefaultValueClassifyFindsTheLiteralsOfOtherDatabases()
         {
             // Act/Assert
-            AssertAll(ColumnDefaultValue.Literal, "'abc'::character varying", "'abc'::text", "'10'::numeric(10,2)", "_utf8mb4'abc'");
+            AssertAll(ColumnDefaultValue.Literal, "'abc'::character varying", "'abc'::text", "'10'::numeric(10,2)");
         }
 
         [TestMethod]
@@ -63,46 +65,35 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestSchemaDefaultValueClassifyFindsTheCurrentTimestamp()
         {
             // Act/Assert
-            AssertAll(ColumnDefaultValue.CurrentTimestamp, "(getdate())", "getdate()", "GETDATE()", "(sysdatetime())", "now()", "NOW()", "CURRENT_TIMESTAMP", "current_timestamp()", "CURRENT_TIMESTAMP(6)",
-                "localtimestamp", "SYSDATE", "now()::timestamp without time zone", "current timestamp", "CURRENT TIMESTAMP", "transaction_timestamp()", "(datetime('now','localtime'))", "now64(3)", "now64()");
+            AssertAll(ColumnDefaultValue.CurrentTimestamp, "(getdate())", "getdate()", "GETDATE()", "now()", "NOW()", "CURRENT_TIMESTAMP", "current_timestamp()", "CURRENT_TIMESTAMP(6)", "localtimestamp", "now()::timestamp without time zone");
         }
 
         [TestMethod]
         public void TestSchemaDefaultValueClassifyFindsTheCurrentTimestampInUtc()
         {
             // Act/Assert
-            AssertAll(ColumnDefaultValue.CurrentTimestampUtc, "(getutcdate())", "GETUTCDATE()", "sysutcdatetime()", "utc_timestamp()", "UTC_TIMESTAMP(6)", "timezone('utc', now())",
-                "(now() AT TIME ZONE 'utc')", "SYS_EXTRACT_UTC(SYSTIMESTAMP)", "(datetime('now'))");
-        }
-
-        [TestMethod]
-        public void TestSchemaDefaultValueClassifyFindsTheCurrentTimestampWithOffset()
-        {
-            // Act/Assert
-            AssertAll(ColumnDefaultValue.CurrentTimestampWithOffset, "(sysdatetimeoffset())", "SYSDATETIMEOFFSET()", "SYSTIMESTAMP", "systimestamp(6)");
+            AssertAll(ColumnDefaultValue.CurrentTimestampUtc, "(getutcdate())", "GETUTCDATE()");
         }
 
         [TestMethod]
         public void TestSchemaDefaultValueClassifyFindsTheCurrentDate()
         {
             // Act/Assert
-            AssertAll(ColumnDefaultValue.CurrentDate, "CURRENT_DATE", "current_date()", "curdate()", "current date", "(CONVERT([date],getdate()))", "(CONVERT(date, getdate(), 101))",
-                "CAST(getdate() AS date)", "CAST(now() AS date)", "TRUNC(SYSDATE)", "(date('now'))", "CURRENT_DATE::date", "today()");
+            AssertAll(ColumnDefaultValue.CurrentDate, "CURRENT_DATE", "current_date::date");
         }
 
         [TestMethod]
         public void TestSchemaDefaultValueClassifyFindsTheCurrentTime()
         {
             // Act/Assert
-            AssertAll(ColumnDefaultValue.CurrentTime, "CURRENT_TIME", "current_time(3)", "curtime()", "current time", "localtime", "LOCALTIME(6)");
+            AssertAll(ColumnDefaultValue.CurrentTime, "CURRENT_TIME", "current_time(3)", "localtime", "LOCALTIME(6)");
         }
 
         [TestMethod]
         public void TestSchemaDefaultValueClassifyFindsTheNewGuids()
         {
             // Act/Assert
-            AssertAll(ColumnDefaultValue.NewGuid, "(newid())", "NEWID()", "uuid()", "UUID()", "gen_random_uuid()", "uuid_generate_v4()", "SYS_GUID()", "random_uuid()", "generateUUIDv4()", "gen_random_uuid()::text");
-            AssertAll(ColumnDefaultValue.NewSequentialGuid, "(newsequentialid())", "NEWSEQUENTIALID()");
+            AssertAll(ColumnDefaultValue.NewGuid, "(newid())", "NEWID()", "uuid()", "UUID()", "uuid()::text");
         }
 
         [TestMethod]
@@ -116,15 +107,15 @@ namespace RepoDb.Schema.Core.UnitTests
         public void TestSchemaDefaultValueClassifyFindsTheCurrentUserAndDatabase()
         {
             // Act/Assert
-            AssertAll(ColumnDefaultValue.CurrentUser, "(suser_sname())", "SUSER_SNAME()", "system_user", "SESSION_USER", "current_user", "CURRENT_USER()", "USER", "user()", "SYS_CONTEXT('USERENV', 'SESSION_USER')");
-            AssertAll(ColumnDefaultValue.CurrentDatabase, "(db_name())", "DB_NAME()", "database()", "current_database()", "current_catalog");
+            AssertAll(ColumnDefaultValue.CurrentUser, "SESSION_USER", "current_user", "USER");
+            AssertAll(ColumnDefaultValue.CurrentDatabase, "current_catalog");
         }
 
         [TestMethod]
         public void TestSchemaDefaultValueClassifyFindsTheNextValueOfASequence()
         {
             // Act/Assert
-            AssertAll(ColumnDefaultValue.SequenceNextValue, "nextval('orders_id_seq'::regclass)", "(NEXT VALUE FOR [dbo].[OrderSeq])", "NEXT VALUE FOR OrderSeq", "ORDER_SEQ.NEXTVAL", "\"HR\".\"SEQ\".nextval", "gen_id(gen_orders, 1)");
+            AssertAll(ColumnDefaultValue.SequenceNextValue, "(NEXT VALUE FOR [dbo].[OrderSeq])", "NEXT VALUE FOR OrderSeq");
         }
 
         [TestMethod]
@@ -160,7 +151,7 @@ namespace RepoDb.Schema.Core.UnitTests
         #region GetLiteral
 
         [TestMethod]
-        public void TestSchemaDefaultValueGetLiteralRemovesTheParenthesesOfSqlServer()
+        public void TestSchemaDefaultValueGetLiteralRemovesTheParenthesesThatWrapThem()
         {
             // Act/Assert
             Assert.AreEqual("0", SchemaDefaultValue.GetLiteral("((0))"));
@@ -169,12 +160,10 @@ namespace RepoDb.Schema.Core.UnitTests
         }
 
         [TestMethod]
-        public void TestSchemaDefaultValueGetLiteralRemovesThePrefixAndTheTypeCastOfTheText()
+        public void TestSchemaDefaultValueGetLiteralRemovesThePrefixOfTheText()
         {
             // Act/Assert
             Assert.AreEqual("'text'", SchemaDefaultValue.GetLiteral("N'text'"));
-            Assert.AreEqual("'abc'", SchemaDefaultValue.GetLiteral("'abc'::character varying"));
-            Assert.AreEqual("'abc'", SchemaDefaultValue.GetLiteral("_utf8mb4'abc'"));
         }
 
         [TestMethod]

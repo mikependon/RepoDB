@@ -25,7 +25,7 @@ namespace RepoDb.Schema.Models
         /// <param name="name">The name of the table.</param>
         /// <param name="schema">The name of the schema that owns the table.</param>
         /// <param name="database">The name of the database that the table belongs to. The default is <c>null</c>.</param>
-        /// <param name="provider">The name of the provider of the database that the table belongs to (i.e.: <c>SqlServer</c>, <c>MySql</c>, the same as <see cref="RepoDb.DbField.Provider"/>). The default is <c>null</c>.</param>
+        /// <param name="provider">The name of the provider of the database that the table belongs to (the same as <see cref="RepoDb.DbField.Provider"/>). The default is <c>null</c>.</param>
         public TableInfo(string name,
             string schema,
             string database = null,
@@ -53,7 +53,7 @@ namespace RepoDb.Schema.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the provider of the database that the table belongs to (i.e.: <c>SqlServer</c>, <c>MySql</c>, <c>PostgreSql</c>, <c>SQLite</c>; the same as
+        /// Gets or sets the name of the provider of the database that the table belongs to (the same as
         /// <see cref="RepoDb.DbField.Provider"/>), or <c>null</c> if it is not known.
         /// </summary>
         [DefinitionIgnore]

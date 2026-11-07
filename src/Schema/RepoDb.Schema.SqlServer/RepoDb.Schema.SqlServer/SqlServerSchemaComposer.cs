@@ -20,7 +20,7 @@ namespace RepoDb.Schema
     /// An <see cref="ISchemaComposer"/> that composes the T-SQL statements, in the dialect of SQL Server, that create the objects of a table.
     /// The column types are mapped on a best-effort basis, so the schema can come from a SQL Server database or from another database engine.
     /// </summary>
-    public class SqlServerSchemaComposer : ISchemaComposer, ISchemaCreationSupport
+    public class SqlServerSchemaComposer : ISchemaComposer, ISchemaCreationSupport, ISchemaValueSupport
     {
         #region Private Variables
 
@@ -45,6 +45,11 @@ namespace RepoDb.Schema
         /// Gets the prefix of the parameters of the destination database.
         /// </summary>
         public string SchemaParameterPrefix => "@";
+
+        /// <summary>
+        /// Gets the formatter that writes the typed values and the kinds of default values in the format of SQL Server.
+        /// </summary>
+        public ISchemaValueFormatter ValueFormatter { get; } = new SqlServerSchemaValueFormatter();
 
         #endregion
 

@@ -86,7 +86,7 @@ namespace RepoDb.Schema
         IEnumerable<CheckConstraintInfo> GetCheckConstraints(string tableName);
 
         /// <summary>
-        /// Gets the schemas of the database (the system schemas are not included). A provider where the schema is a database or a user (i.e.: MySQL or Oracle) returns them.
+        /// Gets the schemas of the database (the system schemas are not included). A provider where the schema is a database or a user (i.e.: a database or a user) returns them.
         /// </summary>
         /// <returns>The <see cref="SchemaInfo"/> objects of the database, or an empty list if the database has no schema concept.</returns>
         IEnumerable<SchemaInfo> GetSchemas();
@@ -199,7 +199,7 @@ namespace RepoDb.Schema
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Gets the schemas of the database (the system schemas are not included). A provider where the schema is a database or a user (i.e.: MySQL or Oracle) returns them.
+        /// Gets the schemas of the database (the system schemas are not included). A provider where the schema is a database or a user (i.e.: a database or a user) returns them.
         /// </summary>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains: the <see cref="SchemaInfo"/> objects of the database, or an empty list if the database has no schema concept.</returns>

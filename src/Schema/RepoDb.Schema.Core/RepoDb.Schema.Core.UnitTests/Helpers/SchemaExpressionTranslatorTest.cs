@@ -9,6 +9,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using RepoDb.Schema.Core.UnitTests.CustomObjects;
 using RepoDb.Interfaces;
 using RepoDb.Schema.Models;
 
@@ -30,7 +31,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
         private static IList<SchemaExpressionToken> Tokenize(string expression) =>
             SchemaExpressionTokenizer.Tokenize(expression,
-                new[] { ('[', ']') });
+                CustomSchemaDialect.Instance.IdentifierQuotes);
 
         #endregion
 
@@ -100,7 +101,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableOfAnExpressionWithoutFunctionsIsNull()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("([UnitPrice]>=(0) AND [Discount]<=(1))"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("([UnitPrice]>=(0) AND [Discount]<=(1))"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.IsNull(usage);
@@ -110,7 +112,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableFindsAFunctionThatIsNotPortable()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("([BirthDate]<getdate())"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("([BirthDate]<getdate())"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.AreEqual("getdate()", usage);
@@ -120,7 +123,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableKeepsTheCaseOfTheFunction()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A]<GETDATE()"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A]<GETDATE()"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.AreEqual("GETDATE()", usage);
@@ -130,7 +134,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableFindsAFunctionThatIsCalledAfterWhiteSpaces()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A]<getdate ()"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A]<getdate ()"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.AreEqual("getdate()", usage);
@@ -140,7 +145,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableFindsTheCastOperator()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A]::int > 0"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A]::int > 0"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.AreEqual("::", usage);
@@ -150,7 +156,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableTakesAPortableFunctionAsPortable()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("ABS([A]) > 0"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("ABS([A]) > 0"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.IsNull(usage);
@@ -160,7 +167,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableTakesAKeywordBeforeAParenthesisAsPortable()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A] > 0 AND ([B] IN (1, 2) OR NOT ([C] = 1))"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A] > 0 AND ([B] IN (1, 2) OR NOT ([C] = 1))"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.IsNull(usage);
@@ -170,7 +178,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableTakesAWordThatIsNotCalledAsPortable()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("Quantity > 0"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("Quantity > 0"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.IsNull(usage);
@@ -180,7 +189,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableTakesAWordFollowedByAnotherWordAsPortable()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("Quantity AND [A] = 1"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("Quantity AND [A] = 1"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.IsNull(usage);
@@ -190,7 +200,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableTakesAWordAtTheEndAsPortable()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A] = Quantity"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A] = Quantity"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.IsNull(usage);
@@ -200,7 +211,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableTakesAWordAtTheEndAfterWhiteSpacesAsPortable()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A] = Quantity   "));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A] = Quantity   "),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.IsNull(usage);
@@ -210,7 +222,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableDoesNotLookInsideALiteral()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A] <> 'getdate()'"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[A] <> 'getdate()'"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.IsNull(usage);
@@ -220,7 +233,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableDoesNotLookInsideAQuotedName()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[getdate] > 0"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("[getdate] > 0"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.IsNull(usage);
@@ -230,7 +244,8 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         public void TestFindNonPortableFindsTheFirstOneOfManyWhenTheyAreNotPortable()
         {
             // Act
-            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("len([A]) > 0 AND [B] < getdate()"));
+            var usage = SchemaExpressionTranslator.FindNonPortable(Tokenize("len([A]) > 0 AND [B] < getdate()"),
+                CustomSchemaDialect.Instance.NonPortableOperators);
 
             // Assert
             Assert.AreEqual("len()", usage);

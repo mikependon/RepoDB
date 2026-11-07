@@ -18,7 +18,7 @@ namespace RepoDb.Schema
     /// <summary>
     /// Builds the versioned schema definition without serializing runtime schema objects or CLR types directly.
     /// </summary>
-    internal static class SchemaDefinition
+    public static class SchemaDefinition
     {
         #region Public Methods
 
@@ -29,7 +29,7 @@ namespace RepoDb.Schema
         /// <param name="tables">The table schemas included in the definition.</param>
         /// <param name="behavior">The relationship behavior used to select the tables.</param>
         /// <returns>The versioned schema definition.</returns>
-        internal static JsonObject Create(TableInfo root,
+        public static JsonObject Create(TableInfo root,
             IList<TableSchema> tables,
             RelatedTableBehavior behavior)
         {
@@ -236,47 +236,9 @@ namespace RepoDb.Schema
         private static JsonObject ColumnType(ColumnInfo column,
             DbField field)
         {
-            var native = field.DatabaseType?.ToLowerInvariant();
-            var baseType = native?.Split('(',
-                ' ')[0];
-            var text = field.Type == typeof(string) || field.Type == typeof(char);
             bool? unicode = column.IsUnicode;
             var charset = column.CharacterSet;
             var unit = column.LengthUnit;
-            if (text && string.Equals(field.Provider,
-                "SqlServer",
-                StringComparison.OrdinalIgnoreCase))
-            {
-                if (string.Equals(baseType,
-                    "nvarchar",
-                    StringComparison.Ordinal) || string.Equals(baseType,
-                        "nchar",
-                        StringComparison.Ordinal) || string.Equals(baseType,
-                        "ntext",
-                        StringComparison.Ordinal))
-                {
-                    unicode = unicode ?? true;
-                    charset = charset ?? "UTF-16";
-                    unit = unit ?? "utf16CodeUnits";
-                }
-                else if (string.Equals(baseType,
-                    "varchar",
-                    StringComparison.Ordinal) || string.Equals(baseType,
-                        "char",
-                        StringComparison.Ordinal) || string.Equals(baseType,
-                        "text",
-                        StringComparison.Ordinal))
-                {
-                    // A UTF-8 collation changes varchar's character repertoire.
-                    if (column.Collation != null)
-                        unicode = unicode ?? column.Collation.EndsWith("_UTF8",
-                            StringComparison.OrdinalIgnoreCase);
-                    if (unicode == true)
-                        charset = charset ?? "UTF-8";
-                    unit = unit ?? "bytes";
-                }
-            }
-
             return new JsonObject
             {
                 ["logical"] = LogicalType(field.Type),

@@ -18,16 +18,16 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
     {
         #region Private Variables
 
-        private readonly (char Open, char Close)[] _backticks = { ('`', '`') };
-        private readonly (char Open, char Close)[] _brackets = { ('[', ']') };
-        private readonly (char Open, char Close)[] _doubleQuotes = { ('"', '"') };
+        private readonly SchemaIdentifierQuote[] _backticks = { new SchemaIdentifierQuote('`') };
+        private readonly SchemaIdentifierQuote[] _brackets = { new SchemaIdentifierQuote('[', ']') };
+        private readonly SchemaIdentifierQuote[] _doubleQuotes = { new SchemaIdentifierQuote('"') };
 
         #endregion
 
         #region Private Methods
 
         private SchemaExpressionToken TokenizeSingle(string expression,
-            (char Open, char Close)[] quotes) =>
+            SchemaIdentifierQuote[] quotes) =>
             SchemaExpressionTokenizer.Tokenize(expression,
                 quotes).Single();
 
@@ -128,7 +128,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         {
             // Act
             var tokens = SchemaExpressionTokenizer.Tokenize("[a] + \"b\"",
-                new[] { ('[', ']'), ('"', '"') });
+                new[] { new SchemaIdentifierQuote('[', ']'), new SchemaIdentifierQuote('"') });
 
             // Assert
             Assert.AreEqual(2, tokens.Count(token => token.Kind == SchemaExpressionTokenKind.Identifier));
@@ -267,14 +267,14 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         }
 
         [TestMethod]
-        public void TestTokenizeTheCastOperatorIsOneToken()
+        public void TestTokenizeTheCharactersOfAnOperatorAreOneTokenEach()
         {
             // Act
-            var token = TokenizeSingle("::",
+            var tokens = SchemaExpressionTokenizer.Tokenize("::",
                 _brackets);
 
             // Assert
-            Assert.AreEqual("::", token.Text);
+            Assert.AreEqual(2, tokens.Count);
         }
 
         [TestMethod]
