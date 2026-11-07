@@ -64,13 +64,6 @@ namespace RepoDb.Schema.MariaDbConnector.UnitTests
         #region Format
 
         [TestMethod]
-        public void TestTheFormatterDoesNotHandleTheKinds()
-        {
-            // Act/Assert
-            Assert.IsFalse(_formatter.HandlesKinds);
-        }
-
-        [TestMethod]
         public void TestFormatTrue()
         {
             // Act

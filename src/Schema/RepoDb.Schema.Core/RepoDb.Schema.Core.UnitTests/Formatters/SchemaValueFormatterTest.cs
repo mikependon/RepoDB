@@ -8,6 +8,7 @@
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Schema.Core.UnitTests.CustomObjects;
 using RepoDb.Schema.Enumerations;
 using RepoDb.Schema.Models;
 
@@ -20,12 +21,12 @@ namespace RepoDb.Schema.Core.UnitTests.Formatters
 
         private static string Format(SchemaValue value,
             string destinationType = null) =>
-            new SchemaValueFormatter().Format(value,
+            new CustomSchemaValueFormatter().Format(value,
                 destinationType,
                 out _);
 
         private static string FormatKind(ColumnDefaultValue kind) =>
-            new SchemaValueFormatter().FormatKind(kind,
+            new CustomSchemaValueFormatter().FormatKind(kind,
                 null,
                 out _);
 
@@ -37,7 +38,7 @@ namespace RepoDb.Schema.Core.UnitTests.Formatters
         public void TestTheFormatterDoesNotHandleTheKindsByDefault()
         {
             // Act
-            var handles = new SchemaValueFormatter().HandlesKinds;
+            var handles = new CustomSchemaValueFormatter().HandlesKinds;
 
             // Assert
             Assert.IsFalse(handles);
@@ -205,7 +206,7 @@ namespace RepoDb.Schema.Core.UnitTests.Formatters
         public void TestFormatADateTimeOffsetWithoutAWarning()
         {
             // Act
-            new SchemaValueFormatter().Format(SchemaValue.FromDateTimeOffset(DateTimeOffset.UtcNow),
+            new CustomSchemaValueFormatter().Format(SchemaValue.FromDateTimeOffset(DateTimeOffset.UtcNow),
                 null,
                 out var warning);
 
@@ -281,7 +282,7 @@ namespace RepoDb.Schema.Core.UnitTests.Formatters
         public void TestFormatKindWithoutAWarning()
         {
             // Act
-            new SchemaValueFormatter().FormatKind(ColumnDefaultValue.CurrentDate,
+            new CustomSchemaValueFormatter().FormatKind(ColumnDefaultValue.CurrentDate,
                 null,
                 out var warning);
 

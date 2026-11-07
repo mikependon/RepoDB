@@ -72,7 +72,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 _composed.AddRange(list);
                 return list.Select(table => "CREATE " + table.Table.Name);
             });
-            composer.As<ISchemaValueSupport>().SetupGet(item => item.ValueFormatter).Returns(new SchemaValueFormatter());
+            composer.As<ISchemaValueSupport>().SetupGet(item => item.ValueFormatter).Returns(new CustomSchemaValueFormatter());
             return composer.Object;
         }
 

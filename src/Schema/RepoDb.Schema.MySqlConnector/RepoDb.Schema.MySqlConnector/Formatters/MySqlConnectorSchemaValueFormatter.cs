@@ -7,14 +7,84 @@
 #endregion
 
 using System;
+using System.Text.RegularExpressions;
+using RepoDb.Schema.Enumerations;
 
 namespace RepoDb.Schema
 {
     /// <summary>
-    /// A <see cref="SchemaValueFormatter"/> that writes the typed values in the format of MySQL (MySqlConnector). The kinds of default values are written by its composer.
+    /// A <see cref="SchemaValueFormatter"/> that writes the typed values and the kinds of default values in the format of MySQL (MySqlConnector).
     /// </summary>
     public sealed class MySqlConnectorSchemaValueFormatter : SchemaValueFormatter
     {
+        #region Private Variables
+
+        private static readonly Regex DateTimeType = new Regex(@"^(datetime|timestamp)(\((?<digits>\d)\))?$",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
+            TimeSpan.FromSeconds(1));
+        private static readonly Regex TimeType = new Regex(@"^time(\((?<digits>\d)\))?$",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
+            TimeSpan.FromSeconds(1));
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets whether the formatter writes the kinds of default values too, which it does.
+        /// </summary>
+        public override bool HandlesKinds => true;
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Writes a kind of default value in the format of MySQL (MySqlConnector).
+        /// </summary>
+        /// <param name="kind">The kind of the default value.</param>
+        /// <param name="destinationType">The type of the column.</param>
+        /// <param name="warning">The reason why the kind was changed, or <c>null</c>.</param>
+        /// <returns>The text that follows <c>DEFAULT</c>, or <c>null</c> if MySQL (MySqlConnector) has no equivalent.</returns>
+        public override string FormatKind(ColumnDefaultValue kind,
+            string destinationType,
+            out string warning)
+        {
+            warning = null;
+            var type = (destinationType ?? string.Empty).Trim();
+            switch (kind)
+            {
+                case ColumnDefaultValue.CurrentTimestamp:
+                    return FormatCurrent(type,
+                        true);
+                case ColumnDefaultValue.CurrentTimestampUtc:
+                    return FormatCurrent(type,
+                        false);
+                case ColumnDefaultValue.CurrentTimestampWithOffset:
+                    warning = "MySQL (MySqlConnector) has no type with an offset, so the date and time is in UTC";
+                    return FormatCurrent(type,
+                        false);
+                case ColumnDefaultValue.CurrentDate:
+                    return "(CURRENT_DATE)";
+                case ColumnDefaultValue.CurrentTime:
+                    return "(CURRENT_TIME" + GetDigits(TimeType,
+                        type) + ")";
+                case ColumnDefaultValue.NewGuid:
+                case ColumnDefaultValue.NewSequentialGuid:
+                    return FormatGuid(type);
+                case ColumnDefaultValue.RandomNumber:
+                    return "(RAND())";
+                case ColumnDefaultValue.CurrentUser:
+                    return IsText(type) ? "(CURRENT_USER())" : null;
+                case ColumnDefaultValue.CurrentDatabase:
+                    return IsText(type) ? "(DATABASE())" : null;
+                default:
+                    return null;
+            }
+        }
+
+        #endregion
+
         #region Protected Methods
 
         /// <summary>
@@ -111,6 +181,84 @@ namespace RepoDb.Schema
         protected override int GetFractionDigits(string destinationType) =>
             Math.Min(ParseDigits(destinationType) ?? 0,
                 MaxFractionDigits);
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Writes the current date and time of a column: <c>CURRENT_TIMESTAMP</c> in a date and time column (with its fractional seconds), an expression in the others.
+        /// </summary>
+        /// <param name="type">The type of the column.</param>
+        /// <param name="local"><c>true</c> for the date and time of the server; <c>false</c> for the date and time in UTC.</param>
+        /// <returns>The text that follows <c>DEFAULT</c>.</returns>
+        private static string FormatCurrent(string type,
+            bool local)
+        {
+            if (DateTimeType.IsMatch(type))
+            {
+                var digits = GetDigits(DateTimeType,
+                    type);
+                return local ? "CURRENT_TIMESTAMP" + digits : "(UTC_TIMESTAMP" + digits + ")";
+            }
+
+            if (TimeType.IsMatch(type))
+            {
+                var digits = GetDigits(TimeType,
+                    type);
+                return local ? "(CURRENT_TIME" + digits + ")" : "(UTC_TIME" + digits + ")";
+            }
+
+            if (type.Equals("date",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                return local ? "(CURRENT_DATE)" : "(UTC_DATE())";
+            }
+
+            return local ? "(NOW())" : "(UTC_TIMESTAMP())";
+        }
+
+        /// <summary>
+        /// Writes a new GUID: <c>UUID()</c> in a text column, and its bytes in a binary of 16 bytes.
+        /// </summary>
+        /// <param name="type">The type of the column.</param>
+        /// <returns>The text that follows <c>DEFAULT</c>, or <c>null</c> if the column can not hold a GUID.</returns>
+        private static string FormatGuid(string type)
+        {
+            if (IsText(type))
+            {
+                return "(UUID())";
+            }
+
+            return type.StartsWith("binary(16)",
+                StringComparison.OrdinalIgnoreCase) || type.StartsWith("varbinary(16)",
+                StringComparison.OrdinalIgnoreCase) ? "(UNHEX(REPLACE(UUID(), '-', '')))" : null;
+        }
+
+        /// <summary>
+        /// Gets the digits of the fractional seconds of the type, between parentheses, as <c>CURRENT_TIMESTAMP</c> must have the digits of its column.
+        /// </summary>
+        /// <param name="pattern">The pattern of the type.</param>
+        /// <param name="type">The type of the column.</param>
+        /// <returns>The digits between parentheses, i.e.: <c>(6)</c>, or an empty text.</returns>
+        private static string GetDigits(Regex pattern,
+            string type)
+        {
+            var match = pattern.Match(type);
+            var digits = match.Success ? match.Groups["digits"].Value : string.Empty;
+            return digits.Length == 0 || digits == "0" ? string.Empty : "(" + digits + ")";
+        }
+
+        /// <summary>
+        /// Checks whether the type is a text.
+        /// </summary>
+        /// <param name="type">The type of the column.</param>
+        /// <returns><c>true</c> if the type is a text.</returns>
+        private static bool IsText(string type) =>
+            type.StartsWith("char",
+                StringComparison.OrdinalIgnoreCase) || type.StartsWith("varchar",
+                StringComparison.OrdinalIgnoreCase) || type.EndsWith("text",
+                StringComparison.OrdinalIgnoreCase);
 
         #endregion
     }

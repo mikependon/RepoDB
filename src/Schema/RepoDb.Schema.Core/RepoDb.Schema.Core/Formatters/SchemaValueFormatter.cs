@@ -16,9 +16,10 @@ using RepoDb.Schema.Models;
 namespace RepoDb.Schema
 {
     /// <summary>
-    /// A class that writes typed values in the ANSI SQL format. A formatter of a database inherits it and changes only what the database writes differently.
+    /// A class that writes typed values in the ANSI SQL format and the kinds of default values in the language of a database.
+    /// A formatter of a database inherits it, writes its kinds (see <see cref="FormatKind"/>) and changes only what the database writes differently.
     /// </summary>
-    public class SchemaValueFormatter : ISchemaValueFormatter
+    public abstract class SchemaValueFormatter : ISchemaValueFormatter
     {
         #region Properties
 
@@ -82,29 +83,15 @@ namespace RepoDb.Schema
         }
 
         /// <summary>
-        /// Writes a kind of default value in the format of the database. The ANSI kinds are the current date and time.
+        /// Writes a kind of default value in the format of the database.
         /// </summary>
         /// <param name="kind">The kind of the default value.</param>
         /// <param name="destinationType">The type of the column in the database, as the composer writes it.</param>
         /// <param name="warning">The reason why the kind was changed, or <c>null</c>.</param>
         /// <returns>The text that follows <c>DEFAULT</c>, or <c>null</c> if the database has no equivalent.</returns>
-        public virtual string FormatKind(ColumnDefaultValue kind,
+        public abstract string FormatKind(ColumnDefaultValue kind,
             string destinationType,
-            out string warning)
-        {
-            warning = null;
-            switch (kind)
-            {
-                case ColumnDefaultValue.CurrentTimestamp:
-                    return "CURRENT_TIMESTAMP";
-                case ColumnDefaultValue.CurrentDate:
-                    return "CURRENT_DATE";
-                case ColumnDefaultValue.CurrentTime:
-                    return "CURRENT_TIME";
-                default:
-                    return null;
-            }
-        }
+            out string warning);
 
         #endregion
 

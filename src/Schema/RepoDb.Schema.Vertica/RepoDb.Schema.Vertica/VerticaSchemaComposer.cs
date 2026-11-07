@@ -21,7 +21,7 @@ namespace RepoDb.Schema
     /// The column types are mapped on a best-effort basis, so the schema can come from a Vertica database or from another database engine.
     /// A statement has no terminator, and a DDL statement is committed by the server. Vertica has no index (it has projections), so no statement creates an index.
     /// </summary>
-    public class VerticaSchemaComposer : ISchemaComposer, ISchemaCreationSupport
+    public class VerticaSchemaComposer : ISchemaComposer, ISchemaCreationSupport, ISchemaValueSupport
     {
         #region Private Variables
 
@@ -31,6 +31,11 @@ namespace RepoDb.Schema
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets the formatter that writes the typed values and the kinds of default values in the format of Vertica.
+        /// </summary>
+        public ISchemaValueFormatter ValueFormatter { get; } = new VerticaSchemaValueFormatter();
 
         /// <summary>
         /// Gets the statement that creates a schema (the placeholder <c>{0}</c> takes the quoted name of the schema).

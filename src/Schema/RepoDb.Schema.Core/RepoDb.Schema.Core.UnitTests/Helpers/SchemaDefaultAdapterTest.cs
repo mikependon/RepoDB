@@ -9,6 +9,7 @@
 using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Schema.Core.UnitTests.CustomObjects;
 using Moq;
 using RepoDb.Interfaces;
 using RepoDb.Schema.Enumerations;
@@ -21,7 +22,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
     {
         #region SubClasses
 
-        private sealed class KindFormatter : SchemaValueFormatter
+        private sealed class KindFormatter : CustomSchemaValueFormatter
         {
             public override bool HandlesKinds => true;
 
@@ -34,7 +35,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
             }
         }
 
-        private sealed class RecordingFormatter : SchemaValueFormatter
+        private sealed class RecordingFormatter : CustomSchemaValueFormatter
         {
             public string DestinationType { get; private set; }
 
@@ -47,7 +48,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
             }
         }
 
-        private sealed class WarningFormatter : SchemaValueFormatter
+        private sealed class WarningFormatter : CustomSchemaValueFormatter
         {
             protected override string FormatDateTimeOffset(DateTimeOffset value,
                 string destinationType,
@@ -147,7 +148,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -163,7 +164,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -180,7 +181,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -214,7 +215,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -231,7 +232,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -247,7 +248,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -264,7 +265,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -285,7 +286,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -307,7 +308,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -328,7 +329,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -349,7 +350,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -371,7 +372,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -388,7 +389,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting(null));
 
             // Assert
@@ -405,7 +406,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 null);
 
             // Assert
@@ -439,7 +440,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -459,7 +460,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -477,7 +478,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -495,7 +496,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -516,7 +517,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -653,7 +654,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -669,7 +670,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -688,7 +689,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -708,7 +709,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -728,7 +729,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
@@ -784,7 +785,7 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
 
             // Act
             SchemaDefaultAdapter.Adapt(table,
-                CreateComposer(new SchemaValueFormatter()),
+                CreateComposer(new CustomSchemaValueFormatter()),
                 CreateSetting());
 
             // Assert
