@@ -543,15 +543,17 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"DECLARE @__RepoDb_OutputTable TABLE ( [Id] INT IDENTITY(1,1), [Result] INT ) ; " +
-                $"INSERT INTO [Table] ( [Field2], [Field3] ) " +
-                $"OUTPUT CONVERT(INT, [INSERTED].[Field1]) INTO @__RepoDb_OutputTable ( [Result] ) " +
-                $"SELECT [Field2], [Field3] FROM " +
-                $"( VALUES " +
-                $"( @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) ) AS T " +
+                $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT, [__RepoDb_OrderColumn] INT ) ; " +
+                $"MERGE [Table] AS T " +
+                $"USING ( VALUES " +
+                $"( @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) ) AS S " +
                 $"( [Field2], [Field3] , [__RepoDb_OrderColumn] ) " +
-                $"ORDER BY [__RepoDb_OrderColumn] ; " +
-                $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
+                $"ON 1 = 0 " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field2], S.[Field3] ) " +
+                $"OUTPUT CONVERT(INT, [INSERTED].[Field1]), S.[__RepoDb_OrderColumn] INTO @__RepoDb_OutputTable ( [Result], [__RepoDb_OrderColumn] ) ; " +
+                $"SELECT [Result], [__RepoDb_OrderColumn] FROM @__RepoDb_OutputTable ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
@@ -573,15 +575,17 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"DECLARE @__RepoDb_OutputTable TABLE ( [Id] INT IDENTITY(1,1), [Result] BIGINT ) ; " +
-                $"INSERT INTO [Table] ( [Field2], [Field3] ) " +
-                $"OUTPUT CONVERT(BIGINT, [INSERTED].[Field1]) INTO @__RepoDb_OutputTable ( [Result] ) " +
-                $"SELECT [Field2], [Field3] FROM " +
-                $"( VALUES " +
-                $"( @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) ) AS T " +
+                $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] BIGINT, [__RepoDb_OrderColumn] INT ) ; " +
+                $"MERGE [Table] AS T " +
+                $"USING ( VALUES " +
+                $"( @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) ) AS S " +
                 $"( [Field2], [Field3] , [__RepoDb_OrderColumn] ) " +
-                $"ORDER BY [__RepoDb_OrderColumn] ; " +
-                $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
+                $"ON 1 = 0 " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field2], S.[Field3] ) " +
+                $"OUTPUT CONVERT(BIGINT, [INSERTED].[Field1]), S.[__RepoDb_OrderColumn] INTO @__RepoDb_OutputTable ( [Result], [__RepoDb_OrderColumn] ) ; " +
+                $"SELECT [Result], [__RepoDb_OrderColumn] FROM @__RepoDb_OutputTable ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
@@ -603,15 +607,17 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"DECLARE @__RepoDb_OutputTable TABLE ( [Id] INT IDENTITY(1,1), [Result] INT ) ; " +
-                $"INSERT INTO [Table] ( [Field1], [Field3] ) " +
-                $"OUTPUT CONVERT(INT, [INSERTED].[Field2]) INTO @__RepoDb_OutputTable ( [Result] ) " +
-                $"SELECT [Field1], [Field3] FROM " +
-                $"( VALUES " +
-                $"( @Field1, @Field3 , @__RepoDb_OrderColumn_0 ) ) AS T " +
+                $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT, [__RepoDb_OrderColumn] INT ) ; " +
+                $"MERGE [Table] AS T " +
+                $"USING ( VALUES " +
+                $"( @Field1, @Field3 , @__RepoDb_OrderColumn_0 ) ) AS S " +
                 $"( [Field1], [Field3] , [__RepoDb_OrderColumn] ) " +
-                $"ORDER BY [__RepoDb_OrderColumn] ; " +
-                $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
+                $"ON 1 = 0 " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field1], [Field3] ) " +
+                $"VALUES ( S.[Field1], S.[Field3] ) " +
+                $"OUTPUT CONVERT(INT, [INSERTED].[Field2]), S.[__RepoDb_OrderColumn] INTO @__RepoDb_OutputTable ( [Result], [__RepoDb_OrderColumn] ) ; " +
+                $"SELECT [Result], [__RepoDb_OrderColumn] FROM @__RepoDb_OutputTable ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
@@ -634,15 +640,17 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"DECLARE @__RepoDb_OutputTable TABLE ( [Id] INT IDENTITY(1,1), [Result] BIGINT ) ; " +
-                $"INSERT INTO [Table] ( [Field1], [Field3] ) " +
-                $"OUTPUT CONVERT(BIGINT, [INSERTED].[Field2]) INTO @__RepoDb_OutputTable ( [Result] ) " +
-                $"SELECT [Field1], [Field3] FROM " +
-                $"( VALUES " +
-                $"( @Field1, @Field3 , @__RepoDb_OrderColumn_0 ) ) AS T " +
+                $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] BIGINT, [__RepoDb_OrderColumn] INT ) ; " +
+                $"MERGE [Table] AS T " +
+                $"USING ( VALUES " +
+                $"( @Field1, @Field3 , @__RepoDb_OrderColumn_0 ) ) AS S " +
                 $"( [Field1], [Field3] , [__RepoDb_OrderColumn] ) " +
-                $"ORDER BY [__RepoDb_OrderColumn] ; " +
-                $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
+                $"ON 1 = 0 " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field1], [Field3] ) " +
+                $"VALUES ( S.[Field1], S.[Field3] ) " +
+                $"OUTPUT CONVERT(BIGINT, [INSERTED].[Field2]), S.[__RepoDb_OrderColumn] INTO @__RepoDb_OutputTable ( [Result], [__RepoDb_OrderColumn] ) ; " +
+                $"SELECT [Result], [__RepoDb_OrderColumn] FROM @__RepoDb_OutputTable ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
@@ -664,17 +672,19 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"DECLARE @__RepoDb_OutputTable TABLE ( [Id] INT IDENTITY(1,1), [Result] INT ) ; " +
-                $"INSERT INTO [Table] ( [Field2], [Field3] ) " +
-                $"OUTPUT CONVERT(INT, [INSERTED].[Field1]) INTO @__RepoDb_OutputTable ( [Result] ) " +
-                $"SELECT [Field2], [Field3] FROM " +
-                $"( VALUES " +
+                $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT, [__RepoDb_OrderColumn] INT ) ; " +
+                $"MERGE [Table] AS T " +
+                $"USING ( VALUES " +
                 $"( @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) , " +
                 $"( @Field2_1, @Field3_1 , @__RepoDb_OrderColumn_1 ) , " +
-                $"( @Field2_2, @Field3_2 , @__RepoDb_OrderColumn_2 ) ) AS T " +
+                $"( @Field2_2, @Field3_2 , @__RepoDb_OrderColumn_2 ) ) AS S " +
                 $"( [Field2], [Field3] , [__RepoDb_OrderColumn] ) " +
-                $"ORDER BY [__RepoDb_OrderColumn] ; " +
-                $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
+                $"ON 1 = 0 " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field2], S.[Field3] ) " +
+                $"OUTPUT CONVERT(INT, [INSERTED].[Field1]), S.[__RepoDb_OrderColumn] INTO @__RepoDb_OutputTable ( [Result], [__RepoDb_OrderColumn] ) ; " +
+                $"SELECT [Result], [__RepoDb_OrderColumn] FROM @__RepoDb_OutputTable ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
@@ -697,15 +707,17 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 identityField: identityField,
                 hints: SqlServerTableHints.TabLock);
             var expected = $"" +
-                $"DECLARE @__RepoDb_OutputTable TABLE ( [Id] INT IDENTITY(1,1), [Result] INT ) ; " +
-                $"INSERT INTO [Table] WITH (TABLOCK) ( [Field2], [Field3] ) " +
-                $"OUTPUT CONVERT(INT, [INSERTED].[Field1]) INTO @__RepoDb_OutputTable ( [Result] ) " +
-                $"SELECT [Field2], [Field3] FROM " +
-                $"( VALUES " +
-                $"( @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) ) AS T " +
+                $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT, [__RepoDb_OrderColumn] INT ) ; " +
+                $"MERGE [Table] WITH (TABLOCK) AS T " +
+                $"USING ( VALUES " +
+                $"( @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) ) AS S " +
                 $"( [Field2], [Field3] , [__RepoDb_OrderColumn] ) " +
-                $"ORDER BY [__RepoDb_OrderColumn] ; " +
-                $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
+                $"ON 1 = 0 " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field2], S.[Field3] ) " +
+                $"OUTPUT CONVERT(INT, [INSERTED].[Field1]), S.[__RepoDb_OrderColumn] INTO @__RepoDb_OutputTable ( [Result], [__RepoDb_OrderColumn] ) ; " +
+                $"SELECT [Result], [__RepoDb_OrderColumn] FROM @__RepoDb_OutputTable ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
@@ -728,17 +740,19 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 identityField: identityField,
                 hints: SqlServerTableHints.TabLock);
             var expected = $"" +
-                $"DECLARE @__RepoDb_OutputTable TABLE ( [Id] INT IDENTITY(1,1), [Result] INT ) ; " +
-                $"INSERT INTO [Table] WITH (TABLOCK) ( [Field2], [Field3] ) " +
-                $"OUTPUT CONVERT(INT, [INSERTED].[Field1]) INTO @__RepoDb_OutputTable ( [Result] ) " +
-                $"SELECT [Field2], [Field3] FROM " +
-                $"( VALUES " +
+                $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] INT, [__RepoDb_OrderColumn] INT ) ; " +
+                $"MERGE [Table] WITH (TABLOCK) AS T " +
+                $"USING ( VALUES " +
                 $"( @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) , " +
                 $"( @Field2_1, @Field3_1 , @__RepoDb_OrderColumn_1 ) , " +
-                $"( @Field2_2, @Field3_2 , @__RepoDb_OrderColumn_2 ) ) AS T " +
+                $"( @Field2_2, @Field3_2 , @__RepoDb_OrderColumn_2 ) ) AS S " +
                 $"( [Field2], [Field3] , [__RepoDb_OrderColumn] ) " +
-                $"ORDER BY [__RepoDb_OrderColumn] ; " +
-                $"SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;";
+                $"ON 1 = 0 " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field2], S.[Field3] ) " +
+                $"OUTPUT CONVERT(INT, [INSERTED].[Field1]), S.[__RepoDb_OrderColumn] INTO @__RepoDb_OutputTable ( [Result], [__RepoDb_OrderColumn] ) ; " +
+                $"SELECT [Result], [__RepoDb_OrderColumn] FROM @__RepoDb_OutputTable ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual, StringComparer.Ordinal);
@@ -2528,8 +2542,8 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 identityField: null);
 
             // Assert
-            StringAssert.StartsWith(actual, $"DECLARE @__RepoDb_OutputTable TABLE ( [Id] INT IDENTITY(1,1), [Result] {expectedType} ) ; ", StringComparison.Ordinal);
-            StringAssert.Contains(actual, $"OUTPUT CONVERT({expectedType}, [INSERTED].[Field1]) INTO @__RepoDb_OutputTable ( [Result] ) ", StringComparison.Ordinal);
+            StringAssert.StartsWith(actual, $"DECLARE @__RepoDb_OutputTable TABLE ( [Result] {expectedType}, [__RepoDb_OrderColumn] INT ) ; ", StringComparison.Ordinal);
+            StringAssert.Contains(actual, $"OUTPUT CONVERT({expectedType}, [INSERTED].[Field1]), S.[__RepoDb_OrderColumn] INTO @__RepoDb_OutputTable ( [Result], [__RepoDb_OrderColumn] ) ", StringComparison.Ordinal);
         }
 
         [TestMethod]
