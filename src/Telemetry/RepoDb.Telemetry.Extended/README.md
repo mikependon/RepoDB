@@ -4,6 +4,26 @@ Extended telemetry capture for RepoDB, delivered separately from `RepoDb.Telemet
 `ExtendedTelemetryItem` inherits `DefaultTelemetryItem` and adds severity, a message,
 thread and distributed tracing identifiers, database metadata, row counts, and custom properties.
 
+## Setting up Docker
+
+Download the [docker-compose.yml](https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/src/Telemetry/RepoDb.Telemetry.Extended/docker-compose.yml) and [.env](https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/src/Telemetry/RepoDb.Telemetry.Extended/.env) files into any directory and run the command below:
+
+```bash
+docker compose up -d
+```
+
+Once the stack is up, the Extended Collector API runs at [`http://localhost:5002`](http://localhost:5002) and the Extended Query API at [`http://localhost:5003`](http://localhost:5003) (Swagger at `/docs`).
+
+| Service | Port | Purpose |
+|---|---|---|
+| `pgsql` | `5432` | PostgreSQL database (`repodb/insights-postgres`, version 0.0.2 or later). |
+| `extended-collector` | `5002` | Receives the telemetry published by your application (the `Host` below). |
+| `extended-query` | `5003` | Queries operational and archived telemetry. |
+| `extended-filedatasinker` | — | Archives telemetry from the database to Parquet files. |
+| `extended-purger` | — | Deletes archived telemetry past its retention period. |
+
+The file has no Visualization. It brings its own `pgsql`, so do not run it next to the Default stack's compose file. Settings come from the `.env` file next to it (`REPODB_PGSQL_PASSWORD`, `REPODB_API_KEY`, `REPODB_QUERY_ALLOWED_ORIGINS`, `REPODB_FILEDATASINKER_*`, `REPODB_PURGER_*`). Everything defaults to `RepoDB2026` as the shared password and API key, meant for trying things out, not production.
+
 ## Configuration
 
 ```csharp
@@ -12,7 +32,7 @@ using System.Data;
 
 GlobalConfiguration.Setup().UseExtendedTelemetry(new ExtendedTelemetryOption("PayrollSystem")
 {
-    Host = "http://localhost:5000",
+    Host = "http://localhost:5002",
     ApiKey = "collector-api-key",
     Enrich = (item, log) =>
     {

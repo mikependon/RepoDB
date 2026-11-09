@@ -1,0 +1,78 @@
+services:
+  pgsql:
+    image: repodb/insights-postgres:latest
+    container_name: pgsql
+    environment:
+      POSTGRES_PASSWORD: RepoDB2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - repodb
+
+  extended-collector:
+    image: repodb/telemetry-extended-collector:latest
+    container_name: extended-collector
+    environment:
+      API_KEY: ${REPODB_API_KEY:-RepoDB2026}
+      CONNECTION_STRING: postgresql://postgres:${REPODB_PGSQL_PASSWORD:-RepoDB2026}@pgsql:5432/repodb_insights
+    ports:
+      - "5002:5002"
+    depends_on:
+      - pgsql
+    networks:
+      - repodb
+
+  extended-query:
+    image: repodb/telemetry-extended-query:latest
+    container_name: extended-query
+    environment:
+      API_KEY: ${REPODB_API_KEY:-RepoDB2026}
+      CONNECTION_STRING: postgresql://postgres:${REPODB_PGSQL_PASSWORD:-RepoDB2026}@pgsql:5432/repodb_insights
+      DIRECTORY_PATH: /tmp/repodb/telemetry/extended
+      ALLOWED_ORIGINS: ${REPODB_QUERY_ALLOWED_ORIGINS:-http://localhost:3000}
+    volumes:
+      - extended_telemetry_data:/tmp/repodb/telemetry/extended:ro
+    ports:
+      - "5003:5003"
+    depends_on:
+      - pgsql
+    networks:
+      - repodb
+
+  extended-filedatasinker:
+    image: repodb/telemetry-extended-filedatasinker:latest
+    container_name: extended-filedatasinker
+    cpus: 0.25
+    environment:
+      CONNECTION_STRING: postgresql://postgres:${REPODB_PGSQL_PASSWORD:-RepoDB2026}@pgsql:5432/repodb_insights
+      DIRECTORY_PATH: /tmp/repodb/telemetry/extended
+      FREQUENCY_IN_MINUTES: ${REPODB_FILEDATASINKER_FREQUENCY_IN_MINUTES:-60}
+      ARCHIVE_BATCH_SIZE: ${REPODB_FILEDATASINKER_BATCH_SIZE:-10000}
+    volumes:
+      - extended_telemetry_data:/tmp/repodb/telemetry/extended
+    depends_on:
+      - pgsql
+    networks:
+      - repodb
+
+  extended-purger:
+    image: repodb/telemetry-extended-purger:latest
+    container_name: extended-purger
+    cpus: 0.25
+    environment:
+      CONNECTION_STRING: postgresql://postgres:${REPODB_PGSQL_PASSWORD:-RepoDB2026}@pgsql:5432/repodb_insights
+      RETENTION_PERIOD_IN_MINUTES: ${REPODB_PURGER_RETENTION_PERIOD_IN_MINUTES:-10080}
+      FREQUENCY_IN_MINUTES: ${REPODB_PURGER_FREQUENCY_IN_MINUTES:-5}
+    depends_on:
+      - pgsql
+    networks:
+      - repodb
+
+volumes:
+  pgdata:
+  extended_telemetry_data:
+
+networks:
+  repodb:
