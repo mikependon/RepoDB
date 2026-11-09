@@ -278,7 +278,7 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            // Call the base
+            // Call the base (guards, and the statement when no key is read back)
             var commandText = base.CreateInsertAll(tableName,
                 fields,
                 batchSize,
@@ -288,29 +288,90 @@ namespace RepoDb.StatementBuilders
 
             // Variables needed
             var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
-
-            // Set the return value
-            if (keyColumn != null)
+            if (keyColumn == null)
             {
-                var databaseType = GetKeyDatabaseType(keyColumn);
-                var returnValue = keyColumn == null ? "NULL" :
-                    string.IsNullOrWhiteSpace(databaseType) ?
-                        string.Concat("[INSERTED].", keyColumn.Name.AsQuoted(DbSetting)) :
-                            string.Concat("CONVERT(", databaseType, ", [INSERTED].", keyColumn.Name.AsQuoted(DbSetting), ")");
-
-                // SQL Server disallows an OUTPUT clause without INTO on a target table that has
-                // any enabled triggers. Route the OUTPUT into a table variable instead of
-                // returning it directly, then SELECT it back out as a second statement.
-                var resultType = string.IsNullOrWhiteSpace(databaseType) ? "SQL_VARIANT" : databaseType;
-                var declare = string.Concat("DECLARE @__RepoDb_OutputTable TABLE ( [Id] INT IDENTITY(1,1), [Result] ", resultType, " ) ; ");
-                var output = string.Concat("OUTPUT ", returnValue, " INTO @__RepoDb_OutputTable ( [Result] ) ");
-
-                commandText = commandText.Insert(commandText.IndexOf("SELECT", StringComparison.Ordinal), output);
-                commandText = string.Concat(declare, commandText, " SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;");
+                return commandText;
             }
 
+            // SQL Server does not guarantee that OUTPUT emits rows in the order of the source rows (for example, a batch
+            // is sorted by the clustered key before it is inserted), so the keys cannot be matched to the entities by
+            // position (#1393). INSERT ... OUTPUT cannot reference source columns, but MERGE can: a MERGE that never
+            // matches (ON 1 = 0) inserts every source row and outputs each generated key together with the row's
+            // [__RepoDb_OrderColumn], which the caller uses to give every entity the key of its own row. The OUTPUT goes
+            // INTO a table variable because SQL Server disallows OUTPUT without INTO on a table with enabled triggers.
+            var databaseType = GetKeyDatabaseType(keyColumn);
+            var returnValue = string.IsNullOrWhiteSpace(databaseType) ?
+                string.Concat("[INSERTED].", keyColumn.Name.AsQuoted(DbSetting)) :
+                string.Concat("CONVERT(", databaseType, ", [INSERTED].", keyColumn.Name.AsQuoted(DbSetting), ")");
+            var resultType = string.IsNullOrWhiteSpace(databaseType) ? "SQL_VARIANT" : databaseType;
+            var orderColumn = "__RepoDb_OrderColumn".AsQuoted(DbSetting);
+
+            // Insertable fields
+            var insertableFields = fields
+                .Where(f =>
+                    !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Initialize the builder
+            var builder = new QueryBuilder();
+
+            // MERGE T USING ( VALUES ... ) AS S ON 1 = 0
+            builder.Clear()
+                .WriteText(string.Concat("DECLARE @__RepoDb_OutputTable TABLE ( [Result] ", resultType, ", ", orderColumn, " INT ) ;"))
+                .Merge()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .As("T")
+                .Using()
+                .OpenParen()
+                .Values();
+
+            // Iterate the indexes
+            for (var index = 0; index < batchSize; index++)
+            {
+                builder
+                    .OpenParen()
+                    .ParametersFrom(insertableFields, index, DbSetting)
+                    .WriteText(
+                        string.Concat(", ",
+                            $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}"))
+                    .CloseParen();
+
+                if (index < batchSize - 1)
+                {
+                    builder
+                        .WriteText(",");
+                }
+            }
+
+            // WHEN NOT MATCHED THEN INSERT ... OUTPUT ... INTO
+            builder
+                .CloseParen()
+                .As("S")
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .WriteText(string.Concat(", ", orderColumn))
+                .CloseParen()
+                .On()
+                .WriteText("1 = 0")
+                .When()
+                .Not()
+                .Matched()
+                .Then()
+                .Insert()
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .CloseParen()
+                .Values()
+                .OpenParen()
+                .AsAliasFieldsFrom(insertableFields, "S", DbSetting)
+                .CloseParen()
+                .WriteText(string.Concat("OUTPUT ", returnValue, ", S.", orderColumn,
+                    " INTO @__RepoDb_OutputTable ( [Result], ", orderColumn, " )"))
+                .End()
+                .WriteText(string.Concat("SELECT [Result], ", orderColumn, " FROM @__RepoDb_OutputTable ORDER BY ", orderColumn, " ;"));
+
             // Return the query
-            return commandText;
+            return builder.GetString();
         }
 
         #endregion

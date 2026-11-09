@@ -61,6 +61,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
 
             // Create the table used to prove trigger compatibility
             CreateTablesWithTrigger();
+
+            // Create the table used to prove that InsertAll maps keys by row, not by OUTPUT order
+            CreateInsertAllOutputOrderTable();
         }
 
         public static void Cleanup()
@@ -70,6 +73,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
                 connection.Truncate<IdentityCompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
                 connection.Truncate<TriggerCompatibilityTable>();
+                connection.Truncate<InsertAllOutputOrderTable>();
                 connection.Truncate<VectorEntity>();
             }
         }
@@ -220,6 +224,36 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
                             [Id] ASC
                         )
                     );
+                END";
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+            {
+                connection.ExecuteNonQuery(commandText);
+            }
+        }
+
+        #endregion
+
+        #region CreateInsertAllOutputOrderTable
+
+        /// <summary>
+        /// Creates a table with a non-clustered identity primary key and a clustered index on [SortKey]. A large batched
+        /// insert into it is sorted by [SortKey], so the OUTPUT clause does not return the rows in the source order (#1393).
+        /// </summary>
+        public static void CreateInsertAllOutputOrderTable()
+        {
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'InsertAllOutputOrderTable'))
+                BEGIN
+                    CREATE TABLE [dbo].[InsertAllOutputOrderTable]
+                    (
+                        [Id] BIGINT IDENTITY(1, 1) NOT NULL,
+                        [SortKey] INT NOT NULL,
+                        [Name] NVARCHAR(128) NOT NULL,
+                        CONSTRAINT [InsertAllOutputOrderTable_Id] PRIMARY KEY NONCLUSTERED
+                        (
+                            [Id] ASC
+                        )
+                    ) ON [PRIMARY];
+                    CREATE CLUSTERED INDEX [InsertAllOutputOrderTable_SortKey] ON [dbo].[InsertAllOutputOrderTable] ([SortKey] ASC);
                 END";
             using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
