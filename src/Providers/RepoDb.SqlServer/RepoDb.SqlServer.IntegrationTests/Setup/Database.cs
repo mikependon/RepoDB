@@ -213,13 +213,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
 
         private static void CreatePropertyHandlerTable()
         {
-            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'PropertyHandler'))
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'VectorPropertyHandler'))
                 BEGIN
-                    CREATE TABLE [dbo].[PropertyHandler]
+                    CREATE TABLE [dbo].[VectorPropertyHandler]
                     (
                         [Id] INT IDENTITY(1, 1) NOT NULL,
                         [Embedding] VECTOR(3) NULL,
-                        CONSTRAINT [PropertyHandler_Id] PRIMARY KEY
+                        CONSTRAINT [VectorPropertyHandler_Id] PRIMARY KEY
                         (
                             [Id] ASC
                         )
