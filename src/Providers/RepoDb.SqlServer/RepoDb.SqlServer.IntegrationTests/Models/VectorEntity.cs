@@ -12,9 +12,9 @@ using RepoDb.PropertyHandlers.SqlServer;
 namespace RepoDb.SqlServer.IntegrationTests.Models
 {
     /// <summary>
-    /// A minimal model that maps to the [dbo].[PropertyHandler] table, used to test the property handlers.
+    /// A minimal model that maps to the [dbo].[VectorPropertyHandler] table, used to test the vector property handler.
     /// </summary>
-    [Map("PropertyHandler")]
+    [Map("VectorPropertyHandler")]
     public class VectorEntity
     {
         public System.Int32 Id { get; set; }
