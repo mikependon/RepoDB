@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>RepoDb.Data.Core.UnitTests.Fake.BulkOperations</AssemblyName>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <Description>A fake bulk operations assembly (its name ends with '.BulkOperations') that the unit tests of RepoDb.Data.Core use to exercise the discovery of the BulkInsert extension methods.</Description>
   </PropertyGroup>

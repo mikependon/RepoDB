@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>RepoDb.EnterpriseDb</Title>
     <AssemblyName>RepoDb.EnterpriseDb</AssemblyName>
-    <TargetFrameworks>net8;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <Nullable>annotations</Nullable>
     <Description>A hybrid .NET ORM library for EDB Postgres Advanced Server (EnterpriseDB).</Description>
     <PackageTags>orm hybrid-orm micro-orm postgresql enterprisedb edb</PackageTags>
@@ -23,7 +23,7 @@
     <PackageReference Include="RepoDb.Connector.EnterpriseDb" Version="1.1.0" />
     <PackageReference Include="System.Text.Json" Version="10.0.13" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+  <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0'))">
     <PackageReference Remove="System.Linq.Async" />
   </ItemGroup>
   <ItemGroup>

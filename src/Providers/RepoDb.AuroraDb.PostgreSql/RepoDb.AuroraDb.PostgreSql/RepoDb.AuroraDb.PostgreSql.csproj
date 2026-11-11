@@ -3,7 +3,7 @@
     <Title>RepoDb.AuroraDb.PostgreSql</Title>
     <AssemblyName>RepoDb.AuroraDb.PostgreSql</AssemblyName>
     <PackageId>RepoDb.AuroraDb.PostgreSql</PackageId>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <Nullable>annotations</Nullable>
     <Description>A hybrid .NET ORM library for Amazon Aurora PostgreSQL (using RepoDb.Connector.AuroraDb.Npgsql).</Description>
     <PackageTags>orm hybrid-orm micro-orm auroradb aurora aws amazon postgresql npgsql</PackageTags>
@@ -31,7 +31,7 @@
     <PackageReference Include="Npgsql" Version="10.0.3" />
     <PackageReference Include="System.Text.Json" Version="10.0.13" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+  <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0'))">
     <PackageReference Remove="System.Linq.Async" />
   </ItemGroup>
   <ItemGroup>

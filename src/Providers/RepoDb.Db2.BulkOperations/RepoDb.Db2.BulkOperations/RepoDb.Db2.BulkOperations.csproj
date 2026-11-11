@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>RepoDb.Db2.BulkOperations</Title>
     <AssemblyName>RepoDb.Db2.BulkOperations</AssemblyName>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
     <Description>An extension library that contains the official Bulk Operations of RepoDB for IBM DB2.</Description>
@@ -22,21 +22,15 @@
     <PackageVersion Condition="'$(RepoDbDb2BulkOperationsVersion)' != ''">$(RepoDbDb2BulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' == 'Windows_NT'">
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
     <PackageReference Include="Net.IBM.Data.Db2" Version="10.0.0.300" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' != 'Windows_NT'">
+  <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
     <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="10.0.0.300" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0' AND '$(OS)' == 'Windows_NT'">
-    <PackageReference Include="Net.IBM.Data.Db2" Version="9.0.0.400" PrivateAssets="all" />
-  </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0' AND '$(OS)' != 'Windows_NT'">
-    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="9.0.0.400" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />

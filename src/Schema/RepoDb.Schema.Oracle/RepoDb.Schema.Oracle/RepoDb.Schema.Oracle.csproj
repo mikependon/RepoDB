@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>RepoDb.Schema.Oracle</Title>
     <AssemblyName>RepoDb.Schema.Oracle</AssemblyName>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <Description>The Oracle schema reader and composer of RepoDB library.</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>RepoDb.Schema.AuroraDbPostgreSql</Title>
     <AssemblyName>RepoDb.Schema.AuroraDbPostgreSql</AssemblyName>
-    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <Description>The Amazon Aurora PostgreSQL schema reader and composer of RepoDB library.</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
