@@ -206,6 +206,12 @@ namespace RepoDb.Reflection
         internal static MethodInfo GetSystemConvertToTypeMethod(Type fromType,
             Type toType)
         {
+            // .NET 11 converts a floating-point to a decimal using its exact binary value, keep the previous rounding
+            if (Converter.GetFloatingPointToDecimalMethod(TypeCache.Get(fromType).GetUnderlyingType(), TypeCache.Get(toType).GetUnderlyingType()) is { } roundedMethod)
+            {
+                return roundedMethod;
+            }
+
             return typeof(System.Convert).GetMethod(string.Concat("To", TypeCache.Get(toType).GetUnderlyingType().Name),
                 new[] { TypeCache.Get(fromType).GetUnderlyingType() });
         }
@@ -1017,7 +1023,14 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionToTypeExpression(Expression expression,
             Type toType)
         {
-            return (expression.Type != toType) ? Expression.Convert(expression, toType) : expression;
+            if (expression.Type == toType)
+            {
+                return expression;
+            }
+
+            // .NET 11 converts a floating-point to a decimal using its exact binary value, keep the previous rounding
+            return Converter.GetFloatingPointToDecimalMethod(expression.Type, toType) is { } roundedMethod ?
+                Expression.Call(roundedMethod, expression) : Expression.Convert(expression, toType);
         }
 
         /// <summary>

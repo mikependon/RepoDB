@@ -12,6 +12,7 @@ using RepoDb.Extensions;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Globalization;
 
 namespace RepoDb
 {
@@ -20,6 +21,30 @@ namespace RepoDb
     /// </summary>
     public static class Converter
     {
+        #region Private Variables
+        
+        /// <summary>
+        /// The maximum absolute value of a <see cref="decimal"/>, as a <see cref="double"/>. A larger value cannot be converted.
+        /// </summary>
+        private const double DecimalMaxValueAsDouble = 7.9228162514264337E+28;
+
+        /// <summary>
+        /// The maximum absolute value of a <see cref="decimal"/>, as a <see cref="float"/>. A larger value cannot be converted.
+        /// </summary>
+        private const float DecimalMaxValueAsSingle = 7.9228162514264337E+28f;
+
+        // Not a constant on purpose: a compile-time evaluation would reflect the compiler instead of the runtime.
+        private static readonly double FloatingPointToDecimalProbe = 100.05;
+
+        /// <summary>
+        /// Gets whether the runtime converts a <see cref="double"/> or <see cref="float"/> to a <see cref="decimal"/> using the exact
+        /// binary value (.NET 11 and up, e.g.: 100.05 becomes 100.04999999999999715782905696) instead of rounding the value to its
+        /// 15 (<see cref="double"/>) or 7 (<see cref="float"/>) significant digits (.NET 10 and below, e.g.: 100.05).
+        /// </summary>
+        internal static readonly bool IsFloatingPointToDecimalExact = (decimal)FloatingPointToDecimalProbe != 100.05m;
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -60,6 +85,17 @@ namespace RepoDb
         private static bool IsNullableOrReferenceType(Type type) =>
             !type.IsValueType ||
             Nullable.GetUnderlyingType(type) != null;
+
+        private static object ChangeType(object value,
+            Type type)
+        {
+            if (type == typeof(decimal) && IsFloatingPointToDecimalExact)
+            {
+                if (value is double d) return DoubleToDecimal(d);
+                if (value is float f) return SingleToDecimal(f);
+            }
+            return Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
+        }
 
         #endregion
 
@@ -126,7 +162,7 @@ namespace RepoDb
             try
             {
                 value = (typeof(T).Equals(StaticType.Guid) && value is string) ?
-                    (T)StringToGuidAsObject(value) : (T)Convert.ChangeType(value, typeof(T), System.Globalization.CultureInfo.InvariantCulture);
+                    (T)StringToGuidAsObject(value) : (T)ChangeType(value, typeof(T));
                 if (value == DBNull.Value)
                 {
                     throw new Exception("Failed to convert the 'DBNull' value.");
@@ -176,7 +212,7 @@ namespace RepoDb
             try
             {
                 value = (type.Equals(StaticType.Guid) && value is string) ?
-                    StringToGuidAsObject(value) : Convert.ChangeType(value, type, System.Globalization.CultureInfo.InvariantCulture);
+                    StringToGuidAsObject(value) : ChangeType(value, type);
                 if (value == DBNull.Value || (value == null && type.IsValueType))
                 {
                     throw new Exception("Failed to convert the 'DBNull' value.");
@@ -197,6 +233,70 @@ namespace RepoDb
                 return result;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Converts a <see cref="double"/> to a <see cref="decimal"/> rounded to 15 significant digits, regardless of the runtime.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
+        internal static decimal DoubleToDecimal(double value)
+        {
+            // NaN, infinity and out-of-range values keep throwing the 'OverflowException' of the runtime
+            if (!IsFloatingPointToDecimalExact || double.IsNaN(value) || double.IsInfinity(value) || Math.Abs(value) >= DecimalMaxValueAsDouble)
+            {
+                return (decimal)value;
+            }
+            return decimal.Parse(value.ToString("G15", CultureInfo.InvariantCulture), NumberStyles.Float, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Converts a <see cref="float"/> to a <see cref="decimal"/> rounded to 7 significant digits, regardless of the runtime.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
+        internal static decimal SingleToDecimal(float value)
+        {
+            // NaN, infinity and out-of-range values keep throwing the 'OverflowException' of the runtime
+            if (!IsFloatingPointToDecimalExact || float.IsNaN(value) || float.IsInfinity(value) || Math.Abs(value) >= DecimalMaxValueAsSingle)
+            {
+                return (decimal)value;
+            }
+            return decimal.Parse(value.ToString("G7", CultureInfo.InvariantCulture), NumberStyles.Float, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Converts an object to a <see cref="decimal"/> like <see cref="Convert.ToDecimal(object)"/>, but keeps the rounding of a boxed
+        /// <see cref="double"/> or <see cref="float"/> regardless of the runtime.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
+        internal static decimal ObjectToDecimal(object value)
+        {
+            return value switch
+            {
+                double d => DoubleToDecimal(d),
+                float f => SingleToDecimal(f),
+                _ => Convert.ToDecimal(value)
+            };
+        }
+
+        /// <summary>
+        /// Gets the method that converts the <paramref name="fromType"/> to a <see cref="decimal"/> keeping the pre-.NET 11 rounding,
+        /// or null if the conversion does not need it.
+        /// </summary>
+        internal static System.Reflection.MethodInfo GetFloatingPointToDecimalMethod(Type fromType,
+            Type toType)
+        {
+            if (!IsFloatingPointToDecimalExact || toType != typeof(decimal))
+            {
+                return null;
+            }
+            var name = fromType == typeof(double) ? nameof(DoubleToDecimal) :
+                fromType == typeof(float) ? nameof(SingleToDecimal) :
+                fromType == typeof(object) ? nameof(ObjectToDecimal) : null;
+            return name == null ? null :
+                typeof(Converter).GetMethod(name, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
         }
 
         #endregion
