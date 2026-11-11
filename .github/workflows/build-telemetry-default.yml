@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Telemetry/RepoDb.Telemetry.Default
-      solution-file: RepoDb.Telemetry.Default.sln
+      solution-file: RepoDb.Telemetry.Default.slnx
       artifact-name: release-telemetry-default
       db-engine: none

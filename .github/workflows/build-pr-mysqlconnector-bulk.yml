@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.MySqlConnector.BulkOperations
-      solution-file: RepoDb.MySqlConnector.BulkOperations.sln
+      solution-file: RepoDb.MySqlConnector.BulkOperations.slnx
       artifact-name: release-pr
       db-engine: mysql

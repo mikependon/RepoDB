@@ -121,6 +121,6 @@ and 10 and include real loopback HTTP capture-to-publish checks without an exter
 database or collector.
 
 ```powershell
-dotnet build RepoDb.Telemetry.Extended.sln
+dotnet build RepoDb.Telemetry.Extended.slnx
 dotnet test --project RepoDb.Telemetry.Extended.UnitTests/RepoDb.Telemetry.Extended.UnitTests.csproj
 ```

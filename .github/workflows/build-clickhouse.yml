@@ -14,6 +14,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.ClickHouse
-      solution-file: RepoDb.ClickHouse.sln
+      solution-file: RepoDb.ClickHouse.slnx
       artifact-name: release-clickhouse
       db-engine: clickhouse

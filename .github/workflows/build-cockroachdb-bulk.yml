@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.CockroachDb.BulkOperations
-      solution-file: RepoDb.CockroachDb.BulkOperations.sln
+      solution-file: RepoDb.CockroachDb.BulkOperations.slnx
       artifact-name: release-cockroachdb-bulk
       db-engine: cockroachdb

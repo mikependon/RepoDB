@@ -13,6 +13,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.Core
-      solution-file: RepoDb.sln
+      solution-file: RepoDb.slnx
       artifact-name: release-pr
       db-engine: sqlserver

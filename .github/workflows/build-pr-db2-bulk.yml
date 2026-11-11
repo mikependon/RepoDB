@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.Db2.BulkOperations
-      solution-file: RepoDb.Db2.BulkOperations.sln
+      solution-file: RepoDb.Db2.BulkOperations.slnx
       artifact-name: release-pr
       db-engine: db2

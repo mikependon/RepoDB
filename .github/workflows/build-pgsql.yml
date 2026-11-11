@@ -14,6 +14,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.PostgreSql
-      solution-file: RepoDb.PostgreSql.sln
+      solution-file: RepoDb.PostgreSql.slnx
       artifact-name: release-pgsql
       db-engine: postgresql

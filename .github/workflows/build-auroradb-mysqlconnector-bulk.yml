@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.AuroraDb.MySqlConnector.BulkOperations
-      solution-file: RepoDb.AuroraDb.MySqlConnector.BulkOperations.sln
+      solution-file: RepoDb.AuroraDb.MySqlConnector.BulkOperations.slnx
       artifact-name: release-auroradb-mysqlconnector-bulk
       db-engine: auroradbmysql

@@ -14,6 +14,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.AuroraDb.MySqlConnector
-      solution-file: RepoDb.AuroraDb.MySqlConnector.sln
+      solution-file: RepoDb.AuroraDb.MySqlConnector.slnx
       artifact-name: release-auroradb-mysqlconnector
       db-engine: auroradbmysql

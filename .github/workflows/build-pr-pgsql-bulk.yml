@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.PostgreSql.BulkOperations
-      solution-file: RepoDb.PostgreSql.BulkOperations.sln
+      solution-file: RepoDb.PostgreSql.BulkOperations.slnx
       artifact-name: release-pr
       db-engine: postgresql

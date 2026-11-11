@@ -70,7 +70,7 @@ Each provider section below names its own `<service>` and the port/credentials i
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.Core
-> dotnet build RepoDb.sln -v n
+> dotnet build RepoDb.slnx -v n
 ```
 
 #### Pre-requisites
@@ -128,7 +128,7 @@ Execute the unit tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.MySqlConnector
-> dotnet build RepoDb.AuroraDb.MySqlConnector.sln -v n
+> dotnet build RepoDb.AuroraDb.MySqlConnector.slnx -v n
 ```
 
 #### Pre-requisites
@@ -172,7 +172,7 @@ Build and execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.MySqlConnector.BulkOperations
-> dotnet build RepoDb.AuroraDb.MySqlConnector.BulkOperations.sln -v n
+> dotnet build RepoDb.AuroraDb.MySqlConnector.BulkOperations.slnx -v n
 ```
 
 #### Building and executing the [RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.MySqlConnector.BulkOperations/RepoDb.AuroraDb.MySqlConnector.BulkOperations.IntegrationTests)
@@ -200,7 +200,7 @@ Build and execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.PostgreSql
-> dotnet build RepoDb.AuroraDb.PostgreSql.sln -v n
+> dotnet build RepoDb.AuroraDb.PostgreSql.slnx -v n
 ```
 
 #### Pre-requisites
@@ -249,7 +249,7 @@ Execute the integration tests. The `TransactionScope` tests are reported as inco
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.AuroraDb.PostgreSql.BulkOperations
-> dotnet build RepoDb.AuroraDb.PostgreSql.BulkOperations.sln -v n
+> dotnet build RepoDb.AuroraDb.PostgreSql.BulkOperations.slnx -v n
 ```
 
 #### Building and executing the [RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests](https://github.com/mikependon/RepoDB/tree/master/src/Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations/RepoDb.AuroraDb.PostgreSql.BulkOperations.IntegrationTests)
@@ -277,7 +277,7 @@ Build and execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.ClickHouse
-> dotnet build RepoDb.ClickHouse.sln -v n
+> dotnet build RepoDb.ClickHouse.slnx -v n
 ```
 
 #### Pre-requisites
@@ -326,7 +326,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.ClickHouse.BulkOperations
-> dotnet build RepoDb.ClickHouse.BulkOperations.sln -v n
+> dotnet build RepoDb.ClickHouse.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -365,7 +365,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.CockroachDb
-> dotnet build RepoDb.CockroachDb.sln -v n
+> dotnet build RepoDb.CockroachDb.slnx -v n
 ```
 
 #### Pre-requisites
@@ -414,7 +414,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.CockroachDb.BulkOperations
-> dotnet build RepoDb.CockroachDb.BulkOperations.sln -v n
+> dotnet build RepoDb.CockroachDb.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -453,7 +453,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.Db2
-> dotnet build RepoDb.Db2.sln -v n
+> dotnet build RepoDb.Db2.slnx -v n
 ```
 
 #### Pre-requisites
@@ -501,7 +501,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.Db2.BulkOperations
-> dotnet build RepoDb.Db2.BulkOperations.sln -v n
+> dotnet build RepoDb.Db2.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -539,7 +539,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.DuckDb
-> dotnet build RepoDb.DuckDb.sln -v n
+> dotnet build RepoDb.DuckDb.slnx -v n
 ```
 
 #### Pre-requisites
@@ -579,7 +579,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.DuckDb.BulkOperations
-> dotnet build RepoDb.DuckDb.BulkOperations.sln -v n
+> dotnet build RepoDb.DuckDb.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -609,7 +609,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.EnterpriseDb
-> dotnet build RepoDb.EnterpriseDb.sln -v n
+> dotnet build RepoDb.EnterpriseDb.slnx -v n
 ```
 
 #### Pre-requisites
@@ -664,7 +664,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.Firebird
-> dotnet build RepoDb.Firebird.sln -v n
+> dotnet build RepoDb.Firebird.slnx -v n
 ```
 
 #### Pre-requisites
@@ -712,7 +712,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.Firebird.BulkOperations
-> dotnet build RepoDb.Firebird.BulkOperations.sln -v n
+> dotnet build RepoDb.Firebird.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -750,7 +750,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.MariaDb
-> dotnet build RepoDb.MariaDb.sln -v n
+> dotnet build RepoDb.MariaDb.slnx -v n
 ```
 
 #### Pre-requisites
@@ -799,7 +799,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.MariaDb.BulkOperations
-> dotnet build RepoDb.MariaDb.BulkOperations.sln -v n
+> dotnet build RepoDb.MariaDb.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -838,7 +838,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.MariaDbConnector
-> dotnet build RepoDb.MariaDbConnector.sln -v n
+> dotnet build RepoDb.MariaDbConnector.slnx -v n
 ```
 
 #### Pre-requisites
@@ -885,7 +885,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.MariaDbConnector.BulkOperations
-> dotnet build RepoDb.MariaDbConnector.BulkOperations.sln -v n
+> dotnet build RepoDb.MariaDbConnector.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -924,7 +924,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.MySql
-> dotnet build RepoDb.MySql.sln -v n
+> dotnet build RepoDb.MySql.slnx -v n
 ```
 
 #### Pre-requisites
@@ -973,7 +973,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.MySql.BulkOperations
-> dotnet build RepoDb.MySql.BulkOperations.sln -v n
+> dotnet build RepoDb.MySql.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1012,7 +1012,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.MySqlConnector
-> dotnet build RepoDb.MySqlConnector.sln -v n
+> dotnet build RepoDb.MySqlConnector.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1059,7 +1059,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.MySqlConnector.BulkOperations
-> dotnet build RepoDb.MySqlConnector.BulkOperations.sln -v n
+> dotnet build RepoDb.MySqlConnector.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1098,7 +1098,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.Oracle
-> dotnet build RepoDb.Oracle.sln -v n
+> dotnet build RepoDb.Oracle.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1146,7 +1146,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.Oracle.BulkOperations
-> dotnet build RepoDb.Oracle.BulkOperations.sln -v n
+> dotnet build RepoDb.Oracle.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1185,7 +1185,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.PostgreSql
-> dotnet build RepoDb.PostgreSql.sln -v n
+> dotnet build RepoDb.PostgreSql.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1234,7 +1234,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.PostgreSql.BulkOperations
-> dotnet build RepoDb.PostgreSql.BulkOperations.sln -v n
+> dotnet build RepoDb.PostgreSql.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1273,7 +1273,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.SapHana
-> dotnet build RepoDb.SapHana.sln -v n
+> dotnet build RepoDb.SapHana.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1321,7 +1321,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.SapHana.BulkOperations
-> dotnet build RepoDb.SapHana.BulkOperations.sln -v n
+> dotnet build RepoDb.SapHana.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1360,7 +1360,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.SqlServer
-> dotnet build RepoDb.SqlServer.sln -v n
+> dotnet build RepoDb.SqlServer.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1409,7 +1409,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.SqlServer.BulkOperations
-> dotnet build RepoDb.SqlServer.BulkOperations.sln -v n
+> dotnet build RepoDb.SqlServer.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1448,7 +1448,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.Sqlite.Microsoft
-> dotnet build RepoDb.Sqlite.Microsoft.sln -v n
+> dotnet build RepoDb.Sqlite.Microsoft.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1488,7 +1488,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.Vertica
-> dotnet build RepoDb.Vertica.sln -v n
+> dotnet build RepoDb.Vertica.slnx -v n
 ```
 
 #### Pre-requisites
@@ -1536,7 +1536,7 @@ Execute the integration tests.
 
 ```
 > cd c:\src\RepoDB\src\Providers\RepoDb.Vertica.BulkOperations
-> dotnet build RepoDb.Vertica.BulkOperations.sln -v n
+> dotnet build RepoDb.Vertica.BulkOperations.slnx -v n
 ```
 
 #### Pre-requisites

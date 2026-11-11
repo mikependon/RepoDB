@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.MariaDb.BulkOperations
-      solution-file: RepoDb.MariaDb.BulkOperations.sln
+      solution-file: RepoDb.MariaDb.BulkOperations.slnx
       artifact-name: release-mariadb-bulk
       db-engine: mariadb

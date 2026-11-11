@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.SapHana.BulkOperations
-      solution-file: RepoDb.SapHana.BulkOperations.sln
+      solution-file: RepoDb.SapHana.BulkOperations.slnx
       artifact-name: release-pr
       db-engine: saphana
