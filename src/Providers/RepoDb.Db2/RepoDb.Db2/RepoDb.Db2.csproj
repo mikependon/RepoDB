@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Title>RepoDb.Db2</Title>
     <AssemblyName>RepoDb.Db2</AssemblyName>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <Description>A hybrid .NET ORM library for Db2 Database.</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
@@ -24,21 +24,15 @@
     <PackageVersion Condition="'$(RepoDbDb2Version)' != ''">$(RepoDbDb2Version)</PackageVersion>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' == 'Windows_NT'">
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
     <PackageReference Include="Net.IBM.Data.Db2" Version="10.0.0.300" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' != 'Windows_NT'">
+  <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
     <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="10.0.0.300" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0' AND '$(OS)' == 'Windows_NT'">
-    <PackageReference Include="Net.IBM.Data.Db2" Version="9.0.0.400" PrivateAssets="all" />
-  </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0' AND '$(OS)' != 'Windows_NT'">
-    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="9.0.0.400" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

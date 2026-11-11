@@ -88,21 +88,18 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -136,21 +133,18 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -183,21 +177,18 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -236,21 +227,18 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -289,21 +277,18 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -336,21 +321,18 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -383,21 +365,18 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -445,6 +424,7 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -481,17 +461,13 @@ jobs:
           echo "LD_LIBRARY_PATH=$DIRS" >> "$GITHUB_ENV"
           echo "Resolved LD_LIBRARY_PATH=$DIRS"
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -530,6 +506,7 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -554,17 +531,13 @@ jobs:
       #     docker logs "$CID" --tail 200
       #     exit 1
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -598,6 +571,7 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -617,17 +591,13 @@ jobs:
           echo "Firebird did not become ready within the timeout."
           exit 1
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -670,21 +640,18 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -709,6 +676,7 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -731,17 +699,13 @@ jobs:
           docker logs cockroachdb --tail 200
           exit 1
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -770,6 +734,7 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -814,17 +779,13 @@ jobs:
           docker logs "$CID" --tail 200
           exit 1
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -849,6 +810,7 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -888,17 +850,13 @@ jobs:
           docker logs saphana --tail 200
           exit 1
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -936,6 +894,7 @@ jobs:
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
@@ -960,17 +919,13 @@ jobs:
           docker logs "$CID" --tail 200
           exit 1
 
-      - name: Test for .NET 8.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
-
-      - name: Test for .NET 9.0
-        working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
-
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Test for .NET 11.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net11.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"

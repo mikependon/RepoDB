@@ -1,6 +1,6 @@
 <Project>
-  <!-- Every shipping library that targets net8.0+ is trim/AOT-analyzed. Test and benchmark projects are not. -->
-  <PropertyGroup Condition="'$(TargetFramework)' != '' And !$(MSBuildProjectName.Contains('Tests')) And !$(MSBuildProjectName.Contains('Benchmarks')) And !$(MSBuildProjectDirectory.Contains('Decommissioned')) And $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+  <!-- Every shipping library that targets net10.0+ is trim/AOT-analyzed. Test and benchmark projects are not. -->
+  <PropertyGroup Condition="'$(TargetFramework)' != '' And !$(MSBuildProjectName.Contains('Tests')) And !$(MSBuildProjectName.Contains('Benchmarks')) And !$(MSBuildProjectDirectory.Contains('Decommissioned')) And $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0'))">
     <IsAotCompatible Condition="'$(IsAotCompatible)' == ''">true</IsAotCompatible>
   </PropertyGroup>
   <ItemGroup>

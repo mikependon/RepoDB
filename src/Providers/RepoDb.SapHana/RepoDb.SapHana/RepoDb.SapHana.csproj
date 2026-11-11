@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>RepoDb.SapHana</Title>
     <AssemblyName>RepoDb.SapHana</AssemblyName>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <Description>A hybrid .NET ORM library for SAP HANA (using Sap.Data.Hana).</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>

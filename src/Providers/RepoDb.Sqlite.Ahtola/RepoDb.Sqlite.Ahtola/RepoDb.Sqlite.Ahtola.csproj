@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>RepoDb.Sqlite.Ahtola</Title>
     <AssemblyName>RepoDb.Sqlite.Ahtola</AssemblyName>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
     <Description>A hybrid .NET ORM library for Ahtola, a pure managed SQLite-compatible engine (using Devolutions.Ahtola.Data.Sqlite).</Description>

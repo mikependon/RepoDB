@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Title>RepoDb.Telemetry.Extended</Title>
     <AssemblyName>RepoDb.Telemetry.Extended</AssemblyName>
-    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net10.0;net11.0</TargetFrameworks>
     <Description>The extended telemetry package for RepoDB library.</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>

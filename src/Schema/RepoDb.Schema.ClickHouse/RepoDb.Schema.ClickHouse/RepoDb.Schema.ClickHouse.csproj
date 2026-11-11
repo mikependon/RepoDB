@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>RepoDb.Schema.ClickHouse</Title>
     <AssemblyName>RepoDb.Schema.ClickHouse</AssemblyName>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <Description>The ClickHouse schema reader and composer of RepoDB library.</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>

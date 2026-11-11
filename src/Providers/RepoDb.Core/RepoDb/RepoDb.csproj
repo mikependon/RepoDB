@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>RepoDB</Title>
     <AssemblyName>RepoDb</AssemblyName>
-    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net10.0;net11.0</TargetFrameworks>
     <Description>A hybrid ORM library for .NET.</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
@@ -43,7 +43,7 @@
     <PackageReference Include="System.Memory" Version="4.6.3" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.0" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+  <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0'))">
     <PackageReference Remove="System.Linq.Async" />
   </ItemGroup>
   <ItemGroup>

@@ -3,7 +3,7 @@
     <Title>RepoDb.DuckDb</Title>
     <AssemblyName>RepoDb.DuckDb</AssemblyName>
     <!-- DuckDB.NET.Data.Full only supports net8.0+ (no netstandard2.0 build), unlike most other providers in this repo. -->
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <Description>A hybrid .NET ORM library for DuckDB.</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
