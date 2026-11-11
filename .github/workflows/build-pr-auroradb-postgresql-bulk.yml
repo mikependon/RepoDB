@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations
-      solution-file: RepoDb.AuroraDb.PostgreSql.BulkOperations.sln
+      solution-file: RepoDb.AuroraDb.PostgreSql.BulkOperations.slnx
       artifact-name: release-pr
       db-engine: auroradbnpgsql

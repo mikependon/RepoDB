@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/RepoDb.MariaDbConnector.BulkOperations.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../RepoDb.MariaDbConnector/RepoDb.MariaDbConnector/RepoDb.MariaDbConnector.csproj" />
+  <Project Path="RepoDb.MariaDbConnector.BulkOperations.IntegrationTests/RepoDb.MariaDbConnector.BulkOperations.IntegrationTests.csproj" />
+  <Project Path="RepoDb.MariaDbConnector.BulkOperations.UnitTests/RepoDb.MariaDbConnector.BulkOperations.UnitTests.csproj" />
+  <Project Path="RepoDb.MariaDbConnector.BulkOperations/RepoDb.MariaDbConnector.BulkOperations.csproj" />
+</Solution>

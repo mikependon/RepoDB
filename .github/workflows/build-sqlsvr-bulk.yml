@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.SqlServer.BulkOperations
-      solution-file: RepoDb.SqlServer.BulkOperations.sln
+      solution-file: RepoDb.SqlServer.BulkOperations.slnx
       artifact-name: release-sqlsvr-bulk
       db-engine: sqlserver

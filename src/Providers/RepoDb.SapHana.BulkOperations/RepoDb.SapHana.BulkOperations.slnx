@@ -1,0 +1,15 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/RepoDb.SapHana.BulkOperations.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../RepoDb.SapHana/RepoDb.SapHana/RepoDb.SapHana.csproj" />
+  <Project Path="RepoDb.SapHana.BulkOperations.IntegrationTests/RepoDb.SapHana.BulkOperations.IntegrationTests.csproj" />
+  <Project Path="RepoDb.SapHana.BulkOperations.UnitTests/RepoDb.SapHana.BulkOperations.UnitTests.csproj" />
+  <Project Path="RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations.csproj" />
+</Solution>

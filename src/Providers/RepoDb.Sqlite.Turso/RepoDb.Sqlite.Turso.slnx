@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.Sqlite.Turso.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.Sqlite.Turso.Tests/">
+    <Project Path="RepoDb.Sqlite.Turso.IntegrationTests/RepoDb.Sqlite.Turso.IntegrationTests.csproj" />
+    <Project Path="RepoDb.Sqlite.Turso.UnitTests/RepoDb.Sqlite.Turso.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.Sqlite.Turso/RepoDb.Sqlite.Turso.csproj" />
+</Solution>

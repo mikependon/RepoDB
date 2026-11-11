@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.AuroraDb.MySqlConnector.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.AuroraDb.MySqlConnector.Tests/">
+    <Project Path="RepoDb.AuroraDb.MySqlConnector.IntegrationTests/RepoDb.AuroraDb.MySqlConnector.IntegrationTests.csproj" />
+    <Project Path="RepoDb.AuroraDb.MySqlConnector.UnitTests/RepoDb.AuroraDb.MySqlConnector.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.AuroraDb.MySqlConnector/RepoDb.AuroraDb.MySqlConnector.csproj" />
+</Solution>

@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.PostgreSql.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.PostgreSql.Tests/">
+    <Project Path="RepoDb.PostgreSql.IntegrationTests/RepoDb.PostgreSql.IntegrationTests.csproj" />
+    <Project Path="RepoDb.PostgreSql.UnitTests/RepoDb.PostgreSql.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.PostgreSql/RepoDb.PostgreSql.csproj" />
+</Solution>

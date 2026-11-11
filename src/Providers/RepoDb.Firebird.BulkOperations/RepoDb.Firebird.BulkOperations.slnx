@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/RepoDb.Firebird.BulkOperations.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../RepoDb.Firebird/RepoDb.Firebird/RepoDb.Firebird.csproj" />
+  <Project Path="RepoDb.Firebird.BulkOperations.IntegrationTests/RepoDb.Firebird.BulkOperations.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Firebird.BulkOperations.UnitTests/RepoDb.Firebird.BulkOperations.UnitTests.csproj" />
+  <Project Path="RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations.csproj" />
+</Solution>

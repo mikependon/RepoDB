@@ -14,6 +14,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.Firebird
-      solution-file: RepoDb.Firebird.sln
+      solution-file: RepoDb.Firebird.slnx
       artifact-name: release-pr
       db-engine: firebird

@@ -16,6 +16,6 @@ jobs:
     secrets: inherit
     with:
       solution-dir: src/Providers/RepoDb.EnterpriseDb
-      solution-file: RepoDb.EnterpriseDb.sln
+      solution-file: RepoDb.EnterpriseDb.slnx
       artifact-name: release-enterprisedb
       db-engine: enterprisedb

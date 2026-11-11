@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.Firebird.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.Firebird.Tests/">
+    <Project Path="RepoDb.Firebird.IntegrationTests/RepoDb.Firebird.IntegrationTests.csproj" />
+    <Project Path="RepoDb.Firebird.UnitTests/RepoDb.Firebird.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.Firebird/RepoDb.Firebird.csproj" />
+</Solution>

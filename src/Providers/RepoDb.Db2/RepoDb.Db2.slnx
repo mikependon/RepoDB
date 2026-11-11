@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.Db2.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.Db2.Tests/">
+    <Project Path="RepoDb.Db2.IntegrationTests/RepoDb.Db2.IntegrationTests.csproj" />
+    <Project Path="RepoDb.Db2.UnitTests/RepoDb.Db2.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.Db2/RepoDb.Db2.csproj" />
+</Solution>

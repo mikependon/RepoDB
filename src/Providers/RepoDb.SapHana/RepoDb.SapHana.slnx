@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.SapHana.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.SapHana.Tests/">
+    <Project Path="RepoDb.SapHana.IntegrationTests/RepoDb.SapHana.IntegrationTests.csproj" />
+    <Project Path="RepoDb.SapHana.UnitTests/RepoDb.SapHana.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.SapHana/RepoDb.SapHana.csproj" />
+</Solution>

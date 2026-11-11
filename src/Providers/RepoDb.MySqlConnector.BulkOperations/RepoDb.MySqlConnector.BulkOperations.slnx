@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/RepoDb.MySqlConnector.BulkOperations.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../RepoDb.MySqlConnector/RepoDb.MySqlConnector/RepoDb.MySqlConnector.csproj" />
+  <Project Path="RepoDb.MySqlConnector.BulkOperations.IntegrationTests/RepoDb.MySqlConnector.BulkOperations.IntegrationTests.csproj" />
+  <Project Path="RepoDb.MySqlConnector.BulkOperations.UnitTests/RepoDb.MySqlConnector.BulkOperations.UnitTests.csproj" />
+  <Project Path="RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations.csproj" />
+</Solution>

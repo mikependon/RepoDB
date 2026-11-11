@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.Oracle.BulkOperations
-      solution-file: RepoDb.Oracle.BulkOperations.sln
+      solution-file: RepoDb.Oracle.BulkOperations.slnx
       artifact-name: release-pr
       db-engine: oracle

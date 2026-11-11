@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/RepoDb.Db2.BulkOperations.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../RepoDb.Db2/RepoDb.Db2/RepoDb.Db2.csproj" />
+  <Project Path="RepoDb.Db2.BulkOperations.IntegrationTests/RepoDb.Db2.BulkOperations.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Db2.BulkOperations.UnitTests/RepoDb.Db2.BulkOperations.UnitTests.csproj" />
+  <Project Path="RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations.csproj" />
+</Solution>

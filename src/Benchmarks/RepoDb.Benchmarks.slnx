@@ -1,0 +1,72 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Benchmarks/">
+    <Project Path="RepoDb.Benchmarks.AuroraDb.MySqlConnector/RepoDb.Benchmarks.AuroraDb.MySqlConnector.csproj" />
+    <Project Path="RepoDb.Benchmarks.AuroraDb.PostgreSql/RepoDb.Benchmarks.AuroraDb.PostgreSql.csproj" />
+    <Project Path="RepoDb.Benchmarks.ClickHouse/RepoDb.Benchmarks.ClickHouse.csproj" />
+    <Project Path="RepoDb.Benchmarks.CockroachDb/RepoDb.Benchmarks.CockroachDb.csproj" />
+    <Project Path="RepoDb.Benchmarks.Core/RepoDb.Benchmarks.Core.csproj" />
+    <Project Path="RepoDb.Benchmarks.Db2/RepoDb.Benchmarks.Db2.csproj" />
+    <Project Path="RepoDb.Benchmarks.DuckDb/RepoDb.Benchmarks.DuckDb.csproj" />
+    <Project Path="RepoDb.Benchmarks.EnterpriseDb/RepoDb.Benchmarks.EnterpriseDb.csproj" />
+    <Project Path="RepoDb.Benchmarks.Firebird/RepoDb.Benchmarks.Firebird.csproj" />
+    <Project Path="RepoDb.Benchmarks.MariaDb/RepoDb.Benchmarks.MariaDb.csproj" />
+    <Project Path="RepoDb.Benchmarks.MariaDbConnector/RepoDb.Benchmarks.MariaDbConnector.csproj" />
+    <Project Path="RepoDb.Benchmarks.MySql/RepoDb.Benchmarks.MySql.csproj" />
+    <Project Path="RepoDb.Benchmarks.MySqlConnector/RepoDb.Benchmarks.MySqlConnector.csproj" />
+    <Project Path="RepoDb.Benchmarks.Oracle/RepoDb.Benchmarks.Oracle.csproj" />
+    <Project Path="RepoDb.Benchmarks.PostgreSql/RepoDb.Benchmarks.PostgreSql.csproj" />
+    <Project Path="RepoDb.Benchmarks.SapHana/RepoDb.Benchmarks.SapHana.csproj" />
+    <Project Path="RepoDb.Benchmarks.Sqlite.Microsoft/RepoDb.Benchmarks.Sqlite.Microsoft.csproj" />
+    <Project Path="RepoDb.Benchmarks.SqlServer/RepoDb.Benchmarks.SqlServer.csproj" />
+    <Project Path="RepoDb.Benchmarks.Vertica/RepoDb.Benchmarks.Vertica.csproj" />
+  </Folder>
+  <Folder Name="/Core/">
+    <Project Path="../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  </Folder>
+  <Folder Name="/DbProviders/">
+    <Project Path="../Providers/RepoDb.AuroraDb.MySqlConnector.BulkOperations/RepoDb.AuroraDb.MySqlConnector.BulkOperations/RepoDb.AuroraDb.MySqlConnector.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.AuroraDb.MySqlConnector/RepoDb.AuroraDb.MySqlConnector/RepoDb.AuroraDb.MySqlConnector.csproj" />
+    <Project Path="../Providers/RepoDb.AuroraDb.PostgreSql.BulkOperations/RepoDb.AuroraDb.PostgreSql.BulkOperations/RepoDb.AuroraDb.PostgreSql.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.AuroraDb.PostgreSql/RepoDb.AuroraDb.PostgreSql/RepoDb.AuroraDb.PostgreSql.csproj" />
+    <Project Path="../Providers/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.ClickHouse/RepoDb.ClickHouse/RepoDb.ClickHouse.csproj" />
+    <Project Path="../Providers/RepoDb.CockroachDb.BulkOperations/RepoDb.CockroachDb.BulkOperations/RepoDb.CockroachDb.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.CockroachDb/RepoDb.CockroachDb/RepoDb.CockroachDb.csproj" />
+    <Project Path="../Providers/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.Db2/RepoDb.Db2/RepoDb.Db2.csproj" />
+    <Project Path="../Providers/RepoDb.DuckDb.BulkOperations/RepoDb.DuckDb.BulkOperations/RepoDb.DuckDb.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.DuckDb/RepoDb.DuckDb/RepoDb.DuckDb.csproj" />
+    <Project Path="../Providers/RepoDb.EnterpriseDb.BulkOperations/RepoDb.EnterpriseDb.BulkOperations/RepoDb.EnterpriseDb.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.EnterpriseDb/RepoDb.EnterpriseDb/RepoDb.EnterpriseDb.csproj" />
+    <Project Path="../Providers/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.Firebird/RepoDb.Firebird/RepoDb.Firebird.csproj" />
+    <Project Path="../Providers/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.MariaDb/RepoDb.MariaDb/RepoDb.MariaDb.csproj" />
+    <Project Path="../Providers/RepoDb.MariaDbConnector.BulkOperations/RepoDb.MariaDbConnector.BulkOperations/RepoDb.MariaDbConnector.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.MariaDbConnector/RepoDb.MariaDbConnector/RepoDb.MariaDbConnector.csproj" />
+    <Project Path="../Providers/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.MySql/RepoDb.MySql/RepoDb.MySql.csproj" />
+    <Project Path="../Providers/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.MySqlConnector/RepoDb.MySqlConnector/RepoDb.MySqlConnector.csproj" />
+    <Project Path="../Providers/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.Oracle/RepoDb.Oracle/RepoDb.Oracle.csproj" />
+    <Project Path="../Providers/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.PostgreSql/RepoDb.PostgreSql/RepoDb.PostgreSql.csproj" />
+    <Project Path="../Providers/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations/RepoDb.SapHana.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.SapHana/RepoDb.SapHana/RepoDb.SapHana.csproj" />
+    <Project Path="../Providers/RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.csproj" />
+    <Project Path="../Providers/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.SqlServer/RepoDb.SqlServer/RepoDb.SqlServer.csproj" />
+    <Project Path="../Providers/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations.csproj" />
+    <Project Path="../Providers/RepoDb.Vertica/RepoDb.Vertica/RepoDb.Vertica.csproj" />
+  </Folder>
+  <Project Path="../Providers/RepoDb.Sqlite.Ahtola/RepoDb.Sqlite.Ahtola/RepoDb.Sqlite.Ahtola.csproj" />
+  <Project Path="../Providers/RepoDb.Sqlite.Turso/RepoDb.Sqlite.Turso/RepoDb.Sqlite.Turso.csproj" />
+  <Project Path="RepoDb.Benchmarks.Sqlite.Ahtola/RepoDb.Benchmarks.Sqlite.Ahtola.csproj" />
+  <Project Path="RepoDb.Benchmarks.Sqlite.Turso/RepoDb.Benchmarks.Sqlite.Turso.csproj" />
+</Solution>

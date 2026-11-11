@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.Oracle.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.Oracle.Tests/">
+    <Project Path="RepoDb.Oracle.IntegrationTests/RepoDb.Oracle.IntegrationTests.csproj" />
+    <Project Path="RepoDb.Oracle.UnitTests/RepoDb.Oracle.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.Oracle/RepoDb.Oracle.csproj" />
+</Solution>

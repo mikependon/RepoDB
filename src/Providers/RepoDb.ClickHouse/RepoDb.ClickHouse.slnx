@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.ClickHouse.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.ClickHouse.Tests/">
+    <Project Path="RepoDb.ClickHouse.IntegrationTests/RepoDb.ClickHouse.IntegrationTests.csproj" />
+    <Project Path="RepoDb.ClickHouse.UnitTests/RepoDb.ClickHouse.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.ClickHouse/RepoDb.ClickHouse.csproj" />
+</Solution>

@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.MariaDbConnector.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.MariaDbConnector.Tests/">
+    <Project Path="RepoDb.MariaDbConnector.IntegrationTests/RepoDb.MariaDbConnector.IntegrationTests.csproj" />
+    <Project Path="RepoDb.MariaDbConnector.UnitTests/RepoDb.MariaDbConnector.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.MariaDbConnector/RepoDb.MariaDbConnector.csproj" />
+</Solution>

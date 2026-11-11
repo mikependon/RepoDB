@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.DuckDb.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.DuckDb.Tests/">
+    <Project Path="RepoDb.DuckDb.IntegrationTests/RepoDb.DuckDb.IntegrationTests.csproj" />
+    <Project Path="RepoDb.DuckDb.UnitTests/RepoDb.DuckDb.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.DuckDb/RepoDb.DuckDb.csproj" />
+</Solution>

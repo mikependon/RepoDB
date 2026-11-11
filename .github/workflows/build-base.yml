@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       solution-file:
-        description: 'Name of the .sln file (e.g. RepoDb.MySql.sln)'
+        description: 'Name of the .slnx file (e.g. RepoDb.MySql.slnx)'
         required: true
         type: string
       artifact-name:

@@ -17,6 +17,6 @@ jobs:
     secrets: inherit
     with:
       solution-dir: src/Providers/RepoDb.EnterpriseDb.BulkOperations
-      solution-file: RepoDb.EnterpriseDb.BulkOperations.sln
+      solution-file: RepoDb.EnterpriseDb.BulkOperations.slnx
       artifact-name: release-enterprisedb-bulk
       db-engine: enterprisedb

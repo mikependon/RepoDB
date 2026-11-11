@@ -14,6 +14,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.MySqlConnector
-      solution-file: RepoDb.MySqlConnector.sln
+      solution-file: RepoDb.MySqlConnector.slnx
       artifact-name: release-mysqlconnector
       db-engine: mysql

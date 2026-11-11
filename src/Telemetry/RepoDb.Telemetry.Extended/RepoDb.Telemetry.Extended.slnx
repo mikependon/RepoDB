@@ -1,0 +1,12 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../RepoDb.Telemetry.Core/RepoDb.Telemetry.Core/RepoDb.Telemetry.Core.csproj" />
+  <Project Path="../RepoDb.Telemetry.Default/RepoDb.Telemetry.Default/RepoDb.Telemetry.Default.csproj" />
+  <Project Path="RepoDb.Telemetry.Extended.UnitTests/RepoDb.Telemetry.Extended.UnitTests.csproj" />
+  <Project Path="RepoDb.Telemetry.Extended/RepoDb.Telemetry.Extended.csproj" />
+</Solution>

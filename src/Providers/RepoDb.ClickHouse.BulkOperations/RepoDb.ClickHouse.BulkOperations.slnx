@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/RepoDb.ClickHouse.BulkOperations.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="../RepoDb.ClickHouse/RepoDb.ClickHouse/RepoDb.ClickHouse.csproj" />
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.ClickHouse.BulkOperations.IntegrationTests/RepoDb.ClickHouse.BulkOperations.IntegrationTests.csproj" />
+  <Project Path="RepoDb.ClickHouse.BulkOperations.UnitTests/RepoDb.ClickHouse.BulkOperations.UnitTests.csproj" />
+  <Project Path="RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations.csproj" />
+</Solution>

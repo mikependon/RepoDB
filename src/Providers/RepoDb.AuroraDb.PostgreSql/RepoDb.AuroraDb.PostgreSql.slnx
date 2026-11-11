@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.AuroraDb.PostgreSql.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.AuroraDb.PostgreSql.Tests/">
+    <Project Path="RepoDb.AuroraDb.PostgreSql.IntegrationTests/RepoDb.AuroraDb.PostgreSql.IntegrationTests.csproj" />
+    <Project Path="RepoDb.AuroraDb.PostgreSql.UnitTests/RepoDb.AuroraDb.PostgreSql.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.AuroraDb.PostgreSql/RepoDb.AuroraDb.PostgreSql.csproj" />
+</Solution>

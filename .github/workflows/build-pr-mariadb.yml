@@ -14,6 +14,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.MariaDb
-      solution-file: RepoDb.MariaDb.sln
+      solution-file: RepoDb.MariaDb.slnx
       artifact-name: release-pr
       db-engine: mariadb

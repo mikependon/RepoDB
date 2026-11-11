@@ -14,6 +14,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.DuckDb
-      solution-file: RepoDb.DuckDb.sln
+      solution-file: RepoDb.DuckDb.slnx
       artifact-name: release-duckdb
       db-engine: none

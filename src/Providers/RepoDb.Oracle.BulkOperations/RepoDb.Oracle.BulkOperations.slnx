@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/RepoDb.Oracle.BulkOperations.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../RepoDb.Oracle/RepoDb.Oracle/RepoDb.Oracle.csproj" />
+  <Project Path="RepoDb.Oracle.BulkOperations.IntegrationTests/RepoDb.Oracle.BulkOperations.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Oracle.BulkOperations.UnitTests/RepoDb.Oracle.BulkOperations.UnitTests.csproj" />
+  <Project Path="RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations.csproj" />
+</Solution>

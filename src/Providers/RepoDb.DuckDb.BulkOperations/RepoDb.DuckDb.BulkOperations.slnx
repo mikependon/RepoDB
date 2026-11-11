@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/RepoDb.DuckDb.BulkOperations.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../RepoDb.DuckDb/RepoDb.DuckDb/RepoDb.DuckDb.csproj" />
+  <Project Path="RepoDb.DuckDb.BulkOperations.IntegrationTests/RepoDb.DuckDb.BulkOperations.IntegrationTests.csproj" />
+  <Project Path="RepoDb.DuckDb.BulkOperations.UnitTests/RepoDb.DuckDb.BulkOperations.UnitTests.csproj" />
+  <Project Path="RepoDb.DuckDb.BulkOperations/RepoDb.DuckDb.BulkOperations.csproj" />
+</Solution>

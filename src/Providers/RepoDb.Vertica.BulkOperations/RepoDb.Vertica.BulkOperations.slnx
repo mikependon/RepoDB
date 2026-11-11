@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/RepoDb.Vertica.BulkOperations.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="../RepoDb.Vertica/RepoDb.Vertica/RepoDb.Vertica.csproj" />
+  <Project Path="RepoDb.Vertica.BulkOperations.IntegrationTests/RepoDb.Vertica.BulkOperations.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Vertica.BulkOperations.UnitTests/RepoDb.Vertica.BulkOperations.UnitTests.csproj" />
+  <Project Path="RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations.csproj" />
+</Solution>

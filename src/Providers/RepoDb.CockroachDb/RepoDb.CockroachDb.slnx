@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.CockroachDb.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.CockroachDb.Tests/">
+    <Project Path="RepoDb.CockroachDb.IntegrationTests/RepoDb.CockroachDb.IntegrationTests.csproj" />
+    <Project Path="RepoDb.CockroachDb.UnitTests/RepoDb.CockroachDb.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.CockroachDb/RepoDb.CockroachDb.csproj" />
+</Solution>

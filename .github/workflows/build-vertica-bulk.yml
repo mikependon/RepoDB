@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.Vertica.BulkOperations
-      solution-file: RepoDb.Vertica.BulkOperations.sln
+      solution-file: RepoDb.Vertica.BulkOperations.slnx
       artifact-name: release-vertica-bulk
       db-engine: vertica

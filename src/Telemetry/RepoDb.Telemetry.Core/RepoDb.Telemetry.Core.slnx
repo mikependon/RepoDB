@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="../../Providers/RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.Telemetry.Core.UnitTests/RepoDb.Telemetry.Core.UnitTests/RepoDb.Telemetry.Core.UnitTests.csproj" />
+  <Project Path="RepoDb.Telemetry.Core/RepoDb.Telemetry.Core.csproj" />
+</Solution>

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../RepoDb.SqlServer/RepoDb.SqlServer/RepoDb.SqlServer.csproj" />
+  <Project Path="RepoDb.Tests/RepoDb.IntegrationTests/RepoDb.IntegrationTests.csproj" />
+  <Project Path="RepoDb.Tests/RepoDb.UnitTests/RepoDb.UnitTests.csproj" />
+  <Project Path="RepoDb/RepoDb.csproj" />
+</Solution>

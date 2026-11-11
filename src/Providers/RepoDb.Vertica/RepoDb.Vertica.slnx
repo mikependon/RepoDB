@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.Vertica.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.Vertica.Tests/">
+    <Project Path="RepoDb.Vertica.IntegrationTests/RepoDb.Vertica.IntegrationTests.csproj" />
+    <Project Path="RepoDb.Vertica.UnitTests/RepoDb.Vertica.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.Vertica/RepoDb.Vertica.csproj" />
+</Solution>

@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.MySqlConnector.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.MySqlConnector.Tests/">
+    <Project Path="RepoDb.MySqlConnector.IntegrationTests/RepoDb.MySqlConnector.IntegrationTests.csproj" />
+    <Project Path="RepoDb.MySqlConnector.UnitTests/RepoDb.MySqlConnector.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.MySqlConnector/RepoDb.MySqlConnector.csproj" />
+</Solution>

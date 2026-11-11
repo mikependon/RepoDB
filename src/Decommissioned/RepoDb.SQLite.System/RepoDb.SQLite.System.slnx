@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/RepoDb.SQLite.System.Base/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/RepoDb.SQLite.System.Tests/">
+    <Project Path="RepoDb.SQLite.System.IntegrationTests/RepoDb.SQLite.System.IntegrationTests.csproj" />
+    <Project Path="RepoDb.SQLite.System.UnitTests/RepoDb.SQLite.System.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../RepoDb.Core/RepoDb/RepoDb.csproj" />
+  <Project Path="RepoDb.SQLite.System/RepoDb.SQLite.System.csproj" />
+</Solution>

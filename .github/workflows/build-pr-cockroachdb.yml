@@ -14,6 +14,6 @@ jobs:
     uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: src/Providers/RepoDb.CockroachDb
-      solution-file: RepoDb.CockroachDb.sln
+      solution-file: RepoDb.CockroachDb.slnx
       artifact-name: release-pr
       db-engine: cockroachdb
