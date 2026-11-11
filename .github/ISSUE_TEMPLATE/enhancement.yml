@@ -29,10 +29,11 @@ body:
   - type: dropdown
     id: packages
     attributes:
-      label: Package(s) involved
-      description: Select the package(s) the enhancement applies to.
+      label: Product or package(s) involved
+      description: Select the product or package(s) the enhancement applies to.
       multiple: true
       options:
+        - RepoDB Desktop Studio
         - RepoDb (Core)
         - A specific database provider (e.g. RepoDb.SqlServer)
         - A bulk operations package (e.g. RepoDb.SqlServer.BulkOperations)

@@ -39,10 +39,11 @@ body:
   - type: dropdown
     id: packages
     attributes:
-      label: Affected package(s)
-      description: Select every RepoDB package involved. Pick "Other" if yours is not listed and name it in the version field below.
+      label: Affected product or package(s)
+      description: Select every RepoDB product or package involved. Pick "Other" if yours is not listed and name it in the version field below.
       multiple: true
       options:
+        - RepoDB Desktop Studio
         - RepoDb (Core)
         - RepoDb.SqlServer
         - RepoDb.PostgreSql
@@ -87,8 +88,8 @@ body:
   - type: input
     id: versions
     attributes:
-      label: Package version(s)
-      description: The exact NuGet versions from your project file.
+      label: Product or package version(s)
+      description: For Desktop Studio, provide the application version. For packages, provide the exact NuGet versions from your project file.
       placeholder: e.g. RepoDb 1.14.0, RepoDb.SqlServer 1.14.0
     validations:
       required: true
@@ -114,6 +115,7 @@ body:
         - Caching
         - Tracing / telemetry
         - Repositories (BaseRepository / DbRepository)
+        - RepoDB Desktop Studio
         - Other / not sure
     validations:
       required: true
@@ -130,8 +132,8 @@ body:
   - type: input
     id: runtime
     attributes:
-      label: .NET runtime and OS
-      description: The target framework and operating system where the bug happens.
+      label: OS and .NET runtime (if applicable)
+      description: The operating system where the bug happens and, for package issues, the target framework.
       placeholder: e.g. .NET 10.0 on Windows 11, .NET 8.0 in a Linux container
     validations:
       required: true
@@ -140,13 +142,12 @@ body:
     id: repro
     attributes:
       label: Steps to reproduce
-      description: The smallest piece of code that triggers the bug. Include the `GlobalConfiguration.Setup()` call and any mappings or property handlers involved.
+      description: For Desktop Studio, list the actions that reproduce the bug. For package issues, share the smallest code sample, including the `GlobalConfiguration.Setup()` call and any mappings or property handlers involved.
       placeholder: |
         GlobalConfiguration.Setup().UseSqlServer();
 
         using var connection = new SqlConnection(connectionString);
         var people = connection.QueryAll<Person>();
-      render: csharp
     validations:
       required: true
 

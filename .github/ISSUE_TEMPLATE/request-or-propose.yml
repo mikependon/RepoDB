@@ -24,6 +24,7 @@ body:
     attributes:
       label: Type of request
       options:
+        - RepoDB Desktop Studio
         - New operation or API
         - New database provider
         - New bulk operations package
