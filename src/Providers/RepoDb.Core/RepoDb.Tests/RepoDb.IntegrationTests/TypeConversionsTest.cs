@@ -243,7 +243,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.ExecuteQuery<decimal>("SELECT '100.05' AS Value;").First();
 
                 // Assert
-                Assert.AreEqual((decimal)100.05, data);
+                Assert.AreEqual(100.05m, data);
             }
         }
 
@@ -257,7 +257,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.ExecuteQueryAsync<decimal>("SELECT '100.05' AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
-                Assert.AreEqual((decimal)100.05, data);
+                Assert.AreEqual(100.05m, data);
             }
         }
 
@@ -466,7 +466,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.ExecuteQuery<decimal>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;").First();
 
                 // Assert
-                Assert.AreEqual((decimal)100.05, data);
+                Assert.AreEqual(100.05m, data);
             }
         }
 
@@ -479,7 +479,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.ExecuteQueryAsync<decimal>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
-                Assert.AreEqual((decimal)100.05, data);
+                Assert.AreEqual(100.05m, data);
             }
         }
 
@@ -604,7 +604,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.ExecuteQuery<decimal>("SELECT CONVERT(REAL, 100.05) AS Value;").First();
 
                 // Assert
-                Assert.AreEqual((decimal)100.05, data);
+                Assert.AreEqual(100.05m, data);
             }
         }
 
@@ -617,7 +617,7 @@ namespace RepoDb.IntegrationTests
                 var data = (await connection.ExecuteQueryAsync<decimal>("SELECT CONVERT(REAL, 100.05) AS Value;").ConfigureAwait(false)).First();
 
                 // Assert
-                Assert.AreEqual((decimal)100.05, data);
+                Assert.AreEqual(100.05m, data);
             }
         }
 
