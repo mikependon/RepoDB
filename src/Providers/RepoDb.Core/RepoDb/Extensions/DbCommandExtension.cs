@@ -11,6 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using RepoDb.Attributes.Parameter;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
+using RepoDb.Helpers;
 using RepoDb.Interfaces;
 using RepoDb.Options;
 using RepoDb.Resolvers;
@@ -70,6 +71,7 @@ namespace RepoDb.Extensions
             // Create the parameter
             var parameter = command.CreateParameter();
             var dbSetting = DbSettingMapper.Get(command.Connection);
+            var isJson = DbJsonParameterHelper.TryConvert(value, out value);
 
             // Set the values
             parameter.ParameterName = name.AsParameterName(dbSetting);
@@ -87,6 +89,12 @@ namespace RepoDb.Extensions
             {
                 // Prepare() requires an explicit assignment, weird Microsoft
                 parameter.DbType = dbType.Value;
+            }
+
+            // JSON
+            if (isJson)
+            {
+                DbJsonParameterHelper.Configure(parameter, dbSetting);
             }
 
             // Set the direction
@@ -338,6 +346,13 @@ namespace RepoDb.Extensions
             DbType? dbType,
             Type fallbackType)
         {
+            // JSON
+            var isJson = DbJsonParameterHelper.TryConvert(value, out value);
+            if (isJson)
+            {
+                valueType = StaticType.String;
+            }
+
             // DbType
             valueType ??= TypeCache.Get(dbField?.Type).GetUnderlyingType() ?? fallbackType;
             dbType ??= classProperty?.GetDbType() ?? (dbField?.Type ?? fallbackType ?? valueType)?.GetDbType();
@@ -354,6 +369,12 @@ namespace RepoDb.Extensions
             if (converted)
             {
                 parameter.DbType = clientTypeToDbTypeResolver.Resolve(valueType).Value;
+            }
+
+            // JSON
+            if (isJson)
+            {
+                DbJsonParameterHelper.Configure(parameter, DbSettingMapper.Get(command.Connection));
             }
 
             // Set the size

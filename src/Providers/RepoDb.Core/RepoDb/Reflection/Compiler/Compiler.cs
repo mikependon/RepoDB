@@ -1020,6 +1020,9 @@ namespace RepoDb.Reflection
         // 'op_Explicit'), which are looked-up via reflection by the 'Expression.Convert()' method and must not be trimmed.
         [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(decimal))]
         [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(DateTimeOffset))]
+#if !NETSTANDARD2_0
+        [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(DbJsonValue<>))]
+#endif
         internal static Expression ConvertExpressionToTypeExpression(Expression expression,
             Type toType)
         {

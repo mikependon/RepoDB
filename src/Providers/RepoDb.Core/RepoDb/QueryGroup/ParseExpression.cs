@@ -23,6 +23,20 @@ namespace RepoDb
          */
 
         /// <summary>
+        /// Checks whether the expression accesses a value inside a JSON column.
+        /// </summary>
+        /// <param name="expression">The expression to check.</param>
+        /// <returns><c>true</c> if the expression is a JSON access.</returns>
+        private static bool IsJsonAccess(Expression expression)
+        {
+#if NETSTANDARD2_0
+            return false;
+#else
+            return Helpers.JsonExpressionParser.TryParse(expression, out _);
+#endif
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="expression"></param>
@@ -32,7 +46,8 @@ namespace RepoDb
             return (
                 expression.Left.NodeType == ExpressionType.Constant ||
                 expression.Left.NodeType == ExpressionType.Convert ||
-                expression.Left.NodeType == ExpressionType.MemberAccess
+                expression.Left.NodeType == ExpressionType.MemberAccess ||
+                IsJsonAccess(expression.Left)
             )
             &&
             (

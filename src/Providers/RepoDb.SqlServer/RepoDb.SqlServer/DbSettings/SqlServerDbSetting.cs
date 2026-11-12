@@ -7,6 +7,8 @@
 
 #endregion
 
+using System;
+
 namespace RepoDb.DbSettings
 {
     /// <summary>
@@ -42,5 +44,19 @@ namespace RepoDb.DbSettings
             Provider = "MSSQL";
             SqlTextParameterPrefix = "@";
         }
+
+        #region Public Methods
+
+        /// <summary>
+        /// Gets the <c>JSON_VALUE</c> function format, which also works on the native <c>json</c> type of SQL Server 2025.
+        /// </summary>
+        /// <param name="valueType">The type of the value the extracted value is compared with, or <c>null</c> when unknown.</param>
+        /// <returns>The format of the JSON extraction.</returns>
+        public override string GetJsonExtractFormat(Type valueType)
+        {
+            return string.Concat("JSON_VALUE({0}, ", JsonPathPlaceholder, ")");
+        }
+
+        #endregion
     }
 }
