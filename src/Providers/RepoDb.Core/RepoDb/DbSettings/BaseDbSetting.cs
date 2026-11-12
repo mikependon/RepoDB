@@ -7,11 +7,8 @@
 
 #endregion
 
-using RepoDb.Helpers;
 using RepoDb.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 
 namespace RepoDb.DbSettings
@@ -21,11 +18,6 @@ namespace RepoDb.DbSettings
     /// </summary>
     public abstract class BaseDbSetting : IDbSetting, IEquatable<BaseDbSetting>
     {
-        /// <summary>
-        /// The placeholder of the path in the format of a JSON extraction.
-        /// </summary>
-        public const string JsonPathPlaceholder = "@@path@@";
-
         #region Privates
 
         private int? hashCode = null;
@@ -187,41 +179,6 @@ namespace RepoDb.DbSettings
         /// </summary>
         [Obsolete("This will be removed in the future releases. The schema separator will be defaulted to a 'period' character.")]
         public string SchemaSeparator { get; protected set; }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Configures the parameter that carries the JSON text of a <see cref="IDbJsonValue"/>. The default is a string parameter.
-        /// </summary>
-        /// <param name="parameter">The parameter to configure.</param>
-        public virtual void ConfigureJsonParameter(IDbDataParameter parameter)
-        {
-            parameter.DbType = DbType.String;
-        }
-
-        /// <summary>
-        /// Formats the segments of a JSON path as the path argument of the JSON function of the database.
-        /// The default is a quoted JSON path (i.e.: <c>'$.Address.City'</c>).
-        /// </summary>
-        /// <param name="segments">The property and array index segments.</param>
-        /// <returns>The SQL literal of the path.</returns>
-        public virtual string FormatJsonPath(IReadOnlyList<string> segments)
-        {
-            return JsonPathBuilder.ToSqlLiteral(JsonPathBuilder.ToJsonPath(segments));
-        }
-
-        /// <summary>
-        /// Gets the format that extracts a value from a JSON column. The <c>{0}</c> is the column and <c>@@path@@</c> is the path.
-        /// The default is <c>JSON_EXTRACT({0}, @@path@@)</c>.
-        /// </summary>
-        /// <param name="valueType">The type of the value the extracted value is compared with, or <c>null</c> when unknown.</param>
-        /// <returns>The format of the JSON extraction.</returns>
-        public virtual string GetJsonExtractFormat(Type valueType)
-        {
-            return string.Concat("JSON_EXTRACT({0}, ", JsonPathPlaceholder, ")");
-        }
 
         #endregion
 

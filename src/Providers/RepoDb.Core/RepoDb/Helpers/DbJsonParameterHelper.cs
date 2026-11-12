@@ -6,7 +6,6 @@
 
 #endregion
 
-using RepoDb.DbSettings;
 using RepoDb.Interfaces;
 using System.Data;
 
@@ -27,14 +26,7 @@ namespace RepoDb.Helpers
         public static void Configure(IDbDataParameter parameter,
             IDbSetting dbSetting)
         {
-            if (dbSetting is BaseDbSetting setting)
-            {
-                setting.ConfigureJsonParameter(parameter);
-            }
-            else
-            {
-                parameter.DbType = DbType.String;
-            }
+            DbJsonDialectMapper.Get(dbSetting).ConfigureParameter(parameter);
         }
 
         /// <summary>

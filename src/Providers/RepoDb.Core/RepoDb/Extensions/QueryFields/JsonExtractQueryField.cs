@@ -7,7 +7,6 @@
 
 #endregion
 
-using RepoDb.DbSettings;
 using RepoDb.Enumerations;
 using RepoDb.Helpers;
 using RepoDb.Interfaces;
@@ -22,7 +21,7 @@ namespace RepoDb.Extensions.QueryFields
     /// </summary>
     public sealed class JsonExtractQueryField : FunctionalQueryField
     {
-        private const string DefaultFormat = "JSON_EXTRACT({0}, " + BaseDbSetting.JsonPathPlaceholder + ")";
+        private const string DefaultFormat = "JSON_EXTRACT({0}, " + JsonConstant.PathPlaceholder + ")";
 
         #region Constructors
 
@@ -81,12 +80,10 @@ namespace RepoDb.Extensions.QueryFields
         #region Private Methods
 
         private string GetFormat(IDbSetting dbSetting) =>
-            dbSetting is BaseDbSetting setting ? setting.GetJsonExtractFormat(Parameter.Value?.GetType()) : DefaultFormat;
+            DbJsonDialectMapper.Get(dbSetting).GetExtractFormat(Parameter.Value?.GetType());
 
         private string GetPath(IDbSetting dbSetting) =>
-            dbSetting is BaseDbSetting setting ?
-                setting.FormatJsonPath(Segments) :
-                JsonPathBuilder.ToSqlLiteral(JsonPathBuilder.ToJsonPath(Segments));
+            DbJsonDialectMapper.Get(dbSetting).FormatPath(Segments);
 
         #endregion
 
@@ -102,7 +99,7 @@ namespace RepoDb.Extensions.QueryFields
             IDbSetting dbSetting)
         {
             var text = GetString(index, GetFormat(dbSetting), dbSetting);
-            return text.Replace(BaseDbSetting.JsonPathPlaceholder, GetPath(dbSetting));
+            return text.Replace(JsonConstant.PathPlaceholder, GetPath(dbSetting));
         }
 
         /// <summary>
