@@ -9,6 +9,7 @@
 using Sap.Data.Hana;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.Interfaces;
 using RepoDb.StatementBuilders;
 using System;
@@ -59,6 +60,9 @@ namespace RepoDb
 
             // Map the Statement Builder
             StatementBuilderMapper.Add<HanaConnection>(new SapHanaStatementBuilder(), true);
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<SapHanaDbSetting>(new SapHanaDbJsonDialect(), true);
 
             // Set the flag
             IsInitialized = true;

@@ -10,6 +10,7 @@
 using Npgsql;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.StatementBuilders;
 
 namespace RepoDb
@@ -58,6 +59,9 @@ namespace RepoDb
 
             // Map the Statement Builder
             StatementBuilderMapper.Add<NpgsqlConnection>(new PostgreSqlStatementBuilder(dbSetting), true);
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<PostgreSqlDbSetting>(new PostgreSqlDbJsonDialect(), true);
 
             // Set the flag
             IsInitialized = true;

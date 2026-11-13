@@ -9,6 +9,7 @@
 using DuckDB.NET.Data;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.PropertyHandlers.DuckDb;
 using RepoDb.StatementBuilders;
 using System;
@@ -73,6 +74,9 @@ namespace RepoDb
                 PropertyHandlerMapper.Add<byte[], DuckDbStreamToByteArrayPropertyHandler>(true);
                 PropertyHandlerMapper.Add<TimeSpan, DuckDbTimeOnlyToTimeSpanPropertyHandler>(true);
             }
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<DuckDbDbSetting>(new DuckDbDbJsonDialect(), true);
 
             // Set the flag
             IsInitialized = true;

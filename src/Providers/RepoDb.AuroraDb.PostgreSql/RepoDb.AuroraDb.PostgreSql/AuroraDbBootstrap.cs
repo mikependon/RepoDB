@@ -9,6 +9,7 @@
 using RepoDb.Connector.AuroraDb.Npgsql;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.StatementBuilders;
 
 namespace RepoDb
@@ -57,6 +58,9 @@ namespace RepoDb
 
             // Map the Statement Builder
             StatementBuilderMapper.Add<AuroraDbConnection>(new AuroraDbStatementBuilder(), true);
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<AuroraDbDbSetting>(new AuroraDbDbJsonDialect(), true);
 
             // Set the flag
             IsInitialized = true;

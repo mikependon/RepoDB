@@ -1,4 +1,4 @@
-#region Copyright Attributions
+﻿#region Copyright Attributions
 
 // Copyright (c) 2020 Michael Camara Pendon.
 // Portions copyright their respective RepoDB contributors.
@@ -1020,6 +1020,9 @@ namespace RepoDb.Reflection
         // 'op_Explicit'), which are looked-up via reflection by the 'Expression.Convert()' method and must not be trimmed.
         [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(decimal))]
         [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(DateTimeOffset))]
+#if !NETSTANDARD2_0
+        [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(DbJsonValue<>))]
+#endif
         internal static Expression ConvertExpressionToTypeExpression(Expression expression,
             Type toType)
         {
@@ -1274,6 +1277,12 @@ namespace RepoDb.Reflection
         {
             var fromType = TypeCache.Get(expression.Type).GetUnderlyingType();
             var toType = TypeCache.Get(trueToType)?.GetUnderlyingType();
+
+            // JSON values are converted by the JSON parameter and the JSON conversion operators
+            if (IsJsonType(fromType) || IsJsonType(toType))
+            {
+                return expression;
+            }
 
             // Guid to String
             if (fromType == StaticType.Guid && toType == StaticType.String)
@@ -2128,6 +2137,37 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         }
 
         /// <summary>
+        /// Gets the expression that sets the JSON text and the JSON configuration of the dialect into the parameter.
+        /// </summary>
+        /// <param name="dbParameterExpression">The parameter expression.</param>
+        /// <param name="valueExpression">The expression of the JSON value (as an object).</param>
+        /// <param name="dbSetting">The database setting currently in used.</param>
+        /// <returns>The expression that sets the parameter.</returns>
+        internal static Expression GetDbJsonParameterValueAssignmentExpression(ParameterExpression dbParameterExpression,
+            Expression valueExpression,
+            IDbSetting dbSetting)
+        {
+            var method = ((Action<IDbDataParameter, object, IDbSetting>)Helpers.DbJsonParameterHelper.SetValue).Method;
+            return Expression.Call(method, dbParameterExpression, valueExpression, Expression.Constant(dbSetting, typeof(IDbSetting)));
+        }
+
+        /// <summary>
+        /// Checks whether the type is a <see cref="IDbJsonValue"/>.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns><c>true</c> if the type is a JSON value.</returns>
+        internal static bool IsJsonType(Type type) =>
+            type != null && typeof(IDbJsonValue).IsAssignableFrom(type);
+
+        /// <summary>
+        /// Checks whether the class property is a <see cref="IDbJsonValue"/>.
+        /// </summary>
+        /// <param name="classProperty">The class property to check.</param>
+        /// <returns><c>true</c> if the property type is a JSON value.</returns>
+        internal static bool IsJsonValue(ClassProperty classProperty) =>
+            classProperty != null && IsJsonType(TypeCache.Get(classProperty.PropertyInfo.PropertyType).GetUnderlyingType());
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="dbParameterExpression"></param>
@@ -2163,7 +2203,9 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
             }
 
             // Set the value
-            return Expression.Call(dbParameterExpression, GetDbParameterValueSetMethod(), expression);
+            return IsJsonValue(classProperty) ?
+                GetDbJsonParameterValueAssignmentExpression(dbParameterExpression, expression, dbSetting) :
+                Expression.Call(dbParameterExpression, GetDbParameterValueSetMethod(), expression);
         }
 
         /// <summary>
@@ -2200,6 +2242,12 @@ parameterExpression: null, classProperty: null, TypeCache.Get(dbField.Type).GetU
         private static DbType? GetDbType(ClassProperty classProperty,
             DbField dbField)
         {
+            // The DbType of a JSON value is set by the JSON dialect of the database
+            if (IsJsonValue(classProperty))
+            {
+                return null;
+            }
+
             var dbType = IsPostgreSqlUserDefined(dbField) ? DbType.Object : classProperty?.GetDbType();
             if (dbType == null)
             {

@@ -161,6 +161,14 @@ namespace RepoDb
                 throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
             }
 
+#if !NETSTANDARD2_0
+            // JSON
+            if (Helpers.JsonExpressionParser.TryParse(expression.Left, out var jsonAccess))
+            {
+                return ParseJson<TEntity>(expression, jsonAccess);
+            }
+#endif
+
             // Field
             var field = expression.GetField();
             var property = GetTargetProperty<TEntity>(field);
@@ -191,6 +199,32 @@ namespace RepoDb
             return new QueryField(field, operation, value, dbType: null, prependUnderscore: false).AsEnumerable();
         }
 
+#if !NETSTANDARD2_0
+        /// <summary>
+        /// Parses a comparison of a value inside a JSON column.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="expression">The comparison expression.</param>
+        /// <param name="jsonAccess">The access to the value inside the JSON column.</param>
+        /// <returns>The <see cref="Extensions.QueryFields.JsonExtractQueryField"/> of the comparison.</returns>
+        private static IEnumerable<QueryField> ParseJson<[DynamicallyAccessedMembers(Trimming.Entity)] TEntity>(BinaryExpression expression,
+            Models.JsonAccess jsonAccess)
+            where TEntity : class
+        {
+            var property = GetTargetProperty<TEntity>(jsonAccess.Column.GetField());
+            if (property == null)
+            {
+                throw new InvalidExpressionException($"Invalid expression '{expression}'. The property {jsonAccess.Column.Member.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
+            }
+            var path = Helpers.JsonPathBuilder.Join(jsonAccess.Segments);
+            return new Extensions.QueryFields.JsonExtractQueryField(property.GetMappedName(),
+                path,
+                GetOperation(expression.NodeType),
+                expression.GetValue(),
+                dbType: null).AsEnumerable();
+        }
+
+#endif
         /// <summary>
         /// 
         /// </summary>

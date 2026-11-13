@@ -11,6 +11,9 @@ using System;
 using System.Data;
 using System.Data.Common;
 using RepoDb.Enumerations;
+#if !NETSTANDARD2_0
+using System.Text.Json;
+#endif
 
 namespace RepoDb.Options
 {
@@ -54,6 +57,15 @@ namespace RepoDb.Options
         /// </summary>
         public bool TraceResourceUsage { get; set; } = false;
 
+#if !NETSTANDARD2_0
+        /// <summary>
+        /// Gets or sets the options used to serialize and deserialize the <see cref="DbJsonValue{T}"/> values.
+        /// For the trimming and NativeAOT, set the <see cref="JsonSerializerOptions.TypeInfoResolver"/> to a source-generated context.
+        /// The default (<c>null</c>) uses <see cref="JsonSerializerOptions.Default"/>.
+        /// </summary>
+        public JsonSerializerOptions JsonSerializerOptions { get; set; }
+
+#endif
         /// <summary>
         /// Gets or sets the duration threshold for trace warnings, or <c>null</c> to disable them.
         /// </summary>

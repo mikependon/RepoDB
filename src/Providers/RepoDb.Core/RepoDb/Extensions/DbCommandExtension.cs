@@ -1,4 +1,4 @@
-#region Copyright Attributions
+﻿#region Copyright Attributions
 
 // Copyright (c) 2018 Michael Camara Pendon.
 // Portions copyright their respective RepoDB contributors.
@@ -11,6 +11,8 @@ using System.Diagnostics.CodeAnalysis;
 using RepoDb.Attributes.Parameter;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
+using RepoDb.Extensions.QueryFields;
+using RepoDb.Helpers;
 using RepoDb.Interfaces;
 using RepoDb.Options;
 using RepoDb.Resolvers;
@@ -70,6 +72,7 @@ namespace RepoDb.Extensions
             // Create the parameter
             var parameter = command.CreateParameter();
             var dbSetting = DbSettingMapper.Get(command.Connection);
+            var isJson = DbJsonParameterHelper.TryConvert(value, out value);
 
             // Set the values
             parameter.ParameterName = name.AsParameterName(dbSetting);
@@ -87,6 +90,12 @@ namespace RepoDb.Extensions
             {
                 // Prepare() requires an explicit assignment, weird Microsoft
                 parameter.DbType = dbType.Value;
+            }
+
+            // JSON
+            if (isJson)
+            {
+                DbJsonParameterHelper.Configure(parameter, dbSetting);
             }
 
             // Set the direction
@@ -338,6 +347,13 @@ namespace RepoDb.Extensions
             DbType? dbType,
             Type fallbackType)
         {
+            // JSON
+            var isJson = DbJsonParameterHelper.TryConvert(value, out value);
+            if (isJson)
+            {
+                valueType = StaticType.String;
+            }
+
             // DbType
             valueType ??= TypeCache.Get(dbField?.Type).GetUnderlyingType() ?? fallbackType;
             dbType ??= classProperty?.GetDbType() ?? (dbField?.Type ?? fallbackType ?? valueType)?.GetDbType();
@@ -354,6 +370,12 @@ namespace RepoDb.Extensions
             if (converted)
             {
                 parameter.DbType = clientTypeToDbTypeResolver.Resolve(valueType).Value;
+            }
+
+            // JSON
+            if (isJson)
+            {
+                DbJsonParameterHelper.Configure(parameter, DbSettingMapper.Get(command.Connection));
             }
 
             // Set the size
@@ -675,10 +697,11 @@ namespace RepoDb.Extensions
                 return;
             }
 
-            // Variables
-            var dbField = GetDbField(fieldName, dbFields);
+            // Variables (the value of a JSON extraction is not of the type of the JSON column)
+            var isJsonExtract = queryField is JsonExtractQueryField;
+            var dbField = isJsonExtract ? null : GetDbField(fieldName, dbFields);
             var value = queryField.Parameter.Value;
-            var classProperty = PropertyCache.Get(entityType, queryField.Field, includeMappings: true);
+            var classProperty = isJsonExtract ? null : PropertyCache.Get(entityType, queryField.Field, includeMappings: true);
             var (direction, fallbackType, size) = queryField is DirectionalQueryField n ?
                 (
                     n.Direction,

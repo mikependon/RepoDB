@@ -1,4 +1,4 @@
-#region Copyright Attributions
+﻿#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -9,6 +9,7 @@
 using IBM.Data.Db2;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.StatementBuilders;
 using System;
 
@@ -60,6 +61,9 @@ namespace RepoDb
             // Map the Statement Builder
             var statementBuilder = new Db2StatementBuilder(dbSetting);
             StatementBuilderMapper.Add<DB2Connection>(statementBuilder, true);
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<Db2DbSetting>(new Db2DbJsonDialect(), true);
 
             // Set the flag
             IsInitialized = true;

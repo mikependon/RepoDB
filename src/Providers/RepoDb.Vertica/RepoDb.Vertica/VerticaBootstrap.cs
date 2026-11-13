@@ -9,6 +9,7 @@
 using Vertica.Data.VerticaClient;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.StatementBuilders;
 using System;
 using System.Globalization;
@@ -72,6 +73,9 @@ namespace RepoDb
                 Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
                 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             }
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<VerticaDbSetting>(new VerticaDbJsonDialect(), true);
 
             // Set the flag
             IsInitialized = true;

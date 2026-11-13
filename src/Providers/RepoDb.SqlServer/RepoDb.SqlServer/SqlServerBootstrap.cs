@@ -10,6 +10,7 @@
 using Microsoft.Data.SqlClient;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.StatementBuilders;
 
 namespace RepoDb
@@ -60,6 +61,9 @@ namespace RepoDb
             // Map the Statement Builder
             var statementBuilder = new SqlServerStatementBuilder(dbSetting);
             StatementBuilderMapper.Add<SqlConnection>(statementBuilder, force: true);
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<SqlServerDbSetting>(new SqlServerDbJsonDialect(), force: true);
 
             // Set the flag
             IsInitialized = true;
