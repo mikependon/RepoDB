@@ -84,6 +84,40 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
 
         #endregion
 
+        #region Parameter
+
+        [TestMethod]
+        public void TestJsonExtractQueryFieldParameterName()
+        {
+            // Act
+            var field = new JsonExtractQueryField("Document", "Address.City", "Value");
+
+            // Assert
+            Assert.AreEqual("Document_Address_City", field.Parameter.Name, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestJsonExtractQueryFieldParameterNameWithArrayIndex()
+        {
+            // Act
+            var field = new JsonExtractQueryField("Tags", "Items[2]", "Value");
+
+            // Assert
+            Assert.AreEqual("Tags_Items_2", field.Parameter.Name, StringComparer.Ordinal);
+        }
+
+        [TestMethod]
+        public void TestJsonExtractQueryFieldParameterNameWithSpecialName()
+        {
+            // Act
+            var field = new JsonExtractQueryField("Document", "display-name", "Value");
+
+            // Assert
+            Assert.AreEqual("Document_display_name", field.Parameter.Name, StringComparer.Ordinal);
+        }
+
+        #endregion
+
         #region GetString
 
         [TestMethod]
@@ -96,7 +130,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var text = field.GetString(0, new CustomDbSetting());
 
             // Assert
-            Assert.AreEqual("JSON_EXTRACT([Document], '$.Address.City') = @Document", text, StringComparer.Ordinal);
+            Assert.AreEqual("JSON_EXTRACT([Document], '$.Address.City') = @Document_Address_City", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -109,7 +143,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var text = field.GetString(1, new CustomDbSetting());
 
             // Assert
-            Assert.AreEqual("JSON_EXTRACT([Document], '$.Id') = @Document_1", text, StringComparer.Ordinal);
+            Assert.AreEqual("JSON_EXTRACT([Document], '$.Id') = @Document_Id_1", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -122,7 +156,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var text = field.GetString(0, new CustomDbSetting());
 
             // Assert
-            Assert.AreEqual("JSON_EXTRACT([Tags], '$[0]') = @Tags", text, StringComparer.Ordinal);
+            Assert.AreEqual("JSON_EXTRACT([Tags], '$[0]') = @Tags_0", text, StringComparer.Ordinal);
         }
 
         [TestMethod]
@@ -135,7 +169,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
             var text = field.GetString(0, new CustomDbSetting());
 
             // Assert
-            Assert.AreEqual("JSON_EXTRACT([Document], '$.Id') > @Document", text, StringComparer.Ordinal);
+            Assert.AreEqual("JSON_EXTRACT([Document], '$.Id') > @Document_Id", text, StringComparer.Ordinal);
         }
 
         [TestMethod]

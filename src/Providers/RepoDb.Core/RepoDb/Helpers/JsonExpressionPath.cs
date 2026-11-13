@@ -26,6 +26,11 @@ namespace RepoDb.Helpers
     {
         #region Private Methods
 
+        /// <summary>
+        /// Adds the segments of a member access.
+        /// </summary>
+        /// <param name="expression">The expression to inspect.</param>
+        /// <param name="segments">The collected segments.</param>
         private static void AddMember(MemberExpression expression,
             List<string> segments)
         {
@@ -33,6 +38,11 @@ namespace RepoDb.Helpers
             segments.Add(GetName(expression.Member));
         }
 
+        /// <summary>
+        /// Adds the segments of the accessor chain.
+        /// </summary>
+        /// <param name="expression">The expression to inspect.</param>
+        /// <param name="segments">The collected segments.</param>
         private static void Collect(Expression expression,
             List<string> segments)
         {

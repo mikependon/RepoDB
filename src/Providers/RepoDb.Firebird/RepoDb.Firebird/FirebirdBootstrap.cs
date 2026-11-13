@@ -9,6 +9,7 @@
 using FirebirdSql.Data.FirebirdClient;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.StatementBuilders;
 
 namespace RepoDb
@@ -57,6 +58,9 @@ namespace RepoDb
 
             // Map the Statement Builder
             StatementBuilderMapper.Add<FbConnection>(new FirebirdStatementBuilder(), true);
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<FirebirdDbSetting>(new FirebirdDbJsonDialect(), true);
 
             // Set the flag
             IsInitialized = true;

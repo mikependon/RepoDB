@@ -10,6 +10,7 @@
 using System.Collections;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
+using RepoDb.Extensions.QueryFields;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -190,7 +191,7 @@ namespace RepoDb
                 return;
             }
 
-            if (queryGroupTypeMap.MappedType != null)
+            if (queryGroupTypeMap.MappedType != null && queryField is not JsonExtractQueryField)
             {
                 dictionary.Add(queryField.Parameter.Name,
                     new CommandParameter(queryField.Field, queryField.Parameter.Value, queryGroupTypeMap.MappedType));

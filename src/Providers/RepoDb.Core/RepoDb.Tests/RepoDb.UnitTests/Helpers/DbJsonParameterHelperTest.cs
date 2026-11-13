@@ -9,6 +9,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Helpers;
 using RepoDb.UnitTests.CustomObjects;
+using System;
 using System.Data;
 
 namespace RepoDb.UnitTests.Helpers
@@ -39,6 +40,50 @@ namespace RepoDb.UnitTests.Helpers
 
             // Act
             DbJsonParameterHelper.Configure(parameter, null);
+
+            // Assert
+            Assert.AreEqual(DbType.String, parameter.DbType);
+        }
+
+        #endregion
+
+        #region SetValue
+
+        [TestMethod]
+        public void TestDbJsonParameterHelperSetValueWithJsonValue()
+        {
+            // Setup
+            var parameter = new CustomDbParameter();
+            var value = DbJsonValue<JsonSampleDocument>.Parse("{\"Id\":5}");
+
+            // Act
+            DbJsonParameterHelper.SetValue(parameter, value, new CustomDbSetting());
+
+            // Assert
+            Assert.AreEqual("{\"Id\":5}", parameter.Value);
+        }
+
+        [TestMethod]
+        public void TestDbJsonParameterHelperSetValueWithDbNull()
+        {
+            // Setup
+            var parameter = new CustomDbParameter();
+
+            // Act
+            DbJsonParameterHelper.SetValue(parameter, DBNull.Value, new CustomDbSetting());
+
+            // Assert
+            Assert.AreEqual(DBNull.Value, parameter.Value);
+        }
+
+        [TestMethod]
+        public void TestDbJsonParameterHelperSetValueConfiguresTheParameter()
+        {
+            // Setup
+            var parameter = new CustomDbParameter { DbType = DbType.Int32 };
+
+            // Act
+            DbJsonParameterHelper.SetValue(parameter, default(DbJsonValue<JsonSampleDocument>), new CustomDbSetting());
 
             // Assert
             Assert.AreEqual(DbType.String, parameter.DbType);

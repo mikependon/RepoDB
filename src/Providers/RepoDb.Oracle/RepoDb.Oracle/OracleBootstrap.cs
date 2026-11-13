@@ -9,6 +9,7 @@
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.StatementBuilders;
 using System;
 
@@ -69,6 +70,9 @@ namespace RepoDb
             // Map the Statement Builder
             var statementBuilder = new OracleStatementBuilder(dbSetting);
             StatementBuilderMapper.Add<OracleConnection>(statementBuilder, true);
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<OracleDbSetting>(new OracleDbJsonDialect(), true);
 
             // Set the flag
             IsInitialized = true;

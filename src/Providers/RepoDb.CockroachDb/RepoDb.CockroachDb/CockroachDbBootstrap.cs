@@ -9,6 +9,7 @@
 using RepoDb.Connector.CockroachDb;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.StatementBuilders;
 
 namespace RepoDb
@@ -57,6 +58,9 @@ namespace RepoDb
 
             // Map the Statement Builder
             StatementBuilderMapper.Add<CockroachDbConnection>(new CockroachDbStatementBuilder(), true);
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<CockroachDbDbSetting>(new CockroachDbDbJsonDialect(), true);
 
             // Set the flag
             IsInitialized = true;

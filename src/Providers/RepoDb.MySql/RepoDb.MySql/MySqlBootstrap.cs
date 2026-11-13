@@ -10,6 +10,7 @@
 using MySql.Data.MySqlClient;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.StatementBuilders;
 
 namespace RepoDb
@@ -58,6 +59,9 @@ namespace RepoDb
 
             // Map the Statement Builder
             StatementBuilderMapper.Add<MySqlConnection>(new MySqlStatementBuilder(), true);
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<MySqlDbSetting>(new MySqlDbJsonDialect(), true);
 
             // Set the flag
             IsInitialized = true;

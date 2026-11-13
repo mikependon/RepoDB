@@ -12,7 +12,7 @@ using System;
 namespace RepoDb.Dialects
 {
     /// <summary>
-    /// The JSON dialect of SQL Server, which uses <c>JSON_VALUE</c> and also works on the native <c>json</c> type of SQL Server 2025.
+    /// The JSON dialect of SQL Server (including its native <c>json</c> type), which uses the SQL standard <c>JSON_VALUE</c> function.
     /// </summary>
     public class SqlServerDbJsonDialect : DefaultDbJsonDialect
     {

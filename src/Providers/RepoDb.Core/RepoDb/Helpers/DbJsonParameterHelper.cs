@@ -7,6 +7,7 @@
 #endregion
 
 using RepoDb.Interfaces;
+using System;
 using System.Data;
 
 namespace RepoDb.Helpers
@@ -27,6 +28,21 @@ namespace RepoDb.Helpers
             IDbSetting dbSetting)
         {
             DbJsonDialectMapper.Get(dbSetting).ConfigureParameter(parameter);
+        }
+
+        /// <summary>
+        /// Sets the JSON text of the value into the parameter, and configures the parameter using the dialect of the database.
+        /// </summary>
+        /// <param name="parameter">The parameter to set.</param>
+        /// <param name="value">The <see cref="IDbJsonValue"/> (or <see cref="DBNull"/>) to set.</param>
+        /// <param name="dbSetting">The database setting currently in used.</param>
+        public static void SetValue(IDbDataParameter parameter,
+            object value,
+            IDbSetting dbSetting)
+        {
+            TryConvert(value, out var converted);
+            parameter.Value = converted ?? DBNull.Value;
+            Configure(parameter, dbSetting);
         }
 
         /// <summary>

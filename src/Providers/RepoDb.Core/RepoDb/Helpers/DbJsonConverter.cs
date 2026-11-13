@@ -23,6 +23,11 @@ namespace RepoDb.Helpers
     {
         #region Private Methods
 
+        /// <summary>
+        /// Gets the JSON type information of the type from the configured options.
+        /// </summary>
+        /// <param name="type">The type to resolve.</param>
+        /// <returns>The JSON type information.</returns>
         private static JsonTypeInfo GetTypeInfo(Type type) =>
             GetOptions().GetTypeInfo(type);
 

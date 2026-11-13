@@ -9,6 +9,7 @@
 using RepoDb.Connector.EnterpriseDb;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.StatementBuilders;
 
 namespace RepoDb
@@ -57,6 +58,9 @@ namespace RepoDb
 
             // Map the Statement Builder
             StatementBuilderMapper.Add<EDBConnection>(new EnterpriseDbStatementBuilder(), true);
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<EnterpriseDbDbSetting>(new EnterpriseDbDbJsonDialect(), true);
 
             // Set the flag
             IsInitialized = true;

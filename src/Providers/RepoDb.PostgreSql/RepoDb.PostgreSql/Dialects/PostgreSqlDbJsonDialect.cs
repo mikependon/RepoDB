@@ -18,7 +18,7 @@ using System.Linq;
 namespace RepoDb.Dialects
 {
     /// <summary>
-    /// The JSON dialect of PostgreSQL, which uses the <c>#&gt;&gt;</c> operator, text array paths and <c>jsonb</c> parameters.
+    /// The JSON dialect of PostgreSQL, which uses the <c>#&gt;&gt;</c> operator, text array paths and a <c>jsonb</c> parameter.
     /// </summary>
     public class PostgreSqlDbJsonDialect : DefaultDbJsonDialect
     {
@@ -37,11 +37,21 @@ namespace RepoDb.Dialects
 
         #region Private Methods
 
+        /// <summary>
+        /// Quotes the property name when it has special characters.
+        /// </summary>
+        /// <param name="segment">The property or array index segment.</param>
+        /// <returns>The element of the text array literal.</returns>
         private static string QuoteElement(string segment) =>
             segment.Any(c => !char.IsLetterOrDigit(c) && c != '_') ?
                 string.Concat("\"", segment.Replace("\\", "\\\\").Replace("\"", "\\\""), "\"") :
                 segment;
 
+        /// <summary>
+        /// Converts a segment into an element of the text array literal.
+        /// </summary>
+        /// <param name="segment">The property or array index segment.</param>
+        /// <returns>The element of the text array literal.</returns>
         private static string ToElement(string segment) =>
             JsonPathBuilder.IsIndex(segment) ? segment.Substring(1, segment.Length - 2) : QuoteElement(segment);
 
@@ -55,15 +65,16 @@ namespace RepoDb.Dialects
         /// <param name="parameter">The parameter to configure.</param>
         public override void ConfigureParameter(IDbDataParameter parameter)
         {
-            if (parameter is NpgsqlParameter npgsqlParameter)
+            if (parameter is NpgsqlParameter jsonParameter)
             {
-                npgsqlParameter.NpgsqlDbType = NpgsqlDbType.Jsonb;
+                jsonParameter.NpgsqlDbType = NpgsqlDbType.Jsonb;
             }
             else
             {
                 base.ConfigureParameter(parameter);
             }
         }
+
 
         /// <summary>
         /// Formats the path as a PostgreSQL text array literal (i.e.: <c>'{Address,City}'</c>).

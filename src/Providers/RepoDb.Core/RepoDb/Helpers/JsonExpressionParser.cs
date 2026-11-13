@@ -24,6 +24,11 @@ namespace RepoDb.Helpers
     {
         #region Private Methods
 
+        /// <summary>
+        /// Gets the JSON access of an <c>ExtractValue</c> call.
+        /// </summary>
+        /// <param name="call">The method call expression.</param>
+        /// <returns>The JSON access, or <c>null</c> when the call is not on an entity column.</returns>
         private static JsonAccess FromExtractValue(MethodCallExpression call)
         {
             var column = Unwrap(call.Arguments[0]) as MemberExpression;
@@ -31,13 +36,23 @@ namespace RepoDb.Helpers
             return IsEntityColumn(column) && segments != null ? new JsonAccess(column, segments) : null;
         }
 
-        private static JsonAccess FromValueChain(MemberExpression member)
+        /// <summary>
+        /// Gets the JSON access of a chain that starts at the <c>Value</c> of a JSON column.
+        /// </summary>
+        /// <param name="expression">The expression to inspect.</param>
+        /// <returns>The JSON access, or <c>null</c> when the chain is not a JSON access.</returns>
+        private static JsonAccess FromValueChain(Expression expression)
         {
             var segments = new List<string>();
-            var column = TryBuildChain(member, segments);
+            var column = TryBuildChain(expression, segments);
             return IsEntityColumn(column) && segments.Count > 0 ? new JsonAccess(column, segments) : null;
         }
 
+        /// <summary>
+        /// Gets the segments of the path argument of an <c>ExtractValue</c> call.
+        /// </summary>
+        /// <param name="path">The path argument of the call.</param>
+        /// <returns>The segments, or <c>null</c> when the argument is not supported.</returns>
         private static IReadOnlyList<string> GetExtractSegments(Expression path) =>
             path switch
             {
@@ -46,18 +61,39 @@ namespace RepoDb.Helpers
                 _ => null
             };
 
+        /// <summary>
+        /// Checks whether the expression is a column of the entity parameter of the query.
+        /// </summary>
+        /// <param name="column">The expression of the JSON column.</param>
+        /// <returns><c>true</c> if the expression is an entity column.</returns>
         private static bool IsEntityColumn(MemberExpression column) =>
             column?.Expression is ParameterExpression;
 
+        /// <summary>
+        /// Checks whether the call is an <c>ExtractValue</c> of the <see cref="JsonQueryExtensions"/>.
+        /// </summary>
+        /// <param name="call">The method call expression.</param>
+        /// <returns><c>true</c> if the call is an <c>ExtractValue</c>.</returns>
         private static bool IsExtractValue(MethodCallExpression call) =>
             call.Method.DeclaringType == typeof(JsonQueryExtensions) &&
             string.Equals(call.Method.Name, nameof(JsonQueryExtensions.ExtractValue), System.StringComparison.Ordinal);
 
+        /// <summary>
+        /// Checks whether the member is the <c>Value</c> of a JSON column.
+        /// </summary>
+        /// <param name="member">The member expression.</param>
+        /// <returns><c>true</c> if the member is the value of a JSON column.</returns>
         private static bool IsJsonValueMember(MemberExpression member) =>
             string.Equals(member.Member.Name, nameof(DbJsonValue<object>.Value), System.StringComparison.Ordinal) &&
             member.Expression is MemberExpression &&
             typeof(IDbJsonValue).IsAssignableFrom(member.Expression.Type);
 
+        /// <summary>
+        /// Collects the segments of a chain, down to the <c>Value</c> of a JSON column.
+        /// </summary>
+        /// <param name="expression">The expression to inspect.</param>
+        /// <param name="segments">The collected segments.</param>
+        /// <returns>The JSON column, or <c>null</c> when the chain is not a JSON access.</returns>
         private static MemberExpression TryBuildChain(Expression expression,
             List<string> segments)
         {
@@ -76,6 +112,13 @@ namespace RepoDb.Helpers
             }
         }
 
+        /// <summary>
+        /// Adds the segment when the column is found.
+        /// </summary>
+        /// <param name="column">The expression of the JSON column.</param>
+        /// <param name="segments">The collected segments.</param>
+        /// <param name="segment">The segment to add.</param>
+        /// <returns>The column.</returns>
         private static MemberExpression AppendAfter(MemberExpression column,
             List<string> segments,
             string segment)
@@ -87,6 +130,11 @@ namespace RepoDb.Helpers
             return column;
         }
 
+        /// <summary>
+        /// Removes the conversion and quote wrappers of the expression.
+        /// </summary>
+        /// <param name="expression">The expression to inspect.</param>
+        /// <returns>The inner expression.</returns>
         private static Expression Unwrap(Expression expression)
         {
             while (expression is UnaryExpression unary &&
@@ -113,7 +161,8 @@ namespace RepoDb.Helpers
             access = Unwrap(expression) switch
             {
                 MethodCallExpression call when IsExtractValue(call) => FromExtractValue(call),
-                MemberExpression member => FromValueChain(member),
+                MemberExpression or BinaryExpression { NodeType: ExpressionType.ArrayIndex } or MethodCallExpression { Method.Name: "get_Item" } =>
+                    FromValueChain(Unwrap(expression)),
                 _ => null
             };
             return access != null;

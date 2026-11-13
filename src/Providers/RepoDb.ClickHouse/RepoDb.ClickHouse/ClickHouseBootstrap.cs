@@ -9,6 +9,7 @@
 using ClickHouse.Driver.ADO;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Dialects;
 using RepoDb.Interfaces;
 using RepoDb.StatementBuilders;
 using System;
@@ -63,6 +64,9 @@ namespace RepoDb
 
             // Map the Statement Builder
             StatementBuilderMapper.Add<ClickHouseConnection>(new ClickHouseStatementBuilder(), true);
+
+            // Map the JSON Dialect
+            DbJsonDialectMapper.Add<ClickHouseDbSetting>(new ClickHouseDbJsonDialect(), true);
 
             // Set the flag
             IsInitialized = true;

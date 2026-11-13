@@ -13,6 +13,7 @@ using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace RepoDb.Extensions.QueryFields
 {
@@ -59,6 +60,7 @@ namespace RepoDb.Extensions.QueryFields
             }
             Path = path;
             Segments = JsonPathBuilder.Split(path);
+            Parameter.SetName(ToParameterName(fieldName, Segments));
         }
 
         #endregion
@@ -79,9 +81,39 @@ namespace RepoDb.Extensions.QueryFields
 
         #region Private Methods
 
+        /// <summary>
+        /// Gets the parameter name, which is different from the column so that no database field conversion applies to it.
+        /// </summary>
+        /// <param name="fieldName">The name of the JSON column.</param>
+        /// <param name="segments">The property and array index segments.</param>
+        /// <returns>The parameter name.</returns>
+        private static string ToParameterName(string fieldName,
+            IReadOnlyList<string> segments) =>
+            string.Concat(fieldName, "_", string.Join("_", segments.Select(ToNamePart)));
+
+        /// <summary>
+        /// Converts a path segment into a valid parameter name part.
+        /// </summary>
+        /// <param name="segment">The property or array index segment.</param>
+        /// <returns>The name part.</returns>
+        private static string ToNamePart(string segment) =>
+            new string((JsonPathBuilder.IsIndex(segment) ? segment.Substring(1, segment.Length - 2) : segment)
+                .Select(c => char.IsLetterOrDigit(c) ? c : '_')
+                .ToArray());
+
+        /// <summary>
+        /// Gets the format of the JSON extraction from the dialect of the database.
+        /// </summary>
+        /// <param name="dbSetting">The database setting currently in used.</param>
+        /// <returns>The format of the JSON extraction.</returns>
         private string GetFormat(IDbSetting dbSetting) =>
             DbJsonDialectMapper.Get(dbSetting).GetExtractFormat(Parameter.Value?.GetType());
 
+        /// <summary>
+        /// Gets the path argument from the dialect of the database.
+        /// </summary>
+        /// <param name="dbSetting">The database setting currently in used.</param>
+        /// <returns>The SQL literal of the path.</returns>
         private string GetPath(IDbSetting dbSetting) =>
             DbJsonDialectMapper.Get(dbSetting).FormatPath(Segments);
 

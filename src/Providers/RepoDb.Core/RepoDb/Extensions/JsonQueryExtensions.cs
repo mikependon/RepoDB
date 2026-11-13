@@ -24,10 +24,22 @@ namespace RepoDb
     {
         #region Private Methods
 
+        /// <summary>
+        /// Extracts the value found at the segments of the JSON node.
+        /// </summary>
+        /// <param name="source">The JSON node to extract from.</param>
+        /// <param name="segments">The property and array index segments.</param>
+        /// <returns>The extracted value, or the default value when not found.</returns>
         private static TResult Extract<TResult>(JsonNode source,
             IReadOnlyList<string> segments) =>
             Navigate(source, segments) is { } node ? node.GetValue<TResult>() : default;
 
+        /// <summary>
+        /// Moves through the JSON node following the segments.
+        /// </summary>
+        /// <param name="node">The JSON node.</param>
+        /// <param name="segments">The property and array index segments.</param>
+        /// <returns>The found node, or <c>null</c> when the path does not exist.</returns>
         private static JsonNode Navigate(JsonNode node,
             IReadOnlyList<string> segments)
         {
@@ -42,12 +54,24 @@ namespace RepoDb
             return node;
         }
 
+        /// <summary>
+        /// Moves into a property or an array item of the JSON node.
+        /// </summary>
+        /// <param name="node">The JSON node.</param>
+        /// <param name="segment">The property or array index segment.</param>
+        /// <returns>The found node, or <c>null</c>.</returns>
         private static JsonNode Step(JsonNode node,
             string segment) =>
             JsonPathBuilder.IsIndex(segment) ?
                 StepIndex(node, segment) :
                 (node is JsonObject jsonObject ? jsonObject[segment] : null);
 
+        /// <summary>
+        /// Moves into an array item of the JSON node.
+        /// </summary>
+        /// <param name="node">The JSON node.</param>
+        /// <param name="segment">The property or array index segment.</param>
+        /// <returns>The found node, or <c>null</c> when the index is out of range.</returns>
         private static JsonNode StepIndex(JsonNode node,
             string segment)
         {

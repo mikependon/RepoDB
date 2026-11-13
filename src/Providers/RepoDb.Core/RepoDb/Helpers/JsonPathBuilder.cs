@@ -19,6 +19,12 @@ namespace RepoDb.Helpers
     {
         #region Private Methods
 
+        /// <summary>
+        /// Adds an array index segment starting at the position.
+        /// </summary>
+        /// <param name="segments">The property and array index segments.</param>
+        /// <param name="path">The JSON path.</param>
+        /// <param name="position">The current position in the path, which is moved forward.</param>
         private static void AddIndex(List<string> segments,
             string path,
             ref int position)
@@ -32,6 +38,12 @@ namespace RepoDb.Helpers
             position = end + 1;
         }
 
+        /// <summary>
+        /// Adds a property name segment starting at the position.
+        /// </summary>
+        /// <param name="segments">The property and array index segments.</param>
+        /// <param name="path">The JSON path.</param>
+        /// <param name="position">The current position in the path, which is moved forward.</param>
         private static void AddName(List<string> segments,
             string path,
             ref int position)
@@ -47,6 +59,11 @@ namespace RepoDb.Helpers
             }
         }
 
+        /// <summary>
+        /// Appends the segment to the JSON path.
+        /// </summary>
+        /// <param name="builder">The builder to append to.</param>
+        /// <param name="segment">The property or array index segment.</param>
         private static void AppendSegment(StringBuilder builder,
             string segment)
         {
@@ -64,6 +81,11 @@ namespace RepoDb.Helpers
             }
         }
 
+        /// <summary>
+        /// Checks whether the segment only has letters, digits and underscores.
+        /// </summary>
+        /// <param name="segment">The property or array index segment.</param>
+        /// <returns><c>true</c> if the name needs no quoting.</returns>
         private static bool IsSimpleName(string segment)
         {
             foreach (var character in segment)
