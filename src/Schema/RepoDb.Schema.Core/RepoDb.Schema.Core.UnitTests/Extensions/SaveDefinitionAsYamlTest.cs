@@ -123,7 +123,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Setup
             var connection = new CustomDbConnection();
-            Reader.Setup(r => r.TableExists("missing")).Returns(false);
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"missing",It.IsAny<System.Data.IDbTransaction>())).Returns(false);
 
             // Act
             Action action = () => connection.SaveDefinitionAsYaml("missing", Filename);
@@ -154,7 +154,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");
@@ -178,7 +178,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");
@@ -202,7 +202,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");
@@ -226,7 +226,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");
@@ -250,7 +250,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");
@@ -274,7 +274,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");
@@ -298,7 +298,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");

@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -20,15 +19,24 @@ using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.Core.UnitTests.Extensions
 {
+    /// <summary>
+    /// Contains the copy table schemas to exists behavior test behavior.
+    /// </summary>
     [TestClass]
     public class CopyTableSchemasToExistsBehaviorTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
@@ -36,49 +44,99 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             SchemaComposerMapper.Clear();
         }
 
-        #region Helpers
+        #region Private Methods
 
-        private static TableSchema GetCountry() =>
-            GetSchema("Country", new[] { "Id", "Name" }, new[] { "IX_Country_Name" }, new string[0]);
+        /// <summary>
+        /// Performs get country.
+        /// </summary>
+        private static TableSchema GetCountry() => GetSchema("Country",
+            new[] { "Id", "Name" },
+            new[] { "IX_Country_Name" },
+            new string[0]);
 
-        private static TableSchema GetPerson() =>
-            GetSchema("Person", new[] { "Id", "CountryId" }, new[] { "IX_Person_Id" }, new[] { "FK_Person_Country" });
+        /// <summary>
+        /// Performs get person.
+        /// </summary>
+        private static TableSchema GetPerson() => GetSchema("Person",
+            new[] { "Id", "CountryId" },
+            new[] { "IX_Person_Id" },
+            new[] { "FK_Person_Country" });
 
-        private static TableSchema GetSchema(string tableName, string[] columns, string[] indexes, string[] foreignKeys)
+        /// <summary>
+        /// Performs get schema.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="columns">The columns.</param>
+        /// <param name="indexes">The indexes.</param>
+        /// <param name="foreignKeys">The foreign keys.</param>
+        private static TableSchema GetSchema(string tableName,
+            string[] columns,
+            string[] indexes,
+            string[] foreignKeys)
         {
-            var schema = new TableSchema(tableName, "dbo");
+            var schema = new TableSchema(tableName,
+                "dbo");
             foreach (var column in columns)
             {
-                schema.Columns.Add(new ColumnInfo { Field = new DbField(column, false, false, true, typeof(string), null, null, null, "text", false, "Test") });
+                schema.Columns.Add(new ColumnInfo { Field = new DbField(column,
+                        false,
+                        false,
+                        true,
+                        typeof(string),
+                        null,
+                        null,
+                        null,
+                        "text",
+                        false,
+                        "Test") });
             }
+
             foreach (var index in indexes)
             {
                 schema.Indexes.Add(new IndexInfo(index));
             }
+
             foreach (var foreignKey in foreignKeys)
             {
                 schema.ForeignKeys.Add(new ForeignKeyInfo(foreignKey));
             }
+
             return schema;
         }
 
+        /// <summary>
+        /// Performs map reader.
+        /// </summary>
+        /// <param name="schemas">The schemas.</param>
         private static void MapReader(params TableSchema[] schemas)
         {
             var relationships = schemas.Select(s => new RelationshipInfo { Schema = s }).ToList();
             var reader = new Mock<ISchemaReader>();
-            reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns(relationships);
-            reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(relationships);
-            SchemaReaderMapper.Add<CustomDbConnection>(reader.Object, true);
+            reader.Setup(r => r.GetDependencyOrder(It.IsAny<System.Data.IDbConnection>(),
+                    It.IsAny<IEnumerable<string>>(),
+                    It.IsAny<System.Data.IDbTransaction>())).Returns(relationships);
+            reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<System.Data.IDbConnection>(),
+                    It.IsAny<IEnumerable<string>>(),
+                    It.IsAny<System.Data.IDbTransaction>(),
+                    It.IsAny<CancellationToken>())).ReturnsAsync(relationships);
+            SchemaReaderMapper.Add<CustomDbConnection>(reader.Object,
+                true);
         }
 
+        /// <summary>
+        /// Performs script.
+        /// </summary>
+        /// <param name="schemas">The schemas.</param>
         private static IEnumerable<string> Script(IEnumerable<TableSchema> schemas)
         {
             var list = schemas.ToList();
-            return list.Select(s => $"CREATE TABLE {s.Table.Name};")
-                .Concat(list.SelectMany(s => s.Indexes.Select(i => $"CREATE INDEX {i.Name} ON {s.Table.Name};")))
-                .Concat(list.SelectMany(s => s.ForeignKeys.Select(f => $"ADD {f.Name} TO {s.Table.Name};")));
+            return list.Select(s => $"CREATE TABLE {s.Table.Name};").Concat(list.SelectMany(s => s.Indexes.Select(i => $"CREATE INDEX {i.Name} ON {s.Table.Name};"))).Concat(list.SelectMany(s => s.ForeignKeys.Select(f => $"ADD {f.Name} TO {s.Table.Name};")));
         }
 
+        /// <summary>
+        /// Performs map composer.
+        /// </summary>
+        /// <param name="compose">The compose.</param>
         private static Mock<ISchemaComposer> MapComposer(bool compose = true)
         {
             var composer = new Mock<ISchemaComposer>();
@@ -86,106 +144,158 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             composer.Setup(c => c.ComposeSchemas(It.IsAny<IEnumerable<TableSchema>>())).Returns<IEnumerable<TableSchema>>(Script);
             composer.Setup(c => c.ComposeSchema(It.IsAny<TableSchema>())).Returns<TableSchema>(s => Script(new[] { s }));
             composer.Setup(c => c.ComposeDropTable(It.IsAny<string>())).Returns<string>(n => $"DROP TABLE {n};");
-            composer.Setup(c => c.ComposeAddColumn(It.IsAny<string>(), It.IsAny<ColumnInfo>())).Returns<string, ColumnInfo>((n, c) => $"ADD COLUMN {c.Field.Name} TO {n};");
-            composer.Setup(c => c.ComposeCreateIndex(It.IsAny<string>(), It.IsAny<IndexInfo>())).Returns<string, IndexInfo>((n, i) => $"CREATE INDEX {i.Name} ON {n};");
+            composer.Setup(c => c.ComposeAddColumn(It.IsAny<string>(),
+                    It.IsAny<ColumnInfo>())).Returns<string, ColumnInfo>((n,
+                    c) => $"ADD COLUMN {c.Field.Name} TO {n};");
+            composer.Setup(c => c.ComposeCreateIndex(It.IsAny<string>(),
+                    It.IsAny<IndexInfo>())).Returns<string, IndexInfo>((n,
+                    i) => $"CREATE INDEX {i.Name} ON {n};");
             if (compose)
             {
                 composer.Setup(c => c.ComposeTableExists(It.IsAny<string>())).Returns<string>(n => $"TABLE_EXISTS {n}");
-                composer.Setup(c => c.ComposeColumnExists(It.IsAny<string>(), It.IsAny<string>())).Returns<string, string>((n, c) => $"COLUMN_EXISTS {n}.{c}");
-                composer.Setup(c => c.ComposeIndexExists(It.IsAny<string>(), It.IsAny<string>())).Returns<string, string>((n, i) => $"INDEX_EXISTS {n}.{i}");
+                composer.Setup(c => c.ComposeColumnExists(It.IsAny<string>(),
+                        It.IsAny<string>())).Returns<string, string>((n,
+                        c) => $"COLUMN_EXISTS {n}.{c}");
+                composer.Setup(c => c.ComposeIndexExists(It.IsAny<string>(),
+                        It.IsAny<string>())).Returns<string, string>((n,
+                        i) => $"INDEX_EXISTS {n}.{i}");
             }
-            SchemaComposerMapper.Add<CustomDbConnection>(composer.Object, true);
+
+            SchemaComposerMapper.Add<CustomDbConnection>(composer.Object,
+                true);
             return composer;
         }
 
-        private static CustomDbConnection GetDestination(params string[] existing) =>
-            new CustomDbConnection { ScalarResult = statement => existing.Contains(statement) ? 1 : 0 };
+        /// <summary>
+        /// Performs get destination.
+        /// </summary>
+        /// <param name="existing">The existing.</param>
+        private static CustomDbConnection GetDestination(params string[] existing) => new CustomDbConnection
+        {
+            ScalarResult = statement => existing.Contains(statement) ? 1 : 0
+        };
 
-        private static CopyTableSchemaResultItem Get(IEnumerable<CopyTableSchemaResultItem> results, string tableName) =>
-            results.Single(r => r.Target.Table.Table.Name == tableName);
-
+        /// <summary>
+        /// Performs get.
+        /// </summary>
+        /// <param name="results">The results.</param>
+        /// <param name="tableName">The table name.</param>
+        private static CopyTableSchemaResultItem Get(IEnumerable<CopyTableSchemaResultItem> results,
+            string tableName) => results.Single(r => r.Target.Table.Table.Name == tableName);
         #endregion
 
         #region Skip
 
+        /// <summary>
+        /// Verifies copy table schemas to with skip leaves the existing table as it is.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithSkipLeavesTheExistingTableAsItIs()
         {
             // Setup
-            MapReader(GetCountry(), GetPerson());
+            MapReader(GetCountry(),
+                GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country");
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Skip, createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Skip,
+                createdCallback: results.Add);
             // Assert
-            CollectionAssert.AreEqual(new[] { "CREATE TABLE Person;", "CREATE INDEX IX_Person_Id ON Person;", "ADD FK_Person_Country TO Person;" }, destination.ExecutedCommands);
-            var country = Get(results, "Country");
-            Assert.AreEqual(TableOutcome.Skipped, country.Outcome);
-            Assert.AreEqual(true, country.TableExisted);
-            Assert.AreEqual(string.Empty, country.Script);
-            var person = Get(results, "Person");
-            Assert.AreEqual(TableOutcome.Created, person.Outcome);
-            Assert.AreEqual(false, person.TableExisted);
+            CollectionAssert.AreEqual(new[] { "CREATE TABLE Person;", "CREATE INDEX IX_Person_Id ON Person;", "ADD FK_Person_Country TO Person;" },
+                destination.ExecutedCommands);
+            var country = Get(results,
+                "Country");
+            Assert.AreEqual(TableOutcome.Skipped,
+                country.Outcome);
+            Assert.AreEqual(true,
+                country.TableExisted);
+            Assert.AreEqual(string.Empty,
+                country.Script);
+            var person = Get(results,
+                "Person");
+            Assert.AreEqual(TableOutcome.Created,
+                person.Outcome);
+            Assert.AreEqual(false,
+                person.TableExisted);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with skip and all the tables existing does not execute anything.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithSkipAndAllTheTablesExistingDoesNotExecuteAnything()
         {
             // Setup
-            MapReader(GetCountry(), GetPerson());
+            MapReader(GetCountry(),
+                GetPerson());
             MapComposer();
-            var destination = GetDestination("TABLE_EXISTS Country", "TABLE_EXISTS Person");
+            var destination = GetDestination("TABLE_EXISTS Country",
+                "TABLE_EXISTS Person");
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" },
+                destination,
+                createdCallback: results.Add);
             // Assert
-            Assert.AreEqual(0, destination.ExecutedCommands.Count);
+            Assert.AreEqual(0,
+                destination.ExecutedCommands.Count);
             Assert.IsTrue(results.All(r => r.Outcome == TableOutcome.Skipped));
-            Assert.AreEqual(2, results.Count);
+            Assert.AreEqual(2,
+                results.Count);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to reports the skipped tables before the statements are executed.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToReportsTheSkippedTablesBeforeTheStatementsAreExecuted()
         {
             // Setup
-            MapReader(GetCountry(), GetPerson());
+            MapReader(GetCountry(),
+                GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country");
             var executedWhenReported = new List<(string Table, int Executed)>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination,
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" },
+                destination,
                 createdCallback: r => executedWhenReported.Add((r.Target.Table.Table.Name, destination.ExecutedCommands.Count)));
-
             // Assert
-            Assert.AreEqual(("Country", 0), executedWhenReported[0]);
-            Assert.AreEqual(("Person", 3), executedWhenReported[1]);
+            Assert.AreEqual(("Country", 0),
+                executedWhenReported[0]);
+            Assert.AreEqual(("Person", 3),
+                executedWhenReported[1]);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to checks the existence of each table once.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToChecksTheExistenceOfEachTableOnce()
         {
             // Setup
-            MapReader(GetCountry(), GetPerson());
+            MapReader(GetCountry(),
+                GetPerson());
             MapComposer();
             var destination = GetDestination();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" },
+                destination);
             // Assert
-            CollectionAssert.AreEqual(new[] { "TABLE_EXISTS Country", "TABLE_EXISTS Person" }, destination.ExecutedScalars);
+            CollectionAssert.AreEqual(new[] { "TABLE_EXISTS Country", "TABLE_EXISTS Person" },
+                destination.ExecutedScalars);
         }
 
         #endregion
 
         #region Unknown
 
+        /// <summary>
+        /// Verifies copy table schemas to with acomposer that does not compose the existence statements creates the tables.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithAComposerThatDoesNotComposeTheExistenceStatementsCreatesTheTables()
         {
@@ -194,14 +304,17 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer(compose: false);
             var destination = GetDestination("TABLE_EXISTS Country");
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" },
+                destination,
+                createdCallback: results.Add);
             // Assert
-            Assert.AreEqual(0, destination.ExecutedScalars.Count);
-            CollectionAssert.AreEqual(new[] { "CREATE TABLE Country;", "CREATE INDEX IX_Country_Name ON Country;" }, destination.ExecutedCommands);
-            Assert.AreEqual(TableOutcome.Created, results.Single().Outcome);
+            Assert.AreEqual(0,
+                destination.ExecutedScalars.Count);
+            CollectionAssert.AreEqual(new[] { "CREATE TABLE Country;", "CREATE INDEX IX_Country_Name ON Country;" },
+                destination.ExecutedCommands);
+            Assert.AreEqual(TableOutcome.Created,
+                results.Single().Outcome);
             Assert.IsNull(results.Single().TableExisted);
         }
 
@@ -209,148 +322,215 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
         #region Throw
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to with throw if atable already exists.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToWithThrowIfATableAlreadyExists()
         {
             // Setup
-            MapReader(GetCountry(), GetPerson());
+            MapReader(GetCountry(),
+                GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Person");
-
             // Act/Assert
-            var exception = Assert.Throws<InvalidOperationException>(() =>
-                new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" }, destination, tableExistenceBehavior: TableExistsBehavior.Throw));
-            StringAssert.Contains(exception.Message, "Person", StringComparison.Ordinal);
-            Assert.AreEqual(0, destination.ExecutedCommands.Count);
+            var exception = Assert.Throws<InvalidOperationException>(() => new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" },
+                    destination,
+                    tableExistenceBehavior: TableExistsBehavior.Throw));
+            StringAssert.Contains(exception.Message,
+                "Person",
+                StringComparison.Ordinal);
+            Assert.AreEqual(0,
+                destination.ExecutedCommands.Count);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with throw and no existing table creates the tables.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithThrowAndNoExistingTableCreatesTheTables()
         {
             // Setup
-            MapReader(GetCountry(), GetPerson());
+            MapReader(GetCountry(),
+                GetPerson());
             MapComposer();
             var destination = GetDestination();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" }, destination, tableExistenceBehavior: TableExistsBehavior.Throw);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Throw);
             // Assert
-            Assert.AreEqual(5, destination.ExecutedCommands.Count);
+            Assert.AreEqual(5,
+                destination.ExecutedCommands.Count);
         }
 
         #endregion
 
         #region Drop
 
+        /// <summary>
+        /// Verifies copy table schemas to with drop drops the existing tables and creates them again.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithDropDropsTheExistingTablesAndCreatesThemAgain()
         {
             // Setup
-            MapReader(GetCountry(), GetPerson());
+            MapReader(GetCountry(),
+                GetPerson());
             MapComposer();
-            var destination = GetDestination("TABLE_EXISTS Country", "TABLE_EXISTS Person");
+            var destination = GetDestination("TABLE_EXISTS Country",
+                "TABLE_EXISTS Person");
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Drop,
+                createdCallback: results.Add);
             // Assert
-            CollectionAssert.AreEqual(new[]
-            {
-                "DROP TABLE Person;", "DROP TABLE Country;",
-                "CREATE TABLE Country;", "CREATE TABLE Person;",
-                "CREATE INDEX IX_Country_Name ON Country;", "CREATE INDEX IX_Person_Id ON Person;",
-                "ADD FK_Person_Country TO Person;"
-            }, destination.ExecutedCommands);
+            CollectionAssert.AreEqual(new[] { "DROP TABLE Person;", "DROP TABLE Country;", "CREATE TABLE Country;", "CREATE TABLE Person;", "CREATE INDEX IX_Country_Name ON Country;", "CREATE INDEX IX_Person_Id ON Person;", "ADD FK_Person_Country TO Person;" },
+                destination.ExecutedCommands);
             Assert.IsTrue(results.All(r => r.Outcome == TableOutcome.Dropped));
             Assert.IsTrue(results.All(r => r.TableExisted == true));
-            StringAssert.StartsWith(Get(results, "Person").Script, "DROP TABLE Person;", StringComparison.Ordinal);
+            StringAssert.StartsWith(Get(results,
+                    "Person").Script,
+                "DROP TABLE Person;",
+                StringComparison.Ordinal);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with drop only drops the tables that exist.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithDropOnlyDropsTheTablesThatExist()
         {
             // Setup
-            MapReader(GetCountry(), GetPerson());
+            MapReader(GetCountry(),
+                GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country");
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Person", "Country" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Drop,
+                createdCallback: results.Add);
             // Assert
-            Assert.AreEqual(1, destination.ExecutedCommands.Count(c => c.StartsWith("DROP", StringComparison.Ordinal)));
-            Assert.AreEqual("DROP TABLE Country;", destination.ExecutedCommands[0]);
-            Assert.AreEqual(TableOutcome.Dropped, Get(results, "Country").Outcome);
-            Assert.AreEqual(TableOutcome.Created, Get(results, "Person").Outcome);
-            Assert.IsFalse(Get(results, "Person").Script.Contains("DROP"));
+            Assert.AreEqual(1,
+                destination.ExecutedCommands.Count(c => c.StartsWith("DROP",
+                        StringComparison.Ordinal)));
+            Assert.AreEqual("DROP TABLE Country;",
+                destination.ExecutedCommands[0]);
+            Assert.AreEqual(TableOutcome.Dropped,
+                Get(results,
+                    "Country").Outcome);
+            Assert.AreEqual(TableOutcome.Created,
+                Get(results,
+                    "Person").Outcome);
+            Assert.IsFalse(Get(results,
+                    "Person").Script.Contains("DROP"));
         }
 
         #endregion
 
         #region Align
 
+        /// <summary>
+        /// Verifies copy table schemas to with align adds the missing columns and indexes.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithAlignAddsTheMissingColumnsAndIndexes()
         {
             // Setup
             MapReader(GetCountry());
             MapComposer();
-            var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id");
+            var destination = GetDestination("TABLE_EXISTS Country",
+                "COLUMN_EXISTS Country.Id");
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Align,
+                createdCallback: results.Add);
             // Assert
-            CollectionAssert.AreEqual(new[] { "ADD COLUMN Name TO Country;", "CREATE INDEX IX_Country_Name ON Country;" }, destination.ExecutedCommands);
+            CollectionAssert.AreEqual(new[] { "ADD COLUMN Name TO Country;", "CREATE INDEX IX_Country_Name ON Country;" },
+                destination.ExecutedCommands);
             var result = results.Single();
-            Assert.AreEqual(TableOutcome.Aligned, result.Outcome);
-            CollectionAssert.AreEqual(new[] { "Name" }, result.AddedColumns.ToArray());
-            CollectionAssert.AreEqual(new[] { "IX_Country_Name" }, result.AddedIndexes.ToArray());
-            Assert.AreEqual(true, result.TableExisted);
-            Assert.AreEqual("ADD COLUMN Name TO Country;" + Environment.NewLine + "CREATE INDEX IX_Country_Name ON Country;", result.Script);
+            Assert.AreEqual(TableOutcome.Aligned,
+                result.Outcome);
+            CollectionAssert.AreEqual(new[] { "Name" },
+                result.AddedColumns.ToArray());
+            CollectionAssert.AreEqual(new[] { "IX_Country_Name" },
+                result.AddedIndexes.ToArray());
+            Assert.AreEqual(true,
+                result.TableExisted);
+            Assert.AreEqual("ADD COLUMN Name TO Country;" + Environment.NewLine + "CREATE INDEX IX_Country_Name ON Country;",
+                result.Script);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with align does not add what exists.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithAlignDoesNotAddWhatExists()
         {
             // Setup
             MapReader(GetCountry());
             MapComposer();
-            var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id", "COLUMN_EXISTS Country.Name", "INDEX_EXISTS Country.IX_Country_Name");
+            var destination = GetDestination("TABLE_EXISTS Country",
+                "COLUMN_EXISTS Country.Id",
+                "COLUMN_EXISTS Country.Name",
+                "INDEX_EXISTS Country.IX_Country_Name");
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Align,
+                createdCallback: results.Add);
             // Assert
-            Assert.AreEqual(0, destination.ExecutedCommands.Count);
-            Assert.AreEqual(TableOutcome.Aligned, results.Single().Outcome);
-            Assert.AreEqual(0, results.Single().AddedColumns.Count);
-            Assert.AreEqual(0, results.Single().AddedIndexes.Count);
+            Assert.AreEqual(0,
+                destination.ExecutedCommands.Count);
+            Assert.AreEqual(TableOutcome.Aligned,
+                results.Single().Outcome);
+            Assert.AreEqual(0,
+                results.Single().AddedColumns.Count);
+            Assert.AreEqual(0,
+                results.Single().AddedIndexes.Count);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with align creates the tables that do not exist.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithAlignCreatesTheTablesThatDoNotExist()
         {
             // Setup
-            MapReader(GetCountry(), GetPerson());
+            MapReader(GetCountry(),
+                GetPerson());
             MapComposer();
-            var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id", "COLUMN_EXISTS Country.Name", "INDEX_EXISTS Country.IX_Country_Name");
+            var destination = GetDestination("TABLE_EXISTS Country",
+                "COLUMN_EXISTS Country.Id",
+                "COLUMN_EXISTS Country.Name",
+                "INDEX_EXISTS Country.IX_Country_Name");
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country", "Person" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Align,
+                createdCallback: results.Add);
             // Assert
-            CollectionAssert.AreEqual(new[] { "CREATE TABLE Person;", "CREATE INDEX IX_Person_Id ON Person;", "ADD FK_Person_Country TO Person;" }, destination.ExecutedCommands);
-            Assert.AreEqual(TableOutcome.Aligned, Get(results, "Country").Outcome);
-            Assert.AreEqual(TableOutcome.Created, Get(results, "Person").Outcome);
+            CollectionAssert.AreEqual(new[] { "CREATE TABLE Person;", "CREATE INDEX IX_Person_Id ON Person;", "ADD FK_Person_Country TO Person;" },
+                destination.ExecutedCommands);
+            Assert.AreEqual(TableOutcome.Aligned,
+                Get(results,
+                    "Country").Outcome);
+            Assert.AreEqual(TableOutcome.Created,
+                Get(results,
+                    "Person").Outcome);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with align does not check the indexes without name.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithAlignDoesNotCheckTheIndexesWithoutName()
         {
@@ -359,15 +539,22 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             country.Indexes.Add(new IndexInfo(null));
             MapReader(country);
             MapComposer();
-            var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id", "COLUMN_EXISTS Country.Name", "INDEX_EXISTS Country.IX_Country_Name");
-
+            var destination = GetDestination("TABLE_EXISTS Country",
+                "COLUMN_EXISTS Country.Id",
+                "COLUMN_EXISTS Country.Name",
+                "INDEX_EXISTS Country.IX_Country_Name");
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Align);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Align);
             // Assert
-            Assert.AreEqual(0, destination.ExecutedCommands.Count);
+            Assert.AreEqual(0,
+                destination.ExecutedCommands.Count);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with align reports the table after its last statement.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithAlignReportsTheTableAfterItsLastStatement()
         {
@@ -376,107 +563,148 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country");
             var executedWhenReported = new List<int>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Align,
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Align,
                 createdCallback: _ => executedWhenReported.Add(destination.ExecutedCommands.Count));
-
             // Assert
-            CollectionAssert.AreEqual(new[] { 3 }, executedWhenReported);
+            CollectionAssert.AreEqual(new[] { 3 },
+                executedWhenReported);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with align and afailed statement reports the table as failed.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithAlignAndAFailedStatementReportsTheTableAsFailed()
         {
             // Setup
             MapReader(GetCountry());
             MapComposer();
-            var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id");
-            destination.FailWhen = statement => statement.StartsWith("ADD COLUMN", StringComparison.Ordinal);
+            var destination = GetDestination("TABLE_EXISTS Country",
+                "COLUMN_EXISTS Country.Id");
+            destination.FailWhen = statement => statement.StartsWith("ADD COLUMN",
+                StringComparison.Ordinal);
             var results = new List<CopyTableSchemaResultItem>();
             var errors = new List<ExecutionError>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add, errorCallback: errors.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Country" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Align,
+                createdCallback: results.Add,
+                errorCallback: errors.Add);
             // Assert
-            Assert.AreEqual(1, errors.Count);
-            Assert.AreEqual("Country", errors[0].TableName);
-            Assert.AreEqual(TableOutcome.Failed, results.Single().Outcome);
+            Assert.AreEqual(1,
+                errors.Count);
+            Assert.AreEqual("Country",
+                errors[0].TableName);
+            Assert.AreEqual(TableOutcome.Failed,
+                results.Single().Outcome);
         }
 
         #endregion
 
         #region Async
 
+        /// <summary>
+        /// Verifies copy table schemas to async with skip leaves the existing table as it is.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncWithSkipLeavesTheExistingTableAsItIs()
         {
             // Setup
-            MapReader(GetCountry(), GetPerson());
+            MapReader(GetCountry(),
+                GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Country");
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Skip, createdCallback: results.Add);
-
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Skip,
+                createdCallback: results.Add);
             // Assert
-            CollectionAssert.AreEqual(new[] { "CREATE TABLE Person;", "CREATE INDEX IX_Person_Id ON Person;", "ADD FK_Person_Country TO Person;" }, destination.ExecutedCommands);
-            Assert.AreEqual(TableOutcome.Skipped, Get(results, "Country").Outcome);
-            Assert.AreEqual(TableOutcome.Created, Get(results, "Person").Outcome);
+            CollectionAssert.AreEqual(new[] { "CREATE TABLE Person;", "CREATE INDEX IX_Person_Id ON Person;", "ADD FK_Person_Country TO Person;" },
+                destination.ExecutedCommands);
+            Assert.AreEqual(TableOutcome.Skipped,
+                Get(results,
+                    "Country").Outcome);
+            Assert.AreEqual(TableOutcome.Created,
+                Get(results,
+                    "Person").Outcome);
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to async with throw if atable already exists.
+        /// </summary>
         [TestMethod]
         public async Task ThrowExceptionOnCopyTableSchemasToAsyncWithThrowIfATableAlreadyExists()
         {
             // Setup
-            MapReader(GetCountry(), GetPerson());
+            MapReader(GetCountry(),
+                GetPerson());
             MapComposer();
             var destination = GetDestination("TABLE_EXISTS Person");
-
             // Act/Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country", "Person" }, destination, tableExistenceBehavior: TableExistsBehavior.Throw));
-            Assert.AreEqual(0, destination.ExecutedCommands.Count);
+            await Assert.ThrowsAsync<InvalidOperationException>(() => new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country", "Person" },
+                    destination,
+                    tableExistenceBehavior: TableExistsBehavior.Throw));
+            Assert.AreEqual(0,
+                destination.ExecutedCommands.Count);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async with drop drops the existing tables and creates them again.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncWithDropDropsTheExistingTablesAndCreatesThemAgain()
         {
             // Setup
-            MapReader(GetCountry(), GetPerson());
+            MapReader(GetCountry(),
+                GetPerson());
             MapComposer();
-            var destination = GetDestination("TABLE_EXISTS Country", "TABLE_EXISTS Person");
+            var destination = GetDestination("TABLE_EXISTS Country",
+                "TABLE_EXISTS Person");
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
-
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Person", "Country" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Drop,
+                createdCallback: results.Add);
             // Assert
-            CollectionAssert.AreEqual(new[] { "DROP TABLE Person;", "DROP TABLE Country;" }, destination.ExecutedCommands.Take(2).ToArray());
-            Assert.AreEqual(7, destination.ExecutedCommands.Count);
+            CollectionAssert.AreEqual(new[] { "DROP TABLE Person;", "DROP TABLE Country;" },
+                destination.ExecutedCommands.Take(2).ToArray());
+            Assert.AreEqual(7,
+                destination.ExecutedCommands.Count);
             Assert.IsTrue(results.All(r => r.Outcome == TableOutcome.Dropped));
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async with align adds the missing columns and indexes.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncWithAlignAddsTheMissingColumnsAndIndexes()
         {
             // Setup
             MapReader(GetCountry());
             MapComposer();
-            var destination = GetDestination("TABLE_EXISTS Country", "COLUMN_EXISTS Country.Id");
+            var destination = GetDestination("TABLE_EXISTS Country",
+                "COLUMN_EXISTS Country.Id");
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country" }, destination, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
-
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Country" },
+                destination,
+                tableExistenceBehavior: TableExistsBehavior.Align,
+                createdCallback: results.Add);
             // Assert
-            CollectionAssert.AreEqual(new[] { "ADD COLUMN Name TO Country;", "CREATE INDEX IX_Country_Name ON Country;" }, destination.ExecutedCommands);
-            CollectionAssert.AreEqual(new[] { "Name" }, results.Single().AddedColumns.ToArray());
-            CollectionAssert.AreEqual(new[] { "IX_Country_Name" }, results.Single().AddedIndexes.ToArray());
+            CollectionAssert.AreEqual(new[] { "ADD COLUMN Name TO Country;", "CREATE INDEX IX_Country_Name ON Country;" },
+                destination.ExecutedCommands);
+            CollectionAssert.AreEqual(new[] { "Name" },
+                results.Single().AddedColumns.ToArray());
+            CollectionAssert.AreEqual(new[] { "IX_Country_Name" },
+                results.Single().AddedIndexes.ToArray());
         }
-
         #endregion
     }
 }

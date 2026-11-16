@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -17,6 +16,9 @@ using RepoDb.Schema.CockroachDb.IntegrationTests.Setup;
 
 namespace RepoDb.Schema.CockroachDb.IntegrationTests
 {
+    /// <summary>
+    /// Contains the helper behavior.
+    /// </summary>
     public static class Helper
     {
         /// <summary>
@@ -34,8 +36,8 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
         /// Makes the schema copies stop checking what exists in the destination database, so they always try to create the tables.
         /// The next call of <see cref="Database.Initialize"/> registers the composer again.
         /// </summary>
-        public static void DisableExistenceChecks() =>
-            SchemaComposerMapper.Add<CockroachDbConnection>(new NoExistenceCheckSchemaComposer(new CockroachDbSchemaComposer()), force: true);
+        public static void DisableExistenceChecks() => SchemaComposerMapper.Add<CockroachDbConnection>(new NoExistenceCheckSchemaComposer(new CockroachDbSchemaComposer()),
+            force: true);
 
         /// <summary>
         /// Reads the schema of the table from the source database.
@@ -46,7 +48,9 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionStringForSource))
             {
-                return new CockroachDbSchemaReader(connection).GetTableSchema(tableName);
+                return new CockroachDbSchemaReader().GetTableSchema(connection,
+                    tableName,
+                    transaction: null);
             }
         }
 
@@ -59,7 +63,9 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
-                return new CockroachDbSchemaReader(connection).GetTableSchema(tableName);
+                return new CockroachDbSchemaReader().GetTableSchema(connection,
+                    tableName,
+                    transaction: null);
             }
         }
 
@@ -72,7 +78,9 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
-                return new CockroachDbSchemaReader(connection).TableExists(tableName);
+                return new CockroachDbSchemaReader().TableExists(connection,
+                    tableName,
+                    transaction: null);
             }
         }
 
@@ -80,8 +88,8 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
         /// Asserts that the table of the target database has the same schema as the table of the source database.
         /// </summary>
         /// <param name="tableName">The name of the table.</param>
-        public static void AssertTargetMatchesSource(string tableName) =>
-            AssertSchemaEquality(GetSourceSchema(tableName), GetTargetSchema(tableName));
+        public static void AssertTargetMatchesSource(string tableName) => AssertSchemaEquality(GetSourceSchema(tableName),
+            GetTargetSchema(tableName));
 
         /// <summary>
         /// Reads the schemas of the tables from the source database.
@@ -92,8 +100,10 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionStringForSource))
             {
-                var reader = new CockroachDbSchemaReader(connection);
-                return tableNames.Select(reader.GetTableSchema).ToList();
+                var reader = new CockroachDbSchemaReader();
+                return tableNames.Select(value => reader.GetTableSchema(connection,
+                        value,
+                        transaction: null)).ToList();
             }
         }
 
@@ -131,8 +141,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
         /// The tables can be given in any order.
         /// </summary>
         /// <param name="tableNames">The names of the tables.</param>
-        public static void CopyAllToTarget(params string[] tableNames) =>
-            ExecuteOnTarget(new CockroachDbSchemaComposer().ComposeSchemas(GetSourceSchemas(tableNames)));
+        public static void CopyAllToTarget(params string[] tableNames) => ExecuteOnTarget(new CockroachDbSchemaComposer().ComposeSchemas(GetSourceSchemas(tableNames)));
 
         /// <summary>
         /// Gets the names of the tables of the source database (<c>schema.table</c>).
@@ -142,14 +151,15 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionStringForSource))
             {
-                var reader = new CockroachDbSchemaReader(connection);
-                return reader.GetTables()
-                    .Where(name =>
-                    {
-                        var schema = reader.GetTableSchema(name);
-                        return schema.Table.Schema == "public" && schema.ForeignKeys.All(foreignKey => foreignKey.ReferencedTable.Schema == "public");
-                    })
-                    .ToList();
+                var reader = new CockroachDbSchemaReader();
+                return reader.GetTables(connection,
+                    transaction: null).Where(name =>
+                {
+                    var schema = reader.GetTableSchema(connection,
+                            name,
+                            transaction: null);
+                    return schema.Table.Schema == "public" && schema.ForeignKeys.All(foreignKey => foreignKey.ReferencedTable.Schema == "public");
+                }).ToList();
             }
         }
 
@@ -161,7 +171,8 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
         {
             using (var connection = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
-                return new CockroachDbSchemaReader(connection).GetTables().ToList();
+                return new CockroachDbSchemaReader().GetTables(connection,
+                    transaction: null).ToList();
             }
         }
 
@@ -170,8 +181,7 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
         /// </summary>
         /// <param name="relationships">The relationships.</param>
         /// <returns>The names of the tables.</returns>
-        public static string[] GetTableNames(IEnumerable<RelationshipInfo> relationships) =>
-            relationships.Select(r => r.Schema.Table.Name).ToArray();
+        public static string[] GetTableNames(IEnumerable<RelationshipInfo> relationships) => relationships.Select(r => r.Schema.Table.Name).ToArray();
 
         /// <summary>
         /// Asserts the equality of the 2 schemas of a table. The comments of the columns are not compared.
@@ -181,70 +191,123 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
         public static void AssertSchemaEquality(TableSchema expected,
             TableSchema actual)
         {
-            Assert.AreEqual(expected.Table.Name, actual.Table.Name, StringComparer.Ordinal);
-            Assert.AreEqual(expected.Table.Schema, actual.Table.Schema, StringComparer.Ordinal);
-
+            Assert.AreEqual(expected.Table.Name,
+                actual.Table.Name,
+                StringComparer.Ordinal);
+            Assert.AreEqual(expected.Table.Schema,
+                actual.Table.Schema,
+                StringComparer.Ordinal);
             // Columns
-            Assert.AreEqual(expected.Columns.Count, actual.Columns.Count);
+            Assert.AreEqual(expected.Columns.Count,
+                actual.Columns.Count);
             for (var i = 0; i < expected.Columns.Count; i++)
             {
                 var (e, a) = (expected.Columns[i], actual.Columns[i]);
-                var name = e.Field.Name;
-                Assert.AreEqual(e.Field.Name, a.Field.Name, StringComparer.Ordinal);
-                Assert.AreEqual(e.Ordinal, a.Ordinal, $"Ordinal of '{name}'.");
-                Assert.AreEqual(e.Field.DatabaseType, a.Field.DatabaseType, StringComparer.Ordinal, $"Type of '{name}'.");
-                Assert.AreEqual(e.Field.Size, a.Field.Size, $"Size of '{name}'.");
-                Assert.AreEqual(e.Field.Precision, a.Field.Precision, $"Precision of '{name}'.");
-                Assert.AreEqual(e.Field.Scale, a.Field.Scale, $"Scale of '{name}'.");
-                Assert.AreEqual(e.Field.IsNullable, a.Field.IsNullable, $"Nullability of '{name}'.");
-                Assert.AreEqual(e.Field.IsIdentity, a.Field.IsIdentity, $"Identity of '{name}'.");
-                Assert.AreEqual(e.Field.IsPrimary, a.Field.IsPrimary, $"Primary of '{name}'.");
-                Assert.AreEqual(e.IdentitySeed, a.IdentitySeed, $"Identity seed of '{name}'.");
-                Assert.AreEqual(e.IdentityIncrement, a.IdentityIncrement, $"Identity increment of '{name}'.");
-                Assert.AreEqual(e.DefaultExpression, a.DefaultExpression, StringComparer.Ordinal, $"Default of '{name}'.");
-                Assert.AreEqual(e.ComputedExpression, a.ComputedExpression, StringComparer.Ordinal, $"Computed expression of '{name}'.");
+                var name=e.Field.Name;
+                Assert.AreEqual(e.Field.Name,
+                    a.Field.Name,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(e.Ordinal,
+                    a.Ordinal,
+                    $"Ordinal of '{name}'.");
+                Assert.AreEqual(e.Field.DatabaseType,
+                    a.Field.DatabaseType,
+                    StringComparer.Ordinal,
+                    $"Type of '{name}'.");
+                Assert.AreEqual(e.Field.Size,
+                    a.Field.Size,
+                    $"Size of '{name}'.");
+                Assert.AreEqual(e.Field.Precision,
+                    a.Field.Precision,
+                    $"Precision of '{name}'.");
+                Assert.AreEqual(e.Field.Scale,
+                    a.Field.Scale,
+                    $"Scale of '{name}'.");
+                Assert.AreEqual(e.Field.IsNullable,
+                    a.Field.IsNullable,
+                    $"Nullability of '{name}'.");
+                Assert.AreEqual(e.Field.IsIdentity,
+                    a.Field.IsIdentity,
+                    $"Identity of '{name}'.");
+                Assert.AreEqual(e.Field.IsPrimary,
+                    a.Field.IsPrimary,
+                    $"Primary of '{name}'.");
+                Assert.AreEqual(e.IdentitySeed,
+                    a.IdentitySeed,
+                    $"Identity seed of '{name}'.");
+                Assert.AreEqual(e.IdentityIncrement,
+                    a.IdentityIncrement,
+                    $"Identity increment of '{name}'.");
+                Assert.AreEqual(e.DefaultExpression,
+                    a.DefaultExpression,
+                    StringComparer.Ordinal,
+                    $"Default of '{name}'.");
+                Assert.AreEqual(e.ComputedExpression,
+                    a.ComputedExpression,
+                    StringComparer.Ordinal,
+                    $"Computed expression of '{name}'.");
             }
 
             // Primary key
-            Assert.AreEqual(expected.PrimaryKey?.Name, actual.PrimaryKey?.Name, StringComparer.Ordinal);
-            CollectionAssert.AreEqual(expected.PrimaryKey?.Columns.ToArray(), actual.PrimaryKey?.Columns.ToArray());
-
+            Assert.AreEqual(expected.PrimaryKey?.Name,
+                actual.PrimaryKey?.Name,
+                StringComparer.Ordinal);
+            CollectionAssert.AreEqual(expected.PrimaryKey?.Columns.ToArray(),
+                actual.PrimaryKey?.Columns.ToArray());
             // Indexes
-            Assert.AreEqual(expected.Indexes.Count, actual.Indexes.Count);
+            Assert.AreEqual(expected.Indexes.Count,
+                actual.Indexes.Count);
             foreach (var index in expected.Indexes)
             {
                 var other = actual.Indexes.Single(x => x.Name == index.Name);
-                Assert.AreEqual(index.IsUnique, other.IsUnique);
-                Assert.AreEqual(index.Filter, other.Filter, StringComparer.Ordinal);
-                CollectionAssert.AreEqual(index.Columns.ToArray(), other.Columns.ToArray());
-                CollectionAssert.AreEqual(index.DescendingColumns.ToArray(), other.DescendingColumns.ToArray());
-                CollectionAssert.AreEqual(index.IncludedColumns.ToArray(), other.IncludedColumns.ToArray());
+                Assert.AreEqual(index.IsUnique,
+                    other.IsUnique);
+                Assert.AreEqual(index.Filter,
+                    other.Filter,
+                    StringComparer.Ordinal);
+                CollectionAssert.AreEqual(index.Columns.ToArray(),
+                    other.Columns.ToArray());
+                CollectionAssert.AreEqual(index.DescendingColumns.ToArray(),
+                    other.DescendingColumns.ToArray());
+                CollectionAssert.AreEqual(index.IncludedColumns.ToArray(),
+                    other.IncludedColumns.ToArray());
             }
 
             // Foreign keys
-            Assert.AreEqual(expected.ForeignKeys.Count, actual.ForeignKeys.Count);
+            Assert.AreEqual(expected.ForeignKeys.Count,
+                actual.ForeignKeys.Count);
             foreach (var foreignKey in expected.ForeignKeys)
             {
                 var other = actual.ForeignKeys.Single(x => x.Name == foreignKey.Name);
-                CollectionAssert.AreEqual(foreignKey.Columns.ToArray(), other.Columns.ToArray());
-                Assert.AreEqual(foreignKey.ReferencedTable, other.ReferencedTable);
-                CollectionAssert.AreEqual(foreignKey.ReferencedColumns.ToArray(), other.ReferencedColumns.ToArray());
-                Assert.AreEqual(foreignKey.UpdateRule, other.UpdateRule);
-                Assert.AreEqual(foreignKey.DeleteRule, other.DeleteRule);
+                CollectionAssert.AreEqual(foreignKey.Columns.ToArray(),
+                    other.Columns.ToArray());
+                Assert.AreEqual(foreignKey.ReferencedTable,
+                    other.ReferencedTable);
+                CollectionAssert.AreEqual(foreignKey.ReferencedColumns.ToArray(),
+                    other.ReferencedColumns.ToArray());
+                Assert.AreEqual(foreignKey.UpdateRule,
+                    other.UpdateRule);
+                Assert.AreEqual(foreignKey.DeleteRule,
+                    other.DeleteRule);
             }
 
             // Unique constraints
-            Assert.AreEqual(expected.UniqueConstraints.Count, actual.UniqueConstraints.Count);
+            Assert.AreEqual(expected.UniqueConstraints.Count,
+                actual.UniqueConstraints.Count);
             foreach (var constraint in expected.UniqueConstraints)
             {
-                CollectionAssert.AreEqual(constraint.Columns.ToArray(), actual.UniqueConstraints.Single(x => x.Name == constraint.Name).Columns.ToArray());
+                CollectionAssert.AreEqual(constraint.Columns.ToArray(),
+                    actual.UniqueConstraints.Single(x => x.Name == constraint.Name).Columns.ToArray());
             }
 
             // Check constraints
-            Assert.AreEqual(expected.CheckConstraints.Count, actual.CheckConstraints.Count);
+            Assert.AreEqual(expected.CheckConstraints.Count,
+                actual.CheckConstraints.Count);
             foreach (var constraint in expected.CheckConstraints)
             {
-                Assert.AreEqual(constraint.Expression, actual.CheckConstraints.Single(x => x.Name == constraint.Name).Expression, StringComparer.Ordinal);
+                Assert.AreEqual(constraint.Expression,
+                    actual.CheckConstraints.Single(x => x.Name == constraint.Name).Expression,
+                    StringComparer.Ordinal);
             }
         }
     }

@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -98,10 +97,16 @@ namespace RepoDb.Data
             }
 
             var reader = SchemaReaderMapper.Get(connection);
-            var relationships = reader.GetDependencyOrder(reader.GetRelatedTables(new[] { sourceTable },
-                schemaBehavior));
+            var relationships = reader.GetDependencyOrder(connection,
+                reader.GetRelatedTables(connection,
+                    new[] { sourceTable },
+                    schemaBehavior,
+                    transaction: null),
+                transaction: null);
             return ToTables(relationships,
-                reader.GetTableSchema(sourceTable).Table,
+                reader.GetTableSchema(connection,
+                    sourceTable,
+                    transaction: null).Table,
                 requested[0],
                 results,
                 connection,
@@ -173,13 +178,19 @@ namespace RepoDb.Data
             }
 
             var reader = SchemaReaderMapper.Get(connection);
-            var names = await reader.GetRelatedTablesAsync(new[] { sourceTable },
+            var names = await reader.GetRelatedTablesAsync(connection,
+                new[] { sourceTable },
                 schemaBehavior,
-                cancellationToken).ConfigureAwait(false);
-            var relationships = await reader.GetDependencyOrderAsync(names,
-                cancellationToken).ConfigureAwait(false);
-            var table = (await reader.GetTableSchemaAsync(sourceTable,
-                cancellationToken).ConfigureAwait(false)).Table;
+                cancellationToken: cancellationToken,
+                transaction: null).ConfigureAwait(false);
+            var relationships = await reader.GetDependencyOrderAsync(connection,
+                names,
+                cancellationToken: cancellationToken,
+                transaction: null).ConfigureAwait(false);
+            var table = (await reader.GetTableSchemaAsync(connection,
+                sourceTable,
+                cancellationToken: cancellationToken,
+                transaction: null).ConfigureAwait(false)).Table;
             return ToTables(relationships,
                 table,
                 requested[0],
@@ -204,14 +215,13 @@ namespace RepoDb.Data
             (string Source, string Target, QueryGroup Where) requestedTable,
             IEnumerable<CopyTableSchemaResultItem> results,
             IDbConnection connection,
-            IDbConnection destinationConnection) =>
-            relationships.Select(relationship => relationship.Schema.Table).Select(table =>
+            IDbConnection destinationConnection) => relationships.Select(relationship => relationship.Schema.Table).Select(table =>
         {
             var target = GetName(destinationConnection,
-                results.First(result => result.Source.Table.Table.Name == table.Name && result.Source.Table.Table.Schema == table.Schema));
+                    results.First(result => result.Source.Table.Table.Name == table.Name && result.Source.Table.Table.Schema == table.Schema));
             return table.Equals(requested) ? (requestedTable.Source, target, requestedTable.Where) : (GetName(connection,
-                table.Schema,
-                table.Name), target, (QueryGroup)null);
+                    table.Schema,
+                    table.Name), target, (QueryGroup)null);
         }).ToList();
 
         /// <summary>
@@ -221,10 +231,9 @@ namespace RepoDb.Data
         /// <param name="result">The item of the table that was created.</param>
         /// <returns>The quoted name of the table.</returns>
         internal static string GetName(IDbConnection connection,
-            CopyTableSchemaResultItem result) =>
-            GetName(connection,
-                result.Target.Table.Table.Schema,
-                result.Target.Table.Table.Name);
+            CopyTableSchemaResultItem result) => GetName(connection,
+            result.Target.Table.Table.Schema,
+            result.Target.Table.Table.Name);
 
         /// <summary>
         /// Gets the name that the table is created with in the destination database, if it is not the name of the source table.
@@ -257,7 +266,7 @@ namespace RepoDb.Data
             string table)
         {
             var setting = connection.GetDbSetting();
-            var name = table.AsQuoted(false,
+            var name=table.AsQuoted(false,
                 true,
                 setting);
             return string.IsNullOrWhiteSpace(schema) ? name : $"{schema.AsQuoted(false,
@@ -276,7 +285,7 @@ namespace RepoDb.Data
         {
             var setting = destinationConnection == null || string.IsNullOrWhiteSpace(targetTable) ? null : DbSettingMapper.Get(destinationConnection);
             if (setting == null || string.Equals(DataEntityExtension.GetTableName(targetTable,
-                setting),
+                    setting),
                 targetTable,
                 StringComparison.Ordinal))
             {
@@ -311,8 +320,7 @@ namespace RepoDb.Data
         /// <returns><c>true</c> if the schema has to be copied; otherwise, <c>false</c>.</returns>
         internal static bool IsSchemaRequested(RelationshipBehavior relationshipBehavior,
             TableExistsBehavior tableExistenceBehavior,
-            string targetSchema) =>
-            relationshipBehavior != RelationshipBehavior.TableOnly || tableExistenceBehavior != TableExistsBehavior.Skip || !string.IsNullOrWhiteSpace(targetSchema);
+            string targetSchema) => relationshipBehavior != RelationshipBehavior.TableOnly || tableExistenceBehavior != TableExistsBehavior.Skip || !string.IsNullOrWhiteSpace(targetSchema);
 
         /// <summary>
         /// Gets the relationship behavior of the schema copy that is equivalent to the one of the data copy.
@@ -660,7 +668,7 @@ namespace RepoDb.Data
                     }
 
                     var dbField = dbFields?.GetByUnquotedName(name.AsUnquoted(true,
-                        dbSetting));
+                            dbSetting));
                     if (dbField == null)
                     {
                         throw new ArgumentException($"The qualifier '{name}' is not a column of the table '{targetTable}'.",
@@ -691,7 +699,7 @@ namespace RepoDb.Data
                 }
 
                 columns = qualifiers.Select(field => field.Name.AsUnquoted(true,
-                    dbSetting)).ToList();
+                        dbSetting)).ToList();
             }
 
             if (excludedColumns != null && columns.Any(excludedColumns.Contains))
@@ -787,7 +795,7 @@ namespace RepoDb.Data
             }
 
             if (relationshipBehavior != RelationshipBehavior.TableOnly && !string.Equals(GetTableName(connection,
-                sourceTable),
+                    sourceTable),
                 GetTableName(destinationConnection,
                     targetTable),
                 StringComparison.Ordinal))
@@ -820,9 +828,9 @@ namespace RepoDb.Data
             while (reader.Read())
             {
                 batch.Add(ToRow(reader,
-                    excluded,
-                    interceptors,
-                    columns));
+                        excluded,
+                        interceptors,
+                        columns));
                 if (batch.Count == bufferSize)
                 {
                     action(batch);
@@ -859,9 +867,9 @@ namespace RepoDb.Data
                 cancellationToken).ConfigureAwait(false))
             {
                 batch.Add(ToRow(reader,
-                    excluded,
-                    interceptors,
-                    columns));
+                        excluded,
+                        interceptors,
+                        columns));
                 if (batch.Count == bufferSize)
                 {
                     await action(batch).ConfigureAwait(false);
@@ -919,7 +927,7 @@ namespace RepoDb.Data
 
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             return mappings.Where(mapping => seen.Add(mapping.SourceColumn)).Select(mapping => new RepoDb.Schema.Models.ColumnMapping(mapping.SourceColumn,
-                mapping.DestinationColumn)).ToList();
+                    mapping.DestinationColumn)).ToList();
         }
 
         /// <summary>
@@ -948,7 +956,7 @@ namespace RepoDb.Data
             var columns = string.Join(", ",
                 mappings.Select(mapping => $"{mapping.SourceColumn.AsQuoted(dbSetting)} AS {mapping.DestinationColumn.AsQuoted(dbSetting)}"));
             return string.Concat(commandText.Substring(0,
-                start + select.Length),
+                    start + select.Length),
                 columns,
                 commandText.Substring(end));
         }
@@ -974,12 +982,12 @@ namespace RepoDb.Data
             }
 
             var sourceColumns = new HashSet<string>(DbFieldCache.Get(connection,
-                sourceTable,
-                null).GetAsFields().Select(field => field.Name),
+                    sourceTable,
+                    null).GetAsFields().Select(field => field.Name),
                 StringComparer.OrdinalIgnoreCase);
             var targetColumns = new HashSet<string>(DbFieldCache.Get(destinationConnection,
-                targetTable,
-                null).GetAsFields().Select(field => field.Name),
+                    targetTable,
+                    null).GetAsFields().Select(field => field.Name),
                 StringComparer.OrdinalIgnoreCase);
             foreach (var mapping in mappings)
             {
@@ -1007,7 +1015,7 @@ namespace RepoDb.Data
             var parameters = new Dictionary<string, object>(StringComparer.Ordinal);
             foreach (var field in where.GetFields(true))
             {
-                var name = field.Parameter.Name;
+                var name=field.Parameter.Name;
                 if (field.Operation == Operation.Between || field.Operation == Operation.NotBetween)
                 {
                     var values = ToList(field.Parameter.Value);
@@ -1036,8 +1044,7 @@ namespace RepoDb.Data
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The list of the values.</returns>
-        private static IList<object> ToList(object value) =>
-            value is System.Collections.IEnumerable enumerable && !(value is string) ? enumerable.Cast<object>().ToList() : new List<object>
+        private static IList<object> ToList(object value) => value is System.Collections.IEnumerable enumerable && !(value is string) ? enumerable.Cast<object>().ToList() : new List<object>
         {
             value
         };
@@ -1061,8 +1068,8 @@ namespace RepoDb.Data
                 return mergeExistingRows ? BulkInsertInvoker.IsMergeAvailable(destinationConnection,
                     probe,
                     isAsync) : BulkInsertInvoker.IsAvailable(destinationConnection,
-                        probe,
-                        isAsync);
+                    probe,
+                    isAsync);
             }
         }
 
@@ -1083,11 +1090,11 @@ namespace RepoDb.Data
             if (interceptors != null)
             {
                 var intercepted = RowInterception.Apply(RowInterception.Read(record,
-                    columns),
+                        columns),
                     interceptors);
                 for (var i = 0; i < intercepted.Count; i++)
                 {
-                    var name = intercepted.Columns[i].Name;
+                    var name=intercepted.Columns[i].Name;
                     if (excludedColumns == null || !excludedColumns.Contains(name))
                     {
                         row[name] = intercepted[i];
@@ -1099,7 +1106,7 @@ namespace RepoDb.Data
 
             for (var i = 0; i < record.FieldCount; i++)
             {
-                var name = record.GetName(i);
+                var name=record.GetName(i);
                 if (excludedColumns == null || !excludedColumns.Contains(name))
                 {
                     row[name] = record.IsDBNull(i) ? null : record.GetValue(i);
@@ -1206,14 +1213,13 @@ namespace RepoDb.Data
         /// <param name="table">The name of the table.</param>
         /// <returns>The details of the table.</returns>
         private static Endpoint CreateEndpoint(IDbConnection connection,
-            string table) =>
-            new Endpoint
+            string table) => new Endpoint
         {
             Server = (connection as System.Data.Common.DbConnection)?.DataSource,
             Database = connection.Database,
             DatabaseType = connection.GetType().Name,
             Table = new TableInfo(GetTableName(connection,
-                table),
+                    table),
                 GetTargetSchema(connection,
                     table),
                 connection.Database)
@@ -1539,15 +1545,15 @@ namespace RepoDb.Data
                     null,
                     trace,
                     transaction) : BulkInsertInvoker.BulkInsert(destinationConnection,
-                        targetTable,
-                        batchReader,
-                        bufferSize,
-                        columnMappingsBehavior,
-                        identityBehavior == IdentityBehavior.KeepIdentity,
-                        commandTimeout,
-                        null,
-                        trace,
-                        transaction);
+                    targetTable,
+                    batchReader,
+                    bufferSize,
+                    columnMappingsBehavior,
+                    identityBehavior == IdentityBehavior.KeepIdentity,
+                    commandTimeout,
+                    null,
+                    trace,
+                    transaction);
             }
         }
 
@@ -1673,16 +1679,16 @@ namespace RepoDb.Data
                     trace,
                     transaction,
                     cancellationToken).ConfigureAwait(false) : await BulkInsertInvoker.BulkInsertAsync(destinationConnection,
-                        targetTable,
-                        batchReader,
-                        bufferSize,
-                        columnMappingsBehavior,
-                        identityBehavior == IdentityBehavior.KeepIdentity,
-                        commandTimeout,
-                        null,
-                        trace,
-                        transaction,
-                        cancellationToken).ConfigureAwait(false);
+                    targetTable,
+                    batchReader,
+                    bufferSize,
+                    columnMappingsBehavior,
+                    identityBehavior == IdentityBehavior.KeepIdentity,
+                    commandTimeout,
+                    null,
+                    trace,
+                    transaction,
+                    cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -1828,13 +1834,13 @@ namespace RepoDb.Data
             var action = new Action<IList<object>>((IList<object> b) =>
             {
                 _ = mergeExistingRows ? RowInserter.Merge(destinationConnection,
-                    targetTable,
-                    b,
-                    qualifiers,
-                    commandTimeout,
-                    traceKey,
-                    trace,
-                    transaction) : RowInserter.Insert(destinationConnection,
+                        targetTable,
+                        b,
+                        qualifiers,
+                        commandTimeout,
+                        traceKey,
+                        trace,
+                        transaction) : RowInserter.Insert(destinationConnection,
                         targetTable,
                         b,
                         commandTimeout,
@@ -1842,9 +1848,9 @@ namespace RepoDb.Data
                         trace,
                         transaction);
                 Report(options,
-                    b.Count,
-                    progressCallback,
-                    CopySize.OfRows(b));
+                        b.Count,
+                        progressCallback,
+                        CopySize.OfRows(b));
             });
             CopyRowBatches(reader,
                 excluded,
@@ -1980,14 +1986,14 @@ namespace RepoDb.Data
             var action = new Func<IList<object>, Task>(async (IList<object> b) =>
             {
                 _ = mergeExistingRows ? await RowInserter.MergeAsync(destinationConnection,
-                    targetTable,
-                    b,
-                    qualifiers,
-                    commandTimeout,
-                    traceKey,
-                    trace,
-                    transaction,
-                    cancellationToken).ConfigureAwait(false) : await RowInserter.InsertAsync(destinationConnection,
+                        targetTable,
+                        b,
+                        qualifiers,
+                        commandTimeout,
+                        traceKey,
+                        trace,
+                        transaction,
+                        cancellationToken).ConfigureAwait(false) : await RowInserter.InsertAsync(destinationConnection,
                         targetTable,
                         b,
                         commandTimeout,
@@ -1996,9 +2002,9 @@ namespace RepoDb.Data
                         transaction,
                         cancellationToken).ConfigureAwait(false);
                 Report(options,
-                    b.Count,
-                    progressCallback,
-                    CopySize.OfRows(b));
+                        b.Count,
+                        progressCallback,
+                        CopySize.OfRows(b));
             });
             await CopyRowBatchesAsync(reader,
                 excluded,
@@ -2007,7 +2013,6 @@ namespace RepoDb.Data
                 action,
                 cancellationToken).ConfigureAwait(false);
         }
-
         #endregion
     }
 }

@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -17,9 +16,15 @@ using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.Db2.IntegrationTests
 {
+    /// <summary>
+    /// Contains the db2 schema reader test behavior.
+    /// </summary>
     [TestClass]
     public class Db2SchemaReaderTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -27,6 +32,9 @@ namespace RepoDb.Schema.Db2.IntegrationTests
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
@@ -37,81 +45,96 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies db2 schema reader table exists.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderTableExists()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.TableExists("Person");
-
+                var actual = reader.TableExists(connection,
+                    "Person",
+                    transaction: null);
                 // Assert
                 Assert.IsTrue(actual);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader table exists with schema name.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderTableExistsWithSchemaName()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.TableExists($"{Database.SourceSalesName}.Invoice");
-
+                var actual = reader.TableExists(connection,
+                    $"{Database.SourceSalesName}.Invoice",
+                    transaction: null);
                 // Assert
                 Assert.IsTrue(actual);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader table exists with quoted name.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderTableExistsWithQuotedName()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.TableExists("\"Person\"");
-
+                var actual = reader.TableExists(connection,
+                    "\"Person\"",
+                    transaction: null);
                 // Assert
                 Assert.IsTrue(actual);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader table exists with the table of another schema.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderTableExistsWithTheTableOfAnotherSchema()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.TableExists("Invoice");
-
+                var actual = reader.TableExists(connection,
+                    "Invoice",
+                    transaction: null);
                 // Assert
                 Assert.IsFalse(actual);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader table exists with missing table.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderTableExistsWithMissingTable()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.TableExists("MissingTable");
-
+                var actual = reader.TableExists(connection,
+                    "MissingTable",
+                    transaction: null);
                 // Assert
                 Assert.IsFalse(actual);
             }
@@ -121,33 +144,39 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies db2 schema reader table exists async.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderTableExistsAsync()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = await reader.TableExistsAsync("Person");
-
+                var actual = await reader.TableExistsAsync(connection,
+                    "Person",
+                    transaction: null);
                 // Assert
                 Assert.IsTrue(actual);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader table exists async with missing table.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderTableExistsAsyncWithMissingTable()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = await reader.TableExistsAsync("MissingTable");
-
+                var actual = await reader.TableExistsAsync(connection,
+                    "MissingTable",
+                    transaction: null);
                 // Assert
                 Assert.IsFalse(actual);
             }
@@ -161,65 +190,81 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies db2 schema reader get schema name.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetSchemaName()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetSchemaName("Person");
-
+                var actual = reader.GetSchemaName(connection,
+                    "Person",
+                    transaction: null);
                 // Assert
                 Assert.IsNull(actual);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get schema name of table in another schema.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetSchemaNameOfTableInAnotherSchema()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetSchemaName($"{Database.SourceSalesName}.Invoice");
-
+                var actual = reader.GetSchemaName(connection,
+                    $"{Database.SourceSalesName}.Invoice",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual(Database.SourceSalesName, actual, StringComparer.Ordinal);
+                Assert.AreEqual(Database.SourceSalesName,
+                    actual,
+                    StringComparer.Ordinal);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get schema name with explicit schema.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetSchemaNameWithExplicitSchema()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetSchemaName($"{Database.SourceSalesName}.Invoice");
-
+                var actual = reader.GetSchemaName(connection,
+                    $"{Database.SourceSalesName}.Invoice",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual(Database.SourceSalesName, actual, StringComparer.Ordinal);
+                Assert.AreEqual(Database.SourceSalesName,
+                    actual,
+                    StringComparer.Ordinal);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get schema name of missing table is the default schema.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetSchemaNameOfMissingTableIsTheDefaultSchema()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetSchemaName("MissingTable");
-
+                var actual = reader.GetSchemaName(connection,
+                    "MissingTable",
+                    transaction: null);
                 // Assert
                 Assert.IsNull(actual);
             }
@@ -229,19 +274,24 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies db2 schema reader get schema name async.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetSchemaNameAsync()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = await reader.GetSchemaNameAsync($"{Database.SourceSalesName}.Invoice");
-
+                var actual = await reader.GetSchemaNameAsync(connection,
+                    $"{Database.SourceSalesName}.Invoice",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual(Database.SourceSalesName, actual, StringComparer.Ordinal);
+                Assert.AreEqual(Database.SourceSalesName,
+                    actual,
+                    StringComparer.Ordinal);
             }
         }
 
@@ -253,57 +303,70 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies db2 schema reader get columns.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetColumns()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetColumns("Person").ToList();
-
+                var actual = reader.GetColumns(connection,
+                    "Person",
+                    transaction: null).ToList();
                 // Assert
-                CollectionAssert.AreEqual(
-                    new[] { "Id", "Name", "NameUpper", "Age", "CountryId", "Salary", "CreatedDateUtc" },
+                CollectionAssert.AreEqual(new[] { "Id", "Name", "NameUpper", "Age", "CountryId", "Salary", "CreatedDateUtc" },
                     Helper.GetNames(actual));
-                CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5, 6, 7 }, actual.Select(c => c.Ordinal).ToArray());
+                CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5, 6, 7 },
+                    actual.Select(c => c.Ordinal).ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get columns of identity column.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetColumnsOfIdentityColumn()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetColumns("Person").Single(c => c.Field.Name == "Id");
-
+                var actual = reader.GetColumns(connection,
+                    "Person",
+                    transaction: null).Single(c => c.Field.Name == "Id");
                 // Assert
                 Assert.IsTrue(actual.Field.IsIdentity);
                 Assert.IsTrue(actual.Field.IsPrimary);
                 Assert.IsFalse(actual.Field.IsNullable);
-                Assert.AreEqual("bigint", actual.Field.DatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(10L, actual.IdentitySeed);
-                Assert.AreEqual(5L, actual.IdentityIncrement);
+                Assert.AreEqual("bigint",
+                    actual.Field.DatabaseType,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(10L,
+                    actual.IdentitySeed);
+                Assert.AreEqual(5L,
+                    actual.IdentityIncrement);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get columns of non identity column.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetColumnsOfNonIdentityColumn()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetColumns("Person").Single(c => c.Field.Name == "Age");
-
+                var actual = reader.GetColumns(connection,
+                    "Person",
+                    transaction: null).Single(c => c.Field.Name == "Age");
                 // Assert
                 Assert.IsFalse(actual.Field.IsIdentity);
                 Assert.IsFalse(actual.Field.IsPrimary);
@@ -313,135 +376,180 @@ namespace RepoDb.Schema.Db2.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get columns of string column.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetColumnsOfStringColumn()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetColumns("Person").Single(c => c.Field.Name == "Name");
-
+                var actual = reader.GetColumns(connection,
+                    "Person",
+                    transaction: null).Single(c => c.Field.Name == "Name");
                 // Assert
-                Assert.AreEqual("varchar", actual.Field.DatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(typeof(string), actual.Field.Type);
-                Assert.AreEqual(128, actual.Field.Size);
+                Assert.AreEqual("varchar",
+                    actual.Field.DatabaseType,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(typeof(string),
+                    actual.Field.Type);
+                Assert.AreEqual(128,
+                    actual.Field.Size);
                 Assert.IsFalse(actual.Field.IsNullable);
                 Assert.IsNull(actual.Collation);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get columns of max size columns.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetColumnsOfMaxSizeColumns()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var columns = reader.GetColumns("NoKey").ToList();
-
+                var columns = reader.GetColumns(connection,
+                    "NoKey",
+                    transaction: null).ToList();
                 // Assert
-                Assert.AreEqual(0, columns.Single(c => c.Field.Name == "Value").Field.Size);
-                Assert.AreEqual(0, columns.Single(c => c.Field.Name == "Payload").Field.Size);
+                Assert.AreEqual(0,
+                    columns.Single(c => c.Field.Name == "Value").Field.Size);
+                Assert.AreEqual(0,
+                    columns.Single(c => c.Field.Name == "Payload").Field.Size);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get columns have no comment.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetColumnsHaveNoComment()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var columns = reader.GetColumns("Person").ToList();
-
+                var columns = reader.GetColumns(connection,
+                    "Person",
+                    transaction: null).ToList();
                 // Assert
                 Assert.IsNull(columns.Single(c => c.Field.Name == "Name").Comment);
                 Assert.IsNull(columns.Single(c => c.Field.Name == "Age").Comment);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get columns of column with default.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetColumnsOfColumnWithDefault()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var columns = reader.GetColumns("Person").ToList();
+                var columns = reader.GetColumns(connection,
+                    "Person",
+                    transaction: null).ToList();
                 var age = columns.Single(c => c.Field.Name == "Age");
                 var createdDate = columns.Single(c => c.Field.Name == "CreatedDateUtc");
-
                 // Assert
-                Assert.AreEqual("0", age.DefaultExpression, StringComparer.Ordinal);
-                Assert.AreEqual(ColumnDefaultValue.Literal, age.DefaultValue);
+                Assert.AreEqual("0",
+                    age.DefaultExpression,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(ColumnDefaultValue.Literal,
+                    age.DefaultValue);
                 Assert.IsTrue(age.Field.HasDefaultValue);
-                StringAssert.Contains(createdDate.DefaultExpression, "CURRENT TIMESTAMP", StringComparison.OrdinalIgnoreCase);
-                Assert.AreEqual(ColumnDefaultValue.CurrentTimestamp, createdDate.DefaultValue);
+                StringAssert.Contains(createdDate.DefaultExpression,
+                    "CURRENT TIMESTAMP",
+                    StringComparison.OrdinalIgnoreCase);
+                Assert.AreEqual(ColumnDefaultValue.CurrentTimestamp,
+                    createdDate.DefaultValue);
                 Assert.IsNull(columns.Single(c => c.Field.Name == "Name").DefaultExpression);
-                Assert.AreEqual(ColumnDefaultValue.None, columns.Single(c => c.Field.Name == "Name").DefaultValue);
+                Assert.AreEqual(ColumnDefaultValue.None,
+                    columns.Single(c => c.Field.Name == "Name").DefaultValue);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get columns of computed column.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetColumnsOfComputedColumn()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var columns = reader.GetColumns("Person").ToList();
+                var columns = reader.GetColumns(connection,
+                    "Person",
+                    transaction: null).ToList();
                 var computed = columns.Single(c => c.Field.Name == "NameUpper");
-
                 // Assert
                 Assert.IsNotNull(computed.ComputedExpression);
-                StringAssert.Contains(computed.ComputedExpression, "upper", StringComparison.OrdinalIgnoreCase);
+                StringAssert.Contains(computed.ComputedExpression,
+                    "upper",
+                    StringComparison.OrdinalIgnoreCase);
                 Assert.IsNull(columns.Single(c => c.Field.Name == "Name").ComputedExpression);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get columns of numeric columns.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetColumnsOfNumericColumns()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var salary = reader.GetColumns("Person").Single(c => c.Field.Name == "Salary");
-                var createdDate = reader.GetColumns("Person").Single(c => c.Field.Name == "CreatedDateUtc");
-
+                var salary = reader.GetColumns(connection,
+                    "Person",
+                    transaction: null).Single(c => c.Field.Name == "Salary");
+                var createdDate = reader.GetColumns(connection,
+                    "Person",
+                    transaction: null).Single(c => c.Field.Name == "CreatedDateUtc");
                 // Assert
-                Assert.AreEqual("decimal", salary.Field.DatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual((byte)18, salary.Field.Precision);
-                Assert.AreEqual((byte)2, salary.Field.Scale);
-                Assert.AreEqual("timestamp", createdDate.Field.DatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual((byte)3, createdDate.Field.Scale);
+                Assert.AreEqual("decimal",
+                    salary.Field.DatabaseType,
+                    StringComparer.Ordinal);
+                Assert.AreEqual((byte)18,
+                    salary.Field.Precision);
+                Assert.AreEqual((byte)2,
+                    salary.Field.Scale);
+                Assert.AreEqual("timestamp",
+                    createdDate.Field.DatabaseType,
+                    StringComparer.Ordinal);
+                Assert.AreEqual((byte)3,
+                    createdDate.Field.Scale);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get columns of composite primary key table.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetColumnsOfCompositePrimaryKeyTable()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var columns = reader.GetColumns("OrderLine").ToList();
-
+                var columns = reader.GetColumns(connection,
+                    "OrderLine",
+                    transaction: null).ToList();
                 // Assert
                 Assert.IsTrue(columns.Single(c => c.Field.Name == "OrderId").Field.IsPrimary);
                 Assert.IsTrue(columns.Single(c => c.Field.Name == "LineNumber").Field.IsPrimary);
@@ -449,19 +557,23 @@ namespace RepoDb.Schema.Db2.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get columns of missing table.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetColumnsOfMissingTable()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetColumns("MissingTable");
-
+                var actual = reader.GetColumns(connection,
+                    "MissingTable",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual(0, actual.Count());
+                Assert.AreEqual(0,
+                    actual.Count());
             }
         }
 
@@ -469,22 +581,25 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies db2 schema reader get columns async.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetColumnsAsync()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = (await reader.GetColumnsAsync("Person")).ToList();
-
+                var actual = (await reader.GetColumnsAsync(connection,
+                    "Person",
+                    transaction: null)).ToList();
                 // Assert
-                CollectionAssert.AreEqual(
-                    new[] { "Id", "Name", "NameUpper", "Age", "CountryId", "Salary", "CreatedDateUtc" },
+                CollectionAssert.AreEqual(new[] { "Id", "Name", "NameUpper", "Age", "CountryId", "Salary", "CreatedDateUtc" },
                     Helper.GetNames(actual));
-                Assert.AreEqual(10L, actual.Single(c => c.Field.Name == "Id").IdentitySeed);
+                Assert.AreEqual(10L,
+                    actual.Single(c => c.Field.Name == "Id").IdentitySeed);
             }
         }
 
@@ -496,52 +611,67 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies db2 schema reader get primary key.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetPrimaryKey()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetPrimaryKey("Person");
-
+                var actual = reader.GetPrimaryKey(connection,
+                    "Person",
+                    transaction: null);
                 // Assert
                 Assert.IsNotNull(actual);
-                Assert.AreEqual("PK_Person", actual.Name, StringComparer.Ordinal);
-                CollectionAssert.AreEqual(new[] { "Id" }, actual.Columns.ToArray());
+                Assert.AreEqual("PK_Person",
+                    actual.Name,
+                    StringComparer.Ordinal);
+                CollectionAssert.AreEqual(new[] { "Id" },
+                    actual.Columns.ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get primary key of composite key.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetPrimaryKeyOfCompositeKey()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetPrimaryKey("OrderLine");
-
+                var actual = reader.GetPrimaryKey(connection,
+                    "OrderLine",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual("PK_OrderLine", actual.Name, StringComparer.Ordinal);
-                CollectionAssert.AreEqual(new[] { "OrderId", "LineNumber" }, actual.Columns.ToArray());
+                Assert.AreEqual("PK_OrderLine",
+                    actual.Name,
+                    StringComparer.Ordinal);
+                CollectionAssert.AreEqual(new[] { "OrderId", "LineNumber" },
+                    actual.Columns.ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get primary key of table without key.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetPrimaryKeyOfTableWithoutKey()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetPrimaryKey("NoKey");
-
+                var actual = reader.GetPrimaryKey(connection,
+                    "NoKey",
+                    transaction: null);
                 // Assert
                 Assert.IsNull(actual);
             }
@@ -551,20 +681,26 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies db2 schema reader get primary key async.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetPrimaryKeyAsync()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = await reader.GetPrimaryKeyAsync("OrderLine");
-
+                var actual = await reader.GetPrimaryKeyAsync(connection,
+                    "OrderLine",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual("PK_OrderLine", actual.Name, StringComparer.Ordinal);
-                CollectionAssert.AreEqual(new[] { "OrderId", "LineNumber" }, actual.Columns.ToArray());
+                Assert.AreEqual("PK_OrderLine",
+                    actual.Name,
+                    StringComparer.Ordinal);
+                CollectionAssert.AreEqual(new[] { "OrderId", "LineNumber" },
+                    actual.Columns.ToArray());
             }
         }
 
@@ -576,39 +712,51 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies db2 schema reader get indexes.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetIndexes()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetIndexes("Person").ToList();
-
+                var actual = reader.GetIndexes(connection,
+                    "Person",
+                    transaction: null).ToList();
                 // Assert
-                Assert.AreEqual(1, actual.Count);
-                Assert.AreEqual("IX_Person_Name", actual[0].Name, StringComparer.Ordinal);
+                Assert.AreEqual(1,
+                    actual.Count);
+                Assert.AreEqual("IX_Person_Name",
+                    actual[0].Name,
+                    StringComparer.Ordinal);
                 Assert.IsFalse(actual[0].IsUnique);
-                CollectionAssert.AreEqual(new[] { "Name", "Age" }, actual[0].Columns.ToArray());
-                CollectionAssert.AreEqual(new[] { "Name" }, actual[0].DescendingColumns.ToArray());
+                CollectionAssert.AreEqual(new[] { "Name", "Age" },
+                    actual[0].Columns.ToArray());
+                CollectionAssert.AreEqual(new[] { "Name" },
+                    actual[0].DescendingColumns.ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get indexes does not include the primary key and the unique constraints.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetIndexesDoesNotIncludeThePrimaryKeyAndTheUniqueConstraints()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetIndexes("Country");
-
+                var actual = reader.GetIndexes(connection,
+                    "Country",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual(0, actual.Count());
+                Assert.AreEqual(0,
+                    actual.Count());
             }
         }
 
@@ -616,20 +764,25 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies db2 schema reader get indexes async.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetIndexesAsync()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = (await reader.GetIndexesAsync("Person")).ToList();
-
+                var actual = (await reader.GetIndexesAsync(connection,
+                    "Person",
+                    transaction: null)).ToList();
                 // Assert
-                Assert.AreEqual(1, actual.Count);
-                CollectionAssert.AreEqual(new[] { "Name" }, actual[0].DescendingColumns.ToArray());
+                Assert.AreEqual(1,
+                    actual.Count);
+                CollectionAssert.AreEqual(new[] { "Name" },
+                    actual[0].DescendingColumns.ToArray());
             }
         }
 
@@ -641,59 +794,82 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies db2 schema reader get foreign keys.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetForeignKeys()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetForeignKeys("Person").ToList();
-
+                var actual = reader.GetForeignKeys(connection,
+                    "Person",
+                    transaction: null).ToList();
                 // Assert
-                Assert.AreEqual(1, actual.Count);
-                Assert.AreEqual("FK_Person_Country", actual[0].Name, StringComparer.Ordinal);
-                CollectionAssert.AreEqual(new[] { "CountryId" }, actual[0].Columns.ToArray());
-                Assert.AreEqual(new TableInfo("Country", null), actual[0].ReferencedTable);
-                CollectionAssert.AreEqual(new[] { "Id" }, actual[0].ReferencedColumns.ToArray());
-                Assert.AreEqual(ForeignKeyRule.NoAction, actual[0].UpdateRule);
-                Assert.AreEqual(ForeignKeyRule.SetNull, actual[0].DeleteRule);
+                Assert.AreEqual(1,
+                    actual.Count);
+                Assert.AreEqual("FK_Person_Country",
+                    actual[0].Name,
+                    StringComparer.Ordinal);
+                CollectionAssert.AreEqual(new[] { "CountryId" },
+                    actual[0].Columns.ToArray());
+                Assert.AreEqual(new TableInfo("Country",
+                        null),
+                    actual[0].ReferencedTable);
+                CollectionAssert.AreEqual(new[] { "Id" },
+                    actual[0].ReferencedColumns.ToArray());
+                Assert.AreEqual(ForeignKeyRule.NoAction,
+                    actual[0].UpdateRule);
+                Assert.AreEqual(ForeignKeyRule.SetNull,
+                    actual[0].DeleteRule);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get foreign keys default rules.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetForeignKeysDefaultRules()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetForeignKeys("Child").Single();
-
+                var actual = reader.GetForeignKeys(connection,
+                    "Child",
+                    transaction: null).Single();
                 // Assert
-                Assert.AreEqual("FK_Child_Parent", actual.Name, StringComparer.Ordinal);
-                Assert.AreEqual(ForeignKeyRule.NoAction, actual.UpdateRule);
-                Assert.AreEqual(ForeignKeyRule.NoAction, actual.DeleteRule);
+                Assert.AreEqual("FK_Child_Parent",
+                    actual.Name,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(ForeignKeyRule.NoAction,
+                    actual.UpdateRule);
+                Assert.AreEqual(ForeignKeyRule.NoAction,
+                    actual.DeleteRule);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get foreign keys of table without foreign keys.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetForeignKeysOfTableWithoutForeignKeys()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetForeignKeys("Country");
-
+                var actual = reader.GetForeignKeys(connection,
+                    "Country",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual(0, actual.Count());
+                Assert.AreEqual(0,
+                    actual.Count());
             }
         }
 
@@ -701,20 +877,27 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies db2 schema reader get foreign keys async.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetForeignKeysAsync()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = (await reader.GetForeignKeysAsync("Person")).Single();
-
+                var actual = (await reader.GetForeignKeysAsync(connection,
+                    "Person",
+                    transaction: null)).Single();
                 // Assert
-                Assert.AreEqual("FK_Person_Country", actual.Name, StringComparer.Ordinal);
-                Assert.AreEqual(new TableInfo("Country", null), actual.ReferencedTable);
+                Assert.AreEqual("FK_Person_Country",
+                    actual.Name,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(new TableInfo("Country",
+                        null),
+                    actual.ReferencedTable);
             }
         }
 
@@ -726,37 +909,48 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies db2 schema reader get unique constraints.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetUniqueConstraints()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetUniqueConstraints("Country").ToList();
-
+                var actual = reader.GetUniqueConstraints(connection,
+                    "Country",
+                    transaction: null).ToList();
                 // Assert
-                Assert.AreEqual(1, actual.Count);
-                Assert.AreEqual("UQ_Country_Name", actual[0].Name, StringComparer.Ordinal);
-                CollectionAssert.AreEqual(new[] { "Name" }, actual[0].Columns.ToArray());
+                Assert.AreEqual(1,
+                    actual.Count);
+                Assert.AreEqual("UQ_Country_Name",
+                    actual[0].Name,
+                    StringComparer.Ordinal);
+                CollectionAssert.AreEqual(new[] { "Name" },
+                    actual[0].Columns.ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get unique constraints of table without unique constraints.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetUniqueConstraintsOfTableWithoutUniqueConstraints()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetUniqueConstraints("Person");
-
+                var actual = reader.GetUniqueConstraints(connection,
+                    "Person",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual(0, actual.Count());
+                Assert.AreEqual(0,
+                    actual.Count());
             }
         }
 
@@ -764,19 +958,24 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies db2 schema reader get unique constraints async.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetUniqueConstraintsAsync()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = (await reader.GetUniqueConstraintsAsync("Country")).Single();
-
+                var actual = (await reader.GetUniqueConstraintsAsync(connection,
+                    "Country",
+                    transaction: null)).Single();
                 // Assert
-                Assert.AreEqual("UQ_Country_Name", actual.Name, StringComparer.Ordinal);
+                Assert.AreEqual("UQ_Country_Name",
+                    actual.Name,
+                    StringComparer.Ordinal);
             }
         }
 
@@ -788,37 +987,49 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies db2 schema reader get check constraints.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetCheckConstraints()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetCheckConstraints("Person").ToList();
-
+                var actual = reader.GetCheckConstraints(connection,
+                    "Person",
+                    transaction: null).ToList();
                 // Assert
-                Assert.AreEqual(1, actual.Count);
-                Assert.AreEqual("CK_Person_Age", actual[0].Name, StringComparer.Ordinal);
-                StringAssert.Contains(actual[0].Expression, "Age", StringComparison.Ordinal);
+                Assert.AreEqual(1,
+                    actual.Count);
+                Assert.AreEqual("CK_Person_Age",
+                    actual[0].Name,
+                    StringComparer.Ordinal);
+                StringAssert.Contains(actual[0].Expression,
+                    "Age",
+                    StringComparison.Ordinal);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get check constraints of table without check constraints.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetCheckConstraintsOfTableWithoutCheckConstraints()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetCheckConstraints("Country");
-
+                var actual = reader.GetCheckConstraints(connection,
+                    "Country",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual(0, actual.Count());
+                Assert.AreEqual(0,
+                    actual.Count());
             }
         }
 
@@ -826,19 +1037,24 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies db2 schema reader get check constraints async.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetCheckConstraintsAsync()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = (await reader.GetCheckConstraintsAsync("Person")).Single();
-
+                var actual = (await reader.GetCheckConstraintsAsync(connection,
+                    "Person",
+                    transaction: null)).Single();
                 // Assert
-                Assert.AreEqual("CK_Person_Age", actual.Name, StringComparer.Ordinal);
+                Assert.AreEqual("CK_Person_Age",
+                    actual.Name,
+                    StringComparer.Ordinal);
             }
         }
 
@@ -850,20 +1066,23 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies db2 schema reader get schemas.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetSchemas()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetSchemas().Select(schema => schema.Name).ToList();
-
+                var actual = reader.GetSchemas(connection,
+                    transaction: null).Select(schema => schema.Name).ToList();
                 // Assert
                 Assert.IsTrue(actual.Count > 0);
-                CollectionAssert.DoesNotContain(actual, "SYSIBM");
+                CollectionAssert.DoesNotContain(actual,
+                    "SYSIBM");
             }
         }
 
@@ -871,20 +1090,23 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies db2 schema reader get schemas async.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetSchemasAsync()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = (await reader.GetSchemasAsync()).Select(schema => schema.Name).ToList();
-
+                var actual = (await reader.GetSchemasAsync(connection,
+                    transaction: null)).Select(schema => schema.Name).ToList();
                 // Assert
                 Assert.IsTrue(actual.Count > 0);
-                CollectionAssert.DoesNotContain(actual, "SYSIBM");
+                CollectionAssert.DoesNotContain(actual,
+                    "SYSIBM");
             }
         }
 
@@ -896,53 +1118,68 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies db2 schema reader get tables.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetTables()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetTables().ToList();
-
+                var actual = reader.GetTables(connection,
+                    transaction: null).ToList();
                 // Assert
-                CollectionAssert.Contains(actual, "Person");
-                CollectionAssert.Contains(actual, "Country");
-                CollectionAssert.Contains(reader.GetTables(Database.SourceSalesName).ToList(), $"{Database.SourceSalesName}.Invoice");
+                CollectionAssert.Contains(actual,
+                    "Person");
+                CollectionAssert.Contains(actual,
+                    "Country");
+                CollectionAssert.Contains(reader.GetTables(connection,
+                        Database.SourceSalesName,
+                        transaction: null).ToList(),
+                    $"{Database.SourceSalesName}.Invoice");
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get tables of schema.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetTablesOfSchema()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetTables(Database.SourceSalesName).ToList();
-
+                var actual = reader.GetTables(connection,
+                    Database.SourceSalesName,
+                    transaction: null).ToList();
                 // Assert
-                CollectionAssert.AreEqual(new[] { $"{Database.SourceSalesName}.Invoice", $"{Database.SourceSalesName}.InvoiceLine", $"{Database.SourceSalesName}.Item", $"{Database.SourceSalesName}.ItemRef" }, actual);
+                CollectionAssert.AreEqual(new[] { $"{Database.SourceSalesName}.Invoice", $"{Database.SourceSalesName}.InvoiceLine", $"{Database.SourceSalesName}.Item", $"{Database.SourceSalesName}.ItemRef" },
+                    actual);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get tables of missing schema.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetTablesOfMissingSchema()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetTables("MissingSchema");
-
+                var actual = reader.GetTables(connection,
+                    "MissingSchema",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual(0, actual.Count());
+                Assert.AreEqual(0,
+                    actual.Count());
             }
         }
 
@@ -950,19 +1187,23 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies db2 schema reader get tables async.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetTablesAsync()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = (await reader.GetTablesAsync(Database.SourceSalesName)).ToList();
-
+                var actual = (await reader.GetTablesAsync(connection,
+                    Database.SourceSalesName,
+                    transaction: null)).ToList();
                 // Assert
-                CollectionAssert.AreEqual(new[] { $"{Database.SourceSalesName}.Invoice", $"{Database.SourceSalesName}.InvoiceLine", $"{Database.SourceSalesName}.Item", $"{Database.SourceSalesName}.ItemRef" }, actual);
+                CollectionAssert.AreEqual(new[] { $"{Database.SourceSalesName}.Invoice", $"{Database.SourceSalesName}.InvoiceLine", $"{Database.SourceSalesName}.Item", $"{Database.SourceSalesName}.ItemRef" },
+                    actual);
             }
         }
 
@@ -974,67 +1215,83 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetDependencyOrder()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "GrandChild", "Parent", "Child" }));
-
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(connection,
+                        new[] { "GrandChild", "Parent", "Child" },
+                        transaction: null));
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, actual);
+                CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" },
+                    actual);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order of person and country.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetDependencyOrderOfPersonAndCountry()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "Person", "Country" }));
-
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(connection,
+                        new[] { "Person", "Country" },
+                        transaction: null));
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Country", "Person" }, actual);
+                CollectionAssert.AreEqual(new[] { "Country", "Person" },
+                    actual);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order ignores the tables that are not in the list.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetDependencyOrderIgnoresTheTablesThatAreNotInTheList()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "GrandChild" }));
-
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(connection,
+                        new[] { "GrandChild" },
+                        transaction: null));
                 // Assert
-                CollectionAssert.AreEqual(new[] { "GrandChild" }, actual);
+                CollectionAssert.AreEqual(new[] { "GrandChild" },
+                    actual);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order with circular references.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetDependencyOrderWithCircularReferences()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "CycleA", "CycleB" }));
-
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(connection,
+                        new[] { "CycleA", "CycleB" },
+                        transaction: null));
                 // Assert
-                CollectionAssert.AreEqual(new[] { "CycleA", "CycleB" }, actual);
+                CollectionAssert.AreEqual(new[] { "CycleA", "CycleB" },
+                    actual);
             }
         }
 
@@ -1042,19 +1299,23 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order async.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetDependencyOrderAsync()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = Helper.GetTableNames(await reader.GetDependencyOrderAsync(new[] { "GrandChild", "Parent", "Child" }));
-
+                var actual = Helper.GetTableNames(await reader.GetDependencyOrderAsync(connection,
+                        new[] { "GrandChild", "Parent", "Child" },
+                        transaction: null));
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, actual);
+                CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" },
+                    actual);
             }
         }
 
@@ -1062,171 +1323,227 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Relationships
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order relationships of dependency chain.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetDependencyOrderRelationshipsOfDependencyChain()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetDependencyOrder(new[] { "GrandChild", "Parent", "Child" }).ToList();
+                var actual = reader.GetDependencyOrder(connection,
+                    new[] { "GrandChild", "Parent", "Child" },
+                    transaction: null).ToList();
                 var parent = actual[0];
                 var child = actual[1];
                 var grandChild = actual[2];
-
                 // Assert
-                Assert.AreEqual(0, parent.Parents.Count);
-                CollectionAssert.AreEqual(new[] { "Child" }, parent.Children.Select(r => r.Schema.Table.Name).ToArray());
-                CollectionAssert.AreEqual(new[] { "Parent" }, child.Parents.Select(r => r.Schema.Table.Name).ToArray());
-                CollectionAssert.AreEqual(new[] { "GrandChild" }, child.Children.Select(r => r.Schema.Table.Name).ToArray());
-                CollectionAssert.AreEqual(new[] { "Child" }, grandChild.Parents.Select(r => r.Schema.Table.Name).ToArray());
-                Assert.AreEqual(0, grandChild.Children.Count);
+                Assert.AreEqual(0,
+                    parent.Parents.Count);
+                CollectionAssert.AreEqual(new[] { "Child" },
+                    parent.Children.Select(r => r.Schema.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "Parent" },
+                    child.Parents.Select(r => r.Schema.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "GrandChild" },
+                    child.Children.Select(r => r.Schema.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "Child" },
+                    grandChild.Parents.Select(r => r.Schema.Table.Name).ToArray());
+                Assert.AreEqual(0,
+                    grandChild.Children.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order relationships share the same instances.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetDependencyOrderRelationshipsShareTheSameInstances()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetDependencyOrder(new[] { "Child", "Parent" }).ToList();
-
+                var actual = reader.GetDependencyOrder(connection,
+                    new[] { "Child", "Parent" },
+                    transaction: null).ToList();
                 // Assert
-                Assert.AreSame(actual[0], actual[1].Parents.Single());
-                Assert.AreSame(actual[1], actual[0].Children.Single());
+                Assert.AreSame(actual[0],
+                    actual[1].Parents.Single());
+                Assert.AreSame(actual[1],
+                    actual[0].Children.Single());
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order relationships have the schema of the table.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetDependencyOrderRelationshipsHaveTheSchemaOfTheTable()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetDependencyOrder(new[] { "Person", "Country" }).ToList();
+                var actual = reader.GetDependencyOrder(connection,
+                    new[] { "Person", "Country" },
+                    transaction: null).ToList();
                 var person = actual.Single(r => r.Schema.Table.Name == "Person");
-
                 // Assert
-                Assert.AreEqual(7, person.Schema.Columns.Count);
-                Assert.AreEqual(1, person.Schema.ForeignKeys.Count);
+                Assert.AreEqual(7,
+                    person.Schema.Columns.Count);
+                Assert.AreEqual(1,
+                    person.Schema.ForeignKeys.Count);
                 Assert.IsNotNull(person.Schema.PrimaryKey);
-                CollectionAssert.AreEqual(new[] { "Country" }, person.Parents.Select(r => r.Schema.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "Country" },
+                    person.Parents.Select(r => r.Schema.Table.Name).ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order relationships of table with multiple parents.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetDependencyOrderRelationshipsOfTableWithMultipleParents()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetDependencyOrder(new[] { "Shipment", "OrderLine", "Country" }).ToList();
+                var actual = reader.GetDependencyOrder(connection,
+                    new[] { "Shipment", "OrderLine", "Country" },
+                    transaction: null).ToList();
                 var shipment = actual.Single(r => r.Schema.Table.Name == "Shipment");
-
                 // Assert
-                Assert.AreEqual("Shipment", actual[2].Schema.Table.Name, StringComparer.Ordinal);
-                CollectionAssert.AreEquivalent(new[] { "OrderLine", "Country" }, shipment.Parents.Select(r => r.Schema.Table.Name).ToArray());
+                Assert.AreEqual("Shipment",
+                    actual[2].Schema.Table.Name,
+                    StringComparer.Ordinal);
+                CollectionAssert.AreEquivalent(new[] { "OrderLine", "Country" },
+                    shipment.Parents.Select(r => r.Schema.Table.Name).ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order relationships ignore the self reference.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetDependencyOrderRelationshipsIgnoreTheSelfReference()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetDependencyOrder(new[] { "Employee" }).Single();
-
+                var actual = reader.GetDependencyOrder(connection,
+                    new[] { "Employee" },
+                    transaction: null).Single();
                 // Assert
-                Assert.AreEqual(0, actual.Parents.Count);
-                Assert.AreEqual(0, actual.Children.Count);
-                Assert.AreEqual(1, actual.Schema.ForeignKeys.Count);
+                Assert.AreEqual(0,
+                    actual.Parents.Count);
+                Assert.AreEqual(0,
+                    actual.Children.Count);
+                Assert.AreEqual(1,
+                    actual.Schema.ForeignKeys.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order relationships of circular references.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetDependencyOrderRelationshipsOfCircularReferences()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetDependencyOrder(new[] { "CycleA", "CycleB" }).ToList();
-
+                var actual = reader.GetDependencyOrder(connection,
+                    new[] { "CycleA", "CycleB" },
+                    transaction: null).ToList();
                 // Assert
-                Assert.AreSame(actual[1], actual[0].Parents.Single());
-                Assert.AreSame(actual[1], actual[0].Children.Single());
-                Assert.AreSame(actual[0], actual[1].Parents.Single());
-                Assert.AreSame(actual[0], actual[1].Children.Single());
+                Assert.AreSame(actual[1],
+                    actual[0].Parents.Single());
+                Assert.AreSame(actual[1],
+                    actual[0].Children.Single());
+                Assert.AreSame(actual[0],
+                    actual[1].Parents.Single());
+                Assert.AreSame(actual[0],
+                    actual[1].Children.Single());
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order breaks the cycle at the table that was given first.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetDependencyOrderBreaksTheCycleAtTheTableThatWasGivenFirst()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "Ledger", "CycleA", "CycleB", $"{Database.SourceSalesName}.Invoice" }));
-
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(connection,
+                        new[] { "Ledger", "CycleA", "CycleB", $"{Database.SourceSalesName}.Invoice" },
+                        transaction: null));
                 // Assert
-                Assert.AreEqual(4, actual.Length);
-                Assert.IsTrue(Array.IndexOf(actual, "CycleA") < Array.IndexOf(actual, "CycleB"));
+                Assert.AreEqual(4,
+                    actual.Length);
+                Assert.IsTrue(Array.IndexOf(actual,
+                        "CycleA") < Array.IndexOf(actual,
+                        "CycleB"));
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order ignores the table that is given more than once.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetDependencyOrderIgnoresTheTableThatIsGivenMoreThanOnce()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = Helper.GetTableNames(reader.GetDependencyOrder(new[] { "Parent", "Parent", "\"Parent\"" }));
-
+                var actual = Helper.GetTableNames(reader.GetDependencyOrder(connection,
+                        new[] { "Parent", "Parent", "\"Parent\"" },
+                        transaction: null));
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Parent" }, actual);
+                CollectionAssert.AreEqual(new[] { "Parent" },
+                    actual);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get dependency order async relationships of dependency chain.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetDependencyOrderAsyncRelationshipsOfDependencyChain()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = (await reader.GetDependencyOrderAsync(new[] { "GrandChild", "Parent", "Child" })).ToList();
-
+                var actual = (await reader.GetDependencyOrderAsync(connection,
+                    new[] { "GrandChild", "Parent", "Child" },
+                    transaction: null)).ToList();
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Child" }, actual[0].Children.Select(r => r.Schema.Table.Name).ToArray());
-                CollectionAssert.AreEqual(new[] { "Parent" }, actual[1].Parents.Select(r => r.Schema.Table.Name).ToArray());
-                CollectionAssert.AreEqual(new[] { "GrandChild" }, actual[1].Children.Select(r => r.Schema.Table.Name).ToArray());
-                Assert.AreEqual(0, actual[2].Children.Count);
+                CollectionAssert.AreEqual(new[] { "Child" },
+                    actual[0].Children.Select(r => r.Schema.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "Parent" },
+                    actual[1].Parents.Select(r => r.Schema.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "GrandChild" },
+                    actual[1].Children.Select(r => r.Schema.Table.Name).ToArray());
+                Assert.AreEqual(0,
+                    actual[2].Children.Count);
             }
         }
 
@@ -1238,64 +1555,89 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies db2 schema reader get table schema.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetTableSchema()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetTableSchema("Person");
-
+                var actual = reader.GetTableSchema(connection,
+                    "Person",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
-                Assert.AreEqual("DB2", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.AreEqual("Person",
+                    actual.Table.Name,
+                    StringComparer.Ordinal);
+                Assert.AreEqual("DB2",
+                    actual.Table.Provider,
+                    StringComparer.Ordinal);
                 Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
-                Assert.AreEqual(7, actual.Columns.Count);
+                Assert.AreEqual(7,
+                    actual.Columns.Count);
                 Assert.IsNotNull(actual.PrimaryKey);
-                Assert.AreEqual(1, actual.Indexes.Count);
-                Assert.AreEqual(1, actual.ForeignKeys.Count);
-                Assert.AreEqual(0, actual.UniqueConstraints.Count);
-                Assert.AreEqual(1, actual.CheckConstraints.Count);
+                Assert.AreEqual(1,
+                    actual.Indexes.Count);
+                Assert.AreEqual(1,
+                    actual.ForeignKeys.Count);
+                Assert.AreEqual(0,
+                    actual.UniqueConstraints.Count);
+                Assert.AreEqual(1,
+                    actual.CheckConstraints.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get table schema of table in another schema.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetTableSchemaOfTableInAnotherSchema()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetTableSchema($"{Database.SourceSalesName}.Invoice");
-
+                var actual = reader.GetTableSchema(connection,
+                    $"{Database.SourceSalesName}.Invoice",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual("Invoice", actual.Table.Name, StringComparer.Ordinal);
-                Assert.AreEqual(Database.SourceSalesName, actual.Table.Schema, StringComparer.Ordinal);
-                Assert.AreEqual(2, actual.Columns.Count);
+                Assert.AreEqual("Invoice",
+                    actual.Table.Name,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(Database.SourceSalesName,
+                    actual.Table.Schema,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(2,
+                    actual.Columns.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get table schema of table without key.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderGetTableSchemaOfTableWithoutKey()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetTableSchema("NoKey");
-
+                var actual = reader.GetTableSchema(connection,
+                    "NoKey",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual(2, actual.Columns.Count);
+                Assert.AreEqual(2,
+                    actual.Columns.Count);
                 Assert.IsNull(actual.PrimaryKey);
-                Assert.AreEqual(0, actual.Indexes.Count);
+                Assert.AreEqual(0,
+                    actual.Indexes.Count);
             }
         }
 
@@ -1303,44 +1645,61 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies db2 schema reader get table schema async.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetTableSchemaAsync()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = await reader.GetTableSchemaAsync("Person");
-
+                var actual = await reader.GetTableSchemaAsync(connection,
+                    "Person",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual("Person", actual.Table.Name, StringComparer.Ordinal);
-                Assert.AreEqual("DB2", actual.Table.Provider, StringComparer.Ordinal);
+                Assert.AreEqual("Person",
+                    actual.Table.Name,
+                    StringComparer.Ordinal);
+                Assert.AreEqual("DB2",
+                    actual.Table.Provider,
+                    StringComparer.Ordinal);
                 Assert.IsNotNull(actual.Table.Database);
                 Assert.IsNull(actual.Table.Schema);
-                Assert.AreEqual(7, actual.Columns.Count);
+                Assert.AreEqual(7,
+                    actual.Columns.Count);
                 Assert.IsNotNull(actual.PrimaryKey);
-                Assert.AreEqual(1, actual.Indexes.Count);
-                Assert.AreEqual(1, actual.ForeignKeys.Count);
-                Assert.AreEqual(1, actual.CheckConstraints.Count);
+                Assert.AreEqual(1,
+                    actual.Indexes.Count);
+                Assert.AreEqual(1,
+                    actual.ForeignKeys.Count);
+                Assert.AreEqual(1,
+                    actual.CheckConstraints.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies db2 schema reader get table schema async is the same as the sync one.
+        /// </summary>
         [TestMethod]
         public async Task TestDb2SchemaReaderGetTableSchemaAsyncIsTheSameAsTheSyncOne()
         {
             using (var connection = new DB2Connection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var expected = reader.GetTableSchema("Person");
-                var actual = await reader.GetTableSchemaAsync("Person");
-
+                var expected = reader.GetTableSchema(connection,
+                    "Person",
+                    transaction: null);
+                var actual = await reader.GetTableSchemaAsync(connection,
+                    "Person",
+                    transaction: null);
                 // Assert
-                Helper.AssertSchemaEquality(expected, actual);
+                Helper.AssertSchemaEquality(expected,
+                    actual);
             }
         }
 
@@ -1350,6 +1709,9 @@ namespace RepoDb.Schema.Db2.IntegrationTests
 
         #region Transaction
 
+        /// <summary>
+        /// Verifies db2 schema reader with transaction.
+        /// </summary>
         [TestMethod]
         public void TestDb2SchemaReaderWithTransaction()
         {
@@ -1357,16 +1719,16 @@ namespace RepoDb.Schema.Db2.IntegrationTests
             using (var transaction = connection.BeginTransaction())
             {
                 // Setup
-                var reader = new Db2SchemaReader(connection, transaction);
-
+                var reader = new Db2SchemaReader();
                 // Act
-                var actual = reader.GetTableSchema("Person");
-
+                var actual = reader.GetTableSchema(connection,
+                    "Person",
+                    transaction: transaction);
                 // Assert
-                Assert.AreEqual(7, actual.Columns.Count);
+                Assert.AreEqual(7,
+                    actual.Columns.Count);
             }
         }
-
         #endregion
     }
 }

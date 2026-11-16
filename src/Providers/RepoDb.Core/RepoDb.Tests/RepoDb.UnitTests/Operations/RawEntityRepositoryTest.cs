@@ -17,10 +17,16 @@ using RepoDb.UnitTests.CustomObjects;
 
 namespace RepoDb.UnitTests.Operations
 {
+    /// <summary>
+    /// Contains the raw entity repository test behavior.
+    /// </summary>
     [TestClass]
     [DoNotParallelize]
     public class RawEntityRepositoryTest : RepositoryOperationTestBase
     {
+        /// <summary>
+        /// Verifies execute query typed returns command result.
+        /// </summary>
         [TestMethod]
         public void TestExecuteQueryTypedReturnsCommandResult()
         {
@@ -36,6 +42,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query typed preserves command failure.
+        /// </summary>
         [TestMethod]
         public void TestExecuteQueryTypedPreservesCommandFailure()
         {
@@ -53,6 +62,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreSame(failure, actual);
         }
 
+        /// <summary>
+        /// Verifies execute query typed uses caller transaction.
+        /// </summary>
         [TestMethod]
         public void TestExecuteQueryTypedUsesCallerTransaction()
         {
@@ -69,6 +81,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.DisposeCount);
         }
 
+        /// <summary>
+        /// Verifies execute query typed returns cached result.
+        /// </summary>
         [TestMethod]
         public void TestExecuteQueryTypedReturnsCachedResult()
         {
@@ -86,6 +101,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query async typed returns command result.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQueryAsyncTypedReturnsCommandResult()
         {
@@ -101,6 +119,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query async typed preserves command failure.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQueryAsyncTypedPreservesCommandFailure()
         {
@@ -118,6 +139,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreSame(failure, actual);
         }
 
+        /// <summary>
+        /// Verifies execute query async typed uses caller transaction.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQueryAsyncTypedUsesCallerTransaction()
         {
@@ -134,6 +158,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.DisposeCount);
         }
 
+        /// <summary>
+        /// Verifies execute query async typed observes cancellation.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQueryAsyncTypedObservesCancellation()
         {
@@ -151,6 +178,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query async typed returns cached result.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQueryAsyncTypedReturnsCachedResult()
         {
@@ -168,6 +198,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query first typed returns command result.
+        /// </summary>
         [TestMethod]
         public void TestExecuteQueryFirstTypedReturnsCommandResult()
         {
@@ -183,6 +216,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query first typed preserves command failure.
+        /// </summary>
         [TestMethod]
         public void TestExecuteQueryFirstTypedPreservesCommandFailure()
         {
@@ -200,6 +236,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreSame(failure, actual);
         }
 
+        /// <summary>
+        /// Verifies execute query first typed uses caller transaction.
+        /// </summary>
         [TestMethod]
         public void TestExecuteQueryFirstTypedUsesCallerTransaction()
         {
@@ -216,6 +255,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.DisposeCount);
         }
 
+        /// <summary>
+        /// Verifies execute query first typed returns cached result.
+        /// </summary>
         [TestMethod]
         public void TestExecuteQueryFirstTypedReturnsCachedResult()
         {
@@ -233,6 +275,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query first async typed returns command result.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQueryFirstAsyncTypedReturnsCommandResult()
         {
@@ -248,6 +293,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query first async typed preserves command failure.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQueryFirstAsyncTypedPreservesCommandFailure()
         {
@@ -265,6 +313,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreSame(failure, actual);
         }
 
+        /// <summary>
+        /// Verifies execute query first async typed uses caller transaction.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQueryFirstAsyncTypedUsesCallerTransaction()
         {
@@ -281,6 +332,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.DisposeCount);
         }
 
+        /// <summary>
+        /// Verifies execute query first async typed observes cancellation.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQueryFirstAsyncTypedObservesCancellation()
         {
@@ -298,6 +352,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query first async typed returns cached result.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQueryFirstAsyncTypedReturnsCachedResult()
         {
@@ -315,6 +372,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query single typed returns command result.
+        /// </summary>
         [TestMethod]
         public void TestExecuteQuerySingleTypedReturnsCommandResult()
         {
@@ -330,6 +390,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query single typed preserves command failure.
+        /// </summary>
         [TestMethod]
         public void TestExecuteQuerySingleTypedPreservesCommandFailure()
         {
@@ -347,6 +410,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreSame(failure, actual);
         }
 
+        /// <summary>
+        /// Verifies execute query single typed uses caller transaction.
+        /// </summary>
         [TestMethod]
         public void TestExecuteQuerySingleTypedUsesCallerTransaction()
         {
@@ -363,6 +429,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.DisposeCount);
         }
 
+        /// <summary>
+        /// Verifies execute query single typed returns cached result.
+        /// </summary>
         [TestMethod]
         public void TestExecuteQuerySingleTypedReturnsCachedResult()
         {
@@ -380,6 +449,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query single async typed returns command result.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQuerySingleAsyncTypedReturnsCommandResult()
         {
@@ -395,6 +467,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query single async typed preserves command failure.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQuerySingleAsyncTypedPreservesCommandFailure()
         {
@@ -412,6 +487,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreSame(failure, actual);
         }
 
+        /// <summary>
+        /// Verifies execute query single async typed uses caller transaction.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQuerySingleAsyncTypedUsesCallerTransaction()
         {
@@ -428,6 +506,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.DisposeCount);
         }
 
+        /// <summary>
+        /// Verifies execute query single async typed observes cancellation.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQuerySingleAsyncTypedObservesCancellation()
         {
@@ -445,6 +526,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute query single async typed returns cached result.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteQuerySingleAsyncTypedReturnsCachedResult()
         {
@@ -462,6 +546,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute non query untyped returns command result.
+        /// </summary>
         [TestMethod]
         public void TestExecuteNonQueryUntypedReturnsCommandResult()
         {
@@ -477,6 +564,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute non query untyped preserves command failure.
+        /// </summary>
         [TestMethod]
         public void TestExecuteNonQueryUntypedPreservesCommandFailure()
         {
@@ -494,6 +584,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreSame(failure, actual);
         }
 
+        /// <summary>
+        /// Verifies execute non query untyped uses caller transaction.
+        /// </summary>
         [TestMethod]
         public void TestExecuteNonQueryUntypedUsesCallerTransaction()
         {
@@ -510,6 +603,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.DisposeCount);
         }
 
+        /// <summary>
+        /// Verifies execute non query async untyped returns command result.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteNonQueryAsyncUntypedReturnsCommandResult()
         {
@@ -525,6 +621,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute non query async untyped preserves command failure.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteNonQueryAsyncUntypedPreservesCommandFailure()
         {
@@ -542,6 +641,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreSame(failure, actual);
         }
 
+        /// <summary>
+        /// Verifies execute non query async untyped uses caller transaction.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteNonQueryAsyncUntypedUsesCallerTransaction()
         {
@@ -558,6 +660,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.DisposeCount);
         }
 
+        /// <summary>
+        /// Verifies execute non query async untyped observes cancellation.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteNonQueryAsyncUntypedObservesCancellation()
         {
@@ -575,6 +680,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar untyped returns command result.
+        /// </summary>
         [TestMethod]
         public void TestExecuteScalarUntypedReturnsCommandResult()
         {
@@ -590,6 +698,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar untyped preserves command failure.
+        /// </summary>
         [TestMethod]
         public void TestExecuteScalarUntypedPreservesCommandFailure()
         {
@@ -607,6 +718,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreSame(failure, actual);
         }
 
+        /// <summary>
+        /// Verifies execute scalar untyped uses caller transaction.
+        /// </summary>
         [TestMethod]
         public void TestExecuteScalarUntypedUsesCallerTransaction()
         {
@@ -623,6 +737,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.DisposeCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar untyped returns cached result.
+        /// </summary>
         [TestMethod]
         public void TestExecuteScalarUntypedReturnsCachedResult()
         {
@@ -640,6 +757,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar async untyped returns command result.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteScalarAsyncUntypedReturnsCommandResult()
         {
@@ -655,6 +775,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar async untyped preserves command failure.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteScalarAsyncUntypedPreservesCommandFailure()
         {
@@ -672,6 +795,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreSame(failure, actual);
         }
 
+        /// <summary>
+        /// Verifies execute scalar async untyped uses caller transaction.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteScalarAsyncUntypedUsesCallerTransaction()
         {
@@ -688,6 +814,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.DisposeCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar async untyped observes cancellation.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteScalarAsyncUntypedObservesCancellation()
         {
@@ -705,6 +834,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar async untyped returns cached result.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteScalarAsyncUntypedReturnsCachedResult()
         {
@@ -722,6 +854,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar typed returns command result.
+        /// </summary>
         [TestMethod]
         public void TestExecuteScalarTypedReturnsCommandResult()
         {
@@ -737,6 +872,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar typed preserves command failure.
+        /// </summary>
         [TestMethod]
         public void TestExecuteScalarTypedPreservesCommandFailure()
         {
@@ -754,6 +892,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreSame(failure, actual);
         }
 
+        /// <summary>
+        /// Verifies execute scalar typed uses caller transaction.
+        /// </summary>
         [TestMethod]
         public void TestExecuteScalarTypedUsesCallerTransaction()
         {
@@ -770,6 +911,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.DisposeCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar typed returns cached result.
+        /// </summary>
         [TestMethod]
         public void TestExecuteScalarTypedReturnsCachedResult()
         {
@@ -787,6 +931,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar async typed returns command result.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteScalarAsyncTypedReturnsCommandResult()
         {
@@ -802,6 +949,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(1, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar async typed preserves command failure.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteScalarAsyncTypedPreservesCommandFailure()
         {
@@ -819,6 +969,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreSame(failure, actual);
         }
 
+        /// <summary>
+        /// Verifies execute scalar async typed uses caller transaction.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteScalarAsyncTypedUsesCallerTransaction()
         {
@@ -835,6 +988,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.DisposeCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar async typed observes cancellation.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteScalarAsyncTypedObservesCancellation()
         {
@@ -852,6 +1008,9 @@ namespace RepoDb.UnitTests.Operations
             Assert.AreEqual(0, connection.ExecutionCount);
         }
 
+        /// <summary>
+        /// Verifies execute scalar async typed returns cached result.
+        /// </summary>
         [TestMethod]
         public async Task TestExecuteScalarAsyncTypedReturnsCachedResult()
         {

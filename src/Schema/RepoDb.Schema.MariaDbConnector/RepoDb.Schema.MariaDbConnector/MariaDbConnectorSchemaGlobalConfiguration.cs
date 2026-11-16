@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using RepoDb.Connector.MariaDbConnector;
@@ -11,15 +10,14 @@ using RepoDb.Connector.MariaDbConnector;
 namespace RepoDb.Schema.MariaDbConnector
 {
     /// <summary>
-    /// A class that is being used to initialize the necessary settings of the MariaDB schema objects for the <see cref="MariaDbConnection"/> object.
+    /// Configures the provider schema services.
     /// </summary>
     public static class MariaDbConnectorSchemaGlobalConfiguration
     {
-        #region Methods
+        #region Public Methods
 
         /// <summary>
-        /// Initializes the MariaDB settings first (see <c>UseMariaDbConnector</c>), then registers the <see cref="MariaDbConnectorSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="MariaDbConnection"/> type.
-        /// A <see cref="MariaDbConnectorSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
+        /// Initializes the MariaDB settings first (see <c>UseMariaDbConnector</c>), then registers the reader and <see cref="MariaDbConnectorSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="MariaDbConnection"/> type.
         /// It is safe to call this method more than once.
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
@@ -27,12 +25,14 @@ namespace RepoDb.Schema.MariaDbConnector
         public static GlobalConfiguration UseMariaDbConnectorSchema(this GlobalConfiguration globalConfiguration)
         {
             globalConfiguration.UseMariaDbConnector();
-            SchemaComposerMapper.Add<MariaDbConnection>(new MariaDbConnectorSchemaComposer(), force: true);
+            SchemaComposerMapper.Add<MariaDbConnection>(new MariaDbConnectorSchemaComposer(),
+                force: true);
+            SchemaReaderMapper.Add<MariaDbConnection>(new MariaDbConnectorSchemaReader(),
+                force: true);
             SchemaDialectMapper.Add(DbSettingMapper.Get<MariaDbConnection>().Provider,
                 MariaDbConnectorSchemaDialect.Instance);
             return globalConfiguration;
         }
-
         #endregion
     }
 }

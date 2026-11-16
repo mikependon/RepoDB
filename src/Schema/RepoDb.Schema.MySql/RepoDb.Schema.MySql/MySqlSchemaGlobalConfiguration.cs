@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using MySql.Data.MySqlClient;
@@ -11,15 +10,14 @@ using MySql.Data.MySqlClient;
 namespace RepoDb.Schema.MySql
 {
     /// <summary>
-    /// A class that is being used to initialize the necessary settings of the MySQL schema objects for the <see cref="MySqlConnection"/> object.
+    /// Configures the provider schema services.
     /// </summary>
     public static class MySqlSchemaGlobalConfiguration
     {
-        #region Methods
+        #region Public Methods
 
         /// <summary>
-        /// Initializes the MySQL settings first (see <c>UseMySql</c>), then registers the <see cref="MySqlSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="MySqlConnection"/> type.
-        /// A <see cref="MySqlSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
+        /// Initializes the MySQL settings first (see <c>UseMySql</c>), then registers the reader and <see cref="MySqlSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="MySqlConnection"/> type.
         /// It is safe to call this method more than once.
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
@@ -27,12 +25,14 @@ namespace RepoDb.Schema.MySql
         public static GlobalConfiguration UseMySqlSchema(this GlobalConfiguration globalConfiguration)
         {
             globalConfiguration.UseMySql();
-            SchemaComposerMapper.Add<MySqlConnection>(new MySqlSchemaComposer(), force: true);
+            SchemaComposerMapper.Add<MySqlConnection>(new MySqlSchemaComposer(),
+                force: true);
+            SchemaReaderMapper.Add<MySqlConnection>(new MySqlSchemaReader(),
+                force: true);
             SchemaDialectMapper.Add(DbSettingMapper.Get<MySqlConnection>().Provider,
                 MySqlSchemaDialect.Instance);
             return globalConfiguration;
         }
-
         #endregion
     }
 }

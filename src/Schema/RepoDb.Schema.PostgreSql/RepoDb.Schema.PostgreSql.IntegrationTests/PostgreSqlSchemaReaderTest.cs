@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -17,251 +16,366 @@ using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.PostgreSql.IntegrationTests
 {
+    /// <summary>
+    /// Contains the postgre sql schema reader test behavior.
+    /// </summary>
     [TestClass]
     public class PostgreSqlSchemaReaderTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
-        public void Initialize() =>
-            Database.Initialize();
+        public void Initialize() => Database.Initialize();
+        #region Private Methods
 
-        #region Helpers
-
-        private static PostgreSqlSchemaReader CreateReader() =>
-            new PostgreSqlSchemaReader(new NpgsqlConnection(Database.ConnectionStringForSource));
-
+        /// <summary>
+        /// Performs create reader.
+        /// </summary>
+        private static PostgreSqlSchemaReader CreateReader() => new PostgreSqlSchemaReader();
         #endregion
 
         #region GetTableSchema
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get columns.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetColumns()
         {
-            // Act
-            var columns = CreateReader().GetColumns("Person").ToList();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var columns = CreateReader().GetColumns(operationConnection,
+                "Person").ToList();
             // Assert
-            CollectionAssert.AreEqual(new[] { "Id", "Name", "Age", "Salary", "CreatedAt", "CountryId", "Double", "Token", "Photo", "Active" }, columns.Select(c => c.Field.Name).ToArray());
+            CollectionAssert.AreEqual(new[] { "Id", "Name", "Age", "Salary", "CreatedAt", "CountryId", "Double", "Token", "Photo", "Active" },
+                columns.Select(c => c.Field.Name).ToArray());
             Assert.IsTrue(columns.All(c => c.Field.Provider == "PostgreSql" || c.Field.Provider == null));
-
             var id = columns[0];
-            Assert.AreEqual("bigint", id.Field.DatabaseType);
+            Assert.AreEqual("bigint",
+                id.Field.DatabaseType);
             Assert.IsTrue(id.Field.IsIdentity);
             Assert.IsTrue(id.Field.IsPrimary);
             Assert.IsFalse(id.Field.IsNullable);
-            Assert.AreEqual(10, id.IdentitySeed);
-            Assert.AreEqual(5, id.IdentityIncrement);
-            Assert.AreEqual(typeof(long), id.Field.Type);
-
-            var name = columns[1];
-            Assert.AreEqual("character varying", name.Field.DatabaseType);
-            Assert.AreEqual(50, name.Field.Size);
-            Assert.AreEqual(typeof(string), name.Field.Type);
-
+            Assert.AreEqual(10,
+                id.IdentitySeed);
+            Assert.AreEqual(5,
+                id.IdentityIncrement);
+            Assert.AreEqual(typeof(long),
+                id.Field.Type);
+            var name=columns[1];
+            Assert.AreEqual("character varying",
+                name.Field.DatabaseType);
+            Assert.AreEqual(50,
+                name.Field.Size);
+            Assert.AreEqual(typeof(string),
+                name.Field.Type);
             var salary = columns[3];
-            Assert.AreEqual("numeric", salary.Field.DatabaseType);
-            Assert.AreEqual(12, (int)salary.Field.Precision);
-            Assert.AreEqual(2, (int)salary.Field.Scale);
-            Assert.AreEqual("0", salary.DefaultExpression);
-            Assert.AreEqual(ColumnDefaultValue.Literal, salary.DefaultValue);
+            Assert.AreEqual("numeric",
+                salary.Field.DatabaseType);
+            Assert.AreEqual(12,
+                (int)salary.Field.Precision);
+            Assert.AreEqual(2,
+                (int)salary.Field.Scale);
+            Assert.AreEqual("0",
+                salary.DefaultExpression);
+            Assert.AreEqual(ColumnDefaultValue.Literal,
+                salary.DefaultValue);
             Assert.IsTrue(salary.Field.IsNullable);
-
             var createdAt = columns[4];
-            Assert.AreEqual("timestamp without time zone", createdAt.Field.DatabaseType);
-            Assert.AreEqual(3, (int)createdAt.Field.Scale);
-            Assert.AreEqual("now()", createdAt.DefaultExpression);
-            Assert.AreEqual(ColumnDefaultValue.CurrentTimestamp, createdAt.DefaultValue);
-
-            Assert.AreEqual("(\"Age\" * 2)", columns[6].ComputedExpression);
-            Assert.AreEqual("true", columns[9].DefaultExpression);
-            Assert.AreEqual(ColumnDefaultValue.BooleanTrue, columns[9].DefaultValue);
+            Assert.AreEqual("timestamp without time zone",
+                createdAt.Field.DatabaseType);
+            Assert.AreEqual(3,
+                (int)createdAt.Field.Scale);
+            Assert.AreEqual("now()",
+                createdAt.DefaultExpression);
+            Assert.AreEqual(ColumnDefaultValue.CurrentTimestamp,
+                createdAt.DefaultValue);
+            Assert.AreEqual("(\"Age\" * 2)",
+                columns[6].ComputedExpression);
+            Assert.AreEqual("true",
+                columns[9].DefaultExpression);
+            Assert.AreEqual(ColumnDefaultValue.BooleanTrue,
+                columns[9].DefaultValue);
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get columns of serial column is identity.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetColumnsOfSerialColumnIsIdentity()
         {
-            // Act
-            var id = CreateReader().GetColumns("ticket").First();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var id = CreateReader().GetColumns(operationConnection,
+                "ticket").First();
             // Assert
             Assert.IsTrue(id.Field.IsIdentity);
             Assert.IsNull(id.DefaultExpression);
-            Assert.AreEqual(ColumnDefaultValue.None, id.DefaultValue);
-            Assert.AreEqual(1, id.IdentitySeed);
-            Assert.AreEqual(1, id.IdentityIncrement);
+            Assert.AreEqual(ColumnDefaultValue.None,
+                id.DefaultValue);
+            Assert.AreEqual(1,
+                id.IdentitySeed);
+            Assert.AreEqual(1,
+                id.IdentityIncrement);
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get primary key.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetPrimaryKey()
         {
-            // Act
-            var primaryKey = CreateReader().GetPrimaryKey("Person");
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var primaryKey = CreateReader().GetPrimaryKey(operationConnection,
+                "Person");
             // Assert
-            Assert.AreEqual("pk_person", primaryKey.Name);
-            CollectionAssert.AreEqual(new[] { "Id" }, primaryKey.Columns.ToArray());
-            Assert.IsNull(CreateReader().GetPrimaryKey("no_key"));
+            Assert.AreEqual("pk_person",
+                primaryKey.Name);
+            CollectionAssert.AreEqual(new[] { "Id" },
+                primaryKey.Columns.ToArray());
+            Assert.IsNull(CreateReader().GetPrimaryKey(operationConnection,
+                    "no_key"));
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get indexes.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetIndexes()
         {
-            // Act
-            var indexes = CreateReader().GetIndexes("Person").ToList();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var indexes = CreateReader().GetIndexes(operationConnection,
+                "Person").ToList();
             // Assert
-            Assert.AreEqual(2, indexes.Count);
-            var name = indexes.Single(i => i.Name == "ix_person_name");
+            Assert.AreEqual(2,
+                indexes.Count);
+            var name=indexes.Single(i => i.Name == "ix_person_name");
             Assert.IsFalse(name.IsUnique);
-            CollectionAssert.AreEqual(new[] { "Name", "Age" }, name.Columns.ToArray());
-            CollectionAssert.AreEqual(new[] { "Name" }, name.DescendingColumns.ToArray());
-            CollectionAssert.AreEqual(new[] { "Salary" }, name.IncludedColumns.ToArray());
-            Assert.AreEqual("\"Active\"", name.Filter);
+            CollectionAssert.AreEqual(new[] { "Name", "Age" },
+                name.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Name" },
+                name.DescendingColumns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Salary" },
+                name.IncludedColumns.ToArray());
+            Assert.AreEqual("\"Active\"",
+                name.Filter);
             var token = indexes.Single(i => i.Name == "ux_person_token");
             Assert.IsTrue(token.IsUnique);
-            Assert.AreEqual("(\"Token\" IS NOT NULL)", token.Filter);
+            Assert.AreEqual("(\"Token\" IS NOT NULL)",
+                token.Filter);
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get foreign keys.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetForeignKeys()
         {
-            // Act
-            var foreignKey = CreateReader().GetForeignKeys("Person").Single();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var foreignKey = CreateReader().GetForeignKeys(operationConnection,
+                "Person").Single();
             // Assert
-            Assert.AreEqual("fk_person_country", foreignKey.Name);
-            Assert.AreEqual(new TableInfo("country", "public"), foreignKey.ReferencedTable);
-            CollectionAssert.AreEqual(new[] { "CountryId" }, foreignKey.Columns.ToArray());
-            CollectionAssert.AreEqual(new[] { "id" }, foreignKey.ReferencedColumns.ToArray());
-            Assert.AreEqual(ForeignKeyRule.Cascade, foreignKey.DeleteRule);
-            Assert.AreEqual(ForeignKeyRule.SetNull, foreignKey.UpdateRule);
+            Assert.AreEqual("fk_person_country",
+                foreignKey.Name);
+            Assert.AreEqual(new TableInfo("country",
+                    "public"),
+                foreignKey.ReferencedTable);
+            CollectionAssert.AreEqual(new[] { "CountryId" },
+                foreignKey.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "id" },
+                foreignKey.ReferencedColumns.ToArray());
+            Assert.AreEqual(ForeignKeyRule.Cascade,
+                foreignKey.DeleteRule);
+            Assert.AreEqual(ForeignKeyRule.SetNull,
+                foreignKey.UpdateRule);
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get unique and check constraints.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetUniqueAndCheckConstraints()
         {
-            // Act
-            var unique = CreateReader().GetUniqueConstraints("country").Single();
-            var check = CreateReader().GetCheckConstraints("Person").Single();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var unique = CreateReader().GetUniqueConstraints(operationConnection,
+                "country").Single();
+            var check = CreateReader().GetCheckConstraints(operationConnection,
+                "Person").Single();
             // Assert
-            Assert.AreEqual("uq_country_name", unique.Name);
-            CollectionAssert.AreEqual(new[] { "name" }, unique.Columns.ToArray());
-            Assert.AreEqual("ck_person_age", check.Name);
-            Assert.AreEqual("(\"Age\" >= 0)", check.Expression);
+            Assert.AreEqual("uq_country_name",
+                unique.Name);
+            CollectionAssert.AreEqual(new[] { "name" },
+                unique.Columns.ToArray());
+            Assert.AreEqual("ck_person_age",
+                check.Name);
+            Assert.AreEqual("(\"Age\" >= 0)",
+                check.Expression);
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get table schema resolves the schema.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetTableSchemaResolvesTheSchema()
         {
-            // Act
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
             var reader = CreateReader();
-            var orderLine = reader.GetTableSchema("order_line");
-            var person = reader.GetTableSchema("public.Person");
-
+            var orderLine = reader.GetTableSchema(operationConnection,
+                "order_line");
+            var person = reader.GetTableSchema(operationConnection,
+                "public.Person");
             // Assert
-            Assert.AreEqual("sales", orderLine.Table.Schema);
-            Assert.AreEqual("public", person.Table.Schema);
-            Assert.AreEqual("Person", person.Table.Name);
-            Assert.AreEqual(new TableInfo("Person", "public"), reader.GetForeignKeys("sales.order_line").Single().ReferencedTable);
+            Assert.AreEqual("sales",
+                orderLine.Table.Schema);
+            Assert.AreEqual("public",
+                person.Table.Schema);
+            Assert.AreEqual("Person",
+                person.Table.Name);
+            Assert.AreEqual(new TableInfo("Person",
+                    "public"),
+                reader.GetForeignKeys(operationConnection,
+                    "sales.order_line").Single().ReferencedTable);
         }
 
         #endregion
 
         #region TableExists / GetTables / GetDependencyOrder
 
+        /// <summary>
+        /// Verifies postgre sql schema reader table exists.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderTableExists()
         {
-            // Act
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
             var reader = CreateReader();
-
             // Assert
-            Assert.IsTrue(reader.TableExists("Person"));
-            Assert.IsTrue(reader.TableExists("sales.order_line"));
-            Assert.IsFalse(reader.TableExists("person"));
-            Assert.IsFalse(reader.TableExists("Missing"));
+            Assert.IsTrue(reader.TableExists(operationConnection,
+                    "Person"));
+            Assert.IsTrue(reader.TableExists(operationConnection,
+                    "sales.order_line"));
+            Assert.IsFalse(reader.TableExists(operationConnection,
+                    "person"));
+            Assert.IsFalse(reader.TableExists(operationConnection,
+                    "Missing"));
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get schemas.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetSchemas()
         {
-            // Act
-            var actual = CreateReader().GetSchemas().Select(schema => schema.Name).ToList();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var actual = CreateReader().GetSchemas(operationConnection).Select(schema => schema.Name).ToList();
             // Assert
             Assert.IsTrue(actual.Count > 0);
-            CollectionAssert.Contains(actual, "public");
-            CollectionAssert.Contains(actual, "sales");
-            CollectionAssert.DoesNotContain(actual, "information_schema");
-            CollectionAssert.DoesNotContain(actual, "pg_catalog");
+            CollectionAssert.Contains(actual,
+                "public");
+            CollectionAssert.Contains(actual,
+                "sales");
+            CollectionAssert.DoesNotContain(actual,
+                "information_schema");
+            CollectionAssert.DoesNotContain(actual,
+                "pg_catalog");
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get schemas async.
+        /// </summary>
         [TestMethod]
         public async Task TestPostgreSqlSchemaReaderGetSchemasAsync()
         {
-            // Act
-            var actual = (await CreateReader().GetSchemasAsync()).Select(schema => schema.Name).ToList();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var actual = (await CreateReader().GetSchemasAsync(operationConnection)).Select(schema => schema.Name).ToList();
             // Assert
             Assert.IsTrue(actual.Count > 0);
-            CollectionAssert.Contains(actual, "public");
-            CollectionAssert.Contains(actual, "sales");
-            CollectionAssert.DoesNotContain(actual, "information_schema");
-            CollectionAssert.DoesNotContain(actual, "pg_catalog");
+            CollectionAssert.Contains(actual,
+                "public");
+            CollectionAssert.Contains(actual,
+                "sales");
+            CollectionAssert.DoesNotContain(actual,
+                "information_schema");
+            CollectionAssert.DoesNotContain(actual,
+                "pg_catalog");
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get tables.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetTables()
         {
-            // Act
-            var all = CreateReader().GetTables().ToList();
-            var sales = CreateReader().GetTables("sales").ToList();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var all = CreateReader().GetTables(operationConnection).ToList();
+            var sales = CreateReader().GetTables(operationConnection,
+                "sales").ToList();
             // Assert
-            CollectionAssert.IsSubsetOf(new[] { "public.\"Person\"", "public.country", "public.no_key", "public.node_a", "public.node_b", "public.ticket", "sales.order_line", "sales.item" }, all);
-            CollectionAssert.AreEquivalent(new[] { "sales.order_line", "sales.item" }, sales);
+            CollectionAssert.IsSubsetOf(new[] { "public.\"Person\"", "public.country", "public.no_key", "public.node_a", "public.node_b", "public.ticket", "sales.order_line", "sales.item" },
+                all);
+            CollectionAssert.AreEquivalent(new[] { "sales.order_line", "sales.item" },
+                sales);
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get dependency order.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetDependencyOrder()
         {
-            // Act
-            var order = CreateReader().GetDependencyOrder(new[] { "sales.order_line", "Person", "country" }).Select(r => r.Schema.Table.Name).ToArray();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var order = CreateReader().GetDependencyOrder(operationConnection,
+                new[] { "sales.order_line", "Person", "country" }).Select(r => r.Schema.Table.Name).ToArray();
             // Assert
-            CollectionAssert.AreEqual(new[] { "country", "Person", "order_line" }, order);
+            CollectionAssert.AreEqual(new[] { "country", "Person", "order_line" },
+                order);
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get dependency order keeps the tables of acycle together.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetDependencyOrderKeepsTheTablesOfACycleTogether()
         {
-            // Act
-            var relationships = CreateReader().GetDependencyOrder(new[] { "node_b", "country", "node_a" }).ToList();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var relationships = CreateReader().GetDependencyOrder(operationConnection,
+                new[] { "node_b", "country", "node_a" }).ToList();
             // Assert
-            CollectionAssert.AreEqual(new[] { "node_b", "node_a", "country" }, relationships.Select(r => r.Schema.Table.Name).ToArray());
-            Assert.AreEqual(1, relationships[0].Parents.Count);
+            CollectionAssert.AreEqual(new[] { "node_b", "node_a", "country" },
+                relationships.Select(r => r.Schema.Table.Name).ToArray());
+            Assert.AreEqual(1,
+                relationships[0].Parents.Count);
         }
 
         #endregion
 
         #region Async
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get table schema async.
+        /// </summary>
         [TestMethod]
         public async Task TestPostgreSqlSchemaReaderGetTableSchemaAsync()
         {
-            // Act
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
             var reader = CreateReader();
-            var actual = await reader.GetTableSchemaAsync("Person");
-
+            var actual = await reader.GetTableSchemaAsync(operationConnection,
+                "Person");
             // Assert
-            Helper.AssertSchemaEquality(reader.GetTableSchema("Person"), actual);
-            Assert.IsTrue(await reader.TableExistsAsync("Person"));
-            Assert.AreEqual("sales", await reader.GetSchemaNameAsync("order_line"));
-            Assert.AreEqual(2, (await reader.GetTablesAsync("sales")).Count());
-            Assert.AreEqual(3, (await reader.GetDependencyOrderAsync(new[] { "order_line", "Person", "country" })).Count());
+            Helper.AssertSchemaEquality(reader.GetTableSchema(operationConnection,
+                    "Person"),
+                actual);
+            Assert.IsTrue(await reader.TableExistsAsync(operationConnection,
+                    "Person"));
+            Assert.AreEqual("sales",
+                await reader.GetSchemaNameAsync(operationConnection,
+                    "order_line"));
+            Assert.AreEqual(2,
+                (await reader.GetTablesAsync(operationConnection,
+                    "sales")).Count());
+            Assert.AreEqual(3,
+                (await reader.GetDependencyOrderAsync(operationConnection,
+                    new[] { "order_line", "Person", "country" })).Count());
         }
-
         #endregion
     }
 }

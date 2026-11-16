@@ -156,7 +156,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             Write(format);
             using var connection = new CustomDbConnection();
-            CustomDbSetting.Map(null);
+            CustomDbSetting.Map(null, isSchemaSupported: false);
             await Assert.ThrowsExactlyAsync<NotSupportedException>(() => Load(connection, format, asynchronous));
             Assert.AreEqual(0, connection.Details.Count);
             var result = await Load(connection, format, asynchronous, schemaMappingMode: SchemaMappingMode.Prefix);

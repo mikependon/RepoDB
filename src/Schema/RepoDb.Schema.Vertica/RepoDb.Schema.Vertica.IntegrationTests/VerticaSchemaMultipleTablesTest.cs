@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -16,14 +15,27 @@ using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.Vertica.IntegrationTests
 {
+    /// <summary>
+    /// Contains the vertica schema multiple tables test behavior.
+    /// </summary>
     [TestClass]
     public class VerticaSchemaMultipleTablesTest
     {
         private static readonly string[] CircularTables =
         {
-            "CycleA", "CycleB", "RingX", "RingY", "RingZ", "LoopA", "LoopB", "LoopLeaf"
+            "CycleA",
+            "CycleB",
+            "RingX",
+            "RingY",
+            "RingZ",
+            "LoopA",
+            "LoopB",
+            "LoopLeaf"
         };
 
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -31,31 +43,44 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
             Database.Cleanup();
         }
 
-        #region Helpers
+        #region Private Methods
 
+        /// <summary>
+        /// Performs get source tables.
+        /// </summary>
         private static List<string> GetSourceTables()
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForSource))
             {
-                var reader = new VerticaSchemaReader(connection);
-                return reader.GetTables().Concat(reader.GetTables(Database.SourceSalesName)).ToList();
+                var reader = new VerticaSchemaReader();
+                return reader.GetTables(connection,
+                    transaction: null).Concat(reader.GetTables(connection,
+                        Database.SourceSalesName,
+                        transaction: null)).ToList();
             }
         }
 
+        /// <summary>
+        /// Performs get target tables.
+        /// </summary>
         private static List<string> GetTargetTables()
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForTarget))
             {
-                var reader = new VerticaSchemaReader(connection);
-                return reader.GetTables()
-                    .Concat(reader.GetTables(Database.TargetSalesName).Select(t => Database.SourceSalesName + t.Substring(Database.TargetSalesName.Length)))
-                    .ToList();
+                var reader = new VerticaSchemaReader();
+                return reader.GetTables(connection,
+                    transaction: null).Concat(reader.GetTables(connection,
+                        Database.TargetSalesName,
+                        transaction: null).Select(t => Database.SourceSalesName + t.Substring(Database.TargetSalesName.Length))).ToList();
             }
         }
 
@@ -63,26 +88,34 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
 
         #region Dependency chain
 
+        /// <summary>
+        /// Verifies vertica schema multiple tables of dependency chain in any order.
+        /// </summary>
         [TestMethod]
         public void TestVerticaSchemaMultipleTablesOfDependencyChainInAnyOrder()
         {
             // Act
-            Helper.CopyAllToTarget("GrandChild", "Parent", "Child");
-
+            Helper.CopyAllToTarget("GrandChild",
+                "Parent",
+                "Child");
             // Assert
             Helper.AssertTargetMatchesSource("Parent");
             Helper.AssertTargetMatchesSource("Child");
             Helper.AssertTargetMatchesSource("GrandChild");
         }
 
+        /// <summary>
+        /// Verifies vertica schema multiple tables of dependency chain in the dependency order.
+        /// </summary>
         [TestMethod]
         public void TestVerticaSchemaMultipleTablesOfDependencyChainInTheDependencyOrder()
         {
             // Setup
             using (var connection = new VerticaConnection(Database.ConnectionStringForSource))
             {
-                var order = Helper.GetTableNames(new VerticaSchemaReader(connection).GetDependencyOrder(new[] { "GrandChild", "Parent", "Child" }));
-
+                var order = Helper.GetTableNames(new VerticaSchemaReader().GetDependencyOrder(connection,
+                        new[] { "GrandChild", "Parent", "Child" },
+                        transaction: null));
                 // Act
                 Helper.CopyToTarget(order);
             }
@@ -93,17 +126,28 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
             Helper.AssertTargetMatchesSource("GrandChild");
         }
 
+        /// <summary>
+        /// Verifies vertica schema multiple tables of dependency chain keeps the foreign keys.
+        /// </summary>
         [TestMethod]
         public void TestVerticaSchemaMultipleTablesOfDependencyChainKeepsTheForeignKeys()
         {
             // Act
-            Helper.CopyAllToTarget("Parent", "Child", "GrandChild");
-
+            Helper.CopyAllToTarget("Parent",
+                "Child",
+                "GrandChild");
             // Assert
-            Assert.AreEqual(new TableInfo("Parent", null), Helper.GetTargetSchema("Child").ForeignKeys.Single().ReferencedTable);
-            Assert.AreEqual(new TableInfo("Child", null), Helper.GetTargetSchema("GrandChild").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("Parent",
+                    null),
+                Helper.GetTargetSchema("Child").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("Child",
+                    null),
+                Helper.GetTargetSchema("GrandChild").ForeignKeys.Single().ReferencedTable);
         }
 
+        /// <summary>
+        /// Verifies throw exception on multiple tables if the referenced table is not part of them.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnMultipleTablesIfTheReferencedTableIsNotPartOfThem()
         {
@@ -115,33 +159,47 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
 
         #region Circular references
 
+        /// <summary>
+        /// Verifies vertica schema multiple tables with circular references.
+        /// </summary>
         [TestMethod]
         public void TestVerticaSchemaMultipleTablesWithCircularReferences()
         {
             // Act
-            Helper.CopyAllToTarget("CycleA", "CycleB");
-
+            Helper.CopyAllToTarget("CycleA",
+                "CycleB");
             // Assert
             Helper.AssertTargetMatchesSource("CycleA");
             Helper.AssertTargetMatchesSource("CycleB");
         }
 
+        /// <summary>
+        /// Verifies vertica schema multiple tables with circular references keeps both foreign keys.
+        /// </summary>
         [TestMethod]
         public void TestVerticaSchemaMultipleTablesWithCircularReferencesKeepsBothForeignKeys()
         {
             // Act
-            Helper.CopyAllToTarget("CycleB", "CycleA");
-
+            Helper.CopyAllToTarget("CycleB",
+                "CycleA");
             // Assert
-            Assert.AreEqual(new TableInfo("CycleB", null), Helper.GetTargetSchema("CycleA").ForeignKeys.Single().ReferencedTable);
-            Assert.AreEqual(new TableInfo("CycleA", null), Helper.GetTargetSchema("CycleB").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("CycleB",
+                    null),
+                Helper.GetTargetSchema("CycleA").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("CycleA",
+                    null),
+                Helper.GetTargetSchema("CycleB").ForeignKeys.Single().ReferencedTable);
         }
 
+        /// <summary>
+        /// Verifies throw exception on tables with circular references if they are created one by one.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnTablesWithCircularReferencesIfTheyAreCreatedOneByOne()
         {
             // Act/Assert
-            Assert.Throws<VerticaException>(() => Helper.CopyToTarget("CycleA", "CycleB"));
+            Assert.Throws<VerticaException>(() => Helper.CopyToTarget("CycleA",
+                    "CycleB"));
         }
 
         #endregion
@@ -152,42 +210,53 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
 
         #region Whole database
 
+        /// <summary>
+        /// Verifies vertica schema multiple tables of the whole database.
+        /// </summary>
         [TestMethod]
         public void TestVerticaSchemaMultipleTablesOfTheWholeDatabase()
         {
             // Setup
             var tables = GetSourceTables();
-
             // Act
             Helper.CopyAllToTarget(tables.ToArray());
-
             // Assert
-            CollectionAssert.AreEquivalent(tables, GetTargetTables());
+            CollectionAssert.AreEquivalent(tables,
+                GetTargetTables());
             foreach (var table in tables)
             {
                 Helper.AssertTargetMatchesSource(table);
             }
         }
 
+        /// <summary>
+        /// Verifies vertica schema multiple tables of the whole database counts the objects.
+        /// </summary>
         [TestMethod]
         public void TestVerticaSchemaMultipleTablesOfTheWholeDatabaseCountsTheObjects()
         {
             // Setup
             var tables = GetSourceTables();
             var sources = Helper.GetSourceSchemas(tables);
-
             // Act
             Helper.CopyAllToTarget(tables.ToArray());
-
             // Assert
             var copied = tables.Select(Helper.GetTargetSchema).ToList();
-            Assert.AreEqual(sources.Sum(s => s.Columns.Count), copied.Sum(s => s.Columns.Count));
-            Assert.AreEqual(sources.Sum(s => s.Indexes.Count), copied.Sum(s => s.Indexes.Count));
-            Assert.AreEqual(sources.Sum(s => s.ForeignKeys.Count), copied.Sum(s => s.ForeignKeys.Count));
-            Assert.AreEqual(sources.Sum(s => s.UniqueConstraints.Count), copied.Sum(s => s.UniqueConstraints.Count));
-            Assert.AreEqual(sources.Sum(s => s.CheckConstraints.Count), copied.Sum(s => s.CheckConstraints.Count));
+            Assert.AreEqual(sources.Sum(s => s.Columns.Count),
+                copied.Sum(s => s.Columns.Count));
+            Assert.AreEqual(sources.Sum(s => s.Indexes.Count),
+                copied.Sum(s => s.Indexes.Count));
+            Assert.AreEqual(sources.Sum(s => s.ForeignKeys.Count),
+                copied.Sum(s => s.ForeignKeys.Count));
+            Assert.AreEqual(sources.Sum(s => s.UniqueConstraints.Count),
+                copied.Sum(s => s.UniqueConstraints.Count));
+            Assert.AreEqual(sources.Sum(s => s.CheckConstraints.Count),
+                copied.Sum(s => s.CheckConstraints.Count));
         }
 
+        /// <summary>
+        /// Verifies vertica schema multiple tables of the whole database in the dependency order.
+        /// </summary>
         [TestMethod]
         public void TestVerticaSchemaMultipleTablesOfTheWholeDatabaseInTheDependencyOrder()
         {
@@ -195,13 +264,12 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
             var tables = GetSourceTables();
             using (var connection = new VerticaConnection(Database.ConnectionStringForSource))
             {
-                var order = Helper.GetTableNames(new VerticaSchemaReader(connection).GetDependencyOrder(tables))
-                    .Where(t => !CircularTables.Contains(t, StringComparer.OrdinalIgnoreCase))
-                    .ToArray();
-
+                var order = Helper.GetTableNames(new VerticaSchemaReader().GetDependencyOrder(connection,
+                        tables,
+                        transaction: null)).Where(t => !CircularTables.Contains(t,
+                        StringComparer.OrdinalIgnoreCase)).ToArray();
                 // Act
                 Helper.CopyToTarget(order);
-
                 // Assert
                 foreach (var table in order)
                 {
@@ -210,43 +278,57 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies vertica schema multiple tables dependency order puts the referenced tables first.
+        /// </summary>
         [TestMethod]
         public void TestVerticaSchemaMultipleTablesDependencyOrderPutsTheReferencedTablesFirst()
         {
             // Setup
             var tables = GetSourceTables();
-            var schemas = Helper.GetSourceSchemas(tables).ToDictionary(s => Helper.FormatName(s.Table.Schema, s.Table.Name), StringComparer.OrdinalIgnoreCase);
-
+            var schemas = Helper.GetSourceSchemas(tables).ToDictionary(s => Helper.FormatName(s.Table.Schema,
+                    s.Table.Name),
+                StringComparer.OrdinalIgnoreCase);
             using (var connection = new VerticaConnection(Database.ConnectionStringForSource))
             {
                 // Act
-                var order = Helper.GetTableNames(new VerticaSchemaReader(connection).GetDependencyOrder(tables)).ToList();
-
+                var order = Helper.GetTableNames(new VerticaSchemaReader().GetDependencyOrder(connection,
+                        tables,
+                        transaction: null)).ToList();
                 // Assert
-                Assert.AreEqual(tables.Count, order.Count);
+                Assert.AreEqual(tables.Count,
+                    order.Count);
                 foreach (var schema in schemas.Values)
                 {
-                    var name = Helper.FormatName(schema.Table.Schema, schema.Table.Name);
-                    if (CircularTables.Contains(name, StringComparer.OrdinalIgnoreCase))
+                    var name=Helper.FormatName(schema.Table.Schema,
+                        schema.Table.Name);
+                    if (CircularTables.Contains(name,
+                        StringComparer.OrdinalIgnoreCase))
                     {
                         continue;
                     }
+
                     foreach (var foreignKey in schema.ForeignKeys)
                     {
-                        var referenced = Helper.FormatName(foreignKey.ReferencedTable.Schema, foreignKey.ReferencedTable.Name);
-                        if (string.Equals(referenced, name, StringComparison.OrdinalIgnoreCase))
+                        var referenced = Helper.FormatName(foreignKey.ReferencedTable.Schema,
+                            foreignKey.ReferencedTable.Name);
+                        if (string.Equals(referenced,
+                            name,
+                            StringComparison.OrdinalIgnoreCase))
                         {
                             continue;
                         }
-                        Assert.IsTrue(
-                            order.FindIndex(t => string.Equals(t, referenced, StringComparison.OrdinalIgnoreCase)) <
-                            order.FindIndex(t => string.Equals(t, name, StringComparison.OrdinalIgnoreCase)),
+
+                        Assert.IsTrue(order.FindIndex(t => string.Equals(t,
+                                    referenced,
+                                    StringComparison.OrdinalIgnoreCase)) < order.FindIndex(t => string.Equals(t,
+                                    name,
+                                    StringComparison.OrdinalIgnoreCase)),
                             $"'{referenced}' must come before '{name}'.");
                     }
                 }
             }
         }
-
         #endregion
     }
 }

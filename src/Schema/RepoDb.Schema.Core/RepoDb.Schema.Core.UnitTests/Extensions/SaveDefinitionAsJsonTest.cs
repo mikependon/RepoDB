@@ -290,7 +290,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var actual = JsonNode.Parse(File.ReadAllText(Filename));
 
             // Assert
-            Reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>()), Times.Never);
+            Reader.Verify(r => r.GetRelatedTables(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),It.IsAny<RelatedTableBehavior>(),It.IsAny<System.Data.IDbTransaction>()), Times.Never);
         }
 
         [TestMethod]
@@ -302,7 +302,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             var connection = new CustomDbConnection();
             Customer.ForeignKeys.Add(new ForeignKeyInfo("FK_Cycle") { ReferencedTable = Invoice.Table });
-            Reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), behavior))
+            Reader.Setup(r => r.GetRelatedTables(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),behavior,It.IsAny<System.Data.IDbTransaction>()))
                 .Returns(new[] { "sales.Invoice", "sales.Customer", "sales.Invoice" });
 
             // Act
@@ -322,7 +322,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             var connection = new CustomDbConnection();
             Customer.ForeignKeys.Add(new ForeignKeyInfo("FK_Cycle") { ReferencedTable = Invoice.Table });
-            Reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), behavior))
+            Reader.Setup(r => r.GetRelatedTables(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),behavior,It.IsAny<System.Data.IDbTransaction>()))
                 .Returns(new[] { "sales.Invoice", "sales.Customer", "sales.Invoice" });
 
             // Act
@@ -342,7 +342,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             var connection = new CustomDbConnection();
             Customer.ForeignKeys.Add(new ForeignKeyInfo("FK_Cycle") { ReferencedTable = Invoice.Table });
-            Reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), behavior))
+            Reader.Setup(r => r.GetRelatedTables(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),behavior,It.IsAny<System.Data.IDbTransaction>()))
                 .Returns(new[] { "sales.Invoice", "sales.Customer", "sales.Invoice" });
 
             // Act
@@ -362,7 +362,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             var connection = new CustomDbConnection();
             Customer.ForeignKeys.Add(new ForeignKeyInfo("FK_Cycle") { ReferencedTable = Invoice.Table });
-            Reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), behavior))
+            Reader.Setup(r => r.GetRelatedTables(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),behavior,It.IsAny<System.Data.IDbTransaction>()))
                 .Returns(new[] { "sales.Invoice", "sales.Customer", "sales.Invoice" });
 
             // Act
@@ -382,7 +382,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             // Setup
             var connection = new CustomDbConnection();
             Customer.ForeignKeys.Add(new ForeignKeyInfo("FK_Cycle") { ReferencedTable = Invoice.Table });
-            Reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), behavior))
+            Reader.Setup(r => r.GetRelatedTables(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),behavior,It.IsAny<System.Data.IDbTransaction>()))
                 .Returns(new[] { "sales.Invoice", "sales.Customer", "sales.Invoice" });
 
             // Act
@@ -390,7 +390,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var actual = JsonNode.Parse(File.ReadAllText(Filename));
 
             // Assert
-            Reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), behavior), Times.Once);
+            Reader.Verify(r => r.GetRelatedTables(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),behavior,It.IsAny<System.Data.IDbTransaction>()), Times.Once);
         }
 
         [TestMethod]
@@ -398,7 +398,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Setup
             var connection = new CustomDbConnection();
-            Reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), RelatedTableBehavior.Children))
+            Reader.Setup(r => r.GetRelatedTables(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),RelatedTableBehavior.Children,It.IsAny<System.Data.IDbTransaction>()))
                 .Returns(new[] { "sales.Invoice" });
 
             // Act
@@ -414,7 +414,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Setup
             var connection = new CustomDbConnection();
-            Reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), RelatedTableBehavior.Children))
+            Reader.Setup(r => r.GetRelatedTables(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),RelatedTableBehavior.Children,It.IsAny<System.Data.IDbTransaction>()))
                 .Returns(new[] { "sales.Invoice" });
 
             // Act
@@ -430,7 +430,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Setup
             var connection = new CustomDbConnection();
-            Reader.Setup(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), RelatedTableBehavior.Children))
+            Reader.Setup(r => r.GetRelatedTables(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),RelatedTableBehavior.Children,It.IsAny<System.Data.IDbTransaction>()))
                 .Returns(new[] { "sales.Invoice" });
 
             // Act
@@ -657,7 +657,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             // Setup
             var connection = new CustomDbConnection();
-            Reader.Setup(r => r.TableExists("missing")).Returns(false);
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"missing",It.IsAny<System.Data.IDbTransaction>())).Returns(false);
 
             // Act
             Action action = () => connection.SaveDefinitionAsJson("missing", Filename);
@@ -688,7 +688,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");
@@ -712,7 +712,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");
@@ -736,7 +736,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");
@@ -760,7 +760,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");
@@ -784,7 +784,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");
@@ -808,7 +808,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");
@@ -832,7 +832,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "previous definition");
             SchemaReadContext observed = null;
             var trace = new Mock<ITrace>().Object;
-            Reader.Setup(r => r.TableExists("sales.Invoice")).Returns(() =>
+            Reader.Setup(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>())).Returns(() =>
             {
                 observed = SchemaReadContext.Current;
                 throw new InvalidOperationException("catalog failed");

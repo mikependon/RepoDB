@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -17,6 +16,9 @@ using RepoDb.Schema;
 
 namespace RepoDb.Data.Vertica.IntegrationTests
 {
+    /// <summary>
+    /// Contains the helper behavior.
+    /// </summary>
     public static class Helper
     {
         /// <summary>
@@ -27,10 +29,11 @@ namespace RepoDb.Data.Vertica.IntegrationTests
         public static string Qualify(string connectionString,
             string commandText)
         {
-            var qualified = commandText.Replace("\"Sales\".", "\"" + (connectionString == Database.ConnectionStringForSource ? Database.SourceSalesName : Database.TargetSalesName) + "\".");
-
+            var qualified = commandText.Replace("\"Sales\".",
+                "\"" + (connectionString == Database.ConnectionStringForSource ? Database.SourceSalesName : Database.TargetSalesName) + "\".");
             // The terminator of the statement is not accepted
-            return qualified.TrimStart().StartsWith("BEGIN", StringComparison.OrdinalIgnoreCase) ? qualified : qualified.Trim().TrimEnd(';');
+            return qualified.TrimStart().StartsWith("BEGIN",
+                StringComparison.OrdinalIgnoreCase) ? qualified : qualified.Trim().TrimEnd(';');
         }
 
         /// <summary>
@@ -46,7 +49,8 @@ namespace RepoDb.Data.Vertica.IntegrationTests
             using (var connection = new VerticaConnection(connectionString).EnsureOpen())
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = Qualify(connectionString, commandText);
+                command.CommandText = Qualify(connectionString,
+                    commandText);
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -56,10 +60,12 @@ namespace RepoDb.Data.Vertica.IntegrationTests
                         {
                             row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
                         }
+
                         rows.Add(row);
                     }
                 }
             }
+
             return rows;
         }
 
@@ -71,8 +77,8 @@ namespace RepoDb.Data.Vertica.IntegrationTests
         /// <param name="where">The filter of the rows, without the <c>WHERE</c> keyword.</param>
         public static List<Dictionary<string, object>> SourceRows(string table,
             string orderBy,
-            string where = null) =>
-            Read(Database.ConnectionStringForSource, $"SELECT * FROM {table}{(where == null ? string.Empty : " WHERE " + where)} ORDER BY {orderBy}");
+            string where = null) => Read(Database.ConnectionStringForSource,
+            $"SELECT * FROM {table}{(where == null ? string.Empty : " WHERE " + where)} ORDER BY {orderBy}");
 
         /// <summary>
         /// Reads the rows of the table from the target database.
@@ -82,22 +88,22 @@ namespace RepoDb.Data.Vertica.IntegrationTests
         /// <param name="where">The filter of the rows, without the <c>WHERE</c> keyword.</param>
         public static List<Dictionary<string, object>> TargetRows(string table,
             string orderBy,
-            string where = null) =>
-            Read(Database.ConnectionStringForTarget, $"SELECT * FROM {table}{(where == null ? string.Empty : " WHERE " + where)} ORDER BY {orderBy}");
+            string where = null) => Read(Database.ConnectionStringForTarget,
+            $"SELECT * FROM {table}{(where == null ? string.Empty : " WHERE " + where)} ORDER BY {orderBy}");
 
         /// <summary>
         /// Counts the rows of the table in the source database.
         /// </summary>
         public static int SourceCount(string table,
-            string where = null) =>
-            Convert.ToInt32(Read(Database.ConnectionStringForSource, $"SELECT COUNT(*) AS \"Count\" FROM {table}{(where == null ? string.Empty : " WHERE " + where)}")[0]["Count"]);
+            string where = null) => Convert.ToInt32(Read(Database.ConnectionStringForSource,
+                $"SELECT COUNT(*) AS \"Count\" FROM {table}{(where == null ? string.Empty : " WHERE " + where)}")[0]["Count"]);
 
         /// <summary>
         /// Counts the rows of the table in the target database.
         /// </summary>
         public static int TargetCount(string table,
-            string where = null) =>
-            Convert.ToInt32(Read(Database.ConnectionStringForTarget, $"SELECT COUNT(*) AS \"Count\" FROM {table}{(where == null ? string.Empty : " WHERE " + where)}")[0]["Count"]);
+            string where = null) => Convert.ToInt32(Read(Database.ConnectionStringForTarget,
+                $"SELECT COUNT(*) AS \"Count\" FROM {table}{(where == null ? string.Empty : " WHERE " + where)}")[0]["Count"]);
 
         /// <summary>
         /// Checks whether the table exists in the target database.
@@ -107,25 +113,27 @@ namespace RepoDb.Data.Vertica.IntegrationTests
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForTarget))
             {
-                return new VerticaSchemaReader(connection).TableExists(tableName.StartsWith("Sales.", StringComparison.Ordinal) ? Database.TargetSalesName + tableName.Substring("Sales".Length) : tableName);
+                return new VerticaSchemaReader().TableExists(connection,
+                    tableName.StartsWith("Sales.",
+                        StringComparison.Ordinal) ? Database.TargetSalesName + tableName.Substring("Sales".Length) : tableName,
+                    transaction: null);
             }
         }
 
         /// <summary>
         /// Gets the names of the (user) tables of the target database, in the <c>[schema].[table]</c> form, in alphabetical order.
         /// </summary>
-        public static List<string> TargetTables() =>
-            Read(Database.ConnectionStringForTarget, "SELECT CASE WHEN table_schema = '" + Database.TargetName + "' THEN '\"' || table_name || '\"' ELSE '\"Sal' || 'es\".\"' || table_name || '\"' END AS \"Name\" FROM v_catalog.tables WHERE table_schema IN ('" + Database.TargetName + "', '" + Database.TargetSalesName + "')")
-                .Select(row => (string)row["Name"])
-                .OrderBy(name => name.Replace("\"", string.Empty), StringComparer.Ordinal)
-                .ToList();
+        public static List<string> TargetTables() => Read(Database.ConnectionStringForTarget,
+            "SELECT CASE WHEN table_schema = '" + Database.TargetName + "' THEN '\"' || table_name || '\"' ELSE '\"Sal' || 'es\".\"' || table_name || '\"' END AS \"Name\" FROM v_catalog.tables WHERE table_schema IN ('" + Database.TargetName + "', '" + Database.TargetSalesName + "')").Select(row => (string)row["Name"]).OrderBy(name => name.Replace("\"",
+                string.Empty),
+            StringComparer.Ordinal).ToList();
 
         /// <summary>
         /// Maps the schema reader of the source connection, which the copy of the tables that are related to the requested table needs.
         /// </summary>
         /// <param name="source">The source connection.</param>
-        public static void MapSchemaReader(VerticaConnection source) =>
-            SchemaReaderMapper.Add<VerticaConnection>(new VerticaSchemaReader(source), true);
+        public static void MapSchemaReader(VerticaConnection source) => SchemaReaderMapper.Add<VerticaConnection>(new VerticaSchemaReader(),
+            true);
 
         /// <summary>
         /// Creates the tables (without their rows) in the target database, with the schema that they have in the source database.
@@ -138,10 +146,12 @@ namespace RepoDb.Data.Vertica.IntegrationTests
             using (var source = new VerticaConnection(Database.ConnectionStringForSource))
             using (var target = new VerticaConnection(Database.ConnectionStringForTarget))
             {
-                var reader = new VerticaSchemaReader(source);
+                var reader = new VerticaSchemaReader();
                 foreach (var tableName in tableNames)
                 {
-                    foreach (var statement in composer.ComposeSchema(reader.GetTableSchema(tableName)))
+                    foreach (var statement in composer.ComposeSchema(reader.GetTableSchema(source,
+                            tableName,
+                            transaction: null)))
                     {
                         target.ExecuteNonQuery(statement);
                     }
@@ -159,8 +169,7 @@ namespace RepoDb.Data.Vertica.IntegrationTests
         public static int TargetOrphans(string childTable,
             string childColumn,
             string parentTable,
-            string parentColumn) =>
-            Convert.ToInt32(Read(Database.ConnectionStringForTarget,
+            string parentColumn) => Convert.ToInt32(Read(Database.ConnectionStringForTarget,
                 $"SELECT COUNT(*) AS \"Count\" FROM {childTable} c LEFT JOIN {parentTable} p ON c.{childColumn} = p.{parentColumn} WHERE c.{childColumn} IS NOT NULL AND p.{parentColumn} IS NULL")[0]["Count"]);
 
         /// <summary>
@@ -170,7 +179,8 @@ namespace RepoDb.Data.Vertica.IntegrationTests
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForSource))
             {
-                connection.ExecuteNonQuery(Qualify(Database.ConnectionStringForSource, commandText));
+                connection.ExecuteNonQuery(Qualify(Database.ConnectionStringForSource,
+                        commandText));
             }
         }
 
@@ -181,7 +191,8 @@ namespace RepoDb.Data.Vertica.IntegrationTests
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForTarget))
             {
-                connection.ExecuteNonQuery(Qualify(Database.ConnectionStringForTarget, commandText));
+                connection.ExecuteNonQuery(Qualify(Database.ConnectionStringForTarget,
+                        commandText));
             }
         }
 
@@ -195,34 +206,54 @@ namespace RepoDb.Data.Vertica.IntegrationTests
             IList<Dictionary<string, object>> actual,
             params string[] columns)
         {
-            Assert.AreEqual(expected.Count, actual.Count, "The number of rows is different.");
+            Assert.AreEqual(expected.Count,
+                actual.Count,
+                "The number of rows is different.");
             for (var i = 0; i < expected.Count; i++)
             {
                 foreach (var column in columns.Length > 0 ? columns : expected[i].Keys.ToArray())
                 {
-                    Assert.IsTrue(actual[i].ContainsKey(column), $"The column '{column}' does not exist in the row {i}.");
-                    AssertValuesEqual(expected[i][column], actual[i][column], $"Row {i}, column '{column}'");
+                    Assert.IsTrue(actual[i].ContainsKey(column),
+                        $"The column '{column}' does not exist in the row {i}.");
+                    AssertValuesEqual(expected[i][column],
+                        actual[i][column],
+                        $"Row {i}, column '{column}'");
                 }
             }
         }
 
+        /// <summary>
+        /// Performs assert values equal.
+        /// </summary>
+        /// <param name="expected">The expected.</param>
+        /// <param name="actual">The actual.</param>
+        /// <param name="message">The message.</param>
         private static void AssertValuesEqual(object expected,
             object actual,
             string message)
         {
             if (expected is byte[] expectedBytes)
             {
-                Assert.IsInstanceOfType<byte[]>(actual, message);
-                CollectionAssert.AreEqual(expectedBytes, (byte[])actual, message);
+                Assert.IsInstanceOfType<byte[]>(actual,
+                    message);
+                CollectionAssert.AreEqual(expectedBytes,
+                    (byte[])actual,
+                    message);
                 return;
             }
+
             // TINYINT(1) is read as a boolean, while the columns that are created in the target (TINYINT) are read as numbers
             if (expected is bool expectedBool && actual is sbyte actualSByte)
             {
-                Assert.AreEqual(expectedBool, actualSByte != 0, message);
+                Assert.AreEqual(expectedBool,
+                    actualSByte != 0,
+                    message);
                 return;
             }
-            Assert.AreEqual(expected, actual, message);
+
+            Assert.AreEqual(expected,
+                actual,
+                message);
         }
     }
 }

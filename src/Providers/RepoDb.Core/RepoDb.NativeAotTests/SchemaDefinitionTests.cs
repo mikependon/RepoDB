@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -20,11 +19,20 @@ using RepoDb.Schema.Sqlite.Microsoft;
 
 namespace RepoDb.NativeAotTests
 {
+    /// <summary>
+    /// Contains the program behavior.
+    /// </summary>
     public static partial class Program
     {
+        /// <summary>
+        /// Contains the schema invoice behavior.
+        /// </summary>
         [Map("Invoice")]
         private sealed class SchemaInvoice
         {
+            /// <summary>
+            /// Gets or sets the id.
+            /// </summary>
             public long Id { get; set; }
         }
 
@@ -33,9 +41,11 @@ namespace RepoDb.NativeAotTests
         /// </summary>
         private static async Task TestSchemaDefinitionsAsync()
         {
-            await RunAsync("Schema save/read/copy extensions (sync/async; every relationship behavior)", async () =>
+            await RunAsync("Schema save/read/copy extensions (sync/async; every relationship behavior)",
+                async () =>
             {
-                if (JsonSerializer.IsReflectionEnabledByDefault) throw new Exception("Reflection-based JSON serialization must be disabled.");
+                if (JsonSerializer.IsReflectionEnabledByDefault)
+                    throw new Exception("Reflection-based JSON serialization must be disabled.");
                 using var connection = new SqliteConnection("Data Source=:memory:");
                 await connection.OpenAsync();
                 using (var command = connection.CreateCommand())
@@ -48,23 +58,56 @@ namespace RepoDb.NativeAotTests
                         CREATE INDEX IX_Invoice_Customer ON Invoice(CustomerId);";
                     await command.ExecuteNonQueryAsync();
                 }
-                SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(connection), true);
-                var filename = Path.Combine(Path.GetTempPath(), "repodb-aot-definition-" + Guid.NewGuid().ToString("N"));
+
+                GlobalConfiguration.Setup().UseSqliteSchema();
+                var filename=Path.Combine(Path.GetTempPath(),
+                        "repodb-aot-definition-" + Guid.NewGuid().ToString("N"));
                 try
                 {
-                    SchemaComposerMapper.Add<SqliteConnection>(new SqliteSchemaComposer(), true);
-                    foreach (var behavior in new[] { RelatedTableBehavior.TableOnly, RelatedTableBehavior.Parents,
-                        RelatedTableBehavior.Children, RelatedTableBehavior.ParentsAndChildren })
+                    foreach (var behavior in new[]
                     {
-                        foreach (var format in new[] { "json", "xml", "yaml" })
+                        RelatedTableBehavior.TableOnly,
+                        RelatedTableBehavior.Parents,
+                        RelatedTableBehavior.Children,
+                        RelatedTableBehavior.ParentsAndChildren
+                    }
+
+                    )
+                    {
+                        foreach (var format in new[]
                         {
-                            if (format == "json") connection.SaveDefinitionAsJson("Invoice", filename, behavior);
-                            else if (format == "xml") connection.SaveDefinitionAsXml("Invoice", filename, behavior);
-                            else connection.SaveDefinitionAsYaml("Invoice", filename, behavior);
+                            "json",
+                            "xml",
+                            "yaml"
+                        }
+
+                        )
+                        {
+                            if (format == "json")
+                                connection.SaveDefinitionAsJson("Invoice",
+                                        filename,
+                                        behavior);
+                            else if (format == "xml")
+                                connection.SaveDefinitionAsXml("Invoice",
+                                        filename,
+                                        behavior);
+                            else
+                                connection.SaveDefinitionAsYaml("Invoice",
+                                        filename,
+                                        behavior);
                             var expected = File.ReadAllBytes(filename);
-                            if (format == "json") await connection.SaveDefinitionAsJsonAsync("Invoice", filename, behavior);
-                            else if (format == "xml") await connection.SaveDefinitionAsXmlAsync("Invoice", filename, behavior);
-                            else await connection.SaveDefinitionAsYamlAsync("Invoice", filename, behavior);
+                            if (format == "json")
+                                await connection.SaveDefinitionAsJsonAsync("Invoice",
+                                        filename,
+                                        behavior);
+                            else if (format == "xml")
+                                await connection.SaveDefinitionAsXmlAsync("Invoice",
+                                        filename,
+                                        behavior);
+                            else
+                                await connection.SaveDefinitionAsYamlAsync("Invoice",
+                                        filename,
+                                        behavior);
                             if (!expected.SequenceEqual(File.ReadAllBytes(filename)))
                                 throw new Exception("Async schema definition differs from synchronous output: " + format + "/" + behavior);
                             SchemaDefinitionInfo synchronous;
@@ -84,16 +127,14 @@ namespace RepoDb.NativeAotTests
                                 synchronous = connection.ReadDefinitionFromYaml(filename);
                                 asynchronous = await connection.ReadDefinitionFromYamlAsync(filename);
                             }
-                            var count = behavior == RelatedTableBehavior.TableOnly ? 1
-                                : behavior == RelatedTableBehavior.ParentsAndChildren ? 3 : 2;
-                            if (synchronous.Tables.Count != count || asynchronous.Tables.Count != count ||
-                                !System.Text.Json.Nodes.JsonNode.DeepEquals(synchronous.Definition, asynchronous.Definition))
+
+                            var count = behavior == RelatedTableBehavior.TableOnly ? 1 : behavior == RelatedTableBehavior.ParentsAndChildren ? 3 : 2;
+                            if (synchronous.Tables.Count != count || asynchronous.Tables.Count != count || !System.Text.Json.Nodes.JsonNode.DeepEquals(synchronous.Definition,
+                                    asynchronous.Definition))
                                 throw new Exception("Schema readers did not preserve the saved definition.");
                             var invoice = asynchronous.Tables.Single(table => table.Table.Name == "Invoice");
-                            if (invoice.Columns.Count != 4 || invoice.PrimaryKey == null || invoice.Indexes.Count != 1 ||
-                                invoice.CheckConstraints.Count != 1 || invoice.ForeignKeys.Count != (behavior == RelatedTableBehavior.TableOnly ? 0 : 1))
+                            if (invoice.Columns.Count != 4 || invoice.PrimaryKey == null || invoice.Indexes.Count != 1 || invoice.CheckConstraints.Count != 1 || invoice.ForeignKeys.Count != (behavior == RelatedTableBehavior.TableOnly ? 0 : 1))
                                 throw new Exception("Schema readers did not reconstruct the table metadata.");
-
                             using var loadTarget = new SqliteConnection("Data Source=:memory:");
                             await loadTarget.OpenAsync();
                             var callbacks = new System.Collections.Generic.List<CopyTableSchemaResultItem>();
@@ -101,37 +142,47 @@ namespace RepoDb.NativeAotTests
                             LoadDefinitionResult loadedAsync;
                             if (format == "json")
                             {
-                                loaded = loadTarget.LoadDefinitionFromJson(filename, createdCallback: callbacks.Add);
-                                loadedAsync = await loadTarget.LoadDefinitionFromJsonAsync(filename, TableExistsBehavior.Drop);
+                                loaded = loadTarget.LoadDefinitionFromJson(filename,
+                                        createdCallback: callbacks.Add);
+                                loadedAsync = await loadTarget.LoadDefinitionFromJsonAsync(filename,
+                                        TableExistsBehavior.Drop);
                             }
                             else if (format == "xml")
                             {
-                                loaded = loadTarget.LoadDefinitionFromXml(filename, createdCallback: callbacks.Add);
-                                loadedAsync = await loadTarget.LoadDefinitionFromXmlAsync(filename, TableExistsBehavior.Drop);
+                                loaded = loadTarget.LoadDefinitionFromXml(filename,
+                                        createdCallback: callbacks.Add);
+                                loadedAsync = await loadTarget.LoadDefinitionFromXmlAsync(filename,
+                                        TableExistsBehavior.Drop);
                             }
                             else
                             {
-                                loaded = loadTarget.LoadDefinitionFromYaml(filename, createdCallback: callbacks.Add);
-                                loadedAsync = await loadTarget.LoadDefinitionFromYamlAsync(filename, TableExistsBehavior.Drop);
+                                loaded = loadTarget.LoadDefinitionFromYaml(filename,
+                                        createdCallback: callbacks.Add);
+                                loadedAsync = await loadTarget.LoadDefinitionFromYamlAsync(filename,
+                                        TableExistsBehavior.Drop);
                             }
-                            if (loaded.Definition.Tables.Count != count || loaded.CopyResult.Items.Count != count ||
-                                loadedAsync.CopyResult.Items.Count != count || callbacks.Count != count ||
-                                loadedAsync.CopyResult.Errors.Count != 0)
+
+                            if (loaded.Definition.Tables.Count != count || loaded.CopyResult.Items.Count != count || loadedAsync.CopyResult.Items.Count != count || callbacks.Count != count || loadedAsync.CopyResult.Errors.Count != 0)
                                 throw new Exception("Schema file loading did not restore all tables or callbacks.");
                         }
 
-                        SchemaComposerMapper.Add<SqliteConnection>(new SqliteSchemaComposer(), true);
                         using var target = new SqliteConnection("Data Source=:memory:");
                         await target.OpenAsync();
-                        var copy = connection.CopyTableSchemaTo<SchemaInvoice>(target, relationshipBehavior: behavior);
+                        var copy = connection.CopyTableSchemaTo<SchemaInvoice>(target,
+                                relationshipBehavior: behavior);
                         var copyAsync = await connection.CopyTableSchemaToAsync<SchemaInvoice>(target,
-                            tableExistenceBehavior: TableExistsBehavior.Drop, relationshipBehavior: behavior);
+                                tableExistenceBehavior: TableExistsBehavior.Drop,
+                                relationshipBehavior: behavior);
                         if (copy.Errors.Count != 0 || copyAsync.Errors.Count != 0 || copy.Items.Count != copyAsync.Items.Count)
                             throw new Exception("Generic schema copy failed.");
-                        var multiple = connection.CopyTableSchemaTo(new[] { "Invoice" }, target,
-                            tableExistenceBehavior: TableExistsBehavior.Skip, relationshipBehavior: behavior);
-                        var multipleAsync = await connection.CopyTableSchemaToAsync(new[] { "Invoice" }, target,
-                            tableExistenceBehavior: TableExistsBehavior.Skip, relationshipBehavior: behavior);
+                        var multiple = connection.CopyTableSchemaTo(new[] { "Invoice" },
+                                target,
+                                tableExistenceBehavior: TableExistsBehavior.Skip,
+                                relationshipBehavior: behavior);
+                        var multipleAsync = await connection.CopyTableSchemaToAsync(new[] { "Invoice" },
+                                target,
+                                tableExistenceBehavior: TableExistsBehavior.Skip,
+                                relationshipBehavior: behavior);
                         if (multiple.Errors.Count != 0 || multipleAsync.Errors.Count != 0)
                             throw new Exception("Multiple-table schema copy failed.");
                     }
@@ -139,7 +190,8 @@ namespace RepoDb.NativeAotTests
                 finally
                 {
                     SchemaReaderMapper.Remove<SqliteConnection>();
-                    if (File.Exists(filename)) File.Delete(filename);
+                    if (File.Exists(filename))
+                        File.Delete(filename);
                 }
             });
         }

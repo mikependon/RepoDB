@@ -8,6 +8,6 @@
 
 -----
 
-- `OracleSchemaReader` (`ISchemaReader`) reads the schema of a table (columns, identity, virtual columns, primary key, indexes, foreign keys, unique and check constraints) from the `ALL_*` data dictionary views of the connection it is created with. A schema is the owner (user) of the table; a table without a schema belongs to the current schema of the session. A unique index is read as an index, while a unique constraint is read as a constraint.
+- `OracleSchemaReader` (`ISchemaReader`) reads the schema of a table (columns, identity, virtual columns, primary key, indexes, foreign keys, unique and check constraints) from the `ALL_*` data dictionary views using the connection supplied to each operation. A schema is the owner (user) of the table; a table without a schema belongs to the current schema of the session. A unique index is read as an index, while a unique constraint is read as a constraint.
 - `OracleSchemaComposer` (`ISchemaComposer`) composes the SQL statements that create the equivalent objects. Oracle supports only the `CASCADE`, `SET NULL` and `NO ACTION` rules on `DELETE` of a foreign key and has no `UPDATE` rule. A DDL statement is committed by the server, so it can not be rolled back.
-- `GlobalConfiguration.Setup().UseOracleSchema()` (`OracleSchemaGlobalConfiguration`) registers the composer for `OracleConnection`.
+- `GlobalConfiguration.Setup().UseOracleSchema()` (`OracleSchemaGlobalConfiguration`) registers the reader and composer for `OracleConnection`.

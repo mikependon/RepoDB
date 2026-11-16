@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -17,23 +16,36 @@ using RepoDb.Interfaces;
 
 namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
 {
+    /// <summary>
+    /// Contains the save definition test base behavior.
+    /// </summary>
     public abstract class SaveDefinitionTestBase
     {
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the connection.
+        /// </summary>
         protected SqliteConnection Connection { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the filename.
+        /// </summary>
         protected string Filename { get; private set; }
 
         #endregion
 
         #region Initialization and Cleanup
 
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
             GlobalConfiguration.Setup().UseSqliteSchema();
-            Filename = Path.Combine(Path.GetTempPath(), "repodb-live-export-" + Guid.NewGuid().ToString("N"));
+            Filename=Path.Combine(Path.GetTempPath(),
+                "repodb-live-export-" + Guid.NewGuid().ToString("N"));
             Connection = new SqliteConnection("Data Source=:memory:");
             Connection.Open();
             using (var command = Connection.CreateCommand())
@@ -46,55 +58,84 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
                     CREATE INDEX IX_Invoice_Customer ON Invoice(CustomerId);";
                 command.ExecuteNonQuery();
             }
-            SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(Connection), true);
+
+            SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(),
+                true);
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
             SchemaReaderMapper.Remove<SqliteConnection>();
             Connection?.Dispose();
-            if (File.Exists(Filename)) File.Delete(Filename);
+            if (File.Exists(Filename))
+                File.Delete(Filename);
         }
 
         #endregion
 
-        #region Helpers
+        #region Private Methods
 
+        /// <summary>
+        /// Contains the catalog trace behavior.
+        /// </summary>
         protected sealed class CatalogTrace : ITrace
         {
-            #region Properties
+        #region Properties
 
+            /// <summary>
+            /// Gets or sets the after keys.
+            /// </summary>
             internal List<string> AfterKeys { get; } = new List<string>();
-
+            /// <summary>
+            /// Gets or sets the before keys.
+            /// </summary>
             internal List<string> BeforeKeys { get; } = new List<string>();
-
+            /// <summary>
+            /// Gets or sets the timeouts.
+            /// </summary>
             internal List<int?> Timeouts { get; } = new List<int?>();
 
-            #endregion
+        #endregion
 
-            #region Public Methods
+        #region Public Methods
 
+            /// <summary>
+            /// Performs before execution.
+            /// </summary>
+            /// <param name="log">The log.</param>
             public void BeforeExecution(CancellableTraceLog log)
             {
                 BeforeKeys.Add(log.Key);
                 Timeouts.Add(SchemaReadContext.Current?.CommandTimeout);
             }
 
-            public void AfterExecution<TResult>(ResultTraceLog<TResult> log) =>
-                AfterKeys.Add(log.Key);
-
+            /// <summary>
+            /// Performs after execution.
+            /// </summary>
+            /// <param name="log">The log.</param>
+            /// <typeparam name="TResult">The tresult type.</typeparam>
+            public void AfterExecution<TResult>(ResultTraceLog<TResult> log) => AfterKeys.Add(log.Key);
+            /// <summary>
+            /// Performs before execution async.
+            /// </summary>
+            /// <param name="log">The log.</param>
+            /// <param name="cancellationToken">The cancellation token.</param>
             public Task BeforeExecutionAsync(CancellableTraceLog log,
-                CancellationToken cancellationToken = default) =>
-                throw new NotSupportedException();
-
+                CancellationToken cancellationToken = default) => throw new NotSupportedException();
+            /// <summary>
+            /// Performs after execution async.
+            /// </summary>
+            /// <param name="log">The log.</param>
+            /// <param name="cancellationToken">The cancellation token.</param>
+            /// <typeparam name="TResult">The tresult type.</typeparam>
             public Task AfterExecutionAsync<TResult>(ResultTraceLog<TResult> log,
-                CancellationToken cancellationToken = default) =>
-                throw new NotSupportedException();
-
-            #endregion
+                CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        #endregion
         }
-
         #endregion
     }
 }

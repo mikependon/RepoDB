@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -17,6 +16,9 @@ using RepoDb.Schema;
 
 namespace RepoDb.Data.PostgreSql.IntegrationTests
 {
+    /// <summary>
+    /// Contains the helper behavior.
+    /// </summary>
     public static class Helper
     {
         /// <summary>
@@ -42,10 +44,12 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
                         {
                             row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
                         }
+
                         rows.Add(row);
                     }
                 }
             }
+
             return rows;
         }
 
@@ -57,8 +61,8 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
         /// <param name="where">The filter of the rows, without the <c>WHERE</c> keyword.</param>
         public static List<Dictionary<string, object>> SourceRows(string table,
             string orderBy,
-            string where = null) =>
-            Read(Database.ConnectionStringForSource, $"SELECT * FROM {table}{(where == null ? string.Empty : " WHERE " + where)} ORDER BY {orderBy}");
+            string where = null) => Read(Database.ConnectionStringForSource,
+            $"SELECT * FROM {table}{(where == null ? string.Empty : " WHERE " + where)} ORDER BY {orderBy}");
 
         /// <summary>
         /// Reads the rows of the table from the target database.
@@ -68,22 +72,22 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
         /// <param name="where">The filter of the rows, without the <c>WHERE</c> keyword.</param>
         public static List<Dictionary<string, object>> TargetRows(string table,
             string orderBy,
-            string where = null) =>
-            Read(Database.ConnectionStringForTarget, $"SELECT * FROM {table}{(where == null ? string.Empty : " WHERE " + where)} ORDER BY {orderBy}");
+            string where = null) => Read(Database.ConnectionStringForTarget,
+            $"SELECT * FROM {table}{(where == null ? string.Empty : " WHERE " + where)} ORDER BY {orderBy}");
 
         /// <summary>
         /// Counts the rows of the table in the source database.
         /// </summary>
         public static int SourceCount(string table,
-            string where = null) =>
-            Convert.ToInt32(Read(Database.ConnectionStringForSource, $"SELECT COUNT(*) AS \"Count\" FROM {table}{(where == null ? string.Empty : " WHERE " + where)}")[0]["Count"]);
+            string where = null) => Convert.ToInt32(Read(Database.ConnectionStringForSource,
+                $"SELECT COUNT(*) AS \"Count\" FROM {table}{(where == null ? string.Empty : " WHERE " + where)}")[0]["Count"]);
 
         /// <summary>
         /// Counts the rows of the table in the target database.
         /// </summary>
         public static int TargetCount(string table,
-            string where = null) =>
-            Convert.ToInt32(Read(Database.ConnectionStringForTarget, $"SELECT COUNT(*) AS \"Count\" FROM {table}{(where == null ? string.Empty : " WHERE " + where)}")[0]["Count"]);
+            string where = null) => Convert.ToInt32(Read(Database.ConnectionStringForTarget,
+                $"SELECT COUNT(*) AS \"Count\" FROM {table}{(where == null ? string.Empty : " WHERE " + where)}")[0]["Count"]);
 
         /// <summary>
         /// Checks whether the table exists in the target database.
@@ -93,24 +97,24 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
-                return new PostgreSqlSchemaReader(connection).TableExists(tableName);
+                return new PostgreSqlSchemaReader().TableExists(connection,
+                    tableName,
+                    transaction: null);
             }
         }
 
         /// <summary>
         /// Gets the names of the (user) tables of the target database, in the <c>[schema].[table]</c> form, in alphabetical order.
         /// </summary>
-        public static List<string> TargetTables() =>
-            Read(Database.ConnectionStringForTarget, "SELECT '\"' || schemaname || '\".\"' || tablename || '\"' AS \"Name\" FROM pg_tables WHERE schemaname NOT IN ('pg_catalog', 'information_schema') ORDER BY schemaname COLLATE \"C\", tablename COLLATE \"C\"")
-                .Select(row => (string)row["Name"])
-                .ToList();
+        public static List<string> TargetTables() => Read(Database.ConnectionStringForTarget,
+            "SELECT '\"' || schemaname || '\".\"' || tablename || '\"' AS \"Name\" FROM pg_tables WHERE schemaname NOT IN ('pg_catalog', 'information_schema') ORDER BY schemaname COLLATE \"C\", tablename COLLATE \"C\"").Select(row => (string)row["Name"]).ToList();
 
         /// <summary>
         /// Maps the schema reader of the source connection, which the copy of the tables that are related to the requested table needs.
         /// </summary>
         /// <param name="source">The source connection.</param>
-        public static void MapSchemaReader(NpgsqlConnection source) =>
-            SchemaReaderMapper.Add<NpgsqlConnection>(new PostgreSqlSchemaReader(source), true);
+        public static void MapSchemaReader(NpgsqlConnection source) => SchemaReaderMapper.Add<NpgsqlConnection>(new PostgreSqlSchemaReader(),
+            true);
 
         /// <summary>
         /// Creates the tables (without their rows) in the target database, with the schema that they have in the source database.
@@ -123,10 +127,12 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
             using (var source = new NpgsqlConnection(Database.ConnectionStringForSource))
             using (var target = new NpgsqlConnection(Database.ConnectionStringForTarget))
             {
-                var reader = new PostgreSqlSchemaReader(source);
+                var reader = new PostgreSqlSchemaReader();
                 foreach (var tableName in tableNames)
                 {
-                    foreach (var statement in composer.ComposeSchema(reader.GetTableSchema(tableName)))
+                    foreach (var statement in composer.ComposeSchema(reader.GetTableSchema(source,
+                            tableName,
+                            transaction: null)))
                     {
                         target.ExecuteNonQuery(statement);
                     }
@@ -144,8 +150,7 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
         public static int TargetOrphans(string childTable,
             string childColumn,
             string parentTable,
-            string parentColumn) =>
-            Convert.ToInt32(Read(Database.ConnectionStringForTarget,
+            string parentColumn) => Convert.ToInt32(Read(Database.ConnectionStringForTarget,
                 $"SELECT COUNT(*) AS \"Count\" FROM {childTable} c LEFT JOIN {parentTable} p ON c.{childColumn} = p.{parentColumn} WHERE c.{childColumn} IS NOT NULL AND p.{parentColumn} IS NULL")[0]["Count"]);
 
         /// <summary>
@@ -180,28 +185,45 @@ namespace RepoDb.Data.PostgreSql.IntegrationTests
             IList<Dictionary<string, object>> actual,
             params string[] columns)
         {
-            Assert.AreEqual(expected.Count, actual.Count, "The number of rows is different.");
+            Assert.AreEqual(expected.Count,
+                actual.Count,
+                "The number of rows is different.");
             for (var i = 0; i < expected.Count; i++)
             {
                 foreach (var column in columns.Length > 0 ? columns : expected[i].Keys.ToArray())
                 {
-                    Assert.IsTrue(actual[i].ContainsKey(column), $"The column '{column}' does not exist in the row {i}.");
-                    AssertValuesEqual(expected[i][column], actual[i][column], $"Row {i}, column '{column}'");
+                    Assert.IsTrue(actual[i].ContainsKey(column),
+                        $"The column '{column}' does not exist in the row {i}.");
+                    AssertValuesEqual(expected[i][column],
+                        actual[i][column],
+                        $"Row {i}, column '{column}'");
                 }
             }
         }
 
+        /// <summary>
+        /// Performs assert values equal.
+        /// </summary>
+        /// <param name="expected">The expected.</param>
+        /// <param name="actual">The actual.</param>
+        /// <param name="message">The message.</param>
         private static void AssertValuesEqual(object expected,
             object actual,
             string message)
         {
             if (expected is byte[] expectedBytes)
             {
-                Assert.IsInstanceOfType<byte[]>(actual, message);
-                CollectionAssert.AreEqual(expectedBytes, (byte[])actual, message);
+                Assert.IsInstanceOfType<byte[]>(actual,
+                    message);
+                CollectionAssert.AreEqual(expectedBytes,
+                    (byte[])actual,
+                    message);
                 return;
             }
-            Assert.AreEqual(expected, actual, message);
+
+            Assert.AreEqual(expected,
+                actual,
+                message);
         }
     }
 }
