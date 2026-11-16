@@ -30,8 +30,7 @@ namespace RepoDb.Schema.ClickHouse
                 force: true);
             SchemaReaderMapper.Add<ClickHouseConnection>(new ClickHouseSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<ClickHouseConnection>().Provider,
-                ClickHouseSchemaDialect.Instance);
+            SchemaDialectMapper.Add<ClickHouseConnection>(ClickHouseSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

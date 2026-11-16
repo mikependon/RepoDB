@@ -29,8 +29,7 @@ namespace RepoDb.Schema.Sqlite.Ahtola
                 force: true);
             SchemaReaderMapper.Add<SqliteConnection>(new AhtolaSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<SqliteConnection>().Provider,
-                AhtolaSchemaDialect.Instance);
+            SchemaDialectMapper.Add<SqliteConnection>(AhtolaSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

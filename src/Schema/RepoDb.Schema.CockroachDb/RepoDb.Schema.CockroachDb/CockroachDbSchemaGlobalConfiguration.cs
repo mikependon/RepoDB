@@ -29,8 +29,7 @@ namespace RepoDb.Schema.CockroachDb
                 force: true);
             SchemaReaderMapper.Add<CockroachDbConnection>(new CockroachDbSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<CockroachDbConnection>().Provider,
-                CockroachDbSchemaDialect.Instance);
+            SchemaDialectMapper.Add<CockroachDbConnection>(CockroachDbSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

@@ -29,8 +29,7 @@ namespace RepoDb.Schema.Db2
                 force: true);
             SchemaReaderMapper.Add<DB2Connection>(new Db2SchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<DB2Connection>().Provider,
-                Db2SchemaDialect.Instance);
+            SchemaDialectMapper.Add<DB2Connection>(Db2SchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

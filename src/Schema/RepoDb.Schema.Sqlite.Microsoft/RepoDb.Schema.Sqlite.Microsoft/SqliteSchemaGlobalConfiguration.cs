@@ -29,8 +29,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft
                 force: true);
             SchemaReaderMapper.Add<SqliteConnection>(new SqliteSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<SqliteConnection>().Provider,
-                SqliteSchemaDialect.Instance);
+            SchemaDialectMapper.Add<SqliteConnection>(SqliteSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

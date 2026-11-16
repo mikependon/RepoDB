@@ -29,8 +29,7 @@ namespace RepoDb.Schema.SapHana
                 force: true);
             SchemaReaderMapper.Add<HanaConnection>(new SapHanaSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<HanaConnection>().Provider,
-                SapHanaSchemaDialect.Instance);
+            SchemaDialectMapper.Add<HanaConnection>(SapHanaSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

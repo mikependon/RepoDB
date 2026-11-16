@@ -29,8 +29,7 @@ namespace RepoDb.Schema.Vertica
                 force: true);
             SchemaReaderMapper.Add<VerticaConnection>(new VerticaSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<VerticaConnection>().Provider,
-                VerticaSchemaDialect.Instance);
+            SchemaDialectMapper.Add<VerticaConnection>(VerticaSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

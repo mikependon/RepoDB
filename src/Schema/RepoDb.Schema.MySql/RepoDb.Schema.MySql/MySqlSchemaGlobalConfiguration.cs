@@ -29,8 +29,7 @@ namespace RepoDb.Schema.MySql
                 force: true);
             SchemaReaderMapper.Add<MySqlConnection>(new MySqlSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<MySqlConnection>().Provider,
-                MySqlSchemaDialect.Instance);
+            SchemaDialectMapper.Add<MySqlConnection>(MySqlSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

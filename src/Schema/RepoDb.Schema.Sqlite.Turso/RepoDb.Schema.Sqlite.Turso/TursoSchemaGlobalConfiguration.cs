@@ -29,8 +29,7 @@ namespace RepoDb.Schema.Sqlite.Turso
                 force: true);
             SchemaReaderMapper.Add<SqliteConnection>(new TursoSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<SqliteConnection>().Provider,
-                TursoSchemaDialect.Instance);
+            SchemaDialectMapper.Add<SqliteConnection>(TursoSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

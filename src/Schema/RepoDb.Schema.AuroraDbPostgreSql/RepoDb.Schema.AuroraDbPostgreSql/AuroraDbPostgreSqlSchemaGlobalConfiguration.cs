@@ -30,8 +30,7 @@ namespace RepoDb.Schema.AuroraDbPostgreSql
                 force: true);
             SchemaReaderMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<AuroraDbConnection>().Provider,
-                AuroraDbPostgreSqlSchemaDialect.Instance);
+            SchemaDialectMapper.Add<AuroraDbConnection>(AuroraDbPostgreSqlSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

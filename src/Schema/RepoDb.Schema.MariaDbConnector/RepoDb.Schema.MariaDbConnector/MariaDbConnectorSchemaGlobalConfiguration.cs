@@ -29,8 +29,7 @@ namespace RepoDb.Schema.MariaDbConnector
                 force: true);
             SchemaReaderMapper.Add<MariaDbConnection>(new MariaDbConnectorSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<MariaDbConnection>().Provider,
-                MariaDbConnectorSchemaDialect.Instance);
+            SchemaDialectMapper.Add<MariaDbConnection>(MariaDbConnectorSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

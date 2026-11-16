@@ -29,8 +29,7 @@ namespace RepoDb.Schema.DuckDb
                 force: true);
             SchemaReaderMapper.Add<DuckDBConnection>(new DuckDbSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<DuckDBConnection>().Provider,
-                DuckDbSchemaDialect.Instance);
+            SchemaDialectMapper.Add<DuckDBConnection>(DuckDbSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

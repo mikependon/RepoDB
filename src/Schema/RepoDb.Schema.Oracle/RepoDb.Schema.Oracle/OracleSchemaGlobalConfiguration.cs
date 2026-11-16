@@ -29,8 +29,7 @@ namespace RepoDb.Schema.Oracle
                 force: true);
             SchemaReaderMapper.Add<OracleConnection>(new OracleSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<OracleConnection>().Provider,
-                OracleSchemaDialect.Instance);
+            SchemaDialectMapper.Add<OracleConnection>(OracleSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

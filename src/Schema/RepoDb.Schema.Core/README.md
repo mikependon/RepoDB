@@ -27,6 +27,8 @@ This is a breaking change for direct callers and custom `ISchemaReader` implemen
 
 ## Saving table definitions
 
+Provider setup also registers the dialect through its connection type, for example `SchemaDialectMapper.Add<SqlConnection>(SqlServerSchemaDialect.Instance)`. This resolves the provider name from the connection's registered database setting without creating a connection. Provider-name lookup remains available for metadata loaded from saved definitions. Custom registrations require a database setting with a nonblank provider name.
+
 Configure the source provider once, then export a definition:
 
 ```csharp

@@ -29,8 +29,7 @@ namespace RepoDb.Schema.Firebird
                 force: true);
             SchemaReaderMapper.Add<FbConnection>(new FirebirdSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<FbConnection>().Provider,
-                FirebirdSchemaDialect.Instance);
+            SchemaDialectMapper.Add<FbConnection>(FirebirdSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

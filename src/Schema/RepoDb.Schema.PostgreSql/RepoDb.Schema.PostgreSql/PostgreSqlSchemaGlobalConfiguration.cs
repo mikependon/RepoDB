@@ -29,8 +29,7 @@ namespace RepoDb.Schema.PostgreSql
                 force: true);
             SchemaReaderMapper.Add<NpgsqlConnection>(new PostgreSqlSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<NpgsqlConnection>().Provider,
-                PostgreSqlSchemaDialect.Instance);
+            SchemaDialectMapper.Add<NpgsqlConnection>(PostgreSqlSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion

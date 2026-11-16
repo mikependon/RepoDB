@@ -30,8 +30,7 @@ namespace RepoDb.Schema.AuroraDbMySqlConnector
                 force: true);
             SchemaReaderMapper.Add<AuroraDbConnection>(new AuroraDbMySqlConnectorSchemaReader(),
                 force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<AuroraDbConnection>().Provider,
-                AuroraDbMySqlConnectorSchemaDialect.Instance);
+            SchemaDialectMapper.Add<AuroraDbConnection>(AuroraDbMySqlConnectorSchemaDialect.Instance);
             return globalConfiguration;
         }
         #endregion
