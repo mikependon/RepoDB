@@ -114,8 +114,14 @@ internal static class InspectionTests
     /// </summary>
     private static void HeadReturnsFirstRows()
     {
-        var result = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var result = table
             .Head(2);
+
+        // Assert
         Check(result.Rows.Count == 2 && (int)result.Rows[0][0] == 1);
     }
 
@@ -124,8 +130,14 @@ internal static class InspectionTests
     /// </summary>
     private static void TailReturnsLastRows()
     {
-        var result = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var result = table
             .Tail(2);
+
+        // Assert
         Check((int)result.Rows[0][0] == 3 && (int)result.Rows[1][0] == 4);
     }
 
@@ -134,14 +146,23 @@ internal static class InspectionTests
     /// </summary>
     private static void SelectionHandlesBoundaries()
     {
+        // Setup
         var table = CreateTable();
-        Check(table
-            .Head(0).Rows.Count == 0 && table
-            .Tail(99).Rows.Count == 4);
-        Throws<ArgumentOutOfRangeException>(() => table
-            .Head(-1));
-        Throws<ArgumentOutOfRangeException>(() => table
-            .Tail(-1));
+
+        // Act
+        var head = table
+            .Head(0);
+        var tail = table
+            .Tail(99);
+        Action negativeHead = () => table
+            .Head(-1);
+        Action negativeTail = () => table
+            .Tail(-1);
+
+        // Assert
+        Check(head.Rows.Count == 0 && tail.Rows.Count == 4);
+        Throws<ArgumentOutOfRangeException>(negativeHead);
+        Throws<ArgumentOutOfRangeException>(negativeTail);
     }
 
     /// <summary>
@@ -149,11 +170,16 @@ internal static class InspectionTests
     /// </summary>
     private static void SelectionPreservesSchema()
     {
+        // Setup
         var table = CreateTable();
         table.Columns[0].Caption = "Identifier";
         table.PrimaryKey = new[] { table.Columns[0] };
+
+        // Act
         var result = table
             .Head(0);
+
+        // Assert
         Check(result.PrimaryKey.Length == 1 && result.Columns[0].Caption is "Identifier");
     }
 
@@ -162,10 +188,15 @@ internal static class InspectionTests
     /// </summary>
     private static void SelectionDoesNotMutateSource()
     {
+        // Setup
         var table = CreateTable();
+
+        // Act
         var result = table
             .Head();
         result.Rows[0][0] = 99;
+
+        // Assert
         Check(!ReferenceEquals(table,
             result) && (int)table.Rows[0][0] == 1);
     }
@@ -175,11 +206,16 @@ internal static class InspectionTests
     /// </summary>
     private static void SelectionPreservesRowStates()
     {
+        // Setup
         var table = CreateTable();
         table.AcceptChanges();
         table.Rows[0][0] = 10;
+
+        // Act
         var row = table
             .Head(1).Rows[0];
+
+        // Assert
         Check(row.RowState == DataRowState.Modified && (int)row[0, DataRowVersion.Original] == 1);
     }
 
@@ -191,12 +227,17 @@ internal static class InspectionTests
         Justification = "The constant expression uses only built-in integer arithmetic without reflected members.")]
     private static void SelectionPreservesExpressions()
     {
+        // Setup
         var table = CreateTable();
         table.Columns.Add("Double",
             typeof(int),
             "Id * 2");
+
+        // Act
         var result = table
             .Head(1);
+
+        // Assert
         Check(result.Columns["Double"]!.Expression is "Id * 2" && (int)result.Rows[0]["Double"] == 2);
     }
 
@@ -205,7 +246,10 @@ internal static class InspectionTests
     /// </summary>
     private static void SampleIsReproducible()
     {
+        // Setup
         var table = CreateTable();
+
+        // Act
         var first = table
             .Sample(3,
             42).Rows
@@ -216,6 +260,8 @@ internal static class InspectionTests
             42).Rows
                 .Cast<DataRow>()
                 .Select(row => row[0]);
+
+        // Assert
         Check(first
             .SequenceEqual(second));
     }
@@ -225,9 +271,15 @@ internal static class InspectionTests
     /// </summary>
     private static void SampleHasNoReplacement()
     {
-        var result = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var result = table
             .Sample(4,
             7);
+
+        // Assert
         Check(result
             .NUnique("Id") == 4);
     }
@@ -237,13 +289,21 @@ internal static class InspectionTests
     /// </summary>
     private static void SampleHandlesBoundaries()
     {
+        // Setup
         var table = CreateTable();
-        Check(table
-            .Sample(0).Rows.Count == 0);
-        Throws<ArgumentOutOfRangeException>(() => table
-            .Sample(-1));
-        Throws<ArgumentOutOfRangeException>(() => table
-            .Sample(5));
+
+        // Act
+        var result = table
+            .Sample(0);
+        Action negativeCount = () => table
+            .Sample(-1);
+        Action oversizedCount = () => table
+            .Sample(5);
+
+        // Assert
+        Check(result.Rows.Count == 0);
+        Throws<ArgumentOutOfRangeException>(negativeCount);
+        Throws<ArgumentOutOfRangeException>(oversizedCount);
     }
 
     /// <summary>
@@ -251,11 +311,16 @@ internal static class InspectionTests
     /// </summary>
     private static void SampleDoesNotMutateSource()
     {
+        // Setup
         var table = CreateTable();
+
+        // Act
         var result = table
             .Sample(4,
             42);
         result.Rows[0][0] = 99;
+
+        // Assert
         Check(table.Rows
             .Cast<DataRow>()
             .Select(row => (int)row[0])
@@ -267,11 +332,18 @@ internal static class InspectionTests
     /// </summary>
     private static void EmptySelectionsPreserveColumns()
     {
+        // Setup
         var table = CreateTable()
             .Head(0);
-        Check(table
-            .Tail().Columns.Count == 2 && table
-            .Sample(0).Columns.Count == 2);
+
+        // Act
+        var tail = table
+            .Tail();
+        var sample = table
+            .Sample(0);
+
+        // Assert
+        Check(tail.Columns.Count == 2 && sample.Columns.Count == 2);
     }
 
     /// <summary>
@@ -279,9 +351,15 @@ internal static class InspectionTests
     /// </summary>
     private static void ShapeReturnsDimensions()
     {
-        Check(CreateTable()
-            .Shape() == (4,
-            2));
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var result = table
+            .Shape();
+
+        // Assert
+        Check(result == (4, 2));
     }
 
     /// <summary>
@@ -289,18 +367,29 @@ internal static class InspectionTests
     /// </summary>
     private static void DeletedRowsAreExcluded()
     {
+        // Setup
         var table = CreateTable();
         table.AcceptChanges();
         table.Rows[0].Delete();
-        Check(table
-            .Shape().Rows == 3 && table
-            .Head().Rows.Count == 3);
-        Check(table
-            .Info().RowCount == 3 && table
-            .Describe()[0].Count == 3);
-        Check(table
-            .NUnique("Id") == 3 && table
-            .MemoryUsage() == 16);
+
+        // Act
+        var shape = table
+            .Shape();
+        var head = table
+            .Head();
+        var info = table
+            .Info();
+        var statistics = table
+            .Describe();
+        var distinct = table
+            .NUnique("Id");
+        var memory = table
+            .MemoryUsage();
+
+        // Assert
+        Check(shape.Rows == 3 && head.Rows.Count == 3);
+        Check(info.RowCount == 3 && statistics[0].Count == 3);
+        Check(distinct == 3 && memory == 16);
     }
 
     /// <summary>
@@ -308,8 +397,14 @@ internal static class InspectionTests
     /// </summary>
     private static void InfoDescribesTable()
     {
-        var info = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var info = table
             .Info();
+
+        // Assert
         Check(info.RowCount == 4 && info.Columns.Count == 2);
     }
 
@@ -318,8 +413,14 @@ internal static class InspectionTests
     /// </summary>
     private static void InfoDescribesColumns()
     {
-        var column = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var column = table
             .Info().Columns[1];
+
+        // Assert
         Check(column.Name is "Category" && column.DataType == typeof(string) && column.AllowDBNull);
         Check(column.NullCount == 1 && column.NonNullCount == 3);
     }
@@ -329,10 +430,15 @@ internal static class InspectionTests
     /// </summary>
     private static void InfoIsASnapshot()
     {
+        // Setup
         var table = CreateTable();
+
+        // Act
         var info = table
             .Info();
         table.Clear();
+
+        // Assert
         Check(info.RowCount == 4 && info.Columns[1].NonNullCount == 3);
     }
 
@@ -341,8 +447,14 @@ internal static class InspectionTests
     /// </summary>
     private static void DTypesReturnsDeclaredTypes()
     {
-        var types = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var types = table
             .DTypes();
+
+        // Assert
         Check(types["Id"] == typeof(int) && types["Category"] == typeof(string));
         Throws<NotSupportedException>(() => ((IDictionary<string, Type>)types).Clear());
     }
@@ -352,8 +464,14 @@ internal static class InspectionTests
     /// </summary>
     private static void DescribeReturnsNumericColumns()
     {
-        var result = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var result = table
             .Describe();
+
+        // Assert
         Check(result.Count == 1 && result[0].Name is "Id" && result[0].Count == 4);
     }
 
@@ -362,8 +480,14 @@ internal static class InspectionTests
     /// </summary>
     private static void DescribeComputesMeanAndDeviation()
     {
-        var result = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var result = table
             .Describe()[0];
+
+        // Assert
         Check(result.Mean == 2.5);
         Near(Math.Sqrt(5.0 / 3),
             result.StandardDeviation);
@@ -374,8 +498,14 @@ internal static class InspectionTests
     /// </summary>
     private static void DescribeComputesQuantiles()
     {
-        var result = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var result = table
             .Describe()[0];
+
+        // Assert
         Check(result.Min == 1 && result.Max == 4);
         Check(result.FirstQuartile == 1.75 && result.Median == 2.5 && result.ThirdQuartile == 3.25);
     }
@@ -385,12 +515,17 @@ internal static class InspectionTests
     /// </summary>
     private static void DescribeHandlesEmptyColumns()
     {
+        // Setup
         var table = CreateTable()
             .Head(0);
         table.Rows.Add(DBNull.Value,
             DBNull.Value);
+
+        // Act
         var result = table
             .Describe()[0];
+
+        // Assert
         Check(result.Count == 0 && result.Mean is null && result.StandardDeviation is null);
         Check(result.Min is null && result.Max is null && result.Median is null);
     }
@@ -400,9 +535,15 @@ internal static class InspectionTests
     /// </summary>
     private static void DescribeHandlesOneValue()
     {
-        var result = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var result = table
             .Head(1)
             .Describe()[0];
+
+        // Assert
         Check(result.Mean == 1 && result.Median == 1 && result.StandardDeviation is null);
     }
 
@@ -411,6 +552,7 @@ internal static class InspectionTests
     /// </summary>
     private static void DescribeHandlesDecimalAndMixedTypes()
     {
+        // Setup
         var table = new DataTable();
         table.Columns.Add("Amount",
             typeof(decimal));
@@ -420,9 +562,13 @@ internal static class InspectionTests
             "text");
         table.Rows.Add(2.5m,
             5);
-        Check(table
-            .Describe().Count == 1 && table
-            .Describe()[0].Mean == 2);
+
+        // Act
+        var result = table
+            .Describe();
+
+        // Assert
+        Check(result.Count == 1 && result[0].Mean == 2);
     }
 
     /// <summary>
@@ -430,15 +576,21 @@ internal static class InspectionTests
     /// </summary>
     private static void DescribeHandlesLargeOffsets()
     {
+        // Setup
         var table = new DataTable();
         table.Columns.Add("Value",
             typeof(double));
         table.Rows.Add(1e12 + 1);
         table.Rows.Add(1e12 + 2);
         table.Rows.Add(1e12 + 3);
+
+        // Act
+        var result = table
+            .Describe()[0];
+
+        // Assert
         Near(1,
-            table
-                .Describe()[0].StandardDeviation);
+            result.StandardDeviation);
     }
 
     /// <summary>
@@ -446,15 +598,23 @@ internal static class InspectionTests
     /// </summary>
     private static void DescribeRejectsNonfiniteValues()
     {
+        // Setup
         var table = new DataTable();
         table.Columns.Add("Value",
             typeof(double));
         table.Rows.Add(double.NaN);
-        Throws<ArgumentException>(() => table
-            .Describe());
-        table.Rows[0][0] = double.PositiveInfinity;
-        Throws<ArgumentException>(() => table
-            .Describe());
+        var infinityTable = table.Copy();
+        infinityTable.Rows[0][0] = double.PositiveInfinity;
+
+        // Act
+        Action describeNaN = () => table
+            .Describe();
+        Action describeInfinity = () => infinityTable
+            .Describe();
+
+        // Assert
+        Throws<ArgumentException>(describeNaN);
+        Throws<ArgumentException>(describeInfinity);
     }
 
     /// <summary>
@@ -462,10 +622,15 @@ internal static class InspectionTests
     /// </summary>
     private static void DescribeSkipsMissingValues()
     {
+        // Setup
         var table = CreateTable();
         table.Rows[0][0] = DBNull.Value;
+
+        // Act
         var result = table
             .Describe()[0];
+
+        // Assert
         Check(result.Count == 3 && result.Mean == 3);
     }
 
@@ -474,13 +639,19 @@ internal static class InspectionTests
     /// </summary>
     private static void DescribeHandlesConstantValues()
     {
+        // Setup
         var table = CreateTable();
         foreach (DataRow row in table.Rows)
         {
             row[0] = 5;
         }
-        Check(table
-            .Describe()[0].StandardDeviation == 0);
+
+        // Act
+        var result = table
+            .Describe()[0];
+
+        // Assert
+        Check(result.StandardDeviation == 0);
     }
 
     /// <summary>
@@ -488,13 +659,19 @@ internal static class InspectionTests
     /// </summary>
     private static void DescribeHandlesUnsignedValues()
     {
+        // Setup
         var table = new DataTable();
         table.Columns.Add("Value",
             typeof(ulong));
         table.Rows.Add(1ul);
         table.Rows.Add(3ul);
-        Check(table
-            .Describe()[0].Mean == 2);
+
+        // Act
+        var result = table
+            .Describe()[0];
+
+        // Assert
+        Check(result.Mean == 2);
     }
 
     /// <summary>
@@ -502,9 +679,15 @@ internal static class InspectionTests
     /// </summary>
     private static void UniquePreservesFirstSeenOrder()
     {
-        var result = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var result = table
             .Unique("Category",
             false);
+
+        // Assert
         Check(result
             .SequenceEqual(new object?[] { "A", "B" }));
     }
@@ -514,8 +697,14 @@ internal static class InspectionTests
     /// </summary>
     private static void UniqueHandlesNulls()
     {
-        var values = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var values = table
             .Unique("Category");
+
+        // Assert
         Check(values.Count == 3 && values[2] is null);
     }
 
@@ -524,11 +713,18 @@ internal static class InspectionTests
     /// </summary>
     private static void NUniqueHandlesNulls()
     {
+        // Setup
         var table = CreateTable();
-        Check(table
-            .NUnique("Category") == 2 && table
+
+        // Act
+        var withoutNulls = table
+            .NUnique("Category");
+        var withNulls = table
             .NUnique("Category",
-            true) == 3);
+                true);
+
+        // Assert
+        Check(withoutNulls == 2 && withNulls == 3);
     }
 
     /// <summary>
@@ -536,8 +732,14 @@ internal static class InspectionTests
     /// </summary>
     private static void ValueCountsReturnsFrequencies()
     {
-        var counts = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var counts = table
             .ValueCounts("Category");
+
+        // Assert
         Check(counts[0].Value is "A" && counts[0].Count == 2);
         Check(counts[1].Value is "B" && counts[1].Count == 1);
     }
@@ -547,9 +749,15 @@ internal static class InspectionTests
     /// </summary>
     private static void ValueCountsHandlesNulls()
     {
-        var counts = CreateTable()
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var counts = table
             .ValueCounts("Category",
             true);
+
+        // Assert
         Check(counts[2].Value is null && counts[2].Count == 1);
     }
 
@@ -558,11 +766,17 @@ internal static class InspectionTests
     /// </summary>
     private static void DistinctUsesClrEquality()
     {
+        // Setup
         var table = CreateTable();
         table.Rows.Add(5,
             "a");
-        Check(table
-            .NUnique("Category") == 3);
+
+        // Act
+        var result = table
+            .NUnique("Category");
+
+        // Assert
+        Check(result == 3);
     }
 
     /// <summary>
@@ -570,13 +784,21 @@ internal static class InspectionTests
     /// </summary>
     private static void DistinctHandlesEmptyColumns()
     {
+        // Setup
         var table = CreateTable()
             .Head(0);
-        Check(table
-            .Unique("Id").Count == 0 && table
-            .NUnique("Id") == 0);
-        Check(table
-            .ValueCounts("Id").Count == 0);
+
+        // Act
+        var unique = table
+            .Unique("Id");
+        var count = table
+            .NUnique("Id");
+        var frequencies = table
+            .ValueCounts("Id");
+
+        // Assert
+        Check(unique.Count == 0 && count == 0);
+        Check(frequencies.Count == 0);
     }
 
     /// <summary>
@@ -584,14 +806,20 @@ internal static class InspectionTests
     /// </summary>
     private static void DistinctHandlesMixedTypes()
     {
+        // Setup
         var table = new DataTable();
         table.Columns.Add("Value",
             typeof(object));
         table.Rows.Add(1);
         table.Rows.Add("1");
         table.Rows.Add(1L);
-        Check(table
-            .NUnique("Value") == 3);
+
+        // Act
+        var result = table
+            .NUnique("Value");
+
+        // Assert
+        Check(result == 3);
     }
 
     /// <summary>
@@ -599,17 +827,27 @@ internal static class InspectionTests
     /// </summary>
     private static void EmptyTablesAreSupported()
     {
+        // Setup
         var table = new DataTable();
-        Check(table
-            .Shape() == (0,
-            0) && table
-                .Info().Columns.Count == 0);
-        Check(table
-            .Describe().Count == 0 && table
-            .MemoryUsage() == 0);
-        Check(table
-            .Head().Rows.Count == 0 && table
-            .Tail().Rows.Count == 0);
+
+        // Act
+        var shape = table
+            .Shape();
+        var info = table
+            .Info();
+        var statistics = table
+            .Describe();
+        var memory = table
+            .MemoryUsage();
+        var head = table
+            .Head();
+        var tail = table
+            .Tail();
+
+        // Assert
+        Check(shape == (0, 0) && info.Columns.Count == 0);
+        Check(statistics.Count == 0 && memory == 0);
+        Check(head.Rows.Count == 0 && tail.Rows.Count == 0);
     }
 
     /// <summary>
@@ -617,8 +855,15 @@ internal static class InspectionTests
     /// </summary>
     private static void MemoryUsageCountsPayload()
     {
-        Check(CreateTable()
-            .MemoryUsage() == 22);
+        // Setup
+        var table = CreateTable();
+
+        // Act
+        var result = table
+            .MemoryUsage();
+
+        // Assert
+        Check(result == 22);
     }
 
     /// <summary>
@@ -626,6 +871,7 @@ internal static class InspectionTests
     /// </summary>
     private static void MemoryUsageHandlesSupportedTypes()
     {
+        // Setup
         var values = new object[] { true, (byte)1, (sbyte)1, 'a', (short)1, (ushort)1,
             1, 1u, 1f, 1L, 1ul, 1d, DateTime.MinValue, TimeSpan.Zero, 1m,
             Guid.Empty, DateTimeOffset.MinValue, new byte[3] };
@@ -636,8 +882,13 @@ internal static class InspectionTests
         {
             table.Rows.Add(value);
         }
-        Check(table
-            .MemoryUsage() == 112);
+
+        // Act
+        var result = table
+            .MemoryUsage();
+
+        // Assert
+        Check(result == 112);
     }
 
     /// <summary>
@@ -645,12 +896,18 @@ internal static class InspectionTests
     /// </summary>
     private static void MemoryUsageHandlesUnknownTypes()
     {
+        // Setup
         var table = new DataTable();
         table.Columns.Add("Value",
             typeof(object));
         table.Rows.Add(new object());
-        Check(table
-            .MemoryUsage() == IntPtr.Size);
+
+        // Act
+        var result = table
+            .MemoryUsage();
+
+        // Assert
+        Check(result == IntPtr.Size);
     }
 
     /// <summary>
@@ -658,13 +915,20 @@ internal static class InspectionTests
     /// </summary>
     private static void ModelsExposeConstructorValues()
     {
-        var column = new ColumnInfo("X",
-            typeof(int),
+        // Setup
+        var name = "X";
+        var type = typeof(int);
+
+        // Act
+        var column = new ColumnInfo(name,
+            type,
             false,
             2,
             3);
         var value = new ValueCount("A",
             4);
+
+        // Assert
         Check(column.Name is "X" && column.DataType == typeof(int) && !column.AllowDBNull);
         Check(column.NullCount == 2 && column.NonNullCount == 3);
         Check(value.Value is "A" && value.Count == 4);
@@ -675,7 +939,10 @@ internal static class InspectionTests
     /// </summary>
     private static void ModelsCopyColumnCollections()
     {
+        // Setup
         var columns = new List<ColumnInfo>();
+
+        // Act
         var info = new TableInfo(7,
             columns);
         columns.Add(new ColumnInfo("X",
@@ -683,6 +950,8 @@ internal static class InspectionTests
             true,
             0,
             7));
+
+        // Assert
         Check(info.RowCount == 7 && info.Columns.Count == 0);
     }
 
@@ -691,13 +960,21 @@ internal static class InspectionTests
     /// </summary>
     private static void NullSelectionTablesAreRejected()
     {
+        // Setup
         DataTable table = null!;
-        Throws<ArgumentNullException>(() => table
-            .Head());
-        Throws<ArgumentNullException>(() => table
-            .Tail());
-        Throws<ArgumentNullException>(() => table
-            .Sample());
+
+        // Act
+        Action head = () => table
+            .Head();
+        Action tail = () => table
+            .Tail();
+        Action sample = () => table
+            .Sample();
+
+        // Assert
+        Throws<ArgumentNullException>(head);
+        Throws<ArgumentNullException>(tail);
+        Throws<ArgumentNullException>(sample);
     }
 
     /// <summary>
@@ -705,13 +982,21 @@ internal static class InspectionTests
     /// </summary>
     private static void NullMetadataTablesAreRejected()
     {
+        // Setup
         DataTable table = null!;
-        Throws<ArgumentNullException>(() => table
-            .Shape());
-        Throws<ArgumentNullException>(() => table
-            .Info());
-        Throws<ArgumentNullException>(() => table
-            .DTypes());
+
+        // Act
+        Action shape = () => table
+            .Shape();
+        Action info = () => table
+            .Info();
+        Action types = () => table
+            .DTypes();
+
+        // Assert
+        Throws<ArgumentNullException>(shape);
+        Throws<ArgumentNullException>(info);
+        Throws<ArgumentNullException>(types);
     }
 
     /// <summary>
@@ -719,11 +1004,18 @@ internal static class InspectionTests
     /// </summary>
     private static void NullStatisticsTablesAreRejected()
     {
+        // Setup
         DataTable table = null!;
-        Throws<ArgumentNullException>(() => table
-            .Describe());
-        Throws<ArgumentNullException>(() => table
-            .MemoryUsage());
+
+        // Act
+        Action describe = () => table
+            .Describe();
+        Action memory = () => table
+            .MemoryUsage();
+
+        // Assert
+        Throws<ArgumentNullException>(describe);
+        Throws<ArgumentNullException>(memory);
     }
 
     /// <summary>
@@ -731,13 +1023,21 @@ internal static class InspectionTests
     /// </summary>
     private static void NullDistinctTablesAreRejected()
     {
+        // Setup
         DataTable table = null!;
-        Throws<ArgumentNullException>(() => table
-            .Unique("X"));
-        Throws<ArgumentNullException>(() => table
-            .NUnique("X"));
-        Throws<ArgumentNullException>(() => table
-            .ValueCounts("X"));
+
+        // Act
+        Action unique = () => table
+            .Unique("X");
+        Action count = () => table
+            .NUnique("X");
+        Action frequencies = () => table
+            .ValueCounts("X");
+
+        // Assert
+        Throws<ArgumentNullException>(unique);
+        Throws<ArgumentNullException>(count);
+        Throws<ArgumentNullException>(frequencies);
     }
 
     /// <summary>
@@ -745,13 +1045,21 @@ internal static class InspectionTests
     /// </summary>
     private static void InvalidColumnsAreRejected()
     {
+        // Setup
         var table = CreateTable();
-        Throws<ArgumentException>(() => table
-            .Unique("Missing"));
-        Throws<ArgumentException>(() => table
-            .NUnique(""));
-        Throws<ArgumentNullException>(() => table
-            .ValueCounts(null!));
+
+        // Act
+        Action missingColumn = () => table
+            .Unique("Missing");
+        Action emptyColumn = () => table
+            .NUnique("");
+        Action nullColumn = () => table
+            .ValueCounts(null!);
+
+        // Assert
+        Throws<ArgumentException>(missingColumn);
+        Throws<ArgumentException>(emptyColumn);
+        Throws<ArgumentNullException>(nullColumn);
     }
 
     /// <summary>

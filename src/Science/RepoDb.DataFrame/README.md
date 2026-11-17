@@ -81,6 +81,24 @@ dotnet run --project src/Science/RepoDb.DataFrame/RepoDb.DataFrame.UnitTests -f 
 dotnet run --project src/Science/RepoDb.DataFrame/RepoDb.DataFrame.UnitTests -f net11.0
 ```
 
+The suite includes negative cases for invalid columns, extreme row limits, insufficient
+sample rows, NaN and infinities, and attempted mutation of read-only results. Boundary tests
+cover deleted-only tables, snapshots, numeric type classification, and raw C# null handling.
+The test assembly has internal visibility to verify helper contracts that normal DataTable
+storage cannot exercise because it normalizes nulls to `DBNull.Value`.
+
+To collect library-only coverage for both target frameworks:
+
+```powershell
+./src/Science/RepoDb.DataFrame/RepoDb.DataFrame.UnitTests/Measure-Coverage.ps1
+```
+
+The script installs `dotnet-coverage` 18.12.0 into `artifacts/Science/tools` if needed, runs
+the tests, and writes Cobertura reports under `artifacts/Science/Coverage`. It fails if
+either framework has less than 100% line or branch coverage or an empty report. Use
+`-NoRestore` when project dependencies have already been restored. Coverage includes
+all library code and excludes the test runner and framework dependencies.
+
 Both projects enable NativeAOT compatibility analysis. To compile and run all tests natively,
 install the platform NativeAOT prerequisites (including the C++ toolchain on Windows), then:
 
