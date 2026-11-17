@@ -3,6 +3,11 @@
   <PropertyGroup Condition="'$(TargetFramework)' != '' And !$(MSBuildProjectName.Contains('Tests')) And !$(MSBuildProjectName.Contains('Benchmarks')) And !$(MSBuildProjectDirectory.Contains('Decommissioned')) And $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0'))">
     <IsAotCompatible Condition="'$(IsAotCompatible)' == ''">true</IsAotCompatible>
   </PropertyGroup>
+  <!-- Every shipping library (not tests, benchmarks or decommissioned) generates its XML documentation, so it is packed into the NuGet package (lib/<tfm>/<assembly>.xml). -->
+  <PropertyGroup Condition="'$(TargetFramework)' != '' And !$(MSBuildProjectName.Contains('Tests')) And !$(MSBuildProjectName.Contains('Benchmarks')) And !$(MSBuildProjectDirectory.Contains('Decommissioned'))">
+    <GenerateDocumentationFile Condition="'$(GenerateDocumentationFile)' == ''">true</GenerateDocumentationFile>
+    <NoWarn Condition="'$(GenerateDocumentationFile)' == 'true'">$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Meziantou.Analyzer" Version="3.0.236">
       <PrivateAssets>all</PrivateAssets>
