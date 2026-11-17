@@ -7,6 +7,17 @@ namespace RepoDb.Schema.UnitTestHelpers
     /// </summary>
     public sealed class CatalogDbSetting : BaseDbSetting
     {
+        #region Constructors
 
+        /// <summary>
+        /// Creates a catalog setting with an optional provider.
+        /// </summary>
+        /// <param name="provider">The catalog provider.</param>
+        public CatalogDbSetting(string provider = null)
+        {
+            Provider = provider;
+        }
+
+        #endregion
     }
 }

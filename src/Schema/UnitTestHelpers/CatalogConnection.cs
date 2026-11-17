@@ -43,7 +43,12 @@ namespace RepoDb.Schema.UnitTestHelpers
         /// <summary>
         /// Gets the current database.
         /// </summary>
-        public override string Database => "Catalog";
+        public override string Database => ConnectionString;
+
+        /// <summary>
+        /// Gets the transaction used by the latest command.
+        /// </summary>
+        public DbTransaction LastTransaction { get; internal set; }
 
         /// <summary>
         /// Gets the data source.
@@ -93,11 +98,12 @@ namespace RepoDb.Schema.UnitTestHelpers
         #region Protected Methods
 
         /// <summary>
-        /// Rejects transactions in the catalog fixture.
+        /// Creates a transaction for the catalog fixture.
         /// </summary>
         /// <param name="isolationLevel">The isolationLevel value.</param>
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel) =>
-            throw new NotSupportedException();
+            new CatalogTransaction(this,
+                isolationLevel);
 
         /// <summary>
         /// Creates a command over the catalog rows.

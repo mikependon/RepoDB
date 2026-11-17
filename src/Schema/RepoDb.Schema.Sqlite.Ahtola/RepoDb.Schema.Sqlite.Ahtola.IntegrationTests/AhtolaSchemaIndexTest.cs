@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -17,9 +16,15 @@ using RepoDb.Schema.Sqlite.Ahtola.IntegrationTests.Setup;
 
 namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
 {
+    /// <summary>
+    /// Contains the ahtola schema index test behavior.
+    /// </summary>
     [TestClass]
     public class AhtolaSchemaIndexTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -27,30 +32,52 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
             Database.Cleanup();
         }
 
-        #region Helpers
+        #region Private Methods
 
-        private static IndexInfo GetIndex(string tableName, string indexName) =>
-            GetIndexes(tableName).Single(i => i.Name == indexName);
+        /// <summary>
+        /// Performs get index.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="indexName">The index name.</param>
+        private static IndexInfo GetIndex(string tableName,
+            string indexName) => GetIndexes(tableName).Single(i => i.Name == indexName);
 
+        /// <summary>
+        /// Performs get indexes.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
         private static List<IndexInfo> GetIndexes(string tableName)
         {
             using (var connection = Database.CreateSource())
             {
-                return new AhtolaSchemaReader(connection).GetIndexes(tableName).ToList();
+                return new AhtolaSchemaReader().GetIndexes(connection,
+                    tableName,
+                    transaction: null).ToList();
             }
         }
 
-        private static UniqueConstraintInfo GetUniqueConstraint(string tableName, string name)
+        /// <summary>
+        /// Performs get unique constraint.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="name">The name.</param>
+        private static UniqueConstraintInfo GetUniqueConstraint(string tableName,
+            string name)
         {
             using (var connection = Database.CreateSource())
             {
-                return new AhtolaSchemaReader(connection).GetUniqueConstraints(tableName).Single(c => c.Name == name);
+                return new AhtolaSchemaReader().GetUniqueConstraints(connection,
+                    tableName,
+                    transaction: null).Single(c => c.Name == name);
             }
         }
 
@@ -58,136 +85,179 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
 
         #region Reader
 
+        /// <summary>
+        /// Verifies ahtola schema reader get indexes of table with multiple indexes.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaReaderGetIndexesOfTableWithMultipleIndexes()
         {
             using (var connection = Database.CreateSource())
             {
                 // Setup
-                var reader = new AhtolaSchemaReader(connection);
-
+                var reader = new AhtolaSchemaReader();
                 // Act
-                var actual = reader.GetIndexes("Product").Select(i => i.Name).OrderBy(n => n, StringComparer.Ordinal).ToArray();
-
+                var actual = reader.GetIndexes(connection,
+                    "Product",
+                    transaction: null).Select(i => i.Name).OrderBy(n => n,
+                    StringComparer.Ordinal).ToArray();
                 // Assert
-                CollectionAssert.AreEqual(
-                    new[] { "CIX_Product_Code", "IX_Product_Active_Name", "IX_Product_Category_Price", "UX_Product_Sku" },
+                CollectionAssert.AreEqual(new[] { "CIX_Product_Code", "IX_Product_Active_Name", "IX_Product_Category_Price", "UX_Product_Sku" },
                     actual);
             }
         }
 
+        /// <summary>
+        /// Verifies ahtola schema reader get indexes of unique index.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaReaderGetIndexesOfUniqueIndex()
         {
             // Act
-            var actual = GetIndex("Product", "CIX_Product_Code");
-
+            var actual = GetIndex("Product",
+                "CIX_Product_Code");
             // Assert
             Assert.IsTrue(actual.IsUnique);
             Assert.IsFalse(actual.IsClustered);
-            CollectionAssert.AreEqual(new[] { "Code" }, actual.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Code" },
+                actual.Columns.ToArray());
             Assert.IsNull(actual.Filter);
         }
 
+        /// <summary>
+        /// Verifies ahtola schema reader get indexes of second unique index.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaReaderGetIndexesOfSecondUniqueIndex()
         {
             // Act
-            var actual = GetIndex("Product", "UX_Product_Sku");
-
+            var actual = GetIndex("Product",
+                "UX_Product_Sku");
             // Assert
             Assert.IsTrue(actual.IsUnique);
             Assert.IsFalse(actual.IsClustered);
-            CollectionAssert.AreEqual(new[] { "Sku" }, actual.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Sku" },
+                actual.Columns.ToArray());
         }
 
+        /// <summary>
+        /// Verifies ahtola schema reader get indexes of multi column index with descending key.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaReaderGetIndexesOfMultiColumnIndexWithDescendingKey()
         {
             // Act
-            var actual = GetIndex("Product", "IX_Product_Category_Price");
-
+            var actual = GetIndex("Product",
+                "IX_Product_Category_Price");
             // Assert
             Assert.IsFalse(actual.IsUnique);
             Assert.IsFalse(actual.IsClustered);
-            CollectionAssert.AreEqual(new[] { "Category", "Price" }, actual.Columns.ToArray());
-            CollectionAssert.AreEqual(new[] { "Price" }, actual.DescendingColumns.ToArray());
-            Assert.AreEqual(0, actual.IncludedColumns.Count);
+            CollectionAssert.AreEqual(new[] { "Category", "Price" },
+                actual.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Price" },
+                actual.DescendingColumns.ToArray());
+            Assert.AreEqual(0,
+                actual.IncludedColumns.Count);
         }
 
+        /// <summary>
+        /// Verifies ahtola schema reader get indexes of filtered index.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaReaderGetIndexesOfFilteredIndex()
         {
             // Act
-            var actual = GetIndex("Product", "IX_Product_Active_Name");
-
+            var actual = GetIndex("Product",
+                "IX_Product_Active_Name");
             // Assert
             Assert.IsNotNull(actual.Filter);
-            StringAssert.Contains(actual.Filter, "IsActive", StringComparison.Ordinal);
-            CollectionAssert.AreEqual(new[] { "Name" }, actual.Columns.ToArray());
+            StringAssert.Contains(actual.Filter,
+                "IsActive",
+                StringComparison.Ordinal);
+            CollectionAssert.AreEqual(new[] { "Name" },
+                actual.Columns.ToArray());
         }
 
+        /// <summary>
+        /// Verifies ahtola schema reader get indexes of index without filter and with descending key.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaReaderGetIndexesOfIndexWithoutFilterAndWithDescendingKey()
         {
             // Act
-            var actual = GetIndex("Person", "IX_Person_Name");
-
+            var actual = GetIndex("Person",
+                "IX_Person_Name");
             // Assert
             Assert.IsNull(actual.Filter);
-            CollectionAssert.AreEqual(new[] { "Name" }, actual.DescendingColumns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Name" },
+                actual.DescendingColumns.ToArray());
             Assert.IsFalse(actual.IsClustered);
         }
 
+        /// <summary>
+        /// Verifies ahtola schema reader get primary key of product.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaReaderGetPrimaryKeyOfProduct()
         {
             using (var connection = Database.CreateSource())
             {
                 // Setup
-                var reader = new AhtolaSchemaReader(connection);
-
+                var reader = new AhtolaSchemaReader();
                 // Act
-                var actual = reader.GetPrimaryKey("Product");
-
+                var actual = reader.GetPrimaryKey(connection,
+                    "Product",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual("PK_Product", actual.Name, StringComparer.Ordinal);
-                CollectionAssert.AreEqual(new[] { "Id" }, actual.Columns.ToArray());
+                Assert.AreEqual("PK_Product",
+                    actual.Name,
+                    StringComparer.Ordinal);
+                CollectionAssert.AreEqual(new[] { "Id" },
+                    actual.Columns.ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies ahtola schema reader get primary key of clustered primary key.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaReaderGetPrimaryKeyOfClusteredPrimaryKey()
         {
             using (var connection = Database.CreateSource())
             {
                 // Setup
-                var reader = new AhtolaSchemaReader(connection);
-
+                var reader = new AhtolaSchemaReader();
                 // Act
-                var actual = reader.GetPrimaryKey("Person");
-
+                var actual = reader.GetPrimaryKey(connection,
+                    "Person",
+                    transaction: null);
                 // Assert
                 Assert.IsTrue(actual.IsClustered);
             }
         }
 
+        /// <summary>
+        /// Verifies ahtola schema reader get indexes async of table with multiple indexes.
+        /// </summary>
         [TestMethod]
         public async Task TestAhtolaSchemaReaderGetIndexesAsyncOfTableWithMultipleIndexes()
         {
             using (var connection = Database.CreateSource())
             {
                 // Setup
-                var reader = new AhtolaSchemaReader(connection);
-
+                var reader = new AhtolaSchemaReader();
                 // Act
-                var actual = (await reader.GetIndexesAsync("Product")).ToList();
-
+                var actual = (await reader.GetIndexesAsync(connection,
+                    "Product",
+                    transaction: null)).ToList();
                 // Assert
-                Assert.AreEqual(4, actual.Count);
+                Assert.AreEqual(4,
+                    actual.Count);
                 var filtered = actual.Single(i => i.Name == "IX_Product_Active_Name");
-                StringAssert.Contains(filtered.Filter, "IsActive", StringComparison.Ordinal);
-                CollectionAssert.AreEqual(new[] { "Price" }, actual.Single(i => i.Name == "IX_Product_Category_Price").DescendingColumns.ToArray());
+                StringAssert.Contains(filtered.Filter,
+                    "IsActive",
+                    StringComparison.Ordinal);
+                CollectionAssert.AreEqual(new[] { "Price" },
+                    actual.Single(i => i.Name == "IX_Product_Category_Price").DescendingColumns.ToArray());
             }
         }
 
@@ -195,104 +265,124 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
 
         #region Composer
 
+        /// <summary>
+        /// Verifies ahtola schema composer composed schema of table with multiple indexes.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaComposerComposedSchemaOfTableWithMultipleIndexes()
         {
             // Act
             Helper.CopyToTarget("Product");
-
             // Assert
             Helper.AssertTargetMatchesSource("Product");
         }
 
+        /// <summary>
+        /// Verifies ahtola schema composer composed schema keeps the primary key and the unique indexes.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaComposerComposedSchemaKeepsThePrimaryKeyAndTheUniqueIndexes()
         {
             // Act
             Helper.CopyToTarget("Product");
-
             // Assert
             var target = Helper.GetTargetSchema("Product");
-            Assert.AreEqual("PK_Product", target.PrimaryKey.Name, StringComparer.Ordinal);
-            CollectionAssert.AreEquivalent(new[] { "CIX_Product_Code", "UX_Product_Sku" }, target.Indexes.Where(i => i.IsUnique).Select(i => i.Name).ToArray());
+            Assert.AreEqual("PK_Product",
+                target.PrimaryKey.Name,
+                StringComparer.Ordinal);
+            CollectionAssert.AreEquivalent(new[] { "CIX_Product_Code", "UX_Product_Sku" },
+                target.Indexes.Where(i => i.IsUnique).Select(i => i.Name).ToArray());
         }
 
+        /// <summary>
+        /// Verifies ahtola schema composer composed schema keeps the filtered index.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaComposerComposedSchemaKeepsTheFilteredIndex()
         {
             // Act
             Helper.CopyToTarget("Product");
-
             // Assert
             var actual = Helper.GetTargetSchema("Product").Indexes.Single(i => i.Name == "IX_Product_Active_Name");
-            Assert.AreEqual(GetIndex("Product", "IX_Product_Active_Name").Filter, actual.Filter, StringComparer.Ordinal);
+            Assert.AreEqual(GetIndex("Product",
+                    "IX_Product_Active_Name").Filter,
+                actual.Filter,
+                StringComparer.Ordinal);
         }
 
+        /// <summary>
+        /// Verifies ahtola schema composer composed schema keeps the descending key.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaComposerComposedSchemaKeepsTheDescendingKey()
         {
             // Act
             Helper.CopyToTarget("Product");
-
             // Assert
             var actual = Helper.GetTargetSchema("Product").Indexes.Single(i => i.Name == "IX_Product_Category_Price");
-            CollectionAssert.AreEqual(new[] { "Category", "Price" }, actual.Columns.ToArray());
-            CollectionAssert.AreEqual(new[] { "Price" }, actual.DescendingColumns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Category", "Price" },
+                actual.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Price" },
+                actual.DescendingColumns.ToArray());
         }
 
+        /// <summary>
+        /// Verifies ahtola schema composer composed unique index enforces the uniqueness.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaComposerComposedUniqueIndexEnforcesTheUniqueness()
         {
             // Setup
             Helper.CopyToTarget("Product");
-
             using (var connection = Database.CreateTarget())
             {
                 connection.ExecuteNonQuery("INSERT INTO [Product] ([Id], [Code], [Sku], [Name], [Category], [Price]) VALUES (1, 'C1', 'S1', 'First', 1, 1.00);");
-
                 // Act/Assert
-                Assert.Throws<SqliteException>(() =>
-                    connection.ExecuteNonQuery("INSERT INTO [Product] ([Id], [Code], [Sku], [Name], [Category], [Price]) VALUES (2, 'C2', 'S1', 'Second', 1, 1.00);"));
-
+                Assert.Throws<SqliteException>(() => connection.ExecuteNonQuery("INSERT INTO [Product] ([Id], [Code], [Sku], [Name], [Category], [Price]) VALUES (2, 'C2', 'S1', 'Second', 1, 1.00);"));
                 // Act/Assert
-                Assert.Throws<SqliteException>(() =>
-                    connection.ExecuteNonQuery("INSERT INTO [Product] ([Id], [Code], [Sku], [Name], [Category], [Price]) VALUES (3, 'C1', 'S3', 'Third', 1, 1.00);"));
+                Assert.Throws<SqliteException>(() => connection.ExecuteNonQuery("INSERT INTO [Product] ([Id], [Code], [Sku], [Name], [Category], [Price]) VALUES (3, 'C1', 'S3', 'Third', 1, 1.00);"));
             }
         }
 
+        /// <summary>
+        /// Verifies ahtola schema composer composed each index on its own.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaComposerComposedEachIndexOnItsOwn()
         {
             // Setup
             var source = Helper.GetSourceSchema("Product");
             var composer = new AhtolaSchemaComposer();
-            var withoutIndexes = new TableSchema(source.Table.Name, source.Table.Schema)
+            var withoutIndexes = new TableSchema(source.Table.Name,
+                source.Table.Schema)
             {
                 PrimaryKey = source.PrimaryKey,
                 Columns = source.Columns,
                 UniqueConstraints = source.UniqueConstraints
             };
-
             // Act
             Helper.ExecuteOnTarget(new[] { composer.ComposeCreateTable(withoutIndexes) });
-            Helper.ExecuteOnTarget(source.Indexes.Select(i => composer.ComposeCreateIndex("Product", i)));
-
+            Helper.ExecuteOnTarget(source.Indexes.Select(i => composer.ComposeCreateIndex("Product",
+                        i)));
             // Assert
             Helper.AssertTargetMatchesSource("Product");
         }
 
+        /// <summary>
+        /// Verifies ahtola schema composer composed schema of tables with indexes.
+        /// </summary>
         [TestMethod]
         public void TestAhtolaSchemaComposerComposedSchemaOfTablesWithIndexes()
         {
             // Act
-            Helper.CopyAllToTarget("Product", "Person", "Country");
-
+            Helper.CopyAllToTarget("Product",
+                "Person",
+                "Country");
             // Assert
             Helper.AssertTargetMatchesSource("Product");
             Helper.AssertTargetMatchesSource("Person");
             Helper.AssertTargetMatchesSource("Country");
         }
-
         #endregion
     }
 }

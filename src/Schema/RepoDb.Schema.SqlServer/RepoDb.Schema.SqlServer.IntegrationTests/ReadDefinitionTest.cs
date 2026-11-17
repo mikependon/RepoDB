@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System.Collections.Generic;
@@ -20,47 +19,100 @@ using RepoDb.Schema.SqlServer.IntegrationTests.Setup;
 
 namespace RepoDb.Schema.SqlServer.IntegrationTests
 {
+    /// <summary>
+    /// Contains the read definition test behavior.
+    /// </summary>
     [TestClass]
     public class ReadDefinitionTest
     {
-        #region Methods
+        #region Public Methods
 
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
-        public void Initialize() =>
-            Database.Initialize();
+        public void Initialize() => Database.Initialize();
 
+        /// <summary>
+        /// Performs cases.
+        /// </summary>
         public static IEnumerable<object[]> Cases()
         {
-            foreach (var format in new[] { "json", "xml", "yaml" })
+            foreach (var format in new[]
+            {
+                "json",
+                "xml",
+                "yaml"
+            }
+
+            )
                 foreach (RelatedTableBehavior behavior in Enum.GetValues(typeof(RelatedTableBehavior)))
-                    foreach (var asynchronous in new[] { false, true })
-                        yield return new object[] { format, behavior, asynchronous };
+                    foreach (var asynchronous in new[]
+                    {
+                        false,
+                        true
+                    }
+
+                    )
+                        yield return new object[]
+                        {
+                            format,
+                            behavior,
+                            asynchronous
+                        };
         }
 
+        /// <summary>
+        /// Verifies saved definition restores provider metadata.
+        /// </summary>
+        /// <param name="format">The format.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="asynchronous">The asynchronous.</param>
         [TestMethod]
         [DynamicData(nameof(Cases))]
-        public async Task SavedDefinitionRestoresProviderMetadata(string format, RelatedTableBehavior behavior, bool asynchronous)
+        public async Task SavedDefinitionRestoresProviderMetadata(string format,
+            RelatedTableBehavior behavior,
+            bool asynchronous)
         {
-            var filename = Path.Combine(Path.GetTempPath(), "repodb-definition-" + Guid.NewGuid().ToString("N"));
+            var filename=Path.Combine(Path.GetTempPath(),
+                "repodb-definition-" + Guid.NewGuid().ToString("N"));
             try
             {
                 using (var connection = new SqlConnection(Database.ConnectionStringForSource))
                 {
                     // Setup: extract real provider metadata and its related tables.
-                    using (Register(connection, new SqlServerSchemaReader(connection)))
+                    using (Register(connection,
+                        new SqlServerSchemaReader()))
                     {
-                        connection.SaveDefinitionAsJson("Sales.Invoice", filename, behavior);
+                        connection.SaveDefinitionAsJson("Sales.Invoice",
+                            filename,
+                            behavior);
                         var expected = JsonNode.Parse(File.ReadAllText(filename));
-                        if (format == "xml") connection.SaveDefinitionAsXml("Sales.Invoice", filename, behavior);
-                        if (format == "yaml") connection.SaveDefinitionAsYaml("Sales.Invoice", filename, behavior);
+                        if (format == "xml")
+                            connection.SaveDefinitionAsXml("Sales.Invoice",
+                                filename,
+                                behavior);
+                        if (format == "yaml")
+                            connection.SaveDefinitionAsYaml("Sales.Invoice",
+                                filename,
+                                behavior);
                         if (asynchronous)
                         {
-                            if (format == "json") await connection.SaveDefinitionAsJsonAsync("Sales.Invoice", filename, behavior);
-                            else if (format == "xml") await connection.SaveDefinitionAsXmlAsync("Sales.Invoice", filename, behavior);
-                            else await connection.SaveDefinitionAsYamlAsync("Sales.Invoice", filename, behavior);
+                            if (format == "json")
+                                await connection.SaveDefinitionAsJsonAsync("Sales.Invoice",
+                                    filename,
+                                    behavior);
+                            else if (format == "xml")
+                                await connection.SaveDefinitionAsXmlAsync("Sales.Invoice",
+                                    filename,
+                                    behavior);
+                            else
+                                await connection.SaveDefinitionAsYamlAsync("Sales.Invoice",
+                                    filename,
+                                    behavior);
                         }
-                        var state = connection.State;
 
+                        var state = connection.State;
                         // Act
                         SchemaDefinitionInfo actual;
                         if (format == "json")
@@ -69,45 +121,70 @@ namespace RepoDb.Schema.SqlServer.IntegrationTests
                             actual = asynchronous ? await connection.ReadDefinitionFromXmlAsync(filename) : connection.ReadDefinitionFromXml(filename);
                         else
                             actual = asynchronous ? await connection.ReadDefinitionFromYamlAsync(filename) : connection.ReadDefinitionFromYaml(filename);
-
                         // Assert: compare all saved fields, including metadata excluded from model equality.
-                        Assert.AreEqual(state, connection.State);
-                        Assert.AreEqual(behavior, actual.RelationshipBehavior);
-                        Assert.IsTrue(JsonNode.DeepEquals(expected, actual.Definition));
-                        var reconstructed = SchemaDefinition.Create(actual.RootTable, actual.Tables, actual.RelationshipBehavior);
-                        Assert.IsTrue(JsonNode.DeepEquals(expected, reconstructed));
+                        Assert.AreEqual(state,
+                            connection.State);
+                        Assert.AreEqual(behavior,
+                            actual.RelationshipBehavior);
+                        Assert.IsTrue(JsonNode.DeepEquals(expected,
+                                actual.Definition));
+                        var reconstructed = SchemaDefinition.Create(actual.RootTable,
+                            actual.Tables,
+                            actual.RelationshipBehavior);
+                        Assert.IsTrue(JsonNode.DeepEquals(expected,
+                                reconstructed));
                     }
                 }
             }
             finally
             {
-                if (File.Exists(filename)) File.Delete(filename);
+                if (File.Exists(filename))
+                    File.Delete(filename);
             }
         }
 
+        /// <summary>
+        /// Performs register.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="reader">The reader.</param>
+        /// <typeparam name="TDbConnection">The tdb connection type.</typeparam>
+        private static IDisposable Register<TDbConnection>(TDbConnection connection,
+            ISchemaReader reader)
+            where TDbConnection : System.Data.IDbConnection => new ReaderScope<TDbConnection>(connection,
+                reader);
 
-        private static IDisposable Register<TDbConnection>(TDbConnection connection, ISchemaReader reader)
-            where TDbConnection : System.Data.IDbConnection =>
-            new ReaderScope<TDbConnection>(connection, reader);
-
-        private sealed class ReaderScope<TDbConnection> : IDisposable
-            where TDbConnection : System.Data.IDbConnection
+        /// <summary>
+        /// Contains the reader scope behavior.
+        /// </summary>
+        private sealed class ReaderScope<TDbConnection> : IDisposable where TDbConnection : System.Data.IDbConnection
         {
             private readonly ISchemaReader previous;
-
-            internal ReaderScope(TDbConnection connection, ISchemaReader reader)
+            /// <summary>
+            /// Creates a ReaderScope instance.
+            /// </summary>
+            /// <param name="connection">The connection.</param>
+            /// <param name="reader">The reader.</param>
+            internal ReaderScope(TDbConnection connection,
+                ISchemaReader reader)
             {
                 previous = SchemaReaderMapper.Get(connection);
-                SchemaReaderMapper.Add<TDbConnection>(reader, true);
+                SchemaReaderMapper.Add<TDbConnection>(reader,
+                    true);
             }
 
+            /// <summary>
+            /// Performs dispose.
+            /// </summary>
             public void Dispose()
             {
-                if (previous == null) SchemaReaderMapper.Remove<TDbConnection>();
-                else SchemaReaderMapper.Add<TDbConnection>(previous, true);
+                if (previous == null)
+                    SchemaReaderMapper.Remove<TDbConnection>();
+                else
+                    SchemaReaderMapper.Add<TDbConnection>(previous,
+                        true);
             }
         }
-
         #endregion
     }
 }

@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,102 +20,205 @@ using System;
 
 namespace RepoDb.Schema.Oracle.IntegrationTests
 {
+    /// <summary>
+    /// Contains the load definition test behavior.
+    /// </summary>
     [TestClass]
     public class LoadDefinitionTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
-        public void Initialize() =>
-            Database.Initialize();
+        public void Initialize() => Database.Initialize();
 
+        /// <summary>
+        /// Performs cases.
+        /// </summary>
         public static IEnumerable<object[]> Cases()
         {
-            foreach (var format in new[] { "json", "xml", "yaml" })
+            foreach (var format in new[]
+            {
+                "json",
+                "xml",
+                "yaml"
+            }
+
+            )
                 foreach (RelatedTableBehavior behavior in Enum.GetValues(typeof(RelatedTableBehavior)))
-                    foreach (var asynchronous in new[] { false, true })
-                        yield return new object[] { format, behavior, asynchronous };
+                    foreach (var asynchronous in new[]
+                    {
+                        false,
+                        true
+                    }
+
+                    )
+                        yield return new object[]
+                        {
+                            format,
+                            behavior,
+                            asynchronous
+                        };
         }
 
+        /// <summary>
+        /// Verifies loads saved relationships into destination.
+        /// </summary>
+        /// <param name="format">The format.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <param name="asynchronous">The asynchronous.</param>
         [TestMethod]
         [DynamicData(nameof(Cases))]
-        public async Task LoadsSavedRelationshipsIntoDestination(string format, RelatedTableBehavior behavior, bool asynchronous)
+        public async Task LoadsSavedRelationshipsIntoDestination(string format,
+            RelatedTableBehavior behavior,
+            bool asynchronous)
         {
-            var filename = Path.Combine(Path.GetTempPath(), "repodb-load-live-" + Guid.NewGuid().ToString("N"));
+            var filename=Path.Combine(Path.GetTempPath(),
+                "repodb-load-live-" + Guid.NewGuid().ToString("N"));
             try
             {
                 Database.Cleanup();
                 using (var connection = new OracleConnection(Database.ConnectionStringForSource))
                 using (var target = new OracleConnection(Database.ConnectionStringForTarget))
                 {
-                    var sourceReader = new OracleSchemaReader(connection);
+                    var sourceReader = new OracleSchemaReader();
                     var previous = SchemaReaderMapper.Get(connection);
-                    Register(connection, sourceReader);
-                    try { connection.SaveDefinitionAsJson("Child", filename, behavior); }
-                    finally { Restore(connection, previous); }
+                    Register(connection,
+                        sourceReader);
+                    try
+                    {
+                        connection.SaveDefinitionAsJson("Child",
+                            filename,
+                            behavior);
+                    }
+                    finally
+                    {
+                        Restore(connection,
+                            previous);
+                    }
 
                     // Restore into the target's current schema rather than the fixture's source owner/database.
                     var document = JsonNode.Parse(File.ReadAllText(filename));
                     ClearSchemas(document);
-                    File.WriteAllText(filename, SchemaDefinitionSerializer.Serialize(document.AsObject(), format));
+                    File.WriteAllText(filename,
+                        SchemaDefinitionSerializer.Serialize(document.AsObject(),
+                            format));
                     var callbacks = new List<CopyTableSchemaResultItem>();
-
-                    var result = await Load(target, filename, format, asynchronous, callbacks.Add);
-                    Assert.IsTrue(JsonNode.DeepEquals(document, result.Definition.Definition));
-                    Assert.AreEqual(document["tables"].AsArray().Count, result.CopyResult.Items.Count);
-                    Assert.AreEqual(result.CopyResult.Items.Count, callbacks.Count);
-                    Assert.AreEqual(0, result.CopyResult.Errors.Count);
-                    var targetReader = new OracleSchemaReader(target);
+                    var result = await Load(target,
+                        filename,
+                        format,
+                        asynchronous,
+                        callbacks.Add);
+                    Assert.IsTrue(JsonNode.DeepEquals(document,
+                            result.Definition.Definition));
+                    Assert.AreEqual(document["tables"].AsArray().Count,
+                        result.CopyResult.Items.Count);
+                    Assert.AreEqual(result.CopyResult.Items.Count,
+                        callbacks.Count);
+                    Assert.AreEqual(0,
+                        result.CopyResult.Errors.Count);
+                    var targetReader = new OracleSchemaReader();
                     foreach (var item in result.CopyResult.Items)
                     {
-                        Assert.AreEqual(TableOutcome.Created, item.Outcome);
+                        Assert.AreEqual(TableOutcome.Created,
+                            item.Outcome);
                         Assert.IsTrue(callbacks.Contains(item));
-                        var actual = asynchronous
-                            ? await targetReader.GetTableSchemaAsync(item.Target.Table.Table.Name)
-                            : targetReader.GetTableSchema(item.Target.Table.Table.Name);
-                        Assert.AreEqual(item.ColumnCount, actual.Columns.Count);
+                        var actual = asynchronous ? await targetReader.GetTableSchemaAsync(target,
+                            item.Target.Table.Table.Name,
+                            transaction: null) : targetReader.GetTableSchema(target,
+                            item.Target.Table.Table.Name,
+                            transaction: null);
+                        Assert.AreEqual(item.ColumnCount,
+                            actual.Columns.Count);
                         Assert.IsNotNull(actual.PrimaryKey);
                     }
-                    var skipped = await Load(target, filename, format, asynchronous, null);
+
+                    var skipped = await Load(target,
+                        filename,
+                        format,
+                        asynchronous,
+                        null);
                     Assert.IsTrue(skipped.CopyResult.Items.All(item => item.Outcome == TableOutcome.Skipped));
                 }
             }
             finally
             {
-                if (File.Exists(filename)) File.Delete(filename);
+                if (File.Exists(filename))
+                    File.Delete(filename);
             }
         }
 
-        private static Task<LoadDefinitionResult> Load(IDbConnection connection, string filename, string format,
-            bool asynchronous, Action<CopyTableSchemaResultItem> callback)
+        /// <summary>
+        /// Performs load.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="filename">The filename.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="asynchronous">The asynchronous.</param>
+        /// <param name="callback">The callback.</param>
+        private static Task<LoadDefinitionResult> Load(IDbConnection connection,
+            string filename,
+            string format,
+            bool asynchronous,
+            Action<CopyTableSchemaResultItem> callback)
         {
-            if (format == "json") return asynchronous ? connection.LoadDefinitionFromJsonAsync(filename, createdCallback: callback)
-                : Task.FromResult(connection.LoadDefinitionFromJson(filename, createdCallback: callback));
-            if (format == "xml") return asynchronous ? connection.LoadDefinitionFromXmlAsync(filename, createdCallback: callback)
-                : Task.FromResult(connection.LoadDefinitionFromXml(filename, createdCallback: callback));
-            return asynchronous ? connection.LoadDefinitionFromYamlAsync(filename, createdCallback: callback)
-                : Task.FromResult(connection.LoadDefinitionFromYaml(filename, createdCallback: callback));
+            if (format == "json")
+                return asynchronous ? connection.LoadDefinitionFromJsonAsync(filename,
+                    createdCallback: callback) : Task.FromResult(connection.LoadDefinitionFromJson(filename,
+                        createdCallback: callback));
+            if (format == "xml")
+                return asynchronous ? connection.LoadDefinitionFromXmlAsync(filename,
+                    createdCallback: callback) : Task.FromResult(connection.LoadDefinitionFromXml(filename,
+                        createdCallback: callback));
+            return asynchronous ? connection.LoadDefinitionFromYamlAsync(filename,
+                createdCallback: callback) : Task.FromResult(connection.LoadDefinitionFromYaml(filename,
+                    createdCallback: callback));
         }
 
+        /// <summary>
+        /// Performs clear schemas.
+        /// </summary>
+        /// <param name="node">The node.</param>
         private static void ClearSchemas(JsonNode node)
         {
             if (node is JsonObject obj)
             {
                 if (obj.ContainsKey("schema") && obj.ContainsKey("name") && obj.ContainsKey("database") && obj.ContainsKey("provider"))
                     obj["schema"] = null;
-                foreach (var value in obj.Select(property => property.Value).ToArray()) ClearSchemas(value);
+                foreach (var value in obj.Select(property => property.Value).ToArray())
+                    ClearSchemas(value);
             }
             else if (node is JsonArray array)
-                foreach (var value in array) ClearSchemas(value);
+                foreach (var value in array)
+                    ClearSchemas(value);
         }
 
-        private static void Register<TConnection>(TConnection connection, ISchemaReader reader)
-            where TConnection : IDbConnection =>
-            SchemaReaderMapper.Add<TConnection>(reader, true);
+        /// <summary>
+        /// Performs register.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="reader">The reader.</param>
+        /// <typeparam name="TConnection">The tconnection type.</typeparam>
+        private static void Register<TConnection>(TConnection connection,
+            ISchemaReader reader)
+            where TConnection : IDbConnection => SchemaReaderMapper.Add<TConnection>(reader,
+                true);
 
-        private static void Restore<TConnection>(TConnection connection, ISchemaReader reader)
+        /// <summary>
+        /// Performs restore.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="reader">The reader.</param>
+        /// <typeparam name="TConnection">The tconnection type.</typeparam>
+        private static void Restore<TConnection>(TConnection connection,
+            ISchemaReader reader)
             where TConnection : IDbConnection
         {
-            if (reader == null) SchemaReaderMapper.Remove<TConnection>();
-            else SchemaReaderMapper.Add<TConnection>(reader, true);
+            if (reader == null)
+                SchemaReaderMapper.Remove<TConnection>();
+            else
+                SchemaReaderMapper.Add<TConnection>(reader,
+                    true);
         }
     }
 }

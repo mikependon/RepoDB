@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -16,14 +15,27 @@ using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.SapHana.IntegrationTests
 {
+    /// <summary>
+    /// Contains the sap hana schema multiple tables test behavior.
+    /// </summary>
     [TestClass]
     public class SapHanaSchemaMultipleTablesTest
     {
         private static readonly string[] CircularTables =
         {
-            "CycleA", "CycleB", "RingX", "RingY", "RingZ", "LoopA", "LoopB", "LoopLeaf"
+            "CycleA",
+            "CycleB",
+            "RingX",
+            "RingY",
+            "RingZ",
+            "LoopA",
+            "LoopB",
+            "LoopLeaf"
         };
 
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -31,31 +43,44 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
             Database.Cleanup();
         }
 
-        #region Helpers
+        #region Private Methods
 
+        /// <summary>
+        /// Performs get source tables.
+        /// </summary>
         private static List<string> GetSourceTables()
         {
             using (var connection = new HanaConnection(Database.ConnectionStringForSource))
             {
-                var reader = new SapHanaSchemaReader(connection);
-                return reader.GetTables().Concat(reader.GetTables(Database.SourceSalesName)).ToList();
+                var reader = new SapHanaSchemaReader();
+                return reader.GetTables(connection,
+                    transaction: null).Concat(reader.GetTables(connection,
+                        Database.SourceSalesName,
+                        transaction: null)).ToList();
             }
         }
 
+        /// <summary>
+        /// Performs get target tables.
+        /// </summary>
         private static List<string> GetTargetTables()
         {
             using (var connection = new HanaConnection(Database.ConnectionStringForTarget))
             {
-                var reader = new SapHanaSchemaReader(connection);
-                return reader.GetTables()
-                    .Concat(reader.GetTables(Database.TargetSalesName).Select(t => Database.SourceSalesName + t.Substring(Database.TargetSalesName.Length)))
-                    .ToList();
+                var reader = new SapHanaSchemaReader();
+                return reader.GetTables(connection,
+                    transaction: null).Concat(reader.GetTables(connection,
+                        Database.TargetSalesName,
+                        transaction: null).Select(t => Database.SourceSalesName + t.Substring(Database.TargetSalesName.Length))).ToList();
             }
         }
 
@@ -63,26 +88,34 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
 
         #region Dependency chain
 
+        /// <summary>
+        /// Verifies sap hana schema multiple tables of dependency chain in any order.
+        /// </summary>
         [TestMethod]
         public void TestSapHanaSchemaMultipleTablesOfDependencyChainInAnyOrder()
         {
             // Act
-            Helper.CopyAllToTarget("GrandChild", "Parent", "Child");
-
+            Helper.CopyAllToTarget("GrandChild",
+                "Parent",
+                "Child");
             // Assert
             Helper.AssertTargetMatchesSource("Parent");
             Helper.AssertTargetMatchesSource("Child");
             Helper.AssertTargetMatchesSource("GrandChild");
         }
 
+        /// <summary>
+        /// Verifies sap hana schema multiple tables of dependency chain in the dependency order.
+        /// </summary>
         [TestMethod]
         public void TestSapHanaSchemaMultipleTablesOfDependencyChainInTheDependencyOrder()
         {
             // Setup
             using (var connection = new HanaConnection(Database.ConnectionStringForSource))
             {
-                var order = Helper.GetTableNames(new SapHanaSchemaReader(connection).GetDependencyOrder(new[] { "GrandChild", "Parent", "Child" }));
-
+                var order = Helper.GetTableNames(new SapHanaSchemaReader().GetDependencyOrder(connection,
+                        new[] { "GrandChild", "Parent", "Child" },
+                        transaction: null));
                 // Act
                 Helper.CopyToTarget(order);
             }
@@ -93,17 +126,28 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
             Helper.AssertTargetMatchesSource("GrandChild");
         }
 
+        /// <summary>
+        /// Verifies sap hana schema multiple tables of dependency chain keeps the foreign keys.
+        /// </summary>
         [TestMethod]
         public void TestSapHanaSchemaMultipleTablesOfDependencyChainKeepsTheForeignKeys()
         {
             // Act
-            Helper.CopyAllToTarget("Parent", "Child", "GrandChild");
-
+            Helper.CopyAllToTarget("Parent",
+                "Child",
+                "GrandChild");
             // Assert
-            Assert.AreEqual(new TableInfo("Parent", null), Helper.GetTargetSchema("Child").ForeignKeys.Single().ReferencedTable);
-            Assert.AreEqual(new TableInfo("Child", null), Helper.GetTargetSchema("GrandChild").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("Parent",
+                    null),
+                Helper.GetTargetSchema("Child").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("Child",
+                    null),
+                Helper.GetTargetSchema("GrandChild").ForeignKeys.Single().ReferencedTable);
         }
 
+        /// <summary>
+        /// Verifies throw exception on multiple tables if the referenced table is not part of them.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnMultipleTablesIfTheReferencedTableIsNotPartOfThem()
         {
@@ -115,100 +159,139 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
 
         #region Circular references
 
+        /// <summary>
+        /// Verifies sap hana schema multiple tables with circular references.
+        /// </summary>
         [TestMethod]
         public void TestSapHanaSchemaMultipleTablesWithCircularReferences()
         {
             // Act
-            Helper.CopyAllToTarget("CycleA", "CycleB");
-
+            Helper.CopyAllToTarget("CycleA",
+                "CycleB");
             // Assert
             Helper.AssertTargetMatchesSource("CycleA");
             Helper.AssertTargetMatchesSource("CycleB");
         }
 
+        /// <summary>
+        /// Verifies sap hana schema multiple tables with circular references keeps both foreign keys.
+        /// </summary>
         [TestMethod]
         public void TestSapHanaSchemaMultipleTablesWithCircularReferencesKeepsBothForeignKeys()
         {
             // Act
-            Helper.CopyAllToTarget("CycleB", "CycleA");
-
+            Helper.CopyAllToTarget("CycleB",
+                "CycleA");
             // Assert
-            Assert.AreEqual(new TableInfo("CycleB", null), Helper.GetTargetSchema("CycleA").ForeignKeys.Single().ReferencedTable);
-            Assert.AreEqual(new TableInfo("CycleA", null), Helper.GetTargetSchema("CycleB").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("CycleB",
+                    null),
+                Helper.GetTargetSchema("CycleA").ForeignKeys.Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("CycleA",
+                    null),
+                Helper.GetTargetSchema("CycleB").ForeignKeys.Single().ReferencedTable);
         }
 
+        /// <summary>
+        /// Verifies throw exception on tables with circular references if they are created one by one.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnTablesWithCircularReferencesIfTheyAreCreatedOneByOne()
         {
             // Act/Assert
-            Assert.Throws<HanaException>(() => Helper.CopyToTarget("CycleA", "CycleB"));
+            Assert.Throws<HanaException>(() => Helper.CopyToTarget("CycleA",
+                    "CycleB"));
         }
 
         #endregion
 
         #region Statements
 
+        /// <summary>
+        /// Verifies sap hana schema multiple tables statements are ordered by kind.
+        /// </summary>
         [TestMethod]
         public void TestSapHanaSchemaMultipleTablesStatementsAreOrderedByKind()
         {
             // Setup
             var schemas = Helper.GetSourceSchemas(GetSourceTables());
-
             // Act
             var statements = new SapHanaSchemaComposer().ComposeSchemas(schemas).ToList();
-
             // Assert
-            var lastTable = statements.FindLastIndex(s => s.StartsWith("CREATE TABLE", StringComparison.Ordinal));
-            var firstIndex = statements.FindIndex(s => s.Contains("INDEX", StringComparison.Ordinal) && s.StartsWith("CREATE", StringComparison.Ordinal));
-            var lastIndex = statements.FindLastIndex(s => s.Contains("INDEX", StringComparison.Ordinal) && s.StartsWith("CREATE", StringComparison.Ordinal));
-            var firstForeignKey = statements.FindIndex(s => s.StartsWith("ALTER TABLE", StringComparison.Ordinal));
+            var lastTable = statements.FindLastIndex(s => s.StartsWith("CREATE TABLE",
+                    StringComparison.Ordinal));
+            var firstIndex = statements.FindIndex(s => s.Contains("INDEX",
+                    StringComparison.Ordinal) && s.StartsWith("CREATE",
+                    StringComparison.Ordinal));
+            var lastIndex = statements.FindLastIndex(s => s.Contains("INDEX",
+                    StringComparison.Ordinal) && s.StartsWith("CREATE",
+                    StringComparison.Ordinal));
+            var firstForeignKey = statements.FindIndex(s => s.StartsWith("ALTER TABLE",
+                    StringComparison.Ordinal));
             Assert.IsTrue(lastTable < firstIndex);
             Assert.IsTrue(lastIndex < firstForeignKey);
-            Assert.AreEqual(schemas.Count, statements.Count(s => s.StartsWith("CREATE TABLE", StringComparison.Ordinal)));
-            Assert.AreEqual(schemas.Sum(s => s.Indexes.Count), statements.Count(s => s.StartsWith("CREATE", StringComparison.Ordinal) && s.Contains("INDEX", StringComparison.Ordinal)));
-            Assert.AreEqual(schemas.Sum(s => s.ForeignKeys.Count), statements.Count(s => s.StartsWith("ALTER TABLE", StringComparison.Ordinal)));
+            Assert.AreEqual(schemas.Count,
+                statements.Count(s => s.StartsWith("CREATE TABLE",
+                        StringComparison.Ordinal)));
+            Assert.AreEqual(schemas.Sum(s => s.Indexes.Count),
+                statements.Count(s => s.StartsWith("CREATE",
+                        StringComparison.Ordinal) && s.Contains("INDEX",
+                        StringComparison.Ordinal)));
+            Assert.AreEqual(schemas.Sum(s => s.ForeignKeys.Count),
+                statements.Count(s => s.StartsWith("ALTER TABLE",
+                        StringComparison.Ordinal)));
         }
 
         #endregion
 
         #region Whole database
 
+        /// <summary>
+        /// Verifies sap hana schema multiple tables of the whole database.
+        /// </summary>
         [TestMethod]
         public void TestSapHanaSchemaMultipleTablesOfTheWholeDatabase()
         {
             // Setup
             var tables = GetSourceTables();
-
             // Act
             Helper.CopyAllToTarget(tables.ToArray());
-
             // Assert
-            CollectionAssert.AreEquivalent(tables, GetTargetTables());
+            CollectionAssert.AreEquivalent(tables,
+                GetTargetTables());
             foreach (var table in tables)
             {
                 Helper.AssertTargetMatchesSource(table);
             }
         }
 
+        /// <summary>
+        /// Verifies sap hana schema multiple tables of the whole database counts the objects.
+        /// </summary>
         [TestMethod]
         public void TestSapHanaSchemaMultipleTablesOfTheWholeDatabaseCountsTheObjects()
         {
             // Setup
             var tables = GetSourceTables();
             var sources = Helper.GetSourceSchemas(tables);
-
             // Act
             Helper.CopyAllToTarget(tables.ToArray());
-
             // Assert
             var copied = tables.Select(Helper.GetTargetSchema).ToList();
-            Assert.AreEqual(sources.Sum(s => s.Columns.Count), copied.Sum(s => s.Columns.Count));
-            Assert.AreEqual(sources.Sum(s => s.Indexes.Count), copied.Sum(s => s.Indexes.Count));
-            Assert.AreEqual(sources.Sum(s => s.ForeignKeys.Count), copied.Sum(s => s.ForeignKeys.Count));
-            Assert.AreEqual(sources.Sum(s => s.UniqueConstraints.Count), copied.Sum(s => s.UniqueConstraints.Count));
-            Assert.AreEqual(sources.Sum(s => s.CheckConstraints.Count), copied.Sum(s => s.CheckConstraints.Count));
+            Assert.AreEqual(sources.Sum(s => s.Columns.Count),
+                copied.Sum(s => s.Columns.Count));
+            Assert.AreEqual(sources.Sum(s => s.Indexes.Count),
+                copied.Sum(s => s.Indexes.Count));
+            Assert.AreEqual(sources.Sum(s => s.ForeignKeys.Count),
+                copied.Sum(s => s.ForeignKeys.Count));
+            Assert.AreEqual(sources.Sum(s => s.UniqueConstraints.Count),
+                copied.Sum(s => s.UniqueConstraints.Count));
+            Assert.AreEqual(sources.Sum(s => s.CheckConstraints.Count),
+                copied.Sum(s => s.CheckConstraints.Count));
         }
 
+        /// <summary>
+        /// Verifies sap hana schema multiple tables of the whole database in the dependency order.
+        /// </summary>
         [TestMethod]
         public void TestSapHanaSchemaMultipleTablesOfTheWholeDatabaseInTheDependencyOrder()
         {
@@ -216,13 +299,12 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
             var tables = GetSourceTables();
             using (var connection = new HanaConnection(Database.ConnectionStringForSource))
             {
-                var order = Helper.GetTableNames(new SapHanaSchemaReader(connection).GetDependencyOrder(tables))
-                    .Where(t => !CircularTables.Contains(t, StringComparer.OrdinalIgnoreCase))
-                    .ToArray();
-
+                var order = Helper.GetTableNames(new SapHanaSchemaReader().GetDependencyOrder(connection,
+                        tables,
+                        transaction: null)).Where(t => !CircularTables.Contains(t,
+                        StringComparer.OrdinalIgnoreCase)).ToArray();
                 // Act
                 Helper.CopyToTarget(order);
-
                 // Assert
                 foreach (var table in order)
                 {
@@ -231,43 +313,57 @@ namespace RepoDb.Schema.SapHana.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sap hana schema multiple tables dependency order puts the referenced tables first.
+        /// </summary>
         [TestMethod]
         public void TestSapHanaSchemaMultipleTablesDependencyOrderPutsTheReferencedTablesFirst()
         {
             // Setup
             var tables = GetSourceTables();
-            var schemas = Helper.GetSourceSchemas(tables).ToDictionary(s => Helper.FormatName(s.Table.Schema, s.Table.Name), StringComparer.OrdinalIgnoreCase);
-
+            var schemas = Helper.GetSourceSchemas(tables).ToDictionary(s => Helper.FormatName(s.Table.Schema,
+                    s.Table.Name),
+                StringComparer.OrdinalIgnoreCase);
             using (var connection = new HanaConnection(Database.ConnectionStringForSource))
             {
                 // Act
-                var order = Helper.GetTableNames(new SapHanaSchemaReader(connection).GetDependencyOrder(tables)).ToList();
-
+                var order = Helper.GetTableNames(new SapHanaSchemaReader().GetDependencyOrder(connection,
+                        tables,
+                        transaction: null)).ToList();
                 // Assert
-                Assert.AreEqual(tables.Count, order.Count);
+                Assert.AreEqual(tables.Count,
+                    order.Count);
                 foreach (var schema in schemas.Values)
                 {
-                    var name = Helper.FormatName(schema.Table.Schema, schema.Table.Name);
-                    if (CircularTables.Contains(name, StringComparer.OrdinalIgnoreCase))
+                    var name=Helper.FormatName(schema.Table.Schema,
+                        schema.Table.Name);
+                    if (CircularTables.Contains(name,
+                        StringComparer.OrdinalIgnoreCase))
                     {
                         continue;
                     }
+
                     foreach (var foreignKey in schema.ForeignKeys)
                     {
-                        var referenced = Helper.FormatName(foreignKey.ReferencedTable.Schema, foreignKey.ReferencedTable.Name);
-                        if (string.Equals(referenced, name, StringComparison.OrdinalIgnoreCase))
+                        var referenced = Helper.FormatName(foreignKey.ReferencedTable.Schema,
+                            foreignKey.ReferencedTable.Name);
+                        if (string.Equals(referenced,
+                            name,
+                            StringComparison.OrdinalIgnoreCase))
                         {
                             continue;
                         }
-                        Assert.IsTrue(
-                            order.FindIndex(t => string.Equals(t, referenced, StringComparison.OrdinalIgnoreCase)) <
-                            order.FindIndex(t => string.Equals(t, name, StringComparison.OrdinalIgnoreCase)),
+
+                        Assert.IsTrue(order.FindIndex(t => string.Equals(t,
+                                    referenced,
+                                    StringComparison.OrdinalIgnoreCase)) < order.FindIndex(t => string.Equals(t,
+                                    name,
+                                    StringComparison.OrdinalIgnoreCase)),
                             $"'{referenced}' must come before '{name}'.");
                     }
                 }
             }
         }
-
         #endregion
     }
 }

@@ -16,55 +16,53 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
     {
         #region Private Variables
 
-        private static readonly KeyValuePair<string, object>[] _columnValues =
-            new[]
-            {
-                new KeyValuePair<string, object>("ChildTable",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("ColumnName",
-                    "Id"),
-                new KeyValuePair<string, object>("DeclaredType",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("DefaultDefinition",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("Definition",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("DeleteAction",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("Hidden",
-                    0),
-                new KeyValuePair<string, object>("Id",
-                    0),
-                new KeyValuePair<string, object>("IndexName",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("IsDescending",
-                    0),
-                new KeyValuePair<string, object>("IsKey",
-                    0),
-                new KeyValuePair<string, object>("IsNotNull",
-                    0),
-                new KeyValuePair<string, object>("IsPartial",
-                    0),
-                new KeyValuePair<string, object>("IsUnique",
-                    0),
-                new KeyValuePair<string, object>("name",
-                    "Id"),
-                new KeyValuePair<string, object>("Origin",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("ParentTable",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("PrimaryKeyPosition",
-                    0),
-                new KeyValuePair<string, object>("ReferencedColumn",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("ReferencedTable",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("TableName",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("UpdateAction",
-                    DBNull.Value)
-            };
-
+        private static readonly KeyValuePair<string, object>[] _columnValues = new[]
+        {
+            new KeyValuePair<string, object>("ChildTable",
+                DBNull.Value),
+            new KeyValuePair<string, object>("ColumnName",
+                "Id"),
+            new KeyValuePair<string, object>("DeclaredType",
+                DBNull.Value),
+            new KeyValuePair<string, object>("DefaultDefinition",
+                DBNull.Value),
+            new KeyValuePair<string, object>("Definition",
+                DBNull.Value),
+            new KeyValuePair<string, object>("DeleteAction",
+                DBNull.Value),
+            new KeyValuePair<string, object>("Hidden",
+                0),
+            new KeyValuePair<string, object>("Id",
+                0),
+            new KeyValuePair<string, object>("IndexName",
+                DBNull.Value),
+            new KeyValuePair<string, object>("IsDescending",
+                0),
+            new KeyValuePair<string, object>("IsKey",
+                0),
+            new KeyValuePair<string, object>("IsNotNull",
+                0),
+            new KeyValuePair<string, object>("IsPartial",
+                0),
+            new KeyValuePair<string, object>("IsUnique",
+                0),
+            new KeyValuePair<string, object>("name",
+                "Id"),
+            new KeyValuePair<string, object>("Origin",
+                DBNull.Value),
+            new KeyValuePair<string, object>("ParentTable",
+                DBNull.Value),
+            new KeyValuePair<string, object>("PrimaryKeyPosition",
+                0),
+            new KeyValuePair<string, object>("ReferencedColumn",
+                DBNull.Value),
+            new KeyValuePair<string, object>("ReferencedTable",
+                DBNull.Value),
+            new KeyValuePair<string, object>("TableName",
+                DBNull.Value),
+            new KeyValuePair<string, object>("UpdateAction",
+                DBNull.Value)
+        };
         #endregion
 
         #region Public Methods
@@ -77,11 +75,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = reader.GetColumns("Items").ToArray();
-
+            var actual = reader.GetColumns(connection,
+                "Items",
+                transaction: null).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -95,12 +93,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = (await reader.GetColumnsAsync("Items"))
-                .ToArray();
-
+            var actual = (await reader.GetColumnsAsync(connection,
+                "Items",
+                transaction: null)).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -114,11 +111,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = reader.GetIndexes("Items").ToArray();
-
+            var actual = reader.GetIndexes(connection,
+                "Items",
+                transaction: null).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -132,12 +129,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = (await reader.GetIndexesAsync("Items"))
-                .ToArray();
-
+            var actual = (await reader.GetIndexesAsync(connection,
+                "Items",
+                transaction: null)).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -151,11 +147,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = reader.GetForeignKeys("Items").ToArray();
-
+            var actual = reader.GetForeignKeys(connection,
+                "Items",
+                transaction: null).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -169,12 +165,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = (await reader.GetForeignKeysAsync("Items"))
-                .ToArray();
-
+            var actual = (await reader.GetForeignKeysAsync(connection,
+                "Items",
+                transaction: null)).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -188,11 +183,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = reader.GetUniqueConstraints("Items").ToArray();
-
+            var actual = reader.GetUniqueConstraints(connection,
+                "Items",
+                transaction: null).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -206,12 +201,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = (await reader.GetUniqueConstraintsAsync("Items"))
-                .ToArray();
-
+            var actual = (await reader.GetUniqueConstraintsAsync(connection,
+                "Items",
+                transaction: null)).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -225,11 +219,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = reader.GetCheckConstraints("Items").ToArray();
-
+            var actual = reader.GetCheckConstraints(connection,
+                "Items",
+                transaction: null).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -243,12 +237,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = (await reader.GetCheckConstraintsAsync("Items"))
-                .ToArray();
-
+            var actual = (await reader.GetCheckConstraintsAsync(connection,
+                "Items",
+                transaction: null)).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -262,11 +255,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = reader.GetPrimaryKey("Items");
-
+            var actual = reader.GetPrimaryKey(connection,
+                "Items",
+                transaction: null);
             // Assert
             Assert.IsNull(actual);
         }
@@ -279,11 +272,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = await reader.GetPrimaryKeyAsync("Items");
-
+            var actual = await reader.GetPrimaryKeyAsync(connection,
+                "Items",
+                transaction: null);
             // Assert
             Assert.IsNull(actual);
         }
@@ -296,11 +289,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = reader.TableExists("Items");
-
+            var actual = reader.TableExists(connection,
+                "Items",
+                transaction: null);
             // Assert
             Assert.IsFalse(actual);
         }
@@ -313,11 +306,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = await reader.TableExistsAsync("Items");
-
+            var actual = await reader.TableExistsAsync(connection,
+                "Items",
+                transaction: null);
             // Assert
             Assert.IsFalse(actual);
         }
@@ -330,11 +323,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = reader.GetTableSchema("Items");
-
+            var actual = reader.GetTableSchema(connection,
+                "Items",
+                transaction: null);
             // Assert
             Assert.AreEqual("Items",
                 actual.Table.Name,
@@ -349,11 +342,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = await reader.GetTableSchemaAsync("Items");
-
+            var actual = await reader.GetTableSchemaAsync(connection,
+                "Items",
+                transaction: null);
             // Assert
             Assert.AreEqual("Items",
                 actual.Table.Name,
@@ -368,11 +361,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = CreateColumnConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = reader.GetColumns("Items").Single();
-
+            var actual = reader.GetColumns(connection,
+                "Items",
+                transaction: null).Single();
             // Assert
             Assert.AreEqual("Id",
                 actual.Field.Name,
@@ -387,11 +380,11 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         {
             // Setup
             using var connection = CreateColumnConnection();
-            var reader = new AhtolaSchemaReader(connection);
-
+            var reader = new AhtolaSchemaReader();
             // Act
-            var actual = (await reader.GetColumnsAsync("Items")).Single();
-
+            var actual = (await reader.GetColumnsAsync(connection,
+                "Items",
+                transaction: null)).Single();
             // Assert
             Assert.AreEqual("Id",
                 actual.Field.Name,
@@ -408,11 +401,13 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
         /// <returns>The configured catalog connection.</returns>
         private static CatalogConnection CreateColumnConnection()
         {
-            var connection = new CatalogConnection { Data = CreateColumnCatalog() };
+            var connection = new CatalogConnection
+            {
+                Data = CreateColumnCatalog()
+            };
             connection.Query = sql => sql.Contains(" AS DeclaredType",
-                    StringComparison.Ordinal) ? connection.Data :
-                sql.Contains(" AS TableName",
-                    StringComparison.Ordinal) ? TableDefinitionCatalog() : new DataTable();
+                StringComparison.Ordinal) ? connection.Data : sql.Contains(" AS TableName",
+                StringComparison.Ordinal) ? TableDefinitionCatalog() : new DataTable();
             return connection;
         }
 
@@ -446,7 +441,6 @@ namespace RepoDb.Schema.Sqlite.Ahtola.UnitTests.Readers
             table.Rows.Add(fields.Select(field => field.Value).ToArray());
             return table;
         }
-
         #endregion
     }
 }

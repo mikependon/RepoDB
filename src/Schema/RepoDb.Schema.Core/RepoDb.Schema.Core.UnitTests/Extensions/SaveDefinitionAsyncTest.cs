@@ -50,13 +50,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
             CollectionAssert.AreEqual(expected, File.ReadAllBytes(Filename));
             Assert.AreEqual(0, Directory.GetFiles(DirectoryPath, ".repodb-*.tmp").Length);
-            Reader.Verify(r => r.TableExistsAsync("sales.Invoice", It.IsAny<CancellationToken>()), Times.Once);
-            Reader.Verify(r => r.GetTableSchemaAsync("sales.Invoice", It.IsAny<CancellationToken>()), Times.Once);
-            Reader.Verify(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), behavior, It.IsAny<CancellationToken>()),
+            Reader.Verify(r => r.TableExistsAsync(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>(),It.IsAny<CancellationToken>()), Times.Once);
+            Reader.Verify(r => r.GetTableSchemaAsync(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>(),It.IsAny<CancellationToken>()), Times.Once);
+            Reader.Verify(r => r.GetRelatedTablesAsync(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),behavior,It.IsAny<System.Data.IDbTransaction>(),It.IsAny<CancellationToken>()),
                 behavior == RelatedTableBehavior.TableOnly ? Times.Never() : Times.Once());
-            Reader.Verify(r => r.TableExists(It.IsAny<string>()), Times.Never);
-            Reader.Verify(r => r.GetTableSchema(It.IsAny<string>()), Times.Never);
-            Reader.Verify(r => r.GetRelatedTables(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>()), Times.Never);
+            Reader.Verify(r => r.TableExists(It.IsAny<System.Data.IDbConnection>(),It.IsAny<string>(),It.IsAny<System.Data.IDbTransaction>()), Times.Never);
+            Reader.Verify(r => r.GetTableSchema(It.IsAny<System.Data.IDbConnection>(),It.IsAny<string>(),It.IsAny<System.Data.IDbTransaction>()), Times.Never);
+            Reader.Verify(r => r.GetRelatedTables(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),It.IsAny<RelatedTableBehavior>(),It.IsAny<System.Data.IDbTransaction>()), Times.Never);
             Assert.IsNull(SchemaReadContext.Current);
         }
 
@@ -69,7 +69,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             using var cancellation = new CancellationTokenSource();
             var trace = new Mock<ITrace>(MockBehavior.Strict).Object;
             SetupAsync();
-            Reader.Setup(r => r.TableExistsAsync("sales.Invoice", cancellation.Token)).Returns(async () =>
+            Reader.Setup(r => r.TableExistsAsync(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>(),cancellation.Token)).Returns(async () =>
             {
                 await Task.Yield();
                 Assert.AreEqual(19, SchemaReadContext.Current.CommandTimeout);
@@ -78,9 +78,9 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
                 return true;
             });
             await Save(new CustomDbConnection(), format, RelatedTableBehavior.Parents, cancellation.Token, trace);
-            Reader.Verify(r => r.GetTableSchemaAsync("sales.Invoice", cancellation.Token), Times.Once);
-            Reader.Verify(r => r.GetTableSchemaAsync("sales.Customer", cancellation.Token), Times.Once);
-            Reader.Verify(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), RelatedTableBehavior.Parents, cancellation.Token), Times.Once);
+            Reader.Verify(r => r.GetTableSchemaAsync(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>(),cancellation.Token), Times.Once);
+            Reader.Verify(r => r.GetTableSchemaAsync(It.IsAny<System.Data.IDbConnection>(),"sales.Customer",It.IsAny<System.Data.IDbTransaction>(),cancellation.Token), Times.Once);
+            Reader.Verify(r => r.GetRelatedTablesAsync(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),RelatedTableBehavior.Parents,It.IsAny<System.Data.IDbTransaction>(),cancellation.Token), Times.Once);
             Assert.IsNull(SchemaReadContext.Current);
         }
 
@@ -91,7 +91,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             File.WriteAllText(Filename, "original");
             using var cancellation = new CancellationTokenSource();
             SetupAsync();
-            Reader.Setup(r => r.GetTableSchemaAsync("sales.Invoice", cancellation.Token)).Returns(() =>
+            Reader.Setup(r => r.GetTableSchemaAsync(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>(),cancellation.Token)).Returns(() =>
             {
                 cancellation.Cancel();
                 return Task.FromResult(Invoice);
@@ -123,7 +123,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         {
             File.WriteAllText(Filename, "original");
             SetupAsync();
-            Reader.Setup(r => r.GetTableSchemaAsync("sales.Invoice", It.IsAny<CancellationToken>())).ThrowsAsync(new InvalidOperationException("reader failed"));
+            Reader.Setup(r => r.GetTableSchemaAsync(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>(),It.IsAny<CancellationToken>())).ThrowsAsync(new InvalidOperationException("reader failed"));
             await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => Save(new CustomDbConnection(), format, RelatedTableBehavior.TableOnly));
             Assert.AreEqual("original", File.ReadAllText(Filename));
             Assert.IsNull(SchemaReadContext.Current);
@@ -148,7 +148,7 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
         public async Task MissingTableAndMappingDoNotCreateFile(string format)
         {
             SetupAsync();
-            Reader.Setup(r => r.TableExistsAsync("sales.Invoice", It.IsAny<CancellationToken>())).ReturnsAsync(false);
+            Reader.Setup(r => r.TableExistsAsync(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>(),It.IsAny<CancellationToken>())).ReturnsAsync(false);
             await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => Save(new CustomDbConnection(), format, RelatedTableBehavior.TableOnly));
             SchemaReaderMapper.Clear();
             await Assert.ThrowsExactlyAsync<MissingMappingException>(() => Save(new CustomDbConnection(), format, RelatedTableBehavior.TableOnly));
@@ -186,10 +186,10 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
 
         private void SetupAsync()
         {
-            Reader.Setup(r => r.TableExistsAsync("sales.Invoice", It.IsAny<CancellationToken>())).ReturnsAsync(true);
-            Reader.Setup(r => r.GetTableSchemaAsync("sales.Invoice", It.IsAny<CancellationToken>())).ReturnsAsync(Invoice);
-            Reader.Setup(r => r.GetTableSchemaAsync("sales.Customer", It.IsAny<CancellationToken>())).ReturnsAsync(Customer);
-            Reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<RelatedTableBehavior>(), It.IsAny<CancellationToken>()))
+            Reader.Setup(r => r.TableExistsAsync(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>(),It.IsAny<CancellationToken>())).ReturnsAsync(true);
+            Reader.Setup(r => r.GetTableSchemaAsync(It.IsAny<System.Data.IDbConnection>(),"sales.Invoice",It.IsAny<System.Data.IDbTransaction>(),It.IsAny<CancellationToken>())).ReturnsAsync(Invoice);
+            Reader.Setup(r => r.GetTableSchemaAsync(It.IsAny<System.Data.IDbConnection>(),"sales.Customer",It.IsAny<System.Data.IDbTransaction>(),It.IsAny<CancellationToken>())).ReturnsAsync(Customer);
+            Reader.Setup(r => r.GetRelatedTablesAsync(It.IsAny<System.Data.IDbConnection>(),It.IsAny<IEnumerable<string>>(),It.IsAny<RelatedTableBehavior>(),It.IsAny<System.Data.IDbTransaction>(),It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new[] { "sales.Invoice", "sales.Customer", "sales.Invoice" });
         }
 

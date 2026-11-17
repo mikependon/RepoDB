@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using Ahtola.Data.Sqlite;
@@ -11,15 +10,14 @@ using Ahtola.Data.Sqlite;
 namespace RepoDb.Schema.Sqlite.Ahtola
 {
     /// <summary>
-    /// A class that is being used to initialize the necessary settings of the SQLite schema objects for the <see cref="SqliteConnection"/> object.
+    /// Configures the provider schema services.
     /// </summary>
     public static class AhtolaSchemaGlobalConfiguration
     {
-        #region Methods
+        #region Public Methods
 
         /// <summary>
-        /// Initializes the Ahtola settings first (see <c>UseAhtola</c>), then registers the <see cref="AhtolaSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="SqliteConnection"/> type.
-        /// A <see cref="AhtolaSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
+        /// Initializes the Ahtola settings first (see <c>UseAhtola</c>), then registers the reader and <see cref="AhtolaSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="SqliteConnection"/> type.
         /// It is safe to call this method more than once.
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
@@ -27,12 +25,13 @@ namespace RepoDb.Schema.Sqlite.Ahtola
         public static GlobalConfiguration UseAhtolaSchema(this GlobalConfiguration globalConfiguration)
         {
             globalConfiguration.UseAhtola();
-            SchemaComposerMapper.Add<SqliteConnection>(new AhtolaSchemaComposer(), force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<SqliteConnection>().Provider,
-                AhtolaSchemaDialect.Instance);
+            SchemaComposerMapper.Add<SqliteConnection>(new AhtolaSchemaComposer(),
+                force: true);
+            SchemaReaderMapper.Add<SqliteConnection>(new AhtolaSchemaReader(),
+                force: true);
+            SchemaDialectMapper.Add<SqliteConnection>(AhtolaSchemaDialect.Instance);
             return globalConfiguration;
         }
-
         #endregion
     }
 }

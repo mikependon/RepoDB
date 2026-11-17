@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -18,9 +17,15 @@ using RepoDb.Schema.Sqlite.Turso.IntegrationTests.Setup;
 
 namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
 {
+    /// <summary>
+    /// Contains the turso schema exists behavior test behavior.
+    /// </summary>
     [TestClass]
     public class TursoSchemaExistsBehaviorTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -28,6 +33,9 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
@@ -35,24 +43,39 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
             Database.Cleanup();
         }
 
-        #region Helpers
+        #region Private Methods
 
-        private static void MapSchemaReaderConnection(SqliteConnection source) =>
-            SchemaReaderMapper.Add<SqliteConnection>(new TursoSchemaReader(source), true);
+        /// <summary>
+        /// Performs map schema reader connection.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        private static void MapSchemaReaderConnection(SqliteConnection source) => SchemaReaderMapper.Add<SqliteConnection>(new TursoSchemaReader(),
+            true);
 
-        private static int CountCountries(SqliteConnection target) =>
-            target.ExecuteScalar<int>("SELECT COUNT(*) FROM [Country];");
+        /// <summary>
+        /// Performs count countries.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        private static int CountCountries(SqliteConnection target) => target.ExecuteScalar<int>("SELECT COUNT(*) FROM [Country];");
 
-        private static void InsertCountry(SqliteConnection target) =>
-            target.ExecuteNonQuery("INSERT INTO [Country] ([Name]) VALUES ('Philippines');");
+        /// <summary>
+        /// Performs insert country.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        private static void InsertCountry(SqliteConnection target) => target.ExecuteNonQuery("INSERT INTO [Country] ([Name]) VALUES ('Philippines');");
 
-        private static void CreateSmallPerson(SqliteConnection target) =>
-            target.ExecuteNonQuery("CREATE TABLE [Person] ([Id] BIGINT NOT NULL, [Name] VARCHAR(128) NOT NULL);");
-
+        /// <summary>
+        /// Performs create small person.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        private static void CreateSmallPerson(SqliteConnection target) => target.ExecuteNonQuery("CREATE TABLE [Person] ([Id] BIGINT NOT NULL, [Name] VARCHAR(128) NOT NULL);");
         #endregion
 
         #region Skip
 
+        /// <summary>
+        /// Verifies copy table schemas to with skip leaves the existing table as it is.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithSkipLeavesTheExistingTableAsItIs()
         {
@@ -64,20 +87,29 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 Helper.CopyToTarget("Country");
                 InsertCountry(target);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Skip, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Country", "Person" },
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Skip,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(TableOutcome.Skipped, results.Single(r => r.Target.Table.Table.Name == "Country").Outcome);
-                Assert.AreEqual(true, results.Single(r => r.Target.Table.Table.Name == "Country").TableExisted);
-                Assert.AreEqual(TableOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
-                Assert.AreEqual(false, results.Single(r => r.Target.Table.Table.Name == "Person").TableExisted);
-                Assert.AreEqual(1, CountCountries(target));
+                Assert.AreEqual(TableOutcome.Skipped,
+                    results.Single(r => r.Target.Table.Table.Name == "Country").Outcome);
+                Assert.AreEqual(true,
+                    results.Single(r => r.Target.Table.Table.Name == "Country").TableExisted);
+                Assert.AreEqual(TableOutcome.Created,
+                    results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
+                Assert.AreEqual(false,
+                    results.Single(r => r.Target.Table.Table.Name == "Person").TableExisted);
+                Assert.AreEqual(1,
+                    CountCountries(target));
                 Helper.AssertTargetMatchesSource("Person");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with the default behavior can be run twice.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithTheDefaultBehaviorCanBeRunTwice()
         {
@@ -86,18 +118,23 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target);
+                source.CopyTableSchemaTo(new[] { "Country", "Person" },
+                    target);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Country", "Person" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
                 Assert.IsTrue(results.All(r => r.Outcome == TableOutcome.Skipped));
-                Assert.AreEqual(2, results.Count);
+                Assert.AreEqual(2,
+                    results.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schema to of asingle table with skip returns the skipped result.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemaToOfASingleTableWithSkipReturnsTheSkippedResult()
         {
@@ -107,15 +144,18 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 Helper.CopyToTarget("Country");
-
                 // Act
-                var result = source.CopyTableSchemaTo("Country", target).Items.Single();
-
+                var result = source.CopyTableSchemaTo("Country",
+                    target).Items.Single();
                 // Assert
-                Assert.AreEqual(TableOutcome.Skipped, result.Outcome);
+                Assert.AreEqual(TableOutcome.Skipped,
+                    result.Outcome);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async with skip leaves the existing table as it is.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncWithSkipLeavesTheExistingTableAsItIs()
         {
@@ -127,14 +167,18 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 Helper.CopyToTarget("Country");
                 InsertCountry(target);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "Country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Skip, createdCallback: results.Add);
-
+                await source.CopyTableSchemaToAsync(new[] { "Country", "Person" },
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Skip,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(TableOutcome.Skipped, results.Single(r => r.Target.Table.Table.Name == "Country").Outcome);
-                Assert.AreEqual(TableOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
-                Assert.AreEqual(1, CountCountries(target));
+                Assert.AreEqual(TableOutcome.Skipped,
+                    results.Single(r => r.Target.Table.Table.Name == "Country").Outcome);
+                Assert.AreEqual(TableOutcome.Created,
+                    results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
+                Assert.AreEqual(1,
+                    CountCountries(target));
             }
         }
 
@@ -142,6 +186,9 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
 
         #region Throw
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to with throw if atable already exists.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToWithThrowIfATableAlreadyExists()
         {
@@ -151,16 +198,18 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 Helper.CopyToTarget("Country");
-
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() =>
-                    source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
-
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "Country", "Person" },
+                        target,
+                        tableExistenceBehavior: TableExistsBehavior.Throw));
                 // Assert
                 Assert.IsFalse(Helper.TargetTableExists("Person"));
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to async with throw if atable already exists.
+        /// </summary>
         [TestMethod]
         public async Task ThrowExceptionOnCopyTableSchemasToAsyncWithThrowIfATableAlreadyExists()
         {
@@ -170,14 +219,17 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 Helper.CopyToTarget("Country");
-
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                    source.CopyTableSchemaToAsync(new[] { "Country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "Country", "Person" },
+                        target,
+                        tableExistenceBehavior: TableExistsBehavior.Throw));
                 Assert.IsFalse(Helper.TargetTableExists("Person"));
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with throw creates the tables that do not exist.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithThrowCreatesTheTablesThatDoNotExist()
         {
@@ -186,10 +238,10 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Throw);
-
+                source.CopyTableSchemaTo(new[] { "Country", "Person" },
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Throw);
                 // Assert
                 Helper.AssertTargetMatchesSource("Country");
                 Helper.AssertTargetMatchesSource("Person");
@@ -200,6 +252,9 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
 
         #region Drop
 
+        /// <summary>
+        /// Verifies copy table schemas to with drop creates the existing tables again.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithDropCreatesTheExistingTablesAgain()
         {
@@ -208,23 +263,31 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                Helper.CopyAllToTarget("Country", "Person");
+                Helper.CopyAllToTarget("Country",
+                    "Person");
                 InsertCountry(target);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Country", "Person" },
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Drop,
+                    createdCallback: results.Add);
                 // Assert
                 Assert.IsTrue(results.All(r => r.Outcome == TableOutcome.Dropped));
                 Assert.IsTrue(results.All(r => r.TableExisted == true));
-                StringAssert.StartsWith(results.Single(r => r.Target.Table.Table.Name == "Person").Script, "DROP TABLE IF EXISTS [Person];", StringComparison.Ordinal);
-                Assert.AreEqual(0, CountCountries(target));
+                StringAssert.StartsWith(results.Single(r => r.Target.Table.Table.Name == "Person").Script,
+                    "DROP TABLE IF EXISTS [Person];",
+                    StringComparison.Ordinal);
+                Assert.AreEqual(0,
+                    CountCountries(target));
                 Helper.AssertTargetMatchesSource("Country");
                 Helper.AssertTargetMatchesSource("Person");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with drop creates the tables that do not exist.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithDropCreatesTheTablesThatDoNotExist()
         {
@@ -235,17 +298,23 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
                 Helper.CopyToTarget("Country");
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Country", "Person" },
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Drop,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(TableOutcome.Dropped, results.Single(r => r.Target.Table.Table.Name == "Country").Outcome);
-                Assert.AreEqual(TableOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
+                Assert.AreEqual(TableOutcome.Dropped,
+                    results.Single(r => r.Target.Table.Table.Name == "Country").Outcome);
+                Assert.AreEqual(TableOutcome.Created,
+                    results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
                 Helper.AssertTargetMatchesSource("Person");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async with drop creates the existing tables again.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncWithDropCreatesTheExistingTablesAgain()
         {
@@ -254,14 +323,16 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                Helper.CopyAllToTarget("Country", "Person");
+                Helper.CopyAllToTarget("Country",
+                    "Person");
                 InsertCountry(target);
-
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "Country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Drop);
-
+                await source.CopyTableSchemaToAsync(new[] { "Country", "Person" },
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Drop);
                 // Assert
-                Assert.AreEqual(0, CountCountries(target));
+                Assert.AreEqual(0,
+                    CountCountries(target));
                 Helper.AssertTargetMatchesSource("Country");
                 Helper.AssertTargetMatchesSource("Person");
             }
@@ -271,6 +342,9 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
 
         #region Align
 
+        /// <summary>
+        /// Verifies copy table schemas to with align can be run twice.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithAlignCanBeRunTwice()
         {
@@ -280,19 +354,28 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 CreateSmallPerson(target);
-                source.CopyTableSchemaTo(new[] { "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Align);
+                source.CopyTableSchemaTo(new[] { "Person" },
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Align);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Person" },
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Align,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(TableOutcome.Aligned, results.Single().Outcome);
-                Assert.AreEqual(0, results.Single().AddedColumns.Count);
-                Assert.AreEqual(0, results.Single().AddedIndexes.Count);
+                Assert.AreEqual(TableOutcome.Aligned,
+                    results.Single().Outcome);
+                Assert.AreEqual(0,
+                    results.Single().AddedColumns.Count);
+                Assert.AreEqual(0,
+                    results.Single().AddedIndexes.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with align creates the tables that do not exist.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithAlignCreatesTheTablesThatDoNotExist()
         {
@@ -303,13 +386,16 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
                 Helper.CopyToTarget("Country");
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Country", "Person" },
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Align,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(TableOutcome.Aligned, results.Single(r => r.Target.Table.Table.Name == "Country").Outcome);
-                Assert.AreEqual(TableOutcome.Created, results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
+                Assert.AreEqual(TableOutcome.Aligned,
+                    results.Single(r => r.Target.Table.Table.Name == "Country").Outcome);
+                Assert.AreEqual(TableOutcome.Created,
+                    results.Single(r => r.Target.Table.Table.Name == "Person").Outcome);
                 Helper.AssertTargetMatchesSource("Person");
             }
         }
@@ -318,6 +404,9 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
 
         #region Relationships
 
+        /// <summary>
+        /// Verifies copy table schema to with parents and skip only creates the missing parents.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemaToWithParentsAndSkipOnlyCreatesTheMissingParents()
         {
@@ -328,17 +417,21 @@ namespace RepoDb.Schema.Sqlite.Turso.IntegrationTests
                 MapSchemaReaderConnection(source);
                 Helper.CopyToTarget("Country");
                 InsertCountry(target);
-
                 // Act
-                var result = source.CopyTableSchemaTo("Person", target, tableExistenceBehavior: TableExistsBehavior.Skip, relationshipBehavior: RelatedTableBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name, "Person", StringComparison.OrdinalIgnoreCase));
-
+                var result = source.CopyTableSchemaTo("Person",
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Skip,
+                    relationshipBehavior: RelatedTableBehavior.Parents).Items.Single(i => string.Equals(i.Source.Table.Table.Name,
+                        "Person",
+                        StringComparison.OrdinalIgnoreCase));
                 // Assert
-                Assert.AreEqual(TableOutcome.Created, result.Outcome);
-                Assert.AreEqual(1, CountCountries(target));
+                Assert.AreEqual(TableOutcome.Created,
+                    result.Outcome);
+                Assert.AreEqual(1,
+                    CountCountries(target));
                 Helper.AssertTargetMatchesSource("Person");
             }
         }
-
         #endregion
     }
 }

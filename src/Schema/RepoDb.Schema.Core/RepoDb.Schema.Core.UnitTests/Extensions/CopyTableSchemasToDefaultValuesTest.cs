@@ -1,9 +1,8 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -20,15 +19,24 @@ using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.Core.UnitTests.Extensions
 {
+    /// <summary>
+    /// Contains the copy table schemas to default values test behavior.
+    /// </summary>
     [TestClass]
     public class CopyTableSchemasToDefaultValuesTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
@@ -36,37 +44,71 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             SchemaComposerMapper.Clear();
         }
 
-        #region Helpers
+        #region Private Methods
 
+        /// <summary>
+        /// Performs get orders.
+        /// </summary>
         private static TableSchema GetOrders()
         {
-            var schema = new TableSchema("Orders", "dbo");
-            foreach (var (name, kind, expression) in new[]
+            var schema = new TableSchema("Orders",
+                "dbo");
+            foreach (var (name, kind, expression)in new[]
             {
                 ("Id", ColumnDefaultValue.None, (string)null),
                 ("Created", ColumnDefaultValue.CurrentTimestamp, "(getdate())"),
                 ("Number", ColumnDefaultValue.SequenceNextValue, "(NEXT VALUE FOR [dbo].[OrderSeq])"),
                 ("Token", ColumnDefaultValue.NewGuid, "(newid())")
-            })
+            }
+
+            )
             {
                 var column = new ColumnInfo();
-                typeof(ColumnInfo).GetProperty(nameof(ColumnInfo.Field)).SetValue(column, new DbField(name, false, false, true, typeof(string), null, null, null, "text", expression != null, "Test"));
-                typeof(ColumnInfo).GetProperty(nameof(ColumnInfo.DefaultValue)).SetValue(column, kind);
-                typeof(ColumnInfo).GetProperty(nameof(ColumnInfo.DefaultExpression)).SetValue(column, expression);
+                typeof(ColumnInfo).GetProperty(nameof(ColumnInfo.Field)).SetValue(column,
+                    new DbField(name,
+                        false,
+                        false,
+                        true,
+                        typeof(string),
+                        null,
+                        null,
+                        null,
+                        "text",
+                        expression != null,
+                        "Test"));
+                typeof(ColumnInfo).GetProperty(nameof(ColumnInfo.DefaultValue)).SetValue(column,
+                    kind);
+                typeof(ColumnInfo).GetProperty(nameof(ColumnInfo.DefaultExpression)).SetValue(column,
+                    expression);
                 schema.Columns.Add(column);
             }
+
             return schema;
         }
 
+        /// <summary>
+        /// Performs map reader.
+        /// </summary>
+        /// <param name="schemas">The schemas.</param>
         private static void MapReader(params TableSchema[] schemas)
         {
             var relationships = schemas.Select(s => new RelationshipInfo { Schema = s }).ToList();
             var reader = new Mock<ISchemaReader>();
-            reader.Setup(r => r.GetDependencyOrder(It.IsAny<IEnumerable<string>>())).Returns(relationships);
-            reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(relationships);
-            SchemaReaderMapper.Add<CustomDbConnection>(reader.Object, true);
+            reader.Setup(r => r.GetDependencyOrder(It.IsAny<System.Data.IDbConnection>(),
+                    It.IsAny<IEnumerable<string>>(),
+                    It.IsAny<System.Data.IDbTransaction>())).Returns(relationships);
+            reader.Setup(r => r.GetDependencyOrderAsync(It.IsAny<System.Data.IDbConnection>(),
+                    It.IsAny<IEnumerable<string>>(),
+                    It.IsAny<System.Data.IDbTransaction>(),
+                    It.IsAny<CancellationToken>())).ReturnsAsync(relationships);
+            SchemaReaderMapper.Add<CustomDbConnection>(reader.Object,
+                true);
         }
 
+        /// <summary>
+        /// Performs map composer.
+        /// </summary>
+        /// <param name="unsupportedDefaultReason">The unsupported default reason.</param>
         private static void MapComposer(Func<ColumnInfo, string> unsupportedDefaultReason = null)
         {
             var composer = new Mock<ISchemaComposer>();
@@ -78,16 +120,23 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             {
                 composer.As<IColumnDefaultSupport>().Setup(c => c.GetUnsupportedDefaultReason(It.IsAny<ColumnInfo>())).Returns(unsupportedDefaultReason);
             }
-            SchemaComposerMapper.Add<CustomDbConnection>(composer.Object, true);
+
+            SchemaComposerMapper.Add<CustomDbConnection>(composer.Object,
+                true);
         }
 
-        private static string Refuse(ColumnInfo column) =>
-            column.DefaultValue == ColumnDefaultValue.SequenceNextValue ? "its value comes from a sequence, which the destination can not use as a default value" : null;
-
+        /// <summary>
+        /// Performs refuse.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        private static string Refuse(ColumnInfo column) => column.DefaultValue == ColumnDefaultValue.SequenceNextValue ? "its value comes from a sequence, which the destination can not use as a default value" : null;
         #endregion
 
         #region Warnings
 
+        /// <summary>
+        /// Verifies copy table schemas to reports the default values that the composer does not create.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToReportsTheDefaultValuesThatTheComposerDoesNotCreate()
         {
@@ -95,18 +144,28 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetOrders());
             MapComposer(Refuse);
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, new CustomDbConnection(), createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" },
+                new CustomDbConnection(),
+                createdCallback: results.Add);
             // Assert
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].Warnings.Count);
-            StringAssert.Contains(results[0].Warnings[0], "Skipped the default value of the column 'Number'", StringComparison.Ordinal);
-            StringAssert.Contains(results[0].Warnings[0], "sequence", StringComparison.Ordinal);
-            Assert.AreEqual(0, results[0].Errors.Count);
+            Assert.AreEqual(1,
+                results.Count);
+            Assert.AreEqual(1,
+                results[0].Warnings.Count);
+            StringAssert.Contains(results[0].Warnings[0],
+                "Skipped the default value of the column 'Number'",
+                StringComparison.Ordinal);
+            StringAssert.Contains(results[0].Warnings[0],
+                "sequence",
+                StringComparison.Ordinal);
+            Assert.AreEqual(0,
+                results[0].Errors.Count);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async reports the default values that the composer does not create.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncReportsTheDefaultValuesThatTheComposerDoesNotCreate()
         {
@@ -114,15 +173,21 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetOrders());
             MapComposer(Refuse);
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" }, new CustomDbConnection(), createdCallback: results.Add);
-
+            await new CustomDbConnection().CopyTableSchemaToAsync(new[] { "Orders" },
+                new CustomDbConnection(),
+                createdCallback: results.Add);
             // Assert
-            Assert.AreEqual(1, results[0].Warnings.Count);
-            StringAssert.Contains(results[0].Warnings[0], "'Number'", StringComparison.Ordinal);
+            Assert.AreEqual(1,
+                results[0].Warnings.Count);
+            StringAssert.Contains(results[0].Warnings[0],
+                "'Number'",
+                StringComparison.Ordinal);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to reports one warning for each default value that the composer does not create.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToReportsOneWarningForEachDefaultValueThatTheComposerDoesNotCreate()
         {
@@ -130,16 +195,24 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetOrders());
             MapComposer(column => column.DefaultValue == ColumnDefaultValue.None ? null : $"the destination refuses {column.DefaultValue}");
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, new CustomDbConnection(), createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" },
+                new CustomDbConnection(),
+                createdCallback: results.Add);
             // Assert
-            Assert.AreEqual(3, results[0].Warnings.Count);
-            StringAssert.Contains(results[0].Warnings[0], "'Created'", StringComparison.Ordinal);
-            StringAssert.Contains(results[0].Warnings[2], "'Token'", StringComparison.Ordinal);
+            Assert.AreEqual(3,
+                results[0].Warnings.Count);
+            StringAssert.Contains(results[0].Warnings[0],
+                "'Created'",
+                StringComparison.Ordinal);
+            StringAssert.Contains(results[0].Warnings[2],
+                "'Token'",
+                StringComparison.Ordinal);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to does not report the default values if the composer creates them all.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToDoesNotReportTheDefaultValuesIfTheComposerCreatesThemAll()
         {
@@ -147,14 +220,18 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetOrders());
             MapComposer(column => null);
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, new CustomDbConnection(), createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" },
+                new CustomDbConnection(),
+                createdCallback: results.Add);
             // Assert
-            Assert.AreEqual(0, results[0].Warnings.Count);
+            Assert.AreEqual(0,
+                results[0].Warnings.Count);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to does not report the default values if the composer does not say which ones it refuses.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToDoesNotReportTheDefaultValuesIfTheComposerDoesNotSayWhichOnesItRefuses()
         {
@@ -162,30 +239,41 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             MapReader(GetOrders());
             MapComposer();
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, new CustomDbConnection(), createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" },
+                new CustomDbConnection(),
+                createdCallback: results.Add);
             // Assert
-            Assert.AreEqual(0, results[0].Warnings.Count);
+            Assert.AreEqual(0,
+                results[0].Warnings.Count);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to does not report the default values of atable that is not created.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToDoesNotReportTheDefaultValuesOfATableThatIsNotCreated()
         {
             // Setup
             MapReader(GetOrders());
             MapComposer(Refuse);
-            var destination = new CustomDbConnection { ScalarResult = statement => statement == "TABLE_EXISTS Orders" ? 1 : 0 };
+            var destination = new CustomDbConnection
+            {
+                ScalarResult = statement => statement == "TABLE_EXISTS Orders" ? 1 : 0
+            };
             var results = new List<CopyTableSchemaResultItem>();
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, destination, createdCallback: results.Add);
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" },
+                destination,
+                createdCallback: results.Add);
             // Assert
-            Assert.AreEqual(0, results[0].Warnings.Count);
+            Assert.AreEqual(0,
+                results[0].Warnings.Count);
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to keeps the default value of the columns of the schema of the source.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToKeepsTheDefaultValueOfTheColumnsOfTheSchemaOfTheSource()
         {
@@ -193,14 +281,13 @@ namespace RepoDb.Schema.Core.UnitTests.Extensions
             var orders = GetOrders();
             MapReader(orders);
             MapComposer(Refuse);
-
             // Act
-            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" }, new CustomDbConnection());
-
+            new CustomDbConnection().CopyTableSchemaTo(new[] { "Orders" },
+                new CustomDbConnection());
             // Assert
-            Assert.AreEqual(ColumnDefaultValue.SequenceNextValue, orders.Columns.Single(column => column.Field.Name == "Number").DefaultValue);
+            Assert.AreEqual(ColumnDefaultValue.SequenceNextValue,
+                orders.Columns.Single(column => column.Field.Name == "Number").DefaultValue);
         }
-
         #endregion
     }
 }

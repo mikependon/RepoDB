@@ -18,12 +18,15 @@ namespace RepoDb.Schema.Core.UnitTests.CustomObjects
         /// </summary>
         /// <param name="defaultSchema">The default schema.</param>
         /// <param name="areIndexNamesUniquePerSchema">Whether the name of an index must be unique in the whole schema (or database) of the database.</param>
+        /// <param name="isSchemaSupported">Whether the database has schemas.</param>
         public static void Map(string defaultSchema,
-            bool areIndexNamesUniquePerSchema = false)
+            bool areIndexNamesUniquePerSchema = false,
+            bool isSchemaSupported = true)
         {
             var setting = new Mock<IDbSetting>();
             setting.SetupGet(s => s.DefaultSchema).Returns(defaultSchema);
             setting.SetupGet(s => s.AreIndexNamesUniquePerSchema).Returns(areIndexNamesUniquePerSchema);
+            setting.SetupGet(s => s.IsSchemaSupported).Returns(isSchemaSupported);
             DbSettingMapper.Add<CustomDbConnection>(setting.Object, true);
         }
     }

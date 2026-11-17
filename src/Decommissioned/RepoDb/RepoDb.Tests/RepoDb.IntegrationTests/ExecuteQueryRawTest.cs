@@ -1,4 +1,4 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2019 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -16,9 +16,15 @@ using System.Linq;
 
 namespace RepoDb.IntegrationTests
 {
+    /// <summary>
+    /// Contains the execute query raw test behavior.
+    /// </summary>
     [TestClass]
     public class ExecuteQueryRawTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -27,6 +33,9 @@ namespace RepoDb.IntegrationTests
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
@@ -35,78 +44,210 @@ namespace RepoDb.IntegrationTests
 
         #region Classes
 
+        /// <summary>
+        /// Contains the whatever class with non nullable properties behavior.
+        /// </summary>
         private class WhateverClassWithNonNullableProperties
         {
+            /// <summary>
+            /// Gets or sets the id.
+            /// </summary>
             public int Id { get; set; }
+            /// <summary>
+            /// Gets or sets the column int.
+            /// </summary>
             public int ColumnInt { get; set; }
+            /// <summary>
+            /// Gets or sets the column big int.
+            /// </summary>
             public long ColumnBigInt { get; set; }
+            /// <summary>
+            /// Gets or sets the column nvar char.
+            /// </summary>
             public string ColumnNVarChar { get; set; }
+            /// <summary>
+            /// Gets or sets the column float.
+            /// </summary>
             public double ColumnFloat { get; set; }
+            /// <summary>
+            /// Gets or sets the column decimal.
+            /// </summary>
             public decimal ColumnDecimal { get; set; }
+            /// <summary>
+            /// Gets or sets the column date.
+            /// </summary>
             public DateTime ColumnDate { get; set; }
+            /// <summary>
+            /// Gets or sets the column time.
+            /// </summary>
             public TimeSpan ColumnTime { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time.
+            /// </summary>
             public DateTime ColumnDateTime { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time2.
+            /// </summary>
             public DateTime ColumnDateTime2 { get; set; }
         }
 
+        /// <summary>
+        /// Contains the whatever class with nullable properties behavior.
+        /// </summary>
         private class WhateverClassWithNullableProperties
         {
+            /// <summary>
+            /// Gets or sets the id.
+            /// </summary>
             public int Id { get; set; }
+            /// <summary>
+            /// Gets or sets the column int.
+            /// </summary>
             public int? ColumnInt { get; set; }
+            /// <summary>
+            /// Gets or sets the column big int.
+            /// </summary>
             public long? ColumnBigInt { get; set; }
+            /// <summary>
+            /// Gets or sets the column nvar char.
+            /// </summary>
             public string ColumnNVarChar { get; set; }
+            /// <summary>
+            /// Gets or sets the column float.
+            /// </summary>
             public double? ColumnFloat { get; set; }
+            /// <summary>
+            /// Gets or sets the column decimal.
+            /// </summary>
             public decimal? ColumnDecimal { get; set; }
+            /// <summary>
+            /// Gets or sets the column date.
+            /// </summary>
             public DateTime? ColumnDate { get; set; }
+            /// <summary>
+            /// Gets or sets the column time.
+            /// </summary>
             public TimeSpan? ColumnTime { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time.
+            /// </summary>
             public DateTime? ColumnDateTime { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time2.
+            /// </summary>
             public DateTime? ColumnDateTime2 { get; set; }
         }
 
+        /// <summary>
+        /// Contains the mapped whatever class with non nullable properties behavior.
+        /// </summary>
         private class MappedWhateverClassWithNonNullableProperties
         {
+            /// <summary>
+            /// Gets or sets the id mapped.
+            /// </summary>
             [Map("Id")]
             public int IdMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column int mapped.
+            /// </summary>
             [Map("ColumnInt")]
             public int ColumnIntMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column big int mapped.
+            /// </summary>
             [Map("ColumnBigInt")]
             public long ColumnBigIntMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column nvar char mapped.
+            /// </summary>
             [Map("ColumnNVarChar")]
             public string ColumnNVarCharMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column float mapped.
+            /// </summary>
             [Map("ColumnFloat")]
             public double ColumnFloatMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column decimal mapped.
+            /// </summary>
             [Map("ColumnDecimal")]
             public decimal ColumnDecimalMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column date mapped.
+            /// </summary>
             [Map("ColumnDate")]
             public DateTime ColumnDateMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column time mapped.
+            /// </summary>
             [Map("ColumnTime")]
             public TimeSpan ColumnTimeMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time mapped.
+            /// </summary>
             [Map("ColumnDateTime")]
             public DateTime ColumnDateTimeMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time2 mapped.
+            /// </summary>
             [Map("ColumnDateTime2")]
             public DateTime ColumnDateTime2Mapped { get; set; }
         }
 
+        /// <summary>
+        /// Contains the mapped whatever class with nullable properties behavior.
+        /// </summary>
         private class MappedWhateverClassWithNullableProperties
         {
+            /// <summary>
+            /// Gets or sets the id mapped.
+            /// </summary>
             [Map("Id")]
             public int IdMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column int mapped.
+            /// </summary>
             [Map("ColumnInt")]
             public int? ColumnIntMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column big int mapped.
+            /// </summary>
             [Map("ColumnBigInt")]
             public long? ColumnBigIntMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column nvar char mapped.
+            /// </summary>
             [Map("ColumnNVarChar")]
             public string ColumnNVarCharMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column float mapped.
+            /// </summary>
             [Map("ColumnFloat")]
             public double? ColumnFloatMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column decimal mapped.
+            /// </summary>
             [Map("ColumnDecimal")]
             public decimal? ColumnDecimalMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column date mapped.
+            /// </summary>
             [Map("ColumnDate")]
             public DateTime? ColumnDateMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column time mapped.
+            /// </summary>
             [Map("ColumnTime")]
             public TimeSpan? ColumnTimeMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time mapped.
+            /// </summary>
             [Map("ColumnDateTime")]
             public DateTime? ColumnDateTimeMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time2 mapped.
+            /// </summary>
             [Map("ColumnDateTime2")]
             public DateTime? ColumnDateTime2Mapped { get; set; }
         }
@@ -121,6 +262,9 @@ namespace RepoDb.IntegrationTests
 
         #region NonNullables
 
+        /// <summary>
+        /// Verifies sql connection execute query whatever class with non nullable properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWhateverClassWithNonNullableProperties()
         {
@@ -159,6 +303,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query whatever class with non nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWhateverClassWithNonNullablePropertiesAndWithExtraClassProperties()
         {
@@ -191,6 +338,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query with whatever class with non nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithWhateverClassWithNonNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -235,6 +385,9 @@ namespace RepoDb.IntegrationTests
 
         #region Nullables
 
+        /// <summary>
+        /// Verifies sql connection execute query whatever class with nullable properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWhateverClassWithNullableProperties()
         {
@@ -273,6 +426,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query whatever class with nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWhateverClassWithNullablePropertiesAndWithExtraClassProperties()
         {
@@ -305,6 +461,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query with whatever class with nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithWhateverClassWithNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -353,6 +512,9 @@ namespace RepoDb.IntegrationTests
 
         #region NonNullables
 
+        /// <summary>
+        /// Verifies sql connection execute query mapped whatever class with non nullable properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMappedWhateverClassWithNonNullableProperties()
         {
@@ -391,6 +553,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query mapped whatever class with non nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMappedWhateverClassWithNonNullablePropertiesAndWithExtraClassProperties()
         {
@@ -423,6 +588,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query with mapped whatever class with non nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithMappedWhateverClassWithNonNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -467,6 +635,9 @@ namespace RepoDb.IntegrationTests
 
         #region Nullables
 
+        /// <summary>
+        /// Verifies sql connection execute query mapped whatever class with nullable properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMappedWhateverClassWithNullableProperties()
         {
@@ -505,6 +676,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query mapped whatever class with nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMappedWhateverClassWithNullablePropertiesAndWithExtraClassProperties()
         {
@@ -537,6 +711,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query with mapped whatever class with nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithMappedWhateverClassWithNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -589,6 +766,9 @@ namespace RepoDb.IntegrationTests
 
         #region NonNullables
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple whatever class with non nullable properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWhateverClassWithNonNullableProperties()
         {
@@ -641,6 +821,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple whatever class with non nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWhateverClassWithNonNullablePropertiesAndWithExtraClassProperties()
         {
@@ -681,6 +864,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple with whatever class with non nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWithWhateverClassWithNonNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -740,6 +926,9 @@ namespace RepoDb.IntegrationTests
 
         #region Nullables
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple whatever class with nullable properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWhateverClassWithNullableProperties()
         {
@@ -791,6 +980,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple whatever class with nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWhateverClassWithNullablePropertiesAndWithExtraClassProperties()
         {
@@ -831,6 +1023,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple with whatever class with nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWithWhateverClassWithNullablePropertiesAndWithExtraQueryProperties()
         {

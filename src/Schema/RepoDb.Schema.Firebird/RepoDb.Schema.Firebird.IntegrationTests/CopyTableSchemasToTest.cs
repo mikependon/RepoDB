@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using RepoDb.Schema;
@@ -20,9 +19,15 @@ using RepoDb.Schema.Firebird.IntegrationTests.Setup;
 
 namespace RepoDb.Schema.Firebird.IntegrationTests
 {
+    /// <summary>
+    /// Contains the copy table schemas to test behavior.
+    /// </summary>
     [TestClass]
     public class CopyTableSchemasToTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -30,6 +35,9 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
@@ -37,34 +45,52 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             Database.Cleanup();
         }
 
-        #region Helpers
+        #region Private Methods
 
-        private static void MapSchemaReaderConnection(FbConnection source) =>
-            SchemaReaderMapper.Add<FbConnection>(new FirebirdSchemaReader(source), true);
+        /// <summary>
+        /// Performs map schema reader connection.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        private static void MapSchemaReaderConnection(FbConnection source) => SchemaReaderMapper.Add<FbConnection>(new FirebirdSchemaReader(),
+            true);
 
+        /// <summary>
+        /// Performs get source tables.
+        /// </summary>
         private static List<string> GetSourceTables()
         {
             using (var connection = new FbConnection(Database.ConnectionStringForSource))
             {
-                var reader = new FirebirdSchemaReader(connection);
-                return reader.GetTables()
-                    .Where(name =>
-                    {
-                        var schema = reader.GetTableSchema(name);
-                        return schema.Table.Schema == null && schema.ForeignKeys.All(foreignKey => foreignKey.ReferencedTable.Schema == null);
-                    })
-                    .ToList();
+                var reader = new FirebirdSchemaReader();
+                return reader.GetTables(connection,
+                    transaction: null).Where(name =>
+                {
+                    var schema = reader.GetTableSchema(connection,
+                            name,
+                            transaction: null);
+                    return schema.Table.Schema == null && schema.ForeignKeys.All(foreignKey => foreignKey.ReferencedTable.Schema == null);
+                }).ToList();
             }
         }
 
+        /// <summary>
+        /// Performs get target tables.
+        /// </summary>
+        /// <param name="schemaName">The schema name.</param>
         private static List<string> GetTargetTables(string schemaName = null)
         {
             using (var connection = new FbConnection(Database.ConnectionStringForTarget))
             {
-                return new FirebirdSchemaReader(connection).GetTables(schemaName).ToList();
+                return new FirebirdSchemaReader().GetTables(connection,
+                    schemaName,
+                    transaction: null).ToList();
             }
         }
 
+        /// <summary>
+        /// Performs assert target matches source.
+        /// </summary>
+        /// <param name="tableNames">The table names.</param>
         private static void AssertTargetMatchesSource(params string[] tableNames)
         {
             foreach (var tableName in tableNames)
@@ -79,6 +105,9 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies copy table schemas to.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasTo()
         {
@@ -87,15 +116,18 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target);
-
+                source.CopyTableSchemaTo(new[] { "Country", "Person" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("Country", "Person");
+                AssertTargetMatchesSource("Country",
+                    "Person");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with the referencing table before the referenced table.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithTheReferencingTableBeforeTheReferencedTable()
         {
@@ -104,15 +136,18 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Person", "Country" }, target);
-
+                source.CopyTableSchemaTo(new[] { "Person", "Country" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("Country", "Person");
+                AssertTargetMatchesSource("Country",
+                    "Person");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to callback result.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToCallbackResult()
         {
@@ -121,27 +156,47 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                var run = source.CopyTableSchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
-
+                var run = source.CopyTableSchemaTo(new[] { "Person", "Country" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(2, results.Count);
+                Assert.AreEqual(2,
+                    results.Count);
                 var person = results.Single(r => r.Target.Table.Table.Name == "Person");
-                Assert.AreEqual(source.Database, person.Source.Database, StringComparer.Ordinal);
-                Assert.AreEqual(target.Database, person.Target.Database, StringComparer.Ordinal);
-                Assert.AreEqual(nameof(FbConnection), person.Source.DatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(nameof(FbConnection), person.Target.DatabaseType, StringComparer.Ordinal);
-                Assert.AreEqual(TableExistsBehavior.Skip, person.Action);
-                Assert.AreEqual(TableOutcome.Created, person.Outcome);
-                StringAssert.Contains(person.Script, "CREATE TABLE \"Person\"", StringComparison.Ordinal);
-                StringAssert.Contains(person.Script, "FK_Person_Country", StringComparison.Ordinal);
+                Assert.AreEqual(source.Database,
+                    person.Source.Database,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(target.Database,
+                    person.Target.Database,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(nameof(FbConnection),
+                    person.Source.DatabaseType,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(nameof(FbConnection),
+                    person.Target.DatabaseType,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(TableExistsBehavior.Skip,
+                    person.Action);
+                Assert.AreEqual(TableOutcome.Created,
+                    person.Outcome);
+                StringAssert.Contains(person.Script,
+                    "CREATE TABLE \"Person\"",
+                    StringComparison.Ordinal);
+                StringAssert.Contains(person.Script,
+                    "FK_Person_Country",
+                    StringComparison.Ordinal);
                 Assert.IsTrue(run.EndTime >= run.StartTime);
-                StringAssert.Contains(results.Single(r => r.Target.Table.Table.Name == "Country").Script, "CREATE TABLE \"Country\"", StringComparison.Ordinal);
+                StringAssert.Contains(results.Single(r => r.Target.Table.Table.Name == "Country").Script,
+                    "CREATE TABLE \"Country\"",
+                    StringComparison.Ordinal);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to calls the callback once the schema of the table is created.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
         {
@@ -151,21 +206,26 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var reported = new List<(string Table, List<string> TargetTables)>();
-
                 // Act
-                source.CopyTableSchemaTo(
-                    new[] { "Person", "Country", "NoKey" },
+                source.CopyTableSchemaTo(new[] { "Person", "Country", "NoKey" },
                     target,
                     createdCallback: r => reported.Add((r.Target.Table.Table.Name, GetTargetTables())));
-
                 // Assert
-                Assert.AreEqual(3, reported.Count);
-                Assert.AreEqual("Person", reported.Last().Table, StringComparer.Ordinal);
-                Assert.AreEqual(3, reported.Last().TargetTables.Count);
-                CollectionAssert.DoesNotContain(reported.First().TargetTables, "Person");
+                Assert.AreEqual(3,
+                    reported.Count);
+                Assert.AreEqual("Person",
+                    reported.Last().Table,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(3,
+                    reported.Last().TargetTables.Count);
+                CollectionAssert.DoesNotContain(reported.First().TargetTables,
+                    "Person");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to calls the callback for every table of the whole database.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToCallsTheCallbackForEveryTableOfTheWholeDatabase()
         {
@@ -175,17 +235,23 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = GetSourceTables();
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(tables,
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(tables.Count, results.Count);
-                Assert.AreEqual(tables.Count, results.Select(r => Helper.FormatName(r.Source.Table.Table.Schema, r.Target.Table.Table.Name)).Distinct(StringComparer.OrdinalIgnoreCase).Count());
+                Assert.AreEqual(tables.Count,
+                    results.Count);
+                Assert.AreEqual(tables.Count,
+                    results.Select(r => Helper.FormatName(r.Source.Table.Table.Schema,
+                            r.Target.Table.Table.Name)).Distinct(StringComparer.OrdinalIgnoreCase).Count());
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to callback result of each table.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToCallbackResultOfEachTable()
         {
@@ -194,26 +260,39 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(new[] { "Person", "Country" }, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Person", "Country" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
+                CollectionAssert.AreEqual(new[] { "Country", "Person" },
+                    results.Select(t => t.Target.Table.Table.Name).ToArray());
                 var person = results[1];
                 Assert.IsNull(person.Source.Table.Table.Schema);
-                Assert.AreEqual(TableOutcome.Created, person.Outcome);
-                Assert.AreEqual(7, person.ColumnCount);
-                Assert.AreEqual(1, person.IndexCount);
-                Assert.AreEqual(1, person.ForeignKeyCount);
-                Assert.AreEqual(1, person.CheckConstraintCount);
-                Assert.AreEqual(0, person.UniqueConstraintCount);
-                StringAssert.StartsWith(person.Script, "CREATE TABLE \"Person\"", StringComparison.Ordinal);
-                Assert.AreEqual(1, results[0].UniqueConstraintCount);
+                Assert.AreEqual(TableOutcome.Created,
+                    person.Outcome);
+                Assert.AreEqual(7,
+                    person.ColumnCount);
+                Assert.AreEqual(1,
+                    person.IndexCount);
+                Assert.AreEqual(1,
+                    person.ForeignKeyCount);
+                Assert.AreEqual(1,
+                    person.CheckConstraintCount);
+                Assert.AreEqual(0,
+                    person.UniqueConstraintCount);
+                StringAssert.StartsWith(person.Script,
+                    "CREATE TABLE \"Person\"",
+                    StringComparison.Ordinal);
+                Assert.AreEqual(1,
+                    results[0].UniqueConstraintCount);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to of dependency chain in any order.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToOfDependencyChainInAnyOrder()
         {
@@ -222,17 +301,23 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(new[] { "GrandChild", "Parent", "Child" }, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "GrandChild", "Parent", "Child" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
-                AssertTargetMatchesSource("Parent", "Child", "GrandChild");
+                CollectionAssert.AreEqual(new[] { "Parent", "Child", "GrandChild" },
+                    results.Select(t => t.Target.Table.Table.Name).ToArray());
+                AssertTargetMatchesSource("Parent",
+                    "Child",
+                    "GrandChild");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to of diamond.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToOfDiamond()
         {
@@ -241,18 +326,28 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(new[] { "DiamondD", "DiamondC", "DiamondB", "DiamondA" }, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "DiamondD", "DiamondC", "DiamondB", "DiamondA" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual("DiamondA", results[0].Target.Table.Table.Name, StringComparer.Ordinal);
-                Assert.AreEqual("DiamondD", results[3].Target.Table.Table.Name, StringComparer.Ordinal);
-                AssertTargetMatchesSource("DiamondA", "DiamondB", "DiamondC", "DiamondD");
+                Assert.AreEqual("DiamondA",
+                    results[0].Target.Table.Table.Name,
+                    StringComparer.Ordinal);
+                Assert.AreEqual("DiamondD",
+                    results[3].Target.Table.Table.Name,
+                    StringComparer.Ordinal);
+                AssertTargetMatchesSource("DiamondA",
+                    "DiamondB",
+                    "DiamondC",
+                    "DiamondD");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to of tables that reference each other.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToOfTablesThatReferenceEachOther()
         {
@@ -261,15 +356,18 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "CycleA", "CycleB" }, target);
-
+                source.CopyTableSchemaTo(new[] { "CycleA", "CycleB" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("CycleA", "CycleB");
+                AssertTargetMatchesSource("CycleA",
+                    "CycleB");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to of cycle of three tables.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToOfCycleOfThreeTables()
         {
@@ -278,15 +376,19 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "RingZ", "RingX", "RingY" }, target);
-
+                source.CopyTableSchemaTo(new[] { "RingZ", "RingX", "RingY" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("RingX", "RingY", "RingZ");
+                AssertTargetMatchesSource("RingX",
+                    "RingY",
+                    "RingZ");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to of cycle with the tables that it depends on and that depend on it.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToOfCycleWithTheTablesThatItDependsOnAndThatDependOnIt()
         {
@@ -295,17 +397,24 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(new[] { "LoopLeaf", "LoopB", "LoopA", "LoopRoot" }, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "LoopLeaf", "LoopB", "LoopA", "LoopRoot" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                CollectionAssert.AreEqual(new[] { "LoopRoot", "LoopB", "LoopA", "LoopLeaf" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
-                AssertTargetMatchesSource("LoopRoot", "LoopA", "LoopB", "LoopLeaf");
+                CollectionAssert.AreEqual(new[] { "LoopRoot", "LoopB", "LoopA", "LoopLeaf" },
+                    results.Select(t => t.Target.Table.Table.Name).ToArray());
+                AssertTargetMatchesSource("LoopRoot",
+                    "LoopA",
+                    "LoopB",
+                    "LoopLeaf");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to of tables with multiple indexes and keys.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToOfTablesWithMultipleIndexesAndKeys()
         {
@@ -314,15 +423,20 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Product", "Shipment", "OrderLine", "Country" }, target);
-
+                source.CopyTableSchemaTo(new[] { "Product", "Shipment", "OrderLine", "Country" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("Product", "Shipment", "OrderLine", "Country");
+                AssertTargetMatchesSource("Product",
+                    "Shipment",
+                    "OrderLine",
+                    "Country");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to of tables with names that need quoting.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToOfTablesWithNamesThatNeedQuoting()
         {
@@ -331,15 +445,20 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "\"Odd.Child\"", "\"Odd.Name\"", "\"Order Details\"", "\"Weird]Name\"" }, target);
-
+                source.CopyTableSchemaTo(new[] { "\"Odd.Child\"", "\"Odd.Name\"", "\"Order Details\"", "\"Weird]Name\"" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("\"Odd.Name\"", "\"Odd.Child\"", "\"Order Details\"", "\"Weird]Name\"");
+                AssertTargetMatchesSource("\"Odd.Name\"",
+                    "\"Odd.Child\"",
+                    "\"Order Details\"",
+                    "\"Weird]Name\"");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to of the whole database.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToOfTheWholeDatabase()
         {
@@ -349,14 +468,16 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = GetSourceTables();
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(tables,
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(tables.Count, results.Count);
-                CollectionAssert.AreEquivalent(tables, GetTargetTables());
+                Assert.AreEqual(tables.Count,
+                    results.Count);
+                CollectionAssert.AreEquivalent(tables,
+                    GetTargetTables());
                 foreach (var table in tables)
                 {
                     AssertTargetMatchesSource(table);
@@ -364,6 +485,9 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to of the whole database in the reverse order.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToOfTheWholeDatabaseInTheReverseOrder()
         {
@@ -373,12 +497,12 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = GetSourceTables();
-
                 // Act
-                source.CopyTableSchemaTo(tables.AsEnumerable().Reverse().ToList(), target);
-
+                source.CopyTableSchemaTo(tables.AsEnumerable().Reverse().ToList(),
+                    target);
                 // Assert
-                CollectionAssert.AreEquivalent(tables, GetTargetTables());
+                CollectionAssert.AreEquivalent(tables,
+                    GetTargetTables());
                 foreach (var table in tables)
                 {
                     AssertTargetMatchesSource(table);
@@ -386,6 +510,9 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to of the whole database counts the objects.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToOfTheWholeDatabaseCountsTheObjects()
         {
@@ -396,20 +523,28 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 MapSchemaReaderConnection(source);
                 var tables = GetSourceTables();
                 var schemas = Helper.GetSourceSchemas(tables);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(tables,
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(schemas.Sum(s => s.Columns.Count), results.Sum(t => t.ColumnCount));
-                Assert.AreEqual(schemas.Sum(s => s.Indexes.Count), results.Sum(t => t.IndexCount));
-                Assert.AreEqual(schemas.Sum(s => s.ForeignKeys.Count), results.Sum(t => t.ForeignKeyCount));
-                Assert.AreEqual(schemas.Sum(s => s.UniqueConstraints.Count), results.Sum(t => t.UniqueConstraintCount));
-                Assert.AreEqual(schemas.Sum(s => s.CheckConstraints.Count), results.Sum(t => t.CheckConstraintCount));
+                Assert.AreEqual(schemas.Sum(s => s.Columns.Count),
+                    results.Sum(t => t.ColumnCount));
+                Assert.AreEqual(schemas.Sum(s => s.Indexes.Count),
+                    results.Sum(t => t.IndexCount));
+                Assert.AreEqual(schemas.Sum(s => s.ForeignKeys.Count),
+                    results.Sum(t => t.ForeignKeyCount));
+                Assert.AreEqual(schemas.Sum(s => s.UniqueConstraints.Count),
+                    results.Sum(t => t.UniqueConstraintCount));
+                Assert.AreEqual(schemas.Sum(s => s.CheckConstraints.Count),
+                    results.Sum(t => t.CheckConstraintCount));
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to of the table that is given more than once.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToOfTheTableThatIsGivenMoreThanOnce()
         {
@@ -418,17 +553,21 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(new[] { "Country", "Country", "\"Country\"" }, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Country", "Country", "\"Country\"" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(1, results.Count);
+                Assert.AreEqual(1,
+                    results.Count);
                 AssertTargetMatchesSource("Country");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with requested exists behavior.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithRequestedExistsBehavior()
         {
@@ -437,16 +576,21 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "NoKey" },
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Drop,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(TableExistsBehavior.Drop, results.Single().Action);
+                Assert.AreEqual(TableExistsBehavior.Drop,
+                    results.Single().Action);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to without tables.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithoutTables()
         {
@@ -455,17 +599,22 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(Enumerable.Empty<string>(), target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(Enumerable.Empty<string>(),
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(0, results.Count);
-                Assert.AreEqual(0, GetTargetTables().Count);
+                Assert.AreEqual(0,
+                    results.Count);
+                Assert.AreEqual(0,
+                    GetTargetTables().Count);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with transaction that is rolled back rolls back the tables.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithTransactionThatIsRolledBackRollsBackTheTables()
         {
@@ -474,19 +623,24 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 using (var transaction = target.BeginTransaction())
                 {
-                    source.CopyTableSchemaTo(new[] { "Country", "Person", "CycleA", "CycleB" }, target, transaction: transaction);
+                    source.CopyTableSchemaTo(new[] { "Country", "Person", "CycleA", "CycleB" },
+                        target,
+                        transaction: transaction);
                     transaction.Rollback();
                 }
 
                 // Assert
-                Assert.AreEqual(0, GetTargetTables().Count);
+                Assert.AreEqual(0,
+                    GetTargetTables().Count);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with transaction that is committed.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithTransactionThatIsCommitted()
         {
@@ -495,19 +649,24 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 using (var transaction = target.BeginTransaction())
                 {
-                    source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, transaction: transaction);
+                    source.CopyTableSchemaTo(new[] { "Country", "Person" },
+                        target,
+                        transaction: transaction);
                     transaction.Commit();
                 }
 
                 // Assert
-                AssertTargetMatchesSource("Country", "Person");
+                AssertTargetMatchesSource("Country",
+                    "Person");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to if the referenced table is not part of them and does not exist leaves out the foreign key.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToIfTheReferencedTableIsNotPartOfThemAndDoesNotExistLeavesOutTheForeignKey()
         {
@@ -516,18 +675,23 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(new[] { "Shipment" }, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Shipment" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(1, results.Count);
+                Assert.AreEqual(1,
+                    results.Count);
                 Assert.IsTrue(results[0].Warnings.Count > 0);
-                Assert.AreEqual(0, results[0].Errors.Count);
+                Assert.AreEqual(0,
+                    results[0].Errors.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to of table that references atable that already exists in the target.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToOfTableThatReferencesATableThatAlreadyExistsInTheTarget()
         {
@@ -536,16 +700,20 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "Country" }, target);
-
+                source.CopyTableSchemaTo(new[] { "Country" },
+                    target);
                 // Act
-                source.CopyTableSchemaTo(new[] { "Person" }, target);
-
+                source.CopyTableSchemaTo(new[] { "Person" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("Country", "Person");
+                AssertTargetMatchesSource("Country",
+                    "Person");
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if atable already exists.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfATableAlreadyExists()
         {
@@ -554,13 +722,18 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
-
+                source.CopyTableSchemaTo(new[] { "NoKey" },
+                    target);
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "NoKey" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "NoKey" },
+                        target,
+                        tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if atable does not exist in the source.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfATableDoesNotExistInTheSource()
         {
@@ -569,12 +742,15 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act/Assert
-                Assert.Throws<FbException>(() => source.CopyTableSchemaTo(new[] { "MissingTable" }, target));
+                Assert.Throws<FbException>(() => source.CopyTableSchemaTo(new[] { "MissingTable" },
+                        target));
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if there is no mapped schema reader.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfThereIsNoMappedSchemaReader()
         {
@@ -582,10 +758,14 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<MissingMappingException>(() => source.CopyTableSchemaTo(new[] { "Country" }, target));
+                Assert.Throws<MissingMappingException>(() => source.CopyTableSchemaTo(new[] { "Country" },
+                        target));
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if atable name is blank.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfATableNameIsBlank()
         {
@@ -594,12 +774,15 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act/Assert
-                Assert.Throws<ArgumentException>(() => source.CopyTableSchemaTo(new[] { "Country", " " }, target));
+                Assert.Throws<ArgumentException>(() => source.CopyTableSchemaTo(new[] { "Country", " " },
+                        target));
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if the table names are null.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfTheTableNamesAreNull()
         {
@@ -607,7 +790,8 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<ArgumentNullException>(() => source.CopyTableSchemaTo((string)null, target));
+                Assert.Throws<ArgumentNullException>(() => source.CopyTableSchemaTo((string)null,
+                        target));
             }
         }
 
@@ -615,6 +799,9 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies copy table schemas to async.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsync()
         {
@@ -623,17 +810,22 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                await source.CopyTableSchemaToAsync(new[] { "Person", "Country" }, target, createdCallback: results.Add);
-
+                await source.CopyTableSchemaToAsync(new[] { "Person", "Country" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                CollectionAssert.AreEqual(new[] { "Country", "Person" }, results.Select(t => t.Target.Table.Table.Name).ToArray());
-                AssertTargetMatchesSource("Country", "Person");
+                CollectionAssert.AreEqual(new[] { "Country", "Person" },
+                    results.Select(t => t.Target.Table.Table.Name).ToArray());
+                AssertTargetMatchesSource("Country",
+                    "Person");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async of tables that reference each other.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncOfTablesThatReferenceEachOther()
         {
@@ -642,15 +834,21 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "RingZ", "RingX", "RingY", "CycleA", "CycleB" }, target);
-
+                await source.CopyTableSchemaToAsync(new[] { "RingZ", "RingX", "RingY", "CycleA", "CycleB" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("RingX", "RingY", "RingZ", "CycleA", "CycleB");
+                AssertTargetMatchesSource("RingX",
+                    "RingY",
+                    "RingZ",
+                    "CycleA",
+                    "CycleB");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async of the whole database.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncOfTheWholeDatabase()
         {
@@ -660,14 +858,16 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = GetSourceTables();
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                await source.CopyTableSchemaToAsync(tables, target, createdCallback: results.Add);
-
+                await source.CopyTableSchemaToAsync(tables,
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(tables.Count, results.Count);
-                CollectionAssert.AreEquivalent(tables, GetTargetTables());
+                Assert.AreEqual(tables.Count,
+                    results.Count);
+                CollectionAssert.AreEquivalent(tables,
+                    GetTargetTables());
                 foreach (var table in tables)
                 {
                     AssertTargetMatchesSource(table);
@@ -675,6 +875,9 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async callback result.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncCallbackResult()
         {
@@ -683,21 +886,34 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                await source.CopyTableSchemaToAsync(new[] { "Person", "Country" }, target, tableExistenceBehavior: TableExistsBehavior.Align, createdCallback: results.Add);
-
+                await source.CopyTableSchemaToAsync(new[] { "Person", "Country" },
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Align,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(2, results.Count);
-                Assert.AreEqual(TableExistsBehavior.Align, results[1].Action);
-                Assert.AreEqual(source.Database, results[1].Source.Database, StringComparer.Ordinal);
-                Assert.AreEqual(target.Database, results[1].Target.Database, StringComparer.Ordinal);
-                Assert.AreEqual(7, results[1].ColumnCount);
-                StringAssert.Contains(results[1].Script, "CREATE TABLE \"Person\"", StringComparison.Ordinal);
+                Assert.AreEqual(2,
+                    results.Count);
+                Assert.AreEqual(TableExistsBehavior.Align,
+                    results[1].Action);
+                Assert.AreEqual(source.Database,
+                    results[1].Source.Database,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(target.Database,
+                    results[1].Target.Database,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(7,
+                    results[1].ColumnCount);
+                StringAssert.Contains(results[1].Script,
+                    "CREATE TABLE \"Person\"",
+                    StringComparison.Ordinal);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async without tables.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncWithoutTables()
         {
@@ -706,16 +922,20 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                await source.CopyTableSchemaToAsync(Enumerable.Empty<string>(), target, createdCallback: results.Add);
-
+                await source.CopyTableSchemaToAsync(Enumerable.Empty<string>(),
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(0, results.Count);
+                Assert.AreEqual(0,
+                    results.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to async if atable already exists.
+        /// </summary>
         [TestMethod]
         public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfATableAlreadyExists()
         {
@@ -724,13 +944,18 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
-
+                await source.CopyTableSchemaToAsync(new[] { "NoKey" },
+                    target);
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "NoKey" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "NoKey" },
+                        target,
+                        tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to async if there is no mapped schema reader.
+        /// </summary>
         [TestMethod]
         public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfThereIsNoMappedSchemaReader()
         {
@@ -738,7 +963,8 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<MissingMappingException>(() => source.CopyTableSchemaToAsync(new[] { "Country" }, target));
+                await Assert.ThrowsAsync<MissingMappingException>(() => source.CopyTableSchemaToAsync(new[] { "Country" },
+                        target));
             }
         }
 
@@ -748,6 +974,9 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies copy table schemas to does not call the error callback if nothing fails.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToDoesNotCallTheErrorCallbackIfNothingFails()
         {
@@ -757,16 +986,21 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var errors = new List<ExecutionError>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, errorCallback: errors.Add);
-
+                source.CopyTableSchemaTo(new[] { "Country", "Person" },
+                    target,
+                    errorCallback: errors.Add);
                 // Assert
-                Assert.AreEqual(0, errors.Count);
-                AssertTargetMatchesSource("Country", "Person");
+                Assert.AreEqual(0,
+                    errors.Count);
+                AssertTargetMatchesSource("Country",
+                    "Person");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to calls the error callback with the details of the error.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToCallsTheErrorCallbackWithTheDetailsOfTheError()
         {
@@ -776,20 +1010,29 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var errors = new List<ExecutionError>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Person" }, target, errorCallback: errors.Add);
-
+                source.CopyTableSchemaTo(new[] { "Person" },
+                    target,
+                    errorCallback: errors.Add);
                 // Assert
-                Assert.AreEqual(1, errors.Count);
+                Assert.AreEqual(1,
+                    errors.Count);
                 Assert.IsInstanceOfType<FbException>(errors[0].Exception);
-                Assert.AreEqual("Person", errors[0].TableName, StringComparer.Ordinal);
+                Assert.AreEqual("Person",
+                    errors[0].TableName,
+                    StringComparer.Ordinal);
                 Assert.IsNull(errors[0].SchemaName);
-                StringAssert.StartsWith(errors[0].Statement, "ALTER TABLE \"Person\" ADD CONSTRAINT \"FK_Person_Country\"", StringComparison.Ordinal);
-                Assert.AreEqual(2, errors[0].StatementIndex);
+                StringAssert.StartsWith(errors[0].Statement,
+                    "ALTER TABLE \"Person\" ADD CONSTRAINT \"FK_Person_Country\"",
+                    StringComparison.Ordinal);
+                Assert.AreEqual(2,
+                    errors[0].StatementIndex);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with error callback keeps the objects that were created.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithErrorCallbackKeepsTheObjectsThatWereCreated()
         {
@@ -799,88 +1042,107 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var created = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(
-                    new[] { "Person" },
+                source.CopyTableSchemaTo(new[] { "Person" },
                     target,
                     createdCallback: created.Add,
-                    errorCallback: _ => { });
-
+                    errorCallback: _ =>
+                {
+                });
                 // Assert
-                Assert.AreEqual(1, created.Count);
-                Assert.AreEqual(1, created[0].Errors.Count);
+                Assert.AreEqual(1,
+                    created.Count);
+                Assert.AreEqual(1,
+                    created[0].Errors.Count);
                 Assert.IsInstanceOfType<FbException>(created[0].Errors[0].Exception);
-                Assert.AreEqual(TableOutcome.Failed, created[0].Outcome);
+                Assert.AreEqual(TableOutcome.Failed,
+                    created[0].Outcome);
                 var person = Helper.GetTargetSchema("Person");
-                Assert.AreEqual(7, person.Columns.Count);
-                Assert.AreEqual(1, person.Indexes.Count);
-                Assert.AreEqual(0, person.ForeignKeys.Count);
+                Assert.AreEqual(7,
+                    person.Columns.Count);
+                Assert.AreEqual(1,
+                    person.Indexes.Count);
+                Assert.AreEqual(0,
+                    person.ForeignKeys.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with error callback continues with the other tables.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithErrorCallbackContinuesWithTheOtherTables()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
+                source.CopyTableSchemaTo(new[] { "NoKey" },
+                    target);
                 var created = new List<CopyTableSchemaResultItem>();
                 var errors = new List<ExecutionError>();
-
                 // Act
-                source.CopyTableSchemaTo(
-                    new[] { "NoKey", "Parent", "Child" },
+                source.CopyTableSchemaTo(new[] { "NoKey", "Parent", "Child" },
                     target,
                     createdCallback: created.Add,
                     errorCallback: errors.Add);
-
                 // Assert
-                Assert.AreEqual(1, errors.Count);
-                Assert.AreEqual("NoKey", errors[0].TableName, StringComparer.Ordinal);
-                StringAssert.StartsWith(errors[0].Statement, "CREATE TABLE \"NoKey\"", StringComparison.Ordinal);
-                CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent", "Child" }, created.Select(r => r.Target.Table.Table.Name).ToArray());
-                Assert.AreSame(errors[0], created.Single(r => r.Target.Table.Table.Name == "NoKey").Errors.Single());
-                Assert.AreEqual(TableOutcome.Failed, created.Single(r => r.Target.Table.Table.Name == "NoKey").Outcome);
-                Assert.AreEqual(0, created.Where(r => r.Target.Table.Table.Name != "NoKey").Sum(r => r.Errors.Count));
-                AssertTargetMatchesSource("NoKey", "Parent", "Child");
+                Assert.AreEqual(1,
+                    errors.Count);
+                Assert.AreEqual("NoKey",
+                    errors[0].TableName,
+                    StringComparer.Ordinal);
+                StringAssert.StartsWith(errors[0].Statement,
+                    "CREATE TABLE \"NoKey\"",
+                    StringComparison.Ordinal);
+                CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent", "Child" },
+                    created.Select(r => r.Target.Table.Table.Name).ToArray());
+                Assert.AreSame(errors[0],
+                    created.Single(r => r.Target.Table.Table.Name == "NoKey").Errors.Single());
+                Assert.AreEqual(TableOutcome.Failed,
+                    created.Single(r => r.Target.Table.Table.Name == "NoKey").Outcome);
+                Assert.AreEqual(0,
+                    created.Where(r => r.Target.Table.Table.Name != "NoKey").Sum(r => r.Errors.Count));
+                AssertTargetMatchesSource("NoKey",
+                    "Parent",
+                    "Child");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with error callback can copy the whole database twice.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithErrorCallbackCanCopyTheWholeDatabaseTwice()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = GetSourceTables();
-                source.CopyTableSchemaTo(tables, target);
+                source.CopyTableSchemaTo(tables,
+                    target);
                 var errors = new List<ExecutionError>();
                 var created = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(
-                    tables,
+                source.CopyTableSchemaTo(tables,
                     target,
                     createdCallback: created.Add,
                     errorCallback: errors.Add);
-
                 // Assert
                 Assert.IsTrue(errors.Count >= tables.Count);
                 Assert.IsTrue(errors.All(e => e.Exception is FbException));
-                Assert.AreEqual(tables.Count, created.Count);
+                Assert.AreEqual(tables.Count,
+                    created.Count);
                 Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == TableOutcome.Failed));
-                Assert.AreEqual(errors.Count, created.Sum(r => r.Errors.Count));
-                CollectionAssert.AreEquivalent(tables, GetTargetTables());
+                Assert.AreEqual(errors.Count,
+                    created.Sum(r => r.Errors.Count));
+                CollectionAssert.AreEquivalent(tables,
+                    GetTargetTables());
                 foreach (var table in tables)
                 {
                     AssertTargetMatchesSource(table);
@@ -888,105 +1150,119 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to stops if the error callback throws.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToStopsIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
+                source.CopyTableSchemaTo(new[] { "NoKey" },
+                    target);
                 var created = new List<string>();
-
                 // Act/Assert
-                Assert.Throws<NotSupportedException>(() =>
-                    source.CopyTableSchemaTo(
-                        new[] { "NoKey", "Parent", "Child" },
+                Assert.Throws<NotSupportedException>(() => source.CopyTableSchemaTo(new[] { "NoKey", "Parent", "Child" },
                         target,
                         createdCallback: r => created.Add(r.Target.Table.Table.Name),
                         errorCallback: _ => throw new NotSupportedException()));
-
                 // Assert
-                Assert.AreEqual(0, created.Count);
-                CollectionAssert.AreEqual(new[] { "NoKey" }, GetTargetTables());
+                Assert.AreEqual(0,
+                    created.Count);
+                CollectionAssert.AreEqual(new[] { "NoKey" },
+                    GetTargetTables());
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if the error callback throws the captured exception.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfTheErrorCallbackThrowsTheCapturedException()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
+                source.CopyTableSchemaTo(new[] { "NoKey" },
+                    target);
                 ExecutionError raised = null;
-
                 // Act
-                var exception = Assert.Throws<FbException>(() =>
-                    source.CopyTableSchemaTo(new[] { "NoKey" }, target, errorCallback: e =>
-                    {
-                        raised = e;
-                        throw e.Exception;
-                    }));
-
+                var exception = Assert.Throws<FbException>(() => source.CopyTableSchemaTo(new[] { "NoKey" },
+                        target,
+                        errorCallback: e =>
+                {
+                    raised = e;
+                    throw e.Exception;
+                }));
                 // Assert
-                Assert.AreSame(raised.Exception, exception);
+                Assert.AreSame(raised.Exception,
+                    exception);
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if the error callback throws.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
-
+                source.CopyTableSchemaTo(new[] { "NoKey" },
+                    target);
                 // Act/Assert
-                Assert.Throws<NotSupportedException>(() =>
-                    source.CopyTableSchemaTo(new[] { "NoKey" }, target, errorCallback: e => throw new NotSupportedException()));
+                Assert.Throws<NotSupportedException>(() => source.CopyTableSchemaTo(new[] { "NoKey" },
+                        target,
+                        errorCallback: e => throw new NotSupportedException()));
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with error callback in transaction that the server commits.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithErrorCallbackInTransactionThatTheServerCommits()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget).EnsureOpen())
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "NoKey" }, target);
-
+                source.CopyTableSchemaTo(new[] { "NoKey" },
+                    target);
                 // Act
                 using (var transaction = target.BeginTransaction())
                 {
-                    source.CopyTableSchemaTo(
-                        new[] { "NoKey", "Parent" },
+                    source.CopyTableSchemaTo(new[] { "NoKey", "Parent" },
                         target,
-                        errorCallback: _ => { },
+                        errorCallback: _ =>
+                    {
+                    },
                         transaction: transaction);
                     transaction.Commit();
                 }
 
                 // Assert
-                CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent" }, GetTargetTables());
+                CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent" },
+                    GetTargetTables());
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to with error callback if there is no mapped schema reader.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToWithErrorCallbackIfThereIsNoMappedSchemaReader()
         {
@@ -995,11 +1271,12 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
             {
                 // Setup
                 var errors = 0;
-
                 // Act/Assert
-                Assert.Throws<MissingMappingException>(() =>
-                    source.CopyTableSchemaTo(new[] { "Country" }, target, errorCallback: e => errors++));
-                Assert.AreEqual(0, errors);
+                Assert.Throws<MissingMappingException>(() => source.CopyTableSchemaTo(new[] { "Country" },
+                        target,
+                        errorCallback: e => errors++));
+                Assert.AreEqual(0,
+                    errors);
             }
         }
 
@@ -1007,6 +1284,9 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies copy table schemas to async calls the error callback with the details of the error.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncCallsTheErrorCallbackWithTheDetailsOfTheError()
         {
@@ -1016,96 +1296,114 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var errors = new List<ExecutionError>();
-
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "Person" }, target, errorCallback: errors.Add);
-
+                await source.CopyTableSchemaToAsync(new[] { "Person" },
+                    target,
+                    errorCallback: errors.Add);
                 // Assert
-                Assert.AreEqual(1, errors.Count);
+                Assert.AreEqual(1,
+                    errors.Count);
                 Assert.IsInstanceOfType<FbException>(errors[0].Exception);
-                Assert.AreEqual("Person", errors[0].TableName, StringComparer.Ordinal);
-                StringAssert.StartsWith(errors[0].Statement, "ALTER TABLE \"Person\"", StringComparison.Ordinal);
+                Assert.AreEqual("Person",
+                    errors[0].TableName,
+                    StringComparer.Ordinal);
+                StringAssert.StartsWith(errors[0].Statement,
+                    "ALTER TABLE \"Person\"",
+                    StringComparison.Ordinal);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async with error callback continues with the other tables.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncWithErrorCallbackContinuesWithTheOtherTables()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
+                await source.CopyTableSchemaToAsync(new[] { "NoKey" },
+                    target);
                 var created = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                await source.CopyTableSchemaToAsync(
-                    new[] { "NoKey", "Parent", "Child" },
+                await source.CopyTableSchemaToAsync(new[] { "NoKey", "Parent", "Child" },
                     target,
                     createdCallback: created.Add,
-                    errorCallback: _ => { });
-
+                    errorCallback: _ =>
+                {
+                });
                 // Assert
-                CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent", "Child" }, created.Select(r => r.Target.Table.Table.Name).ToArray());
-                Assert.AreEqual(1, created.Single(r => r.Target.Table.Table.Name == "NoKey").Errors.Count);
-                Assert.AreEqual(0, created.Where(r => r.Target.Table.Table.Name != "NoKey").Sum(r => r.Errors.Count));
-                AssertTargetMatchesSource("NoKey", "Parent", "Child");
+                CollectionAssert.AreEquivalent(new[] { "NoKey", "Parent", "Child" },
+                    created.Select(r => r.Target.Table.Table.Name).ToArray());
+                Assert.AreEqual(1,
+                    created.Single(r => r.Target.Table.Table.Name == "NoKey").Errors.Count);
+                Assert.AreEqual(0,
+                    created.Where(r => r.Target.Table.Table.Name != "NoKey").Sum(r => r.Errors.Count));
+                AssertTargetMatchesSource("NoKey",
+                    "Parent",
+                    "Child");
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async stops if the error callback throws.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncStopsIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
-
+                await source.CopyTableSchemaToAsync(new[] { "NoKey" },
+                    target);
                 // Act/Assert
-                await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    source.CopyTableSchemaToAsync(
-                        new[] { "NoKey", "Parent", "Child" },
+                await Assert.ThrowsAsync<NotSupportedException>(() => source.CopyTableSchemaToAsync(new[] { "NoKey", "Parent", "Child" },
                         target,
                         errorCallback: _ => throw new NotSupportedException()));
-
                 // Assert
-                CollectionAssert.AreEqual(new[] { "NoKey" }, GetTargetTables());
+                CollectionAssert.AreEqual(new[] { "NoKey" },
+                    GetTargetTables());
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to async if the error callback throws the captured exception.
+        /// </summary>
         [TestMethod]
         public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfTheErrorCallbackThrowsTheCapturedException()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new FbConnection(Database.ConnectionStringForSource))
             using (var target = new FbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopyTableSchemaToAsync(new[] { "NoKey" }, target);
+                await source.CopyTableSchemaToAsync(new[] { "NoKey" },
+                    target);
                 ExecutionError raised = null;
-
                 // Act
-                var exception = await Assert.ThrowsAsync<FbException>(() =>
-                    source.CopyTableSchemaToAsync(new[] { "NoKey" }, target, errorCallback: e =>
-                    {
-                        raised = e;
-                        throw e.Exception;
-                    }));
-
+                var exception = await Assert.ThrowsAsync<FbException>(() => source.CopyTableSchemaToAsync(new[] { "NoKey" },
+                        target,
+                        errorCallback: e =>
+                {
+                    raised = e;
+                    throw e.Exception;
+                }));
                 // Assert
-                Assert.AreSame(raised.Exception, exception);
+                Assert.AreSame(raised.Exception,
+                    exception);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async with error callback can copy the whole database twice.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncWithErrorCallbackCanCopyTheWholeDatabaseTwice()
         {
@@ -1115,16 +1413,19 @@ namespace RepoDb.Schema.Firebird.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = GetSourceTables();
-                await source.CopyTableSchemaToAsync(tables, target);
-
+                await source.CopyTableSchemaToAsync(tables,
+                    target);
                 // Act
-                await source.CopyTableSchemaToAsync(tables, target, errorCallback: _ => { });
-
+                await source.CopyTableSchemaToAsync(tables,
+                    target,
+                    errorCallback: _ =>
+                {
+                });
                 // Assert
-                CollectionAssert.AreEquivalent(tables, GetTargetTables());
+                CollectionAssert.AreEquivalent(tables,
+                    GetTargetTables());
             }
         }
-
         #endregion
 
         #endregion

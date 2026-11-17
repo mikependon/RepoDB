@@ -1,9 +1,8 @@
-﻿#region Copyright Attributions
+#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -29,17 +28,22 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
         /// The statements that clean up what the test created (they are executed in the reverse order).
         /// </summary>
         private readonly List<string> _cleanup = new List<string>();
-
         #endregion
 
         #region Initialize
 
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
             Database.Initialize();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
@@ -53,35 +57,52 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
                     }
                     catch (Exception)
                     {
-                        // The schema (or the table) may not have been created
+                    // The schema (or the table) may not have been created
                     }
                 }
             }
+
             _cleanup.Clear();
             Database.Cleanup();
         }
 
         #endregion
 
-        #region Helpers
+        #region Private Methods
 
-        private static string Quote(string name) =>
-            "\"" + name.Replace("\"", "\"\"") + "\"";
+        /// <summary>
+        /// Performs quote.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        private static string Quote(string name) => "\"" + name.Replace("\"",
+            "\"\"") + "\"";
 
-        private string NewName(string prefix = "RepoDb_Cs_") =>
-            prefix + Guid.NewGuid().ToString("N").Substring(0, 8);
+        /// <summary>
+        /// Performs new name.
+        /// </summary>
+        /// <param name="prefix">The prefix.</param>
+        private string NewName(string prefix = "RepoDb_Cs_") => prefix + Guid.NewGuid().ToString("N").Substring(0,
+            8);
 
+        /// <summary>
+        /// Performs track.
+        /// </summary>
+        /// <param name="name">The name.</param>
         private string Track(string name)
         {
             _cleanup.Add("DROP SCHEMA " + Quote(name));
             return name;
         }
 
+        /// <summary>
+        /// Performs schemas.
+        /// </summary>
         private static List<string> Schemas()
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForTarget))
             {
-                return new VerticaSchemaReader(connection).GetSchemas().Select(schema => schema.Name).ToList();
+                return new VerticaSchemaReader().GetSchemas(connection,
+                    transaction: null).Select(schema => schema.Name).ToList();
             }
         }
 
@@ -89,111 +110,126 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
 
         #region CreateSchema
 
+        /// <summary>
+        /// Verifies create schema.
+        /// </summary>
         [TestMethod]
         public void TestCreateSchema()
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                var name = Track(NewName());
-
+                var name=Track(NewName());
                 // Act
                 var actual = connection.CreateSchema(name);
-
                 // Assert
                 Assert.IsTrue(actual);
-                CollectionAssert.Contains(Schemas(), name);
+                CollectionAssert.Contains(Schemas(),
+                    name);
             }
         }
 
+        /// <summary>
+        /// Verifies create schema does nothing if the schema exists.
+        /// </summary>
         [TestMethod]
         public void TestCreateSchemaDoesNothingIfTheSchemaExists()
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                var name = Track(NewName());
+                var name=Track(NewName());
                 connection.CreateSchema(name);
-
                 // Act
                 var actual = connection.CreateSchema(name);
-
                 // Assert
                 Assert.IsFalse(actual);
-                Assert.AreEqual(1, Schemas().Count(schema => schema == name));
+                Assert.AreEqual(1,
+                    Schemas().Count(schema => schema == name));
             }
         }
 
+        /// <summary>
+        /// Verifies create schema with aname that has spaces.
+        /// </summary>
         [TestMethod]
         public void TestCreateSchemaWithANameThatHasSpaces()
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                var name = Track(NewName("RepoDb Cs "));
-
+                var name=Track(NewName("RepoDb Cs "));
                 // Act
                 var actual = connection.CreateSchema(name);
-
                 // Assert
                 Assert.IsTrue(actual);
-                CollectionAssert.Contains(Schemas(), name);
+                CollectionAssert.Contains(Schemas(),
+                    name);
             }
         }
 
+        /// <summary>
+        /// Verifies create schema keeps the case of the name.
+        /// </summary>
         [TestMethod]
         public void TestCreateSchemaKeepsTheCaseOfTheName()
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                var name = Track(NewName("RepoDb_Cs_"));
-
+                var name=Track(NewName("RepoDb_Cs_"));
                 // Act
                 connection.CreateSchema(name);
-
                 // Assert
-                CollectionAssert.Contains(Schemas(), name);
+                CollectionAssert.Contains(Schemas(),
+                    name);
             }
         }
 
-
+        /// <summary>
+        /// Verifies create schema creates aschema that atable can be created in.
+        /// </summary>
         [TestMethod]
         public void TestCreateSchemaCreatesASchemaThatATableCanBeCreatedIn()
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                var name = Track(NewName());
+                var name=Track(NewName());
                 var table = Quote(name) + "." + Quote("Item");
                 _cleanup.Add("DROP TABLE " + table);
-
                 // Act
                 connection.CreateSchema(name);
                 connection.ExecuteNonQuery("CREATE TABLE " + table + " (" + Quote("Id") + " INTEGER NOT NULL)");
-
                 // Assert
-                Assert.AreEqual(0L, Convert.ToInt64(connection.ExecuteScalar("SELECT COUNT(*) FROM " + table)));
+                Assert.AreEqual(0L,
+                    Convert.ToInt64(connection.ExecuteScalar("SELECT COUNT(*) FROM " + table)));
             }
         }
 
+        /// <summary>
+        /// Verifies create schema with acommand timeout.
+        /// </summary>
         [TestMethod]
         public void TestCreateSchemaWithACommandTimeout()
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                var name = Track(NewName());
-
+                var name=Track(NewName());
                 // Act
-                var actual = connection.CreateSchema(name, commandTimeout: 30);
-
+                var actual = connection.CreateSchema(name,
+                    commandTimeout: 30);
                 // Assert
                 Assert.IsTrue(actual);
-                CollectionAssert.Contains(Schemas(), name);
+                CollectionAssert.Contains(Schemas(),
+                    name);
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on create schema if the name is empty.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCreateSchemaIfTheNameIsEmpty()
         {
@@ -208,25 +244,26 @@ namespace RepoDb.Schema.Vertica.IntegrationTests
 
         #region CreateSchemaAsync
 
+        /// <summary>
+        /// Verifies create schema async.
+        /// </summary>
         [TestMethod]
         public async Task TestCreateSchemaAsync()
         {
             using (var connection = new VerticaConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
-                var name = Track(NewName());
-
+                var name=Track(NewName());
                 // Act
                 var first = await connection.CreateSchemaAsync(name);
                 var second = await connection.CreateSchemaAsync(name);
-
                 // Assert
                 Assert.IsTrue(first);
                 Assert.IsFalse(second);
-                CollectionAssert.Contains(Schemas(), name);
+                CollectionAssert.Contains(Schemas(),
+                    name);
             }
         }
-
         #endregion
     }
 }

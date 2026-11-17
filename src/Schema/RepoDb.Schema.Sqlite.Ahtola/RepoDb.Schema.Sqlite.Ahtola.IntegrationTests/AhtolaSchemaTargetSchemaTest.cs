@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -18,9 +17,15 @@ using RepoDb.Schema.Sqlite.Ahtola.IntegrationTests.Setup;
 
 namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
 {
+    /// <summary>
+    /// Contains the ahtola schema target schema test behavior.
+    /// </summary>
     [TestClass]
     public class AhtolaSchemaTargetSchemaTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -28,6 +33,9 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
@@ -35,24 +43,40 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
             Database.Cleanup();
         }
 
-        #region Helpers
+        #region Private Methods
 
-        private static void MapSchemaReaderConnection(SqliteConnection source) =>
-            SchemaReaderMapper.Add<SqliteConnection>(new AhtolaSchemaReader(source), true);
+        /// <summary>
+        /// Performs map schema reader connection.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        private static void MapSchemaReaderConnection(SqliteConnection source) => SchemaReaderMapper.Add<SqliteConnection>(new AhtolaSchemaReader(),
+            true);
 
+        /// <summary>
+        /// Performs get target tables.
+        /// </summary>
+        /// <param name="schemaName">The schema name.</param>
         private static List<string> GetTargetTables(string schemaName = null)
         {
             using (var connection = Database.CreateTarget())
             {
-                return new AhtolaSchemaReader(connection).GetTables(schemaName).ToList();
+                return new AhtolaSchemaReader().GetTables(connection,
+                    schemaName,
+                    transaction: null).ToList();
             }
         }
 
+        /// <summary>
+        /// Performs get target schema.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
         private static TableSchema GetTargetSchema(string tableName)
         {
             using (var connection = Database.CreateTarget())
             {
-                return new AhtolaSchemaReader(connection).GetTableSchema(tableName);
+                return new AhtolaSchemaReader().GetTableSchema(connection,
+                    tableName,
+                    transaction: null);
             }
         }
 
@@ -60,6 +84,9 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
 
         #region Target Schema
 
+        /// <summary>
+        /// Verifies copy table schemas to with target schema creates the tables in that schema.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithTargetSchemaCreatesTheTablesInThatSchema()
         {
@@ -69,20 +96,29 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Country", "Person" }, target, Database.SalesSchema, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Country", "Person" },
+                    target,
+                    Database.SalesSchema,
+                    createdCallback: results.Add);
                 // Assert
-                CollectionAssert.AreEquivalent(new[] { $"{Database.SalesSchema}.Country", $"{Database.SalesSchema}.Person" }, GetTargetTables(Database.SalesSchema));
-                Assert.AreEqual(0, GetTargetTables().Count);
+                CollectionAssert.AreEquivalent(new[] { $"{Database.SalesSchema}.Country", $"{Database.SalesSchema}.Person" },
+                    GetTargetTables(Database.SalesSchema));
+                Assert.AreEqual(0,
+                    GetTargetTables().Count);
                 Assert.IsTrue(results.All(r => r.Source.Table.Table.Schema == null && r.Target.Table.Table.Schema == Database.SalesSchema));
                 var person = GetTargetSchema($"{Database.SalesSchema}.Person");
-                Assert.AreEqual(new TableInfo("Country", Database.SalesSchema), person.ForeignKeys.Single().ReferencedTable);
-                CollectionAssert.AreEqual(Helper.GetSourceSchema("Person").Columns.Select(c => c.Field.Name).ToArray(), person.Columns.Select(c => c.Field.Name).ToArray());
+                Assert.AreEqual(new TableInfo("Country",
+                        Database.SalesSchema),
+                    person.ForeignKeys.Single().ReferencedTable);
+                CollectionAssert.AreEqual(Helper.GetSourceSchema("Person").Columns.Select(c => c.Field.Name).ToArray(),
+                    person.Columns.Select(c => c.Field.Name).ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to without target schema creates the tables in the default schema.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
         {
@@ -92,18 +128,24 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Person", "Country", "OrderLine" }, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Person", "Country", "OrderLine" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                CollectionAssert.AreEquivalent(new[] { "Country", "OrderLine", "Person" }, GetTargetTables());
+                CollectionAssert.AreEquivalent(new[] { "Country", "OrderLine", "Person" },
+                    GetTargetTables());
                 Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == null));
                 Assert.IsTrue(results.All(r => r.Source.Table.Table.Schema == null));
-                Assert.AreEqual(new TableInfo("Country", null), GetTargetSchema("Person").ForeignKeys.Single().ReferencedTable);
+                Assert.AreEqual(new TableInfo("Country",
+                        null),
+                    GetTargetSchema("Person").ForeignKeys.Single().ReferencedTable);
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schema to of asingle table with target schema.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemaToOfASingleTableWithTargetSchema()
         {
@@ -112,17 +154,22 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                var result = source.CopyTableSchemaTo("Country", target, Database.SalesSchema).Items.Single();
-
+                var result = source.CopyTableSchemaTo("Country",
+                    target,
+                    Database.SalesSchema).Items.Single();
                 // Assert
                 Assert.IsNull(result.Source.Table.Table.Schema);
-                Assert.AreEqual(Database.SalesSchema, result.Target.Table.Table.Schema);
-                CollectionAssert.AreEqual(new[] { $"{Database.SalesSchema}.Country" }, GetTargetTables(Database.SalesSchema));
+                Assert.AreEqual(Database.SalesSchema,
+                    result.Target.Table.Table.Schema);
+                CollectionAssert.AreEqual(new[] { $"{Database.SalesSchema}.Country" },
+                    GetTargetTables(Database.SalesSchema));
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to with target schema checks the tables of that schema.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToWithTargetSchemaChecksTheTablesOfThatSchema()
         {
@@ -131,21 +178,33 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "Country" }, target, Database.SalesSchema);
+                source.CopyTableSchemaTo(new[] { "Country" },
+                    target,
+                    Database.SalesSchema);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Country" }, target, Database.SalesSchema, createdCallback: results.Add);
-                source.CopyTableSchemaTo(new[] { "Country" }, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Country" },
+                    target,
+                    Database.SalesSchema,
+                    createdCallback: results.Add);
+                source.CopyTableSchemaTo(new[] { "Country" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(TableOutcome.Skipped, results[0].Outcome);
-                Assert.AreEqual(TableOutcome.Created, results[1].Outcome);
-                CollectionAssert.AreEquivalent(new[] { $"{Database.SalesSchema}.Country" }, GetTargetTables(Database.SalesSchema));
-                CollectionAssert.AreEquivalent(new[] { "Country" }, GetTargetTables());
+                Assert.AreEqual(TableOutcome.Skipped,
+                    results[0].Outcome);
+                Assert.AreEqual(TableOutcome.Created,
+                    results[1].Outcome);
+                CollectionAssert.AreEquivalent(new[] { $"{Database.SalesSchema}.Country" },
+                    GetTargetTables(Database.SalesSchema));
+                CollectionAssert.AreEquivalent(new[] { "Country" },
+                    GetTargetTables());
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if the target schema does not exist.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfTheTargetSchemaDoesNotExist()
         {
@@ -154,12 +213,16 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act/Assert
-                Assert.Throws<SqliteException>(() => source.CopyTableSchemaTo(new[] { "Country" }, target, "Missing"));
+                Assert.Throws<SqliteException>(() => source.CopyTableSchemaTo(new[] { "Country" },
+                        target,
+                        "Missing"));
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async with target schema creates the tables in that schema.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncWithTargetSchemaCreatesTheTablesInThatSchema()
         {
@@ -169,16 +232,21 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "Country", "Person" }, target, Database.SalesSchema, createdCallback: results.Add);
-
+                await source.CopyTableSchemaToAsync(new[] { "Country", "Person" },
+                    target,
+                    Database.SalesSchema,
+                    createdCallback: results.Add);
                 // Assert
-                CollectionAssert.AreEquivalent(new[] { $"{Database.SalesSchema}.Country", $"{Database.SalesSchema}.Person" }, GetTargetTables(Database.SalesSchema));
+                CollectionAssert.AreEquivalent(new[] { $"{Database.SalesSchema}.Country", $"{Database.SalesSchema}.Person" },
+                    GetTargetTables(Database.SalesSchema));
                 Assert.IsTrue(results.All(r => r.Target.Table.Table.Schema == Database.SalesSchema));
             }
         }
 
+        /// <summary>
+        /// Verifies copy table schemas to async without target schema creates the tables in the default schema.
+        /// </summary>
         [TestMethod]
         public async Task TestCopyTableSchemasToAsyncWithoutTargetSchemaCreatesTheTablesInTheDefaultSchema()
         {
@@ -187,17 +255,16 @@ namespace RepoDb.Schema.Sqlite.Ahtola.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                var result = (await source.CopyTableSchemaToAsync("Country", target)).Items.Single();
-
+                var result = (await source.CopyTableSchemaToAsync("Country",
+                    target)).Items.Single();
                 // Assert
                 Assert.IsNull(result.Source.Table.Table.Schema);
                 Assert.IsNull(result.Target.Table.Table.Schema);
-                CollectionAssert.AreEqual(new[] { "Country" }, GetTargetTables());
+                CollectionAssert.AreEqual(new[] { "Country" },
+                    GetTargetTables());
             }
         }
-
         #endregion
     }
 }

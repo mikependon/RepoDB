@@ -16,85 +16,83 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
     {
         #region Private Variables
 
-        private static readonly KeyValuePair<string, object>[] _columnValues =
-            new[]
-            {
-                new KeyValuePair<string, object>("ChildSchema",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("ChildTable",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("Collation",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("ColumnName",
-                    "Id"),
-                new KeyValuePair<string, object>("Comment",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("ComputedDefinition",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("ConstraintName",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("DefaultDefinition",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("Definition",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("DeleteAction",
-                    0),
-                new KeyValuePair<string, object>("FilterDefinition",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("ForeignKeyName",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("IdentityIncrement",
-                    0),
-                new KeyValuePair<string, object>("IdentitySeed",
-                    0),
-                new KeyValuePair<string, object>("IndexName",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("IsClustered",
-                    0),
-                new KeyValuePair<string, object>("IsDescending",
-                    0),
-                new KeyValuePair<string, object>("IsIdentity",
-                    0),
-                new KeyValuePair<string, object>("IsIncluded",
-                    0),
-                new KeyValuePair<string, object>("IsNullable",
-                    true),
-                new KeyValuePair<string, object>("IsPrimary",
-                    0),
-                new KeyValuePair<string, object>("IsUnique",
-                    0),
-                new KeyValuePair<string, object>("MaxLength",
-                    10),
-                new KeyValuePair<string, object>("Name",
-                    "Id"),
-                new KeyValuePair<string, object>("Ordinal",
-                    0),
-                new KeyValuePair<string, object>("ParentSchema",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("ParentTable",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("pk",
-                    0),
-                new KeyValuePair<string, object>("Precision",
-                    10),
-                new KeyValuePair<string, object>("ReferencedColumn",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("ReferencedSchema",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("ReferencedTable",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("Scale",
-                    0),
-                new KeyValuePair<string, object>("SchemaName",
-                    DBNull.Value),
-                new KeyValuePair<string, object>("type",
-                    "INTEGER"),
-                new KeyValuePair<string, object>("TypeName",
-                    "INTEGER"),
-                new KeyValuePair<string, object>("UpdateAction",
-                    0)
-            };
-
+        private static readonly KeyValuePair<string, object>[] _columnValues = new[]
+        {
+            new KeyValuePair<string, object>("ChildSchema",
+                DBNull.Value),
+            new KeyValuePair<string, object>("ChildTable",
+                DBNull.Value),
+            new KeyValuePair<string, object>("Collation",
+                DBNull.Value),
+            new KeyValuePair<string, object>("ColumnName",
+                "Id"),
+            new KeyValuePair<string, object>("Comment",
+                DBNull.Value),
+            new KeyValuePair<string, object>("ComputedDefinition",
+                DBNull.Value),
+            new KeyValuePair<string, object>("ConstraintName",
+                DBNull.Value),
+            new KeyValuePair<string, object>("DefaultDefinition",
+                DBNull.Value),
+            new KeyValuePair<string, object>("Definition",
+                DBNull.Value),
+            new KeyValuePair<string, object>("DeleteAction",
+                0),
+            new KeyValuePair<string, object>("FilterDefinition",
+                DBNull.Value),
+            new KeyValuePair<string, object>("ForeignKeyName",
+                DBNull.Value),
+            new KeyValuePair<string, object>("IdentityIncrement",
+                0),
+            new KeyValuePair<string, object>("IdentitySeed",
+                0),
+            new KeyValuePair<string, object>("IndexName",
+                DBNull.Value),
+            new KeyValuePair<string, object>("IsClustered",
+                0),
+            new KeyValuePair<string, object>("IsDescending",
+                0),
+            new KeyValuePair<string, object>("IsIdentity",
+                0),
+            new KeyValuePair<string, object>("IsIncluded",
+                0),
+            new KeyValuePair<string, object>("IsNullable",
+                true),
+            new KeyValuePair<string, object>("IsPrimary",
+                0),
+            new KeyValuePair<string, object>("IsUnique",
+                0),
+            new KeyValuePair<string, object>("MaxLength",
+                10),
+            new KeyValuePair<string, object>("Name",
+                "Id"),
+            new KeyValuePair<string, object>("Ordinal",
+                0),
+            new KeyValuePair<string, object>("ParentSchema",
+                DBNull.Value),
+            new KeyValuePair<string, object>("ParentTable",
+                DBNull.Value),
+            new KeyValuePair<string, object>("pk",
+                0),
+            new KeyValuePair<string, object>("Precision",
+                10),
+            new KeyValuePair<string, object>("ReferencedColumn",
+                DBNull.Value),
+            new KeyValuePair<string, object>("ReferencedSchema",
+                DBNull.Value),
+            new KeyValuePair<string, object>("ReferencedTable",
+                DBNull.Value),
+            new KeyValuePair<string, object>("Scale",
+                0),
+            new KeyValuePair<string, object>("SchemaName",
+                DBNull.Value),
+            new KeyValuePair<string, object>("type",
+                "INTEGER"),
+            new KeyValuePair<string, object>("TypeName",
+                "INTEGER"),
+            new KeyValuePair<string, object>("UpdateAction",
+                0)
+        };
         #endregion
 
         #region Public Methods
@@ -107,11 +105,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = reader.GetColumns("test.Items").ToArray();
-
+            var actual = reader.GetColumns(connection,
+                "test.Items",
+                transaction: null).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -125,12 +123,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = (await reader.GetColumnsAsync("test.Items"))
-                .ToArray();
-
+            var actual = (await reader.GetColumnsAsync(connection,
+                "test.Items",
+                transaction: null)).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -144,11 +141,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = reader.GetIndexes("test.Items").ToArray();
-
+            var actual = reader.GetIndexes(connection,
+                "test.Items",
+                transaction: null).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -162,12 +159,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = (await reader.GetIndexesAsync("test.Items"))
-                .ToArray();
-
+            var actual = (await reader.GetIndexesAsync(connection,
+                "test.Items",
+                transaction: null)).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -181,11 +177,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = reader.GetForeignKeys("test.Items").ToArray();
-
+            var actual = reader.GetForeignKeys(connection,
+                "test.Items",
+                transaction: null).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -199,12 +195,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = (await reader.GetForeignKeysAsync("test.Items"))
-                .ToArray();
-
+            var actual = (await reader.GetForeignKeysAsync(connection,
+                "test.Items",
+                transaction: null)).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -218,11 +213,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = reader.GetUniqueConstraints("test.Items").ToArray();
-
+            var actual = reader.GetUniqueConstraints(connection,
+                "test.Items",
+                transaction: null).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -236,12 +231,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = (await reader.GetUniqueConstraintsAsync("test.Items"))
-                .ToArray();
-
+            var actual = (await reader.GetUniqueConstraintsAsync(connection,
+                "test.Items",
+                transaction: null)).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -255,11 +249,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = reader.GetCheckConstraints("test.Items").ToArray();
-
+            var actual = reader.GetCheckConstraints(connection,
+                "test.Items",
+                transaction: null).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -273,12 +267,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = (await reader.GetCheckConstraintsAsync("test.Items"))
-                .ToArray();
-
+            var actual = (await reader.GetCheckConstraintsAsync(connection,
+                "test.Items",
+                transaction: null)).ToArray();
             // Assert
             Assert.AreEqual(0,
                 actual.Length);
@@ -292,11 +285,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = reader.GetPrimaryKey("test.Items");
-
+            var actual = reader.GetPrimaryKey(connection,
+                "test.Items",
+                transaction: null);
             // Assert
             Assert.IsNull(actual);
         }
@@ -309,11 +302,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = await reader.GetPrimaryKeyAsync("test.Items");
-
+            var actual = await reader.GetPrimaryKeyAsync(connection,
+                "test.Items",
+                transaction: null);
             // Assert
             Assert.IsNull(actual);
         }
@@ -326,11 +319,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = reader.TableExists("test.Items");
-
+            var actual = reader.TableExists(connection,
+                "test.Items",
+                transaction: null);
             // Assert
             Assert.IsFalse(actual);
         }
@@ -343,11 +336,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = await reader.TableExistsAsync("test.Items");
-
+            var actual = await reader.TableExistsAsync(connection,
+                "test.Items",
+                transaction: null);
             // Assert
             Assert.IsFalse(actual);
         }
@@ -360,11 +353,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = reader.GetTableSchema("test.Items");
-
+            var actual = reader.GetTableSchema(connection,
+                "test.Items",
+                transaction: null);
             // Assert
             Assert.AreEqual("Items",
                 actual.Table.Name,
@@ -379,11 +372,11 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         {
             // Setup
             using var connection = new CatalogConnection();
-            var reader = new SqlServerSchemaReader(connection);
-
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = await reader.GetTableSchemaAsync("test.Items");
-
+            var actual = await reader.GetTableSchemaAsync(connection,
+                "test.Items",
+                transaction: null);
             // Assert
             Assert.AreEqual("Items",
                 actual.Table.Name,
@@ -397,12 +390,15 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         public void GetColumnsMapsCatalogRecord()
         {
             // Setup
-            using var connection = new CatalogConnection { Data = CreateColumnCatalog() };
-            var reader = new SqlServerSchemaReader(connection);
-
+            using var connection = new CatalogConnection
+            {
+                Data = CreateColumnCatalog()
+            };
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = reader.GetColumns("test.Items").Single();
-
+            var actual = reader.GetColumns(connection,
+                "test.Items",
+                transaction: null).Single();
             // Assert
             Assert.AreEqual("Id",
                 actual.Field.Name,
@@ -416,12 +412,15 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
         public async Task GetColumnsAsyncMapsCatalogRecord()
         {
             // Setup
-            using var connection = new CatalogConnection { Data = CreateColumnCatalog() };
-            var reader = new SqlServerSchemaReader(connection);
-
+            using var connection = new CatalogConnection
+            {
+                Data = CreateColumnCatalog()
+            };
+            var reader = new SqlServerSchemaReader();
             // Act
-            var actual = (await reader.GetColumnsAsync("test.Items")).Single();
-
+            var actual = (await reader.GetColumnsAsync(connection,
+                "test.Items",
+                transaction: null)).Single();
             // Assert
             Assert.AreEqual("Id",
                 actual.Field.Name,
@@ -446,7 +445,6 @@ namespace RepoDb.Schema.SqlServer.UnitTests.Readers
             table.Rows.Add(fields.Select(field => field.Value).ToArray());
             return table;
         }
-
         #endregion
     }
 }

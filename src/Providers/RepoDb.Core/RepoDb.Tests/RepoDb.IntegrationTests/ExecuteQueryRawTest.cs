@@ -22,9 +22,16 @@ using System.Globalization;
 
 namespace RepoDb.IntegrationTests
 {
+    /// <summary>
+    /// Contains the execute query raw test behavior.
+    /// </summary>
     [TestClass]
     public class ExecuteQueryRawTest
     {
+        /// <summary>
+        /// Performs class initialize.
+        /// </summary>
+        /// <param name="context">The context.</param>
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
@@ -35,6 +42,9 @@ namespace RepoDb.IntegrationTests
 #endif
         }
 
+        /// <summary>
+        /// Performs class cleaup.
+        /// </summary>
         [ClassCleanup]
         public static void ClassCleaup()
         {
@@ -42,6 +52,9 @@ namespace RepoDb.IntegrationTests
             PropertyHandlerCache.Flush();
         }
 
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -49,6 +62,9 @@ namespace RepoDb.IntegrationTests
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
@@ -57,13 +73,26 @@ namespace RepoDb.IntegrationTests
 
         #region PropertyHandlers
 
+        /// <summary>
+        /// Contains the int property handler behavior.
+        /// </summary>
         private class IntPropertyHandler : IPropertyHandler<uint, uint>
         {
+            /// <summary>
+            /// Performs get.
+            /// </summary>
+            /// <param name="input">The input.</param>
+            /// <param name="options">The options.</param>
             public uint Get(uint input, PropertyHandlerGetOptions options)
             {
                 return input * 2;
             }
 
+            /// <summary>
+            /// Performs set.
+            /// </summary>
+            /// <param name="input">The input.</param>
+            /// <param name="options">The options.</param>
             public uint Set(uint input, PropertyHandlerSetOptions options)
             {
                 return input;
@@ -74,6 +103,9 @@ namespace RepoDb.IntegrationTests
 
         #region Enums
 
+        /// <summary>
+        /// Contains the gender behavior.
+        /// </summary>
         private enum Gender
         {
             Male = 1,
@@ -84,78 +116,210 @@ namespace RepoDb.IntegrationTests
 
         #region Classes
 
+        /// <summary>
+        /// Contains the whatever class with non nullable properties behavior.
+        /// </summary>
         private class WhateverClassWithNonNullableProperties
         {
+            /// <summary>
+            /// Gets or sets the id.
+            /// </summary>
             public int Id { get; set; }
+            /// <summary>
+            /// Gets or sets the column int.
+            /// </summary>
             public int ColumnInt { get; set; }
+            /// <summary>
+            /// Gets or sets the column big int.
+            /// </summary>
             public long ColumnBigInt { get; set; }
+            /// <summary>
+            /// Gets or sets the column nvar char.
+            /// </summary>
             public string ColumnNVarChar { get; set; }
+            /// <summary>
+            /// Gets or sets the column float.
+            /// </summary>
             public double ColumnFloat { get; set; }
+            /// <summary>
+            /// Gets or sets the column decimal.
+            /// </summary>
             public decimal ColumnDecimal { get; set; }
+            /// <summary>
+            /// Gets or sets the column date.
+            /// </summary>
             public DateTime ColumnDate { get; set; }
+            /// <summary>
+            /// Gets or sets the column time.
+            /// </summary>
             public TimeSpan ColumnTime { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time.
+            /// </summary>
             public DateTime ColumnDateTime { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time2.
+            /// </summary>
             public DateTime ColumnDateTime2 { get; set; }
         }
 
+        /// <summary>
+        /// Contains the whatever class with nullable properties behavior.
+        /// </summary>
         private class WhateverClassWithNullableProperties
         {
+            /// <summary>
+            /// Gets or sets the id.
+            /// </summary>
             public int Id { get; set; }
+            /// <summary>
+            /// Gets or sets the column int.
+            /// </summary>
             public int? ColumnInt { get; set; }
+            /// <summary>
+            /// Gets or sets the column big int.
+            /// </summary>
             public long? ColumnBigInt { get; set; }
+            /// <summary>
+            /// Gets or sets the column nvar char.
+            /// </summary>
             public string ColumnNVarChar { get; set; }
+            /// <summary>
+            /// Gets or sets the column float.
+            /// </summary>
             public double? ColumnFloat { get; set; }
+            /// <summary>
+            /// Gets or sets the column decimal.
+            /// </summary>
             public decimal? ColumnDecimal { get; set; }
+            /// <summary>
+            /// Gets or sets the column date.
+            /// </summary>
             public DateTime? ColumnDate { get; set; }
+            /// <summary>
+            /// Gets or sets the column time.
+            /// </summary>
             public TimeSpan? ColumnTime { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time.
+            /// </summary>
             public DateTime? ColumnDateTime { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time2.
+            /// </summary>
             public DateTime? ColumnDateTime2 { get; set; }
         }
 
+        /// <summary>
+        /// Contains the mapped whatever class with non nullable properties behavior.
+        /// </summary>
         private class MappedWhateverClassWithNonNullableProperties
         {
+            /// <summary>
+            /// Gets or sets the id mapped.
+            /// </summary>
             [Map("Id")]
             public int IdMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column int mapped.
+            /// </summary>
             [Map("ColumnInt")]
             public int ColumnIntMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column big int mapped.
+            /// </summary>
             [Map("ColumnBigInt")]
             public long ColumnBigIntMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column nvar char mapped.
+            /// </summary>
             [Map("ColumnNVarChar")]
             public string ColumnNVarCharMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column float mapped.
+            /// </summary>
             [Map("ColumnFloat")]
             public double ColumnFloatMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column decimal mapped.
+            /// </summary>
             [Map("ColumnDecimal")]
             public decimal ColumnDecimalMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column date mapped.
+            /// </summary>
             [Map("ColumnDate")]
             public DateTime ColumnDateMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column time mapped.
+            /// </summary>
             [Map("ColumnTime")]
             public TimeSpan ColumnTimeMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time mapped.
+            /// </summary>
             [Map("ColumnDateTime")]
             public DateTime ColumnDateTimeMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time2 mapped.
+            /// </summary>
             [Map("ColumnDateTime2")]
             public DateTime ColumnDateTime2Mapped { get; set; }
         }
 
+        /// <summary>
+        /// Contains the mapped whatever class with nullable properties behavior.
+        /// </summary>
         private class MappedWhateverClassWithNullableProperties
         {
+            /// <summary>
+            /// Gets or sets the id mapped.
+            /// </summary>
             [Map("Id")]
             public int IdMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column int mapped.
+            /// </summary>
             [Map("ColumnInt")]
             public int? ColumnIntMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column big int mapped.
+            /// </summary>
             [Map("ColumnBigInt")]
             public long? ColumnBigIntMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column nvar char mapped.
+            /// </summary>
             [Map("ColumnNVarChar")]
             public string ColumnNVarCharMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column float mapped.
+            /// </summary>
             [Map("ColumnFloat")]
             public double? ColumnFloatMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column decimal mapped.
+            /// </summary>
             [Map("ColumnDecimal")]
             public decimal? ColumnDecimalMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column date mapped.
+            /// </summary>
             [Map("ColumnDate")]
             public DateTime? ColumnDateMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column time mapped.
+            /// </summary>
             [Map("ColumnTime")]
             public TimeSpan? ColumnTimeMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time mapped.
+            /// </summary>
             [Map("ColumnDateTime")]
             public DateTime? ColumnDateTimeMapped { get; set; }
+            /// <summary>
+            /// Gets or sets the column date time2 mapped.
+            /// </summary>
             [Map("ColumnDateTime2")]
             public DateTime? ColumnDateTime2Mapped { get; set; }
         }
@@ -216,6 +380,9 @@ namespace RepoDb.IntegrationTests
 
         #region PropertyHandler
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for property handler.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForPropertyHandler()
         {
@@ -231,6 +398,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for property handler.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForPropertyHandler()
         {
@@ -252,6 +422,9 @@ namespace RepoDb.IntegrationTests
 
         #region String
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for enum from string.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForEnumFromString()
         {
@@ -267,6 +440,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for enum from string.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForEnumFromString()
         {
@@ -282,6 +458,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for nullable enum from string.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForNullableEnumFromString()
         {
@@ -297,6 +476,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for nullable enum from string.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForNullableEnumFromString()
         {
@@ -312,6 +494,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for nullable enum from string with null results.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForNullableEnumFromStringWithNullResults()
         {
@@ -327,6 +512,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for nullable enum from string with null results.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForNullableEnumFromStringWithNullResults()
         {
@@ -346,6 +534,9 @@ namespace RepoDb.IntegrationTests
 
         #region NonString
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for enum from non string.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForEnumFromNonString()
         {
@@ -361,6 +552,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for enum from non string.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForEnumFromNonString()
         {
@@ -376,6 +570,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for nullable enum from non string.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForNullableEnumFromNonString()
         {
@@ -391,6 +588,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for nullable enum from non string.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForNullableEnumFromNonString()
         {
@@ -406,6 +606,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for nullable enum from non string with null results.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForNullableEnumFromNonStringWithNullResults()
         {
@@ -421,6 +624,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for nullable enum from non string with null results.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForNullableEnumFromNonStringWithNullResults()
         {
@@ -444,6 +650,9 @@ namespace RepoDb.IntegrationTests
 
         // String
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for string.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForString()
         {
@@ -459,6 +668,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for string.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForString()
         {
@@ -474,6 +686,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for string with null results.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForStringWithNullResults()
         {
@@ -488,6 +703,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for string with null results.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForStringWithNullResults()
         {
@@ -504,6 +722,9 @@ namespace RepoDb.IntegrationTests
 
         // Guid
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for guid.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForGuid()
         {
@@ -522,6 +743,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for guid.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForGuid()
         {
@@ -540,6 +764,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for guid with null results.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForGuidWithNullResults()
         {
@@ -554,6 +781,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for guid with null results.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForGuidWithNullResults()
         {
@@ -570,6 +800,9 @@ namespace RepoDb.IntegrationTests
 
         // Long
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for long.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForLong()
         {
@@ -585,6 +818,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for long.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForLong()
         {
@@ -600,6 +836,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for long with null results.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForLongWithNullResults()
         {
@@ -614,6 +853,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for long with null results.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForLongWithNullResults()
         {
@@ -630,6 +872,9 @@ namespace RepoDb.IntegrationTests
 
         // DateTime
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for date time.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForDateTime()
         {
@@ -648,6 +893,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for date time.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForDateTime()
         {
@@ -666,6 +914,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for date time with null results.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForDateTimeWithNullResults()
         {
@@ -680,6 +931,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for date time with null results.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForDateTimeWithNullResults()
         {
@@ -700,6 +954,9 @@ namespace RepoDb.IntegrationTests
 
         // Guid
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for nullable guid.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForNullableGuid()
         {
@@ -718,6 +975,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for nullable guid.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForNullableGuid()
         {
@@ -736,6 +996,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for nullable guid with null results.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForNullableGuidWithNullResults()
         {
@@ -750,6 +1013,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for nullable guid with null results.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForNullableGuidWithNullResults()
         {
@@ -766,6 +1032,9 @@ namespace RepoDb.IntegrationTests
 
         // Long
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for nullable long.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForNullableLong()
         {
@@ -781,6 +1050,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for nullable long.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForNullableLong()
         {
@@ -796,6 +1068,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for nullable long with null results.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForNullableLongWithNullResults()
         {
@@ -810,6 +1085,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for nullable long with null results.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForNullableLongWithNullResults()
         {
@@ -826,6 +1104,9 @@ namespace RepoDb.IntegrationTests
 
         // DateTime
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for nullable date time.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForNullableDateTime()
         {
@@ -846,6 +1127,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for nullable date time.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForNullableDateTime()
         {
@@ -866,6 +1150,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query type result for nullable date time with null results.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryTypeResultForNullableDateTimeWithNullResults()
         {
@@ -880,6 +1167,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async type result for nullable date time with null results.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncTypeResultForNullableDateTimeWithNullResults()
         {
@@ -896,6 +1186,9 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        /// <summary>
+        /// Verifies throw exception on sql connection execute query type result with more columns.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnSqlConnectionExecuteQueryTypeResultWithMoreColumns()
         {
@@ -906,6 +1199,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on sql connection execute query async type result with more columns.
+        /// </summary>
         [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionExecuteQueryAsyncTypeResultWithMoreColumns()
         {
@@ -922,6 +1218,9 @@ namespace RepoDb.IntegrationTests
 
         #region NonNullables
 
+        /// <summary>
+        /// Verifies sql connection execute query whatever class with non nullable properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWhateverClassWithNonNullableProperties()
         {
@@ -960,6 +1259,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async whatever class with non nullable properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncWhateverClassWithNonNullableProperties()
         {
@@ -998,6 +1300,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query whatever class with non nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWhateverClassWithNonNullablePropertiesAndWithExtraClassProperties()
         {
@@ -1030,6 +1335,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async whatever class with non nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncWhateverClassWithNonNullablePropertiesAndWithExtraClassProperties()
         {
@@ -1062,6 +1370,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query with whatever class with non nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithWhateverClassWithNonNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -1102,6 +1413,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async with whatever class with non nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncWithWhateverClassWithNonNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -1146,6 +1460,9 @@ namespace RepoDb.IntegrationTests
 
         #region Nullables
 
+        /// <summary>
+        /// Verifies sql connection execute query whatever class with nullable properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWhateverClassWithNullableProperties()
         {
@@ -1184,6 +1501,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async whatever class with nullable properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncWhateverClassWithNullableProperties()
         {
@@ -1222,6 +1542,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query whatever class with nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWhateverClassWithNullablePropertiesAndWithExtraClassProperties()
         {
@@ -1254,6 +1577,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async whatever class with nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncWhateverClassWithNullablePropertiesAndWithExtraClassProperties()
         {
@@ -1286,6 +1612,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query with whatever class with nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithWhateverClassWithNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -1326,6 +1655,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async with whatever class with nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncWithWhateverClassWithNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -1374,6 +1706,9 @@ namespace RepoDb.IntegrationTests
 
         #region NonNullables
 
+        /// <summary>
+        /// Verifies sql connection execute query mapped whatever class with non nullable properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMappedWhateverClassWithNonNullableProperties()
         {
@@ -1412,6 +1747,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async mapped whatever class with non nullable properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncMappedWhateverClassWithNonNullableProperties()
         {
@@ -1450,6 +1788,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query mapped whatever class with non nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMappedWhateverClassWithNonNullablePropertiesAndWithExtraClassProperties()
         {
@@ -1482,6 +1823,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async mapped whatever class with non nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncMappedWhateverClassWithNonNullablePropertiesAndWithExtraClassProperties()
         {
@@ -1514,6 +1858,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query with mapped whatever class with non nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithMappedWhateverClassWithNonNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -1554,6 +1901,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async with mapped whatever class with non nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncWithMappedWhateverClassWithNonNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -1598,6 +1948,9 @@ namespace RepoDb.IntegrationTests
 
         #region Nullables
 
+        /// <summary>
+        /// Verifies sql connection execute query mapped whatever class with nullable properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMappedWhateverClassWithNullableProperties()
         {
@@ -1636,6 +1989,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async mapped whatever class with nullable properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncMappedWhateverClassWithNullableProperties()
         {
@@ -1674,6 +2030,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query mapped whatever class with nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMappedWhateverClassWithNullablePropertiesAndWithExtraClassProperties()
         {
@@ -1706,6 +2065,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async mapped whatever class with nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncMappedWhateverClassWithNullablePropertiesAndWithExtraClassProperties()
         {
@@ -1738,6 +2100,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query with mapped whatever class with nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithMappedWhateverClassWithNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -1778,6 +2143,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async with mapped whatever class with nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncWithMappedWhateverClassWithNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -1899,6 +2267,9 @@ namespace RepoDb.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies sql connection execute query via idb data parameter.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryViaIDbDataParameter()
         {
@@ -1913,6 +2284,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query via query field for idb data parameter.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryViaQueryFieldForIDbDataParameter()
         {
@@ -1927,6 +2301,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query via query fields for idb data parameter.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryViaQueryFieldsForIDbDataParameter()
         {
@@ -1941,6 +2318,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query via query groups for idb data parameter.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryViaQueryGroupsForIDbDataParameter()
         {
@@ -1959,6 +2339,9 @@ namespace RepoDb.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies sql connection execute query async via idb data parameter.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncViaIDbDataParameter()
         {
@@ -1973,6 +2356,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async via query field for idb data parameter.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncViaQueryFieldForIDbDataParameter()
         {
@@ -1987,6 +2373,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async via query fields for idb data parameter.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncViaQueryFieldsForIDbDataParameter()
         {
@@ -2001,6 +2390,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query async via query groups for idb data parameter.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncViaQueryGroupsForIDbDataParameter()
         {
@@ -2027,6 +2419,9 @@ namespace RepoDb.IntegrationTests
 
         #region NonNullables
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple whatever class with non nullable properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWhateverClassWithNonNullableProperties()
         {
@@ -2079,6 +2474,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple async whatever class with non nullable properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncWhateverClassWithNonNullableProperties()
         {
@@ -2131,6 +2529,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple whatever class with non nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWhateverClassWithNonNullablePropertiesAndWithExtraClassProperties()
         {
@@ -2171,6 +2572,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple async whatever class with non nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncWhateverClassWithNonNullablePropertiesAndWithExtraClassProperties()
         {
@@ -2211,6 +2615,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple with whatever class with non nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWithWhateverClassWithNonNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -2266,6 +2673,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple async with whatever class with non nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncWithWhateverClassWithNonNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -2325,6 +2735,9 @@ namespace RepoDb.IntegrationTests
 
         #region Nullables
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple whatever class with nullable properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWhateverClassWithNullableProperties()
         {
@@ -2376,6 +2789,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple async whatever class with nullable properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncWhateverClassWithNullableProperties()
         {
@@ -2427,6 +2843,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple whatever class with nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWhateverClassWithNullablePropertiesAndWithExtraClassProperties()
         {
@@ -2467,6 +2886,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple async whatever class with nullable properties and with extra class properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncWhateverClassWithNullablePropertiesAndWithExtraClassProperties()
         {
@@ -2507,6 +2929,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple with whatever class with nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWithWhateverClassWithNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -2562,6 +2987,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple async with whatever class with nullable properties and with extra query properties.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncWithWhateverClassWithNullablePropertiesAndWithExtraQueryProperties()
         {
@@ -2625,6 +3053,9 @@ namespace RepoDb.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple via idb data parameter.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleViaIDbDataParameter()
         {
@@ -2642,6 +3073,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple via query field for idb data parameter.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleViaQueryFieldForIDbDataParameter()
         {
@@ -2659,6 +3093,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple via query fields for idb data parameter.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleViaQueryFieldsForIDbDataParameter()
         {
@@ -2676,6 +3113,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple via query group for idb data parameter.
+        /// </summary>
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleViaQueryGroupForIDbDataParameter()
         {
@@ -2697,6 +3137,9 @@ namespace RepoDb.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple async via idb data parameter.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncViaIDbDataParameter()
         {
@@ -2714,6 +3157,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple async via query field for idb data parameter.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncViaQueryFieldForIDbDataParameter()
         {
@@ -2731,6 +3177,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple async via query fields for idb data parameter.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncViaQueryFieldsForIDbDataParameter()
         {
@@ -2748,6 +3197,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Verifies sql connection execute query multiple async via query group for idb data parameter.
+        /// </summary>
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncViaQueryGroupForIDbDataParameter()
         {

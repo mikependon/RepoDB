@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using DuckDB.NET.Data;
@@ -11,15 +10,14 @@ using DuckDB.NET.Data;
 namespace RepoDb.Schema.DuckDb
 {
     /// <summary>
-    /// A class that is being used to initialize the necessary settings of the DuckDb schema objects for the <see cref="DuckDBConnection"/> object.
+    /// Configures the provider schema services.
     /// </summary>
     public static class DuckDbSchemaGlobalConfiguration
     {
-        #region Methods
+        #region Public Methods
 
         /// <summary>
-        /// Initializes the DuckDb settings first (see <c>UseDuckDb</c>), then registers the <see cref="DuckDbSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="DuckDBConnection"/> type.
-        /// A <see cref="DuckDbSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
+        /// Initializes the DuckDb settings first (see <c>UseDuckDb</c>), then registers the reader and <see cref="DuckDbSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="DuckDBConnection"/> type.
         /// It is safe to call this method more than once.
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
@@ -27,12 +25,13 @@ namespace RepoDb.Schema.DuckDb
         public static GlobalConfiguration UseDuckDbSchema(this GlobalConfiguration globalConfiguration)
         {
             globalConfiguration.UseDuckDb();
-            SchemaComposerMapper.Add<DuckDBConnection>(new DuckDbSchemaComposer(), force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<DuckDBConnection>().Provider,
-                DuckDbSchemaDialect.Instance);
+            SchemaComposerMapper.Add<DuckDBConnection>(new DuckDbSchemaComposer(),
+                force: true);
+            SchemaReaderMapper.Add<DuckDBConnection>(new DuckDbSchemaReader(),
+                force: true);
+            SchemaDialectMapper.Add<DuckDBConnection>(DuckDbSchemaDialect.Instance);
             return globalConfiguration;
         }
-
         #endregion
     }
 }

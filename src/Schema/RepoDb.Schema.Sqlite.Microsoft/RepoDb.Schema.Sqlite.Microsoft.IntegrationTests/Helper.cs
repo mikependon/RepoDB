@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -16,14 +15,17 @@ using RepoDb.Schema.Sqlite.Microsoft.IntegrationTests.Setup;
 
 namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
 {
+    /// <summary>
+    /// Contains the helper behavior.
+    /// </summary>
     public static class Helper
     {
         /// <summary>
         /// Makes the schema copies stop checking what exists in the destination database, so they always try to create the tables.
         /// The next call of <see cref="Database.Initialize"/> registers the composer again.
         /// </summary>
-        public static void DisableExistenceChecks() =>
-            SchemaComposerMapper.Add<SqliteConnection>(new NoExistenceCheckSchemaComposer(new SqliteSchemaComposer()), force: true);
+        public static void DisableExistenceChecks() => SchemaComposerMapper.Add<SqliteConnection>(new NoExistenceCheckSchemaComposer(new SqliteSchemaComposer()),
+            force: true);
 
         /// <summary>
         /// Creates a table in the target database that owns the name of an index, so the statement that creates the index with the same name fails (the copy does not check the existence of the names).
@@ -50,7 +52,9 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         {
             using (var connection = Database.CreateSource())
             {
-                return new SqliteSchemaReader(connection).GetTableSchema(tableName);
+                return new SqliteSchemaReader().GetTableSchema(connection,
+                    tableName,
+                    transaction: null);
             }
         }
 
@@ -63,7 +67,9 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         {
             using (var connection = Database.CreateTarget())
             {
-                var schema = new SqliteSchemaReader(connection).GetTableSchema(tableName);
+                var schema = new SqliteSchemaReader().GetTableSchema(connection,
+                    tableName,
+                    transaction: null);
                 return schema;
             }
         }
@@ -77,7 +83,9 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         {
             using (var connection = Database.CreateTarget())
             {
-                return new SqliteSchemaReader(connection).TableExists(tableName);
+                return new SqliteSchemaReader().TableExists(connection,
+                    tableName,
+                    transaction: null);
             }
         }
 
@@ -92,10 +100,12 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
             using (var source = Database.CreateSource())
             using (var target = Database.CreateTarget())
             {
-                var reader = new SqliteSchemaReader(source);
+                var reader = new SqliteSchemaReader();
                 foreach (var tableName in tableNames)
                 {
-                    foreach (var statement in composer.ComposeSchema(reader.GetTableSchema(tableName)))
+                    foreach (var statement in composer.ComposeSchema(reader.GetTableSchema(source,
+                            tableName,
+                            transaction: null)))
                     {
                         target.ExecuteNonQuery(statement);
                     }
@@ -112,8 +122,10 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         {
             using (var connection = Database.CreateSource())
             {
-                var reader = new SqliteSchemaReader(connection);
-                return tableNames.Select(reader.GetTableSchema).ToList();
+                var reader = new SqliteSchemaReader();
+                return tableNames.Select(value => reader.GetTableSchema(connection,
+                        value,
+                        transaction: null)).ToList();
             }
         }
 
@@ -137,8 +149,7 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         /// The tables can be given in any order.
         /// </summary>
         /// <param name="tableNames">The names of the tables.</param>
-        public static void CopyAllToTarget(params string[] tableNames) =>
-            ExecuteOnTarget(new SqliteSchemaComposer().ComposeSchemas(GetSourceSchemas(tableNames)));
+        public static void CopyAllToTarget(params string[] tableNames) => ExecuteOnTarget(new SqliteSchemaComposer().ComposeSchemas(GetSourceSchemas(tableNames)));
 
         /// <summary>
         /// Asserts the equality of the 2 schemas of a table. The comments of the columns and the names of the unnamed constraints are not compared.
@@ -148,14 +159,19 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public static void AssertSchemaEquality(TableSchema expected,
             TableSchema actual)
         {
-            Assert.AreEqual(expected.Table.Name, actual.Table.Name, StringComparer.Ordinal);
-            Assert.AreEqual(expected.Table.Schema, actual.Table.Schema, StringComparer.Ordinal);
-
+            Assert.AreEqual(expected.Table.Name,
+                actual.Table.Name,
+                StringComparer.Ordinal);
+            Assert.AreEqual(expected.Table.Schema,
+                actual.Table.Schema,
+                StringComparer.Ordinal);
             // Columns
-            Assert.AreEqual(expected.Columns.Count, actual.Columns.Count);
+            Assert.AreEqual(expected.Columns.Count,
+                actual.Columns.Count);
             for (var i = 0; i < expected.Columns.Count; i++)
             {
-                AssertColumnEquality(expected.Columns[i], actual.Columns[i]);
+                AssertColumnEquality(expected.Columns[i],
+                    actual.Columns[i]);
             }
 
             // Primary key
@@ -166,50 +182,81 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
             else
             {
                 Assert.IsNotNull(actual.PrimaryKey);
-                Assert.AreEqual(expected.PrimaryKey.Name, actual.PrimaryKey.Name, StringComparer.Ordinal);
-                Assert.AreEqual(expected.PrimaryKey.IsClustered, actual.PrimaryKey.IsClustered);
-                CollectionAssert.AreEqual(expected.PrimaryKey.Columns.ToArray(), actual.PrimaryKey.Columns.ToArray());
+                Assert.AreEqual(expected.PrimaryKey.Name,
+                    actual.PrimaryKey.Name,
+                    StringComparer.Ordinal);
+                Assert.AreEqual(expected.PrimaryKey.IsClustered,
+                    actual.PrimaryKey.IsClustered);
+                CollectionAssert.AreEqual(expected.PrimaryKey.Columns.ToArray(),
+                    actual.PrimaryKey.Columns.ToArray());
             }
 
             // Indexes
-            Assert.AreEqual(expected.Indexes.Count, actual.Indexes.Count);
+            Assert.AreEqual(expected.Indexes.Count,
+                actual.Indexes.Count);
             foreach (var index in expected.Indexes)
             {
-                var other = actual.Indexes.Single(x => string.Equals(x.Name, index.Name, StringComparison.Ordinal));
-                Assert.AreEqual(index.IsUnique, other.IsUnique);
-                Assert.AreEqual(index.IsClustered, other.IsClustered);
-                Assert.AreEqual(index.Filter, other.Filter, StringComparer.Ordinal);
-                CollectionAssert.AreEqual(index.Columns.ToArray(), other.Columns.ToArray());
-                CollectionAssert.AreEqual(index.DescendingColumns.ToArray(), other.DescendingColumns.ToArray());
-                CollectionAssert.AreEqual(index.IncludedColumns.ToArray(), other.IncludedColumns.ToArray());
+                var other = actual.Indexes.Single(x => string.Equals(x.Name,
+                        index.Name,
+                        StringComparison.Ordinal));
+                Assert.AreEqual(index.IsUnique,
+                    other.IsUnique);
+                Assert.AreEqual(index.IsClustered,
+                    other.IsClustered);
+                Assert.AreEqual(index.Filter,
+                    other.Filter,
+                    StringComparer.Ordinal);
+                CollectionAssert.AreEqual(index.Columns.ToArray(),
+                    other.Columns.ToArray());
+                CollectionAssert.AreEqual(index.DescendingColumns.ToArray(),
+                    other.DescendingColumns.ToArray());
+                CollectionAssert.AreEqual(index.IncludedColumns.ToArray(),
+                    other.IncludedColumns.ToArray());
             }
 
             // Foreign keys
-            Assert.AreEqual(expected.ForeignKeys.Count, actual.ForeignKeys.Count);
+            Assert.AreEqual(expected.ForeignKeys.Count,
+                actual.ForeignKeys.Count);
             foreach (var foreignKey in expected.ForeignKeys)
             {
-                var other = actual.ForeignKeys.Single(x => string.Equals(x.Name, foreignKey.Name, StringComparison.Ordinal));
-                CollectionAssert.AreEqual(foreignKey.Columns.ToArray(), other.Columns.ToArray());
-                Assert.AreEqual(foreignKey.ReferencedTable, other.ReferencedTable);
-                CollectionAssert.AreEqual(foreignKey.ReferencedColumns.ToArray(), other.ReferencedColumns.ToArray());
-                Assert.AreEqual(foreignKey.UpdateRule, other.UpdateRule);
-                Assert.AreEqual(foreignKey.DeleteRule, other.DeleteRule);
+                var other = actual.ForeignKeys.Single(x => string.Equals(x.Name,
+                        foreignKey.Name,
+                        StringComparison.Ordinal));
+                CollectionAssert.AreEqual(foreignKey.Columns.ToArray(),
+                    other.Columns.ToArray());
+                Assert.AreEqual(foreignKey.ReferencedTable,
+                    other.ReferencedTable);
+                CollectionAssert.AreEqual(foreignKey.ReferencedColumns.ToArray(),
+                    other.ReferencedColumns.ToArray());
+                Assert.AreEqual(foreignKey.UpdateRule,
+                    other.UpdateRule);
+                Assert.AreEqual(foreignKey.DeleteRule,
+                    other.DeleteRule);
             }
 
             // Unique constraints
-            Assert.AreEqual(expected.UniqueConstraints.Count, actual.UniqueConstraints.Count);
+            Assert.AreEqual(expected.UniqueConstraints.Count,
+                actual.UniqueConstraints.Count);
             foreach (var constraint in expected.UniqueConstraints)
             {
-                var other = actual.UniqueConstraints.Single(x => string.Equals(x.Name, constraint.Name, StringComparison.Ordinal));
-                CollectionAssert.AreEqual(constraint.Columns.ToArray(), other.Columns.ToArray());
+                var other = actual.UniqueConstraints.Single(x => string.Equals(x.Name,
+                        constraint.Name,
+                        StringComparison.Ordinal));
+                CollectionAssert.AreEqual(constraint.Columns.ToArray(),
+                    other.Columns.ToArray());
             }
 
             // Check constraints
-            Assert.AreEqual(expected.CheckConstraints.Count, actual.CheckConstraints.Count);
+            Assert.AreEqual(expected.CheckConstraints.Count,
+                actual.CheckConstraints.Count);
             foreach (var constraint in expected.CheckConstraints)
             {
-                var other = actual.CheckConstraints.Single(x => string.Equals(x.Name, constraint.Name, StringComparison.Ordinal));
-                Assert.AreEqual(constraint.Expression, other.Expression, StringComparer.Ordinal);
+                var other = actual.CheckConstraints.Single(x => string.Equals(x.Name,
+                        constraint.Name,
+                        StringComparison.Ordinal));
+                Assert.AreEqual(constraint.Expression,
+                    other.Expression,
+                    StringComparer.Ordinal);
             }
         }
 
@@ -221,37 +268,69 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         public static void AssertColumnEquality(ColumnInfo expected,
             ColumnInfo actual)
         {
-            var name = expected.Field.Name;
-            Assert.AreEqual(expected.Field.Name, actual.Field.Name, StringComparer.Ordinal);
-            Assert.AreEqual(expected.Ordinal, actual.Ordinal, $"Ordinal of '{name}'.");
-            Assert.AreEqual(expected.Field.DatabaseType, actual.Field.DatabaseType, StringComparer.Ordinal, $"Type of '{name}'.");
-            Assert.AreEqual(expected.Field.Size, actual.Field.Size, $"Size of '{name}'.");
-            Assert.AreEqual(expected.Field.Precision, actual.Field.Precision, $"Precision of '{name}'.");
-            Assert.AreEqual(expected.Field.Scale, actual.Field.Scale, $"Scale of '{name}'.");
-            Assert.AreEqual(expected.Field.IsNullable, actual.Field.IsNullable, $"Nullability of '{name}'.");
-            Assert.AreEqual(expected.Field.IsIdentity, actual.Field.IsIdentity, $"Identity of '{name}'.");
-            Assert.AreEqual(expected.Field.IsPrimary, actual.Field.IsPrimary, $"Primary of '{name}'.");
-            Assert.AreEqual(expected.IdentitySeed, actual.IdentitySeed, $"Identity seed of '{name}'.");
-            Assert.AreEqual(expected.IdentityIncrement, actual.IdentityIncrement, $"Identity increment of '{name}'.");
-            Assert.AreEqual(expected.DefaultExpression, actual.DefaultExpression, StringComparer.Ordinal, $"Default of '{name}'.");
-            Assert.AreEqual(expected.ComputedExpression, actual.ComputedExpression, StringComparer.Ordinal, $"Computed expression of '{name}'.");
-            Assert.AreEqual(expected.Collation, actual.Collation, StringComparer.Ordinal, $"Collation of '{name}'.");
+            var name=expected.Field.Name;
+            Assert.AreEqual(expected.Field.Name,
+                actual.Field.Name,
+                StringComparer.Ordinal);
+            Assert.AreEqual(expected.Ordinal,
+                actual.Ordinal,
+                $"Ordinal of '{name}'.");
+            Assert.AreEqual(expected.Field.DatabaseType,
+                actual.Field.DatabaseType,
+                StringComparer.Ordinal,
+                $"Type of '{name}'.");
+            Assert.AreEqual(expected.Field.Size,
+                actual.Field.Size,
+                $"Size of '{name}'.");
+            Assert.AreEqual(expected.Field.Precision,
+                actual.Field.Precision,
+                $"Precision of '{name}'.");
+            Assert.AreEqual(expected.Field.Scale,
+                actual.Field.Scale,
+                $"Scale of '{name}'.");
+            Assert.AreEqual(expected.Field.IsNullable,
+                actual.Field.IsNullable,
+                $"Nullability of '{name}'.");
+            Assert.AreEqual(expected.Field.IsIdentity,
+                actual.Field.IsIdentity,
+                $"Identity of '{name}'.");
+            Assert.AreEqual(expected.Field.IsPrimary,
+                actual.Field.IsPrimary,
+                $"Primary of '{name}'.");
+            Assert.AreEqual(expected.IdentitySeed,
+                actual.IdentitySeed,
+                $"Identity seed of '{name}'.");
+            Assert.AreEqual(expected.IdentityIncrement,
+                actual.IdentityIncrement,
+                $"Identity increment of '{name}'.");
+            Assert.AreEqual(expected.DefaultExpression,
+                actual.DefaultExpression,
+                StringComparer.Ordinal,
+                $"Default of '{name}'.");
+            Assert.AreEqual(expected.ComputedExpression,
+                actual.ComputedExpression,
+                StringComparer.Ordinal,
+                $"Computed expression of '{name}'.");
+            Assert.AreEqual(expected.Collation,
+                actual.Collation,
+                StringComparer.Ordinal,
+                $"Collation of '{name}'.");
         }
 
         /// <summary>
         /// Asserts that the table of the target database has the same schema as the table of the source database.
         /// </summary>
         /// <param name="tableName">The name of the table.</param>
-        public static void AssertTargetMatchesSource(string tableName) =>
-            AssertSchemaEquality(GetSourceSchema(tableName), GetTargetSchema(tableName));
+        public static void AssertTargetMatchesSource(string tableName) => AssertSchemaEquality(GetSourceSchema(tableName),
+            GetTargetSchema(tableName));
 
         /// <summary>
         /// Gets the names (<c>schema.table</c>) of the tables of the relationships, in the same order.
         /// </summary>
         /// <param name="relationships">The relationships.</param>
         /// <returns>The names of the tables.</returns>
-        public static string[] GetTableNames(IEnumerable<RelationshipInfo> relationships) =>
-            relationships.Select(r => FormatName(r.Schema.Table.Schema, r.Schema.Table.Name)).ToArray();
+        public static string[] GetTableNames(IEnumerable<RelationshipInfo> relationships) => relationships.Select(r => FormatName(r.Schema.Table.Schema,
+                r.Schema.Table.Name)).ToArray();
 
         /// <summary>
         /// Formats the name of a table like the reader does: the plain identifiers are kept as they are (<c>Person</c>),
@@ -260,12 +339,10 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         /// <param name="schema">The name of the schema.</param>
         /// <param name="table">The name of the table.</param>
         /// <returns>The formatted name of the table.</returns>
-        public static string FormatName(string schema, string table)
+        public static string FormatName(string schema,
+            string table)
         {
-            string Part(string name) =>
-                name.Length > 0 && !char.IsDigit(name[0]) && name.All(c => char.IsLetterOrDigit(c) || c == '_')
-                    ? name
-                    : $"[{name}]";
+            string Part(string name) => name.Length > 0 && !char.IsDigit(name[0]) && name.All(c => char.IsLetterOrDigit(c) || c == '_') ? name : $"[{name}]";
             return schema == null ? Part(table) : $"{Part(schema)}.{Part(table)}";
         }
 
@@ -274,7 +351,6 @@ namespace RepoDb.Schema.Sqlite.Microsoft.IntegrationTests
         /// </summary>
         /// <param name="columns">The columns.</param>
         /// <returns>The names of the columns.</returns>
-        public static string[] GetNames(IEnumerable<ColumnInfo> columns) =>
-            columns.Select(c => c.Field.Name).ToArray();
+        public static string[] GetNames(IEnumerable<ColumnInfo> columns) => columns.Select(c => c.Field.Name).ToArray();
     }
 }

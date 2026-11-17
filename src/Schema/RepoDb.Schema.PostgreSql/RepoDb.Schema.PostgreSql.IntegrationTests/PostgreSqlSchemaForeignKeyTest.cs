@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -17,9 +16,15 @@ using RepoDb.Schema.Models;
 
 namespace RepoDb.Schema.PostgreSql.IntegrationTests
 {
+    /// <summary>
+    /// Contains the postgre sql schema foreign key test behavior.
+    /// </summary>
     [TestClass]
     public class PostgreSqlSchemaForeignKeyTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -27,15 +32,22 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
-        public void Cleanup() =>
-            Database.Cleanup();
+        public void Cleanup() => Database.Cleanup();
+        #region Private Methods
 
-        #region Helpers
+        /// <summary>
+        /// Performs create reader.
+        /// </summary>
+        private static PostgreSqlSchemaReader CreateReader() => new PostgreSqlSchemaReader();
 
-        private static PostgreSqlSchemaReader CreateReader() =>
-            new PostgreSqlSchemaReader(new NpgsqlConnection(Database.ConnectionStringForSource));
-
+        /// <summary>
+        /// Performs execute on target.
+        /// </summary>
+        /// <param name="commandText">The command text.</param>
         private static void ExecuteOnTarget(string commandText)
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForTarget))
@@ -44,6 +56,10 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// Performs count on target.
+        /// </summary>
+        /// <param name="commandText">The command text.</param>
         private static long CountOnTarget(string commandText)
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForTarget))
@@ -56,203 +72,301 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
 
         #region Reader
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get foreign keys of table with multiple foreign keys.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetForeignKeysOfTableWithMultipleForeignKeys()
         {
-            // Act
-            var foreignKeys = CreateReader().GetForeignKeys("transfer").OrderBy(x => x.Name).ToList();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var foreignKeys = CreateReader().GetForeignKeys(operationConnection,
+                "transfer").OrderBy(x => x.Name).ToList();
             // Assert
-            Assert.AreEqual(2, foreignKeys.Count);
-            Assert.IsTrue(foreignKeys.All(x => x.ReferencedTable == new TableInfo("account", "public")));
-            CollectionAssert.AreEqual(new[] { "from_id" }, foreignKeys[0].Columns.ToArray());
-            CollectionAssert.AreEqual(new[] { "to_id" }, foreignKeys[1].Columns.ToArray());
+            Assert.AreEqual(2,
+                foreignKeys.Count);
+            Assert.IsTrue(foreignKeys.All(x => x.ReferencedTable == new TableInfo("account",
+                        "public")));
+            CollectionAssert.AreEqual(new[] { "from_id" },
+                foreignKeys[0].Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "to_id" },
+                foreignKeys[1].Columns.ToArray());
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get foreign keys of composite foreign key.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetForeignKeysOfCompositeForeignKey()
         {
-            // Act
-            var foreignKey = CreateReader().GetForeignKeys("shipment").Single();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var foreignKey = CreateReader().GetForeignKeys(operationConnection,
+                "shipment").Single();
             // Assert
-            Assert.AreEqual("fk_shipment_region", foreignKey.Name);
-            Assert.AreEqual(new TableInfo("region_code", "public"), foreignKey.ReferencedTable);
-            CollectionAssert.AreEqual(new[] { "country_code", "region" }, foreignKey.Columns.ToArray());
-            CollectionAssert.AreEqual(new[] { "country_code", "code" }, foreignKey.ReferencedColumns.ToArray());
+            Assert.AreEqual("fk_shipment_region",
+                foreignKey.Name);
+            Assert.AreEqual(new TableInfo("region_code",
+                    "public"),
+                foreignKey.ReferencedTable);
+            CollectionAssert.AreEqual(new[] { "country_code", "region" },
+                foreignKey.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "country_code", "code" },
+                foreignKey.ReferencedColumns.ToArray());
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get foreign keys of table without foreign keys.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetForeignKeysOfTableWithoutForeignKeys()
         {
-            // Assert
-            Assert.AreEqual(0, CreateReader().GetForeignKeys("country").Count());
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Assert
+            Assert.AreEqual(0,
+                CreateReader().GetForeignKeys(operationConnection,
+                    "country").Count());
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get foreign keys default rules.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetForeignKeysDefaultRules()
         {
-            // Act
-            var foreignKey = CreateReader().GetForeignKeys("chain_b").Single();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var foreignKey = CreateReader().GetForeignKeys(operationConnection,
+                "chain_b").Single();
             // Assert
-            Assert.AreEqual(ForeignKeyRule.NoAction, foreignKey.DeleteRule);
-            Assert.AreEqual(ForeignKeyRule.NoAction, foreignKey.UpdateRule);
+            Assert.AreEqual(ForeignKeyRule.NoAction,
+                foreignKey.DeleteRule);
+            Assert.AreEqual(ForeignKeyRule.NoAction,
+                foreignKey.UpdateRule);
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get foreign keys with restrict and set default rules.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetForeignKeysWithRestrictAndSetDefaultRules()
         {
-            // Act
-            var foreignKey = CreateReader().GetForeignKeys("preference").Single(x => x.Name == "fk_preference_color");
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var foreignKey = CreateReader().GetForeignKeys(operationConnection,
+                "preference").Single(x => x.Name == "fk_preference_color");
             // Assert
-            Assert.AreEqual(ForeignKeyRule.SetDefault, foreignKey.DeleteRule);
-            Assert.AreEqual(ForeignKeyRule.Restrict, foreignKey.UpdateRule);
+            Assert.AreEqual(ForeignKeyRule.SetDefault,
+                foreignKey.DeleteRule);
+            Assert.AreEqual(ForeignKeyRule.Restrict,
+                foreignKey.UpdateRule);
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get foreign keys with set null and cascade rules.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetForeignKeysWithSetNullAndCascadeRules()
         {
-            // Act
-            var foreignKey = CreateReader().GetForeignKeys("preference").Single(x => x.Name == "fk_preference_other");
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var foreignKey = CreateReader().GetForeignKeys(operationConnection,
+                "preference").Single(x => x.Name == "fk_preference_other");
             // Assert
-            Assert.AreEqual(ForeignKeyRule.SetNull, foreignKey.DeleteRule);
-            Assert.AreEqual(ForeignKeyRule.Cascade, foreignKey.UpdateRule);
+            Assert.AreEqual(ForeignKeyRule.SetNull,
+                foreignKey.DeleteRule);
+            Assert.AreEqual(ForeignKeyRule.Cascade,
+                foreignKey.UpdateRule);
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get foreign keys of self referencing foreign key.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetForeignKeysOfSelfReferencingForeignKey()
         {
-            // Act
-            var foreignKey = CreateReader().GetForeignKeys("employee").Single();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var foreignKey = CreateReader().GetForeignKeys(operationConnection,
+                "employee").Single();
             // Assert
-            Assert.AreEqual(new TableInfo("employee", "public"), foreignKey.ReferencedTable);
-            CollectionAssert.AreEqual(new[] { "manager_id" }, foreignKey.Columns.ToArray());
+            Assert.AreEqual(new TableInfo("employee",
+                    "public"),
+                foreignKey.ReferencedTable);
+            CollectionAssert.AreEqual(new[] { "manager_id" },
+                foreignKey.Columns.ToArray());
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get foreign keys across schemas.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetForeignKeysAcrossSchemas()
         {
-            // Act
-            var foreignKeys = CreateReader().GetForeignKeys("item_ref").OrderBy(x => x.ReferencedTable.Schema, StringComparer.Ordinal).ToList();
-
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
+            var foreignKeys = CreateReader().GetForeignKeys(operationConnection,
+                "item_ref").OrderBy(x => x.ReferencedTable.Schema,
+                StringComparer.Ordinal).ToList();
             // Assert
-            CollectionAssert.AreEqual(new[] { new TableInfo("item", "public"), new TableInfo("item", "sales") }, foreignKeys.Select(x => x.ReferencedTable).ToArray());
+            CollectionAssert.AreEqual(new[] { new TableInfo("item",
+                    "public"), new TableInfo("item",
+                    "sales") },
+                foreignKeys.Select(x => x.ReferencedTable).ToArray());
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get foreign keys of circular references.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaReaderGetForeignKeysOfCircularReferences()
         {
-            // Act
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
             var reader = CreateReader();
-
             // Assert
-            Assert.AreEqual(new TableInfo("ring_2", "public"), reader.GetForeignKeys("ring_1").Single().ReferencedTable);
-            Assert.AreEqual(new TableInfo("ring_3", "public"), reader.GetForeignKeys("ring_2").Single().ReferencedTable);
-            Assert.AreEqual(new TableInfo("ring_1", "public"), reader.GetForeignKeys("ring_3").Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("ring_2",
+                    "public"),
+                reader.GetForeignKeys(operationConnection,
+                    "ring_1").Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("ring_3",
+                    "public"),
+                reader.GetForeignKeys(operationConnection,
+                    "ring_2").Single().ReferencedTable);
+            Assert.AreEqual(new TableInfo("ring_1",
+                    "public"),
+                reader.GetForeignKeys(operationConnection,
+                    "ring_3").Single().ReferencedTable);
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema reader get foreign keys async of table with multiple foreign keys.
+        /// </summary>
         [TestMethod]
         public async Task TestPostgreSqlSchemaReaderGetForeignKeysAsyncOfTableWithMultipleForeignKeys()
         {
-            // Act
+            using var operationConnection = new NpgsqlConnection(Database.ConnectionStringForSource); // Act
             var reader = CreateReader();
-            var actual = (await reader.GetForeignKeysAsync("transfer")).ToList();
-
+            var actual = (await reader.GetForeignKeysAsync(operationConnection,
+                "transfer")).ToList();
             // Assert
-            Assert.AreEqual(2, actual.Count);
-            Assert.AreEqual(1, (await reader.GetForeignKeysAsync("shipment")).Count());
+            Assert.AreEqual(2,
+                actual.Count);
+            Assert.AreEqual(1,
+                (await reader.GetForeignKeysAsync(operationConnection,
+                    "shipment")).Count());
         }
 
         #endregion
 
         #region Composer
 
+        /// <summary>
+        /// Verifies postgre sql schema composer composed schema of self referencing table.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaComposerComposedSchemaOfSelfReferencingTable()
         {
             // Act
             Helper.CopyToTarget("employee");
-
             // Assert
             Helper.AssertTargetMatchesSource("employee");
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema composer composed schema of table with composite and multiple foreign keys.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaComposerComposedSchemaOfTableWithCompositeAndMultipleForeignKeys()
         {
             // Act
-            Helper.CopyToTarget("region_code", "shipment", "account", "transfer");
-
+            Helper.CopyToTarget("region_code",
+                "shipment",
+                "account",
+                "transfer");
             // Assert
-            foreach (var table in new[] { "region_code", "shipment", "account", "transfer" })
+            foreach (var table in new[]
+            {
+                "region_code",
+                "shipment",
+                "account",
+                "transfer"
+            }
+
+            )
             {
                 Helper.AssertTargetMatchesSource(table);
             }
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema composer composed schema of tables with foreign keys across schemas.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaComposerComposedSchemaOfTablesWithForeignKeysAcrossSchemas()
         {
             // Act
-            Helper.CopyToTarget("item", "sales.item", "item_ref");
-
+            Helper.CopyToTarget("item",
+                "sales.item",
+                "item_ref");
             // Assert
             Helper.AssertTargetMatchesSource("item_ref");
             Helper.AssertTargetMatchesSource("sales.item");
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema composer composed schema of table with restrict and set default rules.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaComposerComposedSchemaOfTableWithRestrictAndSetDefaultRules()
         {
             // Act
-            Helper.CopyToTarget("color", "preference");
-
+            Helper.CopyToTarget("color",
+                "preference");
             // Assert
             Helper.AssertTargetMatchesSource("preference");
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema composer composed composite foreign key is enforced.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaComposerComposedCompositeForeignKeyIsEnforced()
         {
             // Setup
-            Helper.CopyToTarget("region_code", "shipment");
+            Helper.CopyToTarget("region_code",
+                "shipment");
             ExecuteOnTarget("INSERT INTO region_code VALUES ('PH', 1);");
-
             // Act/Assert
             ExecuteOnTarget("INSERT INTO shipment VALUES (1, 'PH', 1);");
             Assert.Throws<PostgresException>(() => ExecuteOnTarget("INSERT INTO shipment VALUES (2, 'PH', 2);"));
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema composer composed cascade rule is applied.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaComposerComposedCascadeRuleIsApplied()
         {
             // Setup
-            Helper.CopyToTarget("color", "preference");
+            Helper.CopyToTarget("color",
+                "preference");
             ExecuteOnTarget("INSERT INTO color VALUES (0), (1); INSERT INTO preference VALUES (1, 1, 1);");
-
             // Act
             ExecuteOnTarget("DELETE FROM color WHERE id = 1;");
-
             // Assert
-            Assert.AreEqual(1, CountOnTarget("SELECT COUNT(*) FROM preference WHERE other_id IS NULL AND color_id = 0;"));
+            Assert.AreEqual(1,
+                CountOnTarget("SELECT COUNT(*) FROM preference WHERE other_id IS NULL AND color_id = 0;"));
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema composer composed self referencing foreign key is enforced.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaComposerComposedSelfReferencingForeignKeyIsEnforced()
         {
             // Setup
             Helper.CopyToTarget("employee");
             ExecuteOnTarget("INSERT INTO employee VALUES (1, NULL);");
-
             // Act/Assert
             ExecuteOnTarget("INSERT INTO employee VALUES (2, 1);");
             Assert.Throws<PostgresException>(() => ExecuteOnTarget("INSERT INTO employee VALUES (3, 99);"));
         }
 
+        /// <summary>
+        /// Verifies throw exception on composed schema if the referenced table does not exist.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnComposedSchemaIfTheReferencedTableDoesNotExist()
         {
@@ -260,19 +374,29 @@ namespace RepoDb.Schema.PostgreSql.IntegrationTests
             Assert.Throws<PostgresException>(() => Helper.CopyToTarget("chain_b"));
         }
 
+        /// <summary>
+        /// Verifies postgre sql schema composer composed schema of tables in wrong order via compose schemas.
+        /// </summary>
         [TestMethod]
         public void TestPostgreSqlSchemaComposerComposedSchemaOfTablesInWrongOrderViaComposeSchemas()
         {
             // Act
-            Helper.CopyAllToTarget("chain_c", "chain_b", "chain_a");
-
+            Helper.CopyAllToTarget("chain_c",
+                "chain_b",
+                "chain_a");
             // Assert
-            foreach (var table in new[] { "chain_a", "chain_b", "chain_c" })
+            foreach (var table in new[]
+            {
+                "chain_a",
+                "chain_b",
+                "chain_c"
+            }
+
+            )
             {
                 Helper.AssertTargetMatchesSource(table);
             }
         }
-
         #endregion
     }
 }

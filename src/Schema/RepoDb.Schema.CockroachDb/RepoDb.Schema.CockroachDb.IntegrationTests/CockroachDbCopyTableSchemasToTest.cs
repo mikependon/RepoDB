@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using RepoDb.Schema;
@@ -20,9 +19,15 @@ using RepoDb.Schema.CockroachDb.IntegrationTests.Setup;
 
 namespace RepoDb.Schema.CockroachDb.IntegrationTests
 {
+    /// <summary>
+    /// Contains the cockroach db copy table schemas to test behavior.
+    /// </summary>
     [TestClass]
     public class CockroachDbCopyTableSchemasToTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -30,6 +35,9 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
@@ -37,11 +45,19 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             Database.Cleanup();
         }
 
-        #region Helpers
+        #region Private Methods
 
-        private static void MapSchemaReaderConnection(CockroachDbConnection source) =>
-            SchemaReaderMapper.Add<CockroachDbConnection>(new CockroachDbSchemaReader(source), true);
+        /// <summary>
+        /// Performs map schema reader connection.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        private static void MapSchemaReaderConnection(CockroachDbConnection source) => SchemaReaderMapper.Add<CockroachDbConnection>(new CockroachDbSchemaReader(),
+            true);
 
+        /// <summary>
+        /// Performs assert target matches source.
+        /// </summary>
+        /// <param name="tableNames">The table names.</param>
         private static void AssertTargetMatchesSource(params string[] tableNames)
         {
             foreach (var tableName in tableNames)
@@ -54,6 +70,9 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
 
         #region Sync
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasTo()
         {
@@ -62,15 +81,18 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "country", "Person" }, target);
-
+                source.CopyTableSchemaTo(new[] { "country", "Person" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("country", "Person");
+                AssertTargetMatchesSource("country",
+                    "Person");
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to with the referencing table before the referenced table.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToWithTheReferencingTableBeforeTheReferencedTable()
         {
@@ -79,15 +101,18 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Person", "country" }, target);
-
+                source.CopyTableSchemaTo(new[] { "Person", "country" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("country", "Person");
+                AssertTargetMatchesSource("country",
+                    "Person");
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to callback result.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToCallbackResult()
         {
@@ -97,29 +122,46 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                var run = source.CopyTableSchemaTo(new[] { "Person", "country" }, target, createdCallback: results.Add);
-
+                var run = source.CopyTableSchemaTo(new[] { "Person", "country" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(2, results.Count);
+                Assert.AreEqual(2,
+                    results.Count);
                 var person = results.Single(r => r.Target.Table.Table.Name == "Person");
-                Assert.AreEqual("public", person.Source.Table.Table.Schema);
-                Assert.AreEqual(TableOutcome.Created, person.Outcome);
-                Assert.AreEqual(TableExistsBehavior.Skip, person.Action);
-                Assert.AreEqual(10, person.ColumnCount);
-                Assert.AreEqual(2, person.IndexCount);
-                Assert.AreEqual(1, person.ForeignKeyCount);
-                Assert.AreEqual(1, person.CheckConstraintCount);
-                Assert.AreEqual("repodb_schema_source", person.Source.Database);
-                Assert.AreEqual("repodb_schema_target", person.Target.Database);
-                Assert.AreEqual(nameof(CockroachDbConnection), person.Source.DatabaseType);
-                StringAssert.StartsWith(person.Script, "CREATE TABLE ", StringComparison.Ordinal);
+                Assert.AreEqual("public",
+                    person.Source.Table.Table.Schema);
+                Assert.AreEqual(TableOutcome.Created,
+                    person.Outcome);
+                Assert.AreEqual(TableExistsBehavior.Skip,
+                    person.Action);
+                Assert.AreEqual(10,
+                    person.ColumnCount);
+                Assert.AreEqual(2,
+                    person.IndexCount);
+                Assert.AreEqual(1,
+                    person.ForeignKeyCount);
+                Assert.AreEqual(1,
+                    person.CheckConstraintCount);
+                Assert.AreEqual("repodb_schema_source",
+                    person.Source.Database);
+                Assert.AreEqual("repodb_schema_target",
+                    person.Target.Database);
+                Assert.AreEqual(nameof(CockroachDbConnection),
+                    person.Source.DatabaseType);
+                StringAssert.StartsWith(person.Script,
+                    "CREATE TABLE ",
+                    StringComparison.Ordinal);
                 Assert.IsTrue(run.EndTime >= run.StartTime);
-                Assert.AreEqual(0, person.Errors.Count);
+                Assert.AreEqual(0,
+                    person.Errors.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to calls the callback once the schema of the table is created.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToCallsTheCallbackOnceTheSchemaOfTheTableIsCreated()
         {
@@ -129,17 +171,20 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var existing = new List<bool>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, createdCallback: result =>
-                    existing.Add(Helper.TargetTableExists(result.Target.Table.Table.Name) && Helper.GetTargetSchema(result.Target.Table.Table.Name).Indexes.Count == result.IndexCount));
-
+                source.CopyTableSchemaTo(new[] { "country", "Person" },
+                    target,
+                    createdCallback: result => existing.Add(Helper.TargetTableExists(result.Target.Table.Table.Name) && Helper.GetTargetSchema(result.Target.Table.Table.Name).Indexes.Count == result.IndexCount));
                 // Assert
-                Assert.AreEqual(2, existing.Count);
+                Assert.AreEqual(2,
+                    existing.Count);
                 Assert.IsTrue(existing.All(x => x));
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to calls the callback for every table of the whole database.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToCallsTheCallbackForEveryTableOfTheWholeDatabase()
         {
@@ -150,16 +195,20 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 MapSchemaReaderConnection(source);
                 var tables = Helper.GetSourceTables();
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(tables, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(tables,
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(tables.Count, results.Count);
+                Assert.AreEqual(tables.Count,
+                    results.Count);
                 Assert.IsTrue(results.All(r => r.Outcome == TableOutcome.Created && r.Errors.Count == 0));
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to of dependency chain and diamond.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToOfDependencyChainAndDiamond()
         {
@@ -168,16 +217,27 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var tables = new[] { "chain_c", "d_leaf", "chain_a", "d_right", "chain_b", "d_left", "d_root" };
-
+                var tables = new[]
+                {
+                    "chain_c",
+                    "d_leaf",
+                    "chain_a",
+                    "d_right",
+                    "chain_b",
+                    "d_left",
+                    "d_root"
+                };
                 // Act
-                source.CopyTableSchemaTo(tables, target);
-
+                source.CopyTableSchemaTo(tables,
+                    target);
                 // Assert
                 AssertTargetMatchesSource(tables);
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to of cycles and self references.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToOfCyclesAndSelfReferences()
         {
@@ -186,16 +246,30 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var tables = new[] { "ring_2", "node_b", "loop_tail", "ring_1", "employee", "loop_a", "node_a", "ring_3", "loop_b", "loop_base" };
-
+                var tables = new[]
+                {
+                    "ring_2",
+                    "node_b",
+                    "loop_tail",
+                    "ring_1",
+                    "employee",
+                    "loop_a",
+                    "node_a",
+                    "ring_3",
+                    "loop_b",
+                    "loop_base"
+                };
                 // Act
-                source.CopyTableSchemaTo(tables, target);
-
+                source.CopyTableSchemaTo(tables,
+                    target);
                 // Assert
                 AssertTargetMatchesSource(tables);
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on cockroach db copy table schemas to of tables in different schemas and with the same name.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCockroachDbCopyTableSchemasToOfTablesInDifferentSchemasAndWithTheSameName()
         {
@@ -204,14 +278,17 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() =>
-                    source.CopyTableSchemaTo(new[] { "item_ref", "sales.item", "public.item", "country", "Person", "sales.order_line" }, target));
-                Assert.AreEqual(0, Helper.GetTargetTables().Count);
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "item_ref", "sales.item", "public.item", "country", "Person", "sales.order_line" },
+                        target));
+                Assert.AreEqual(0,
+                    Helper.GetTargetTables().Count);
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to of tables with names that need quoting.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToOfTablesWithNamesThatNeedQuoting()
         {
@@ -220,16 +297,23 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                var tables = new[] { "public.\"odd name\"", "public.\"odd.name\"", "public.\"odd\"\"name\"" };
-
+                var tables = new[]
+                {
+                    "public.\"odd name\"",
+                    "public.\"odd.name\"",
+                    "public.\"odd\"\"name\""
+                };
                 // Act
-                source.CopyTableSchemaTo(tables, target);
-
+                source.CopyTableSchemaTo(tables,
+                    target);
                 // Assert
                 AssertTargetMatchesSource(tables);
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to of the whole database.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToOfTheWholeDatabase()
         {
@@ -239,16 +323,19 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = Helper.GetSourceTables();
-
                 // Act
-                source.CopyTableSchemaTo(tables, target);
-
+                source.CopyTableSchemaTo(tables,
+                    target);
                 // Assert
-                CollectionAssert.AreEquivalent(tables, Helper.GetTargetTables());
+                CollectionAssert.AreEquivalent(tables,
+                    Helper.GetTargetTables());
                 AssertTargetMatchesSource(tables.ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to of the whole database in the reverse order.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToOfTheWholeDatabaseInTheReverseOrder()
         {
@@ -258,15 +345,17 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = Helper.GetSourceTables();
-
                 // Act
-                source.CopyTableSchemaTo(Enumerable.Reverse(tables), target);
-
+                source.CopyTableSchemaTo(Enumerable.Reverse(tables),
+                    target);
                 // Assert
                 AssertTargetMatchesSource(tables.ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to of the table that is given more than once.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToOfTheTableThatIsGivenMoreThanOnce()
         {
@@ -276,16 +365,20 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "country", "public.country" }, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "country", "public.country" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(1, results.Count);
+                Assert.AreEqual(1,
+                    results.Count);
                 AssertTargetMatchesSource("country");
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to with requested exists behavior.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToWithRequestedExistsBehavior()
         {
@@ -295,15 +388,20 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "country" }, target, tableExistenceBehavior: TableExistsBehavior.Drop, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "country" },
+                    target,
+                    tableExistenceBehavior: TableExistsBehavior.Drop,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(TableExistsBehavior.Drop, results.Single().Action);
+                Assert.AreEqual(TableExistsBehavior.Drop,
+                    results.Single().Action);
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to without tables.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToWithoutTables()
         {
@@ -313,16 +411,21 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(Enumerable.Empty<string>(), target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(Enumerable.Empty<string>(),
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(0, results.Count);
-                Assert.AreEqual(0, Helper.GetTargetTables().Count);
+                Assert.AreEqual(0,
+                    results.Count);
+                Assert.AreEqual(0,
+                    Helper.GetTargetTables().Count);
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to of table that references atable that already exists in the target.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToOfTableThatReferencesATableThatAlreadyExistsInTheTarget()
         {
@@ -331,13 +434,14 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "country" }, target);
-
+                source.CopyTableSchemaTo(new[] { "country" },
+                    target);
                 // Act
-                source.CopyTableSchemaTo(new[] { "Person" }, target);
-
+                source.CopyTableSchemaTo(new[] { "Person" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("country", "Person");
+                AssertTargetMatchesSource("country",
+                    "Person");
             }
         }
 
@@ -345,6 +449,9 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
 
         #region Transactions
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to with transaction that is rolled back.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToWithTransactionThatIsRolledBack()
         {
@@ -353,19 +460,24 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 using (var transaction = Helper.BeginDdlTransaction(target))
                 {
-                    source.CopyTableSchemaTo(new[] { "country", "Person" }, target, transaction: transaction);
+                    source.CopyTableSchemaTo(new[] { "country", "Person" },
+                        target,
+                        transaction: transaction);
                     transaction.Rollback();
                 }
 
                 // Assert
-                Assert.AreEqual(0, Helper.GetTargetTables().Count);
+                Assert.AreEqual(0,
+                    Helper.GetTargetTables().Count);
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to with transaction that is committed.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToWithTransactionThatIsCommitted()
         {
@@ -374,42 +486,50 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 using (var transaction = Helper.BeginDdlTransaction(target))
                 {
-                    source.CopyTableSchemaTo(new[] { "country", "Person" }, target, transaction: transaction);
+                    source.CopyTableSchemaTo(new[] { "country", "Person" },
+                        target,
+                        transaction: transaction);
                     transaction.Commit();
                 }
 
                 // Assert
-                AssertTargetMatchesSource("country", "Person");
+                AssertTargetMatchesSource("country",
+                    "Person");
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to with error callback in transaction that the server aborts.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToWithErrorCallbackInTransactionThatTheServerAborts()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget).EnsureOpen())
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "country" }, target);
+                source.CopyTableSchemaTo(new[] { "country" },
+                    target);
                 var errors = new List<ExecutionError>();
-
                 // Act
                 using (var transaction = Helper.BeginDdlTransaction(target))
                 {
-                    source.CopyTableSchemaTo(new[] { "country", "Person" }, target, errorCallback: errors.Add, transaction: transaction);
-
+                    source.CopyTableSchemaTo(new[] { "country", "Person" },
+                        target,
+                        errorCallback: errors.Add,
+                        transaction: transaction);
                     // Assert
                     Assert.IsTrue(errors.Count > 1);
                     Assert.IsTrue(errors.All(e => e.Exception is CockroachDbException));
-                    Assert.AreEqual("42P07", ((CockroachDbException)errors[0].Exception).SqlState);
-                    Assert.AreEqual("25P02", ((CockroachDbException)errors[1].Exception).SqlState);
+                    Assert.AreEqual("42P07",
+                        ((CockroachDbException)errors[0].Exception).SqlState);
+                    Assert.AreEqual("25P02",
+                        ((CockroachDbException)errors[1].Exception).SqlState);
                     transaction.Rollback();
                 }
             }
@@ -419,6 +539,9 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
 
         #region Exceptions
 
+        /// <summary>
+        /// Verifies copy table schemas to if the referenced table is not part of them and does not exist leaves out the foreign key.
+        /// </summary>
         [TestMethod]
         public void TestCopyTableSchemasToIfTheReferencedTableIsNotPartOfThemAndDoesNotExistLeavesOutTheForeignKey()
         {
@@ -427,18 +550,23 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
                 var results = new List<CopyTableSchemaResultItem>();
-                source.CopyTableSchemaTo(new[] { "Person" }, target, createdCallback: results.Add);
-
+                source.CopyTableSchemaTo(new[] { "Person" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(1, results.Count);
+                Assert.AreEqual(1,
+                    results.Count);
                 Assert.IsTrue(results[0].Warnings.Count > 0);
-                Assert.AreEqual(0, results[0].Errors.Count);
+                Assert.AreEqual(0,
+                    results[0].Errors.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if atable already exists.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfATableAlreadyExists()
         {
@@ -447,13 +575,18 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "country" }, target);
-
+                source.CopyTableSchemaTo(new[] { "country" },
+                    target);
                 // Act/Assert
-                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "country", "Person" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
+                Assert.Throws<InvalidOperationException>(() => source.CopyTableSchemaTo(new[] { "country", "Person" },
+                        target,
+                        tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if atable does not exist in the source.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfATableDoesNotExistInTheSource()
         {
@@ -462,13 +595,17 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act/Assert
-                Assert.Throws<ArgumentException>(() => source.CopyTableSchemaTo(new[] { "country", "Missing" }, target));
-                Assert.AreEqual(0, Helper.GetTargetTables().Count);
+                Assert.Throws<ArgumentException>(() => source.CopyTableSchemaTo(new[] { "country", "Missing" },
+                        target));
+                Assert.AreEqual(0,
+                    Helper.GetTargetTables().Count);
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if there is no mapped schema reader.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfThereIsNoMappedSchemaReader()
         {
@@ -476,10 +613,14 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                Assert.Throws<MissingMappingException>(() => source.CopyTableSchemaTo(new[] { "country" }, target));
+                Assert.Throws<MissingMappingException>(() => source.CopyTableSchemaTo(new[] { "country" },
+                        target));
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if atable name is blank or the table names are null.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfATableNameIsBlankOrTheTableNamesAreNull()
         {
@@ -488,10 +629,11 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act/Assert
-                Assert.Throws<ArgumentException>(() => source.CopyTableSchemaTo(new[] { "country", " " }, target));
-                Assert.Throws<ArgumentNullException>(() => source.CopyTableSchemaTo((IEnumerable<string>)null, target));
+                Assert.Throws<ArgumentException>(() => source.CopyTableSchemaTo(new[] { "country", " " },
+                        target));
+                Assert.Throws<ArgumentNullException>(() => source.CopyTableSchemaTo((IEnumerable<string>)null,
+                        target));
             }
         }
 
@@ -499,6 +641,9 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
 
         #region Error callback
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to does not call the error callback if nothing fails.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToDoesNotCallTheErrorCallbackIfNothingFails()
         {
@@ -508,41 +653,53 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var errors = new List<ExecutionError>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "country", "Person" }, target, errorCallback: errors.Add);
-
+                source.CopyTableSchemaTo(new[] { "country", "Person" },
+                    target,
+                    errorCallback: errors.Add);
                 // Assert
-                Assert.AreEqual(0, errors.Count);
+                Assert.AreEqual(0,
+                    errors.Count);
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to calls the error callback with the details of the error.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToCallsTheErrorCallbackWithTheDetailsOfTheError()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "country" }, target);
+                source.CopyTableSchemaTo(new[] { "country" },
+                    target);
                 var errors = new List<ExecutionError>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "country" }, target, errorCallback: errors.Add);
-
+                source.CopyTableSchemaTo(new[] { "country" },
+                    target,
+                    errorCallback: errors.Add);
                 // Assert
                 var error = errors.Single();
-                Assert.AreEqual("country", error.TableName);
-                Assert.AreEqual("public", error.SchemaName);
-                Assert.AreEqual(0, error.StatementIndex);
-                StringAssert.StartsWith(error.Statement, "CREATE TABLE \"public\".\"country\"", StringComparison.Ordinal);
+                Assert.AreEqual("country",
+                    error.TableName);
+                Assert.AreEqual("public",
+                    error.SchemaName);
+                Assert.AreEqual(0,
+                    error.StatementIndex);
+                StringAssert.StartsWith(error.Statement,
+                    "CREATE TABLE \"public\".\"country\"",
+                    StringComparison.Ordinal);
                 Assert.IsInstanceOfType<CockroachDbException>(error.Exception);
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to with error callback keeps the objects that were created.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToWithErrorCallbackKeepsTheObjectsThatWereCreated()
         {
@@ -552,121 +709,157 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var created = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "Person" }, target, createdCallback: created.Add, errorCallback: _ => { });
-
+                source.CopyTableSchemaTo(new[] { "Person" },
+                    target,
+                    createdCallback: created.Add,
+                    errorCallback: _ =>
+                {
+                });
                 // Assert
                 var person = Helper.GetTargetSchema("Person");
-                Assert.AreEqual(10, person.Columns.Count);
-                Assert.AreEqual(2, person.Indexes.Count);
-                Assert.AreEqual(0, person.ForeignKeys.Count);
-                Assert.AreEqual(1, created.Single().Errors.Count);
-                Assert.AreEqual(TableOutcome.Failed, created.Single().Outcome);
+                Assert.AreEqual(10,
+                    person.Columns.Count);
+                Assert.AreEqual(2,
+                    person.Indexes.Count);
+                Assert.AreEqual(0,
+                    person.ForeignKeys.Count);
+                Assert.AreEqual(1,
+                    created.Single().Errors.Count);
+                Assert.AreEqual(TableOutcome.Failed,
+                    created.Single().Outcome);
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to with error callback continues with the other tables.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToWithErrorCallbackContinuesWithTheOtherTables()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "no_key" }, target);
+                source.CopyTableSchemaTo(new[] { "no_key" },
+                    target);
                 var created = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(new[] { "no_key", "chain_a", "chain_b" }, target, createdCallback: created.Add, errorCallback: _ => { });
-
+                source.CopyTableSchemaTo(new[] { "no_key", "chain_a", "chain_b" },
+                    target,
+                    createdCallback: created.Add,
+                    errorCallback: _ =>
+                {
+                });
                 // Assert
-                Assert.AreEqual(3, created.Count);
-                Assert.AreEqual(1, created.Single(r => r.Target.Table.Table.Name == "no_key").Errors.Count);
-                Assert.AreEqual(0, created.Where(r => r.Target.Table.Table.Name != "no_key").Sum(r => r.Errors.Count));
-                AssertTargetMatchesSource("no_key", "chain_a", "chain_b");
+                Assert.AreEqual(3,
+                    created.Count);
+                Assert.AreEqual(1,
+                    created.Single(r => r.Target.Table.Table.Name == "no_key").Errors.Count);
+                Assert.AreEqual(0,
+                    created.Where(r => r.Target.Table.Table.Name != "no_key").Sum(r => r.Errors.Count));
+                AssertTargetMatchesSource("no_key",
+                    "chain_a",
+                    "chain_b");
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to with error callback can copy the whole database twice.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToWithErrorCallbackCanCopyTheWholeDatabaseTwice()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = Helper.GetSourceTables();
-                source.CopyTableSchemaTo(tables, target);
+                source.CopyTableSchemaTo(tables,
+                    target);
                 var errors = new List<ExecutionError>();
                 var created = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                source.CopyTableSchemaTo(tables, target, createdCallback: created.Add, errorCallback: errors.Add);
-
+                source.CopyTableSchemaTo(tables,
+                    target,
+                    createdCallback: created.Add,
+                    errorCallback: errors.Add);
                 // Assert
                 Assert.IsTrue(errors.Count >= tables.Count);
                 Assert.IsTrue(errors.All(e => e.Exception is CockroachDbException));
-                Assert.AreEqual(tables.Count, created.Count);
+                Assert.AreEqual(tables.Count,
+                    created.Count);
                 Assert.IsTrue(created.All(r => r.Errors.Count > 0 && r.Outcome == TableOutcome.Failed));
-                Assert.AreEqual(errors.Count, created.Sum(r => r.Errors.Count));
+                Assert.AreEqual(errors.Count,
+                    created.Sum(r => r.Errors.Count));
                 AssertTargetMatchesSource(tables.ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to stops if the error callback throws.
+        /// </summary>
         [TestMethod]
         public void TestCockroachDbCopyTableSchemasToStopsIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "no_key" }, target);
+                source.CopyTableSchemaTo(new[] { "no_key" },
+                    target);
                 var created = new List<string>();
-
                 // Act/Assert
-                Assert.Throws<NotSupportedException>(() =>
-                    source.CopyTableSchemaTo(new[] { "no_key", "chain_a" }, target, createdCallback: r => created.Add(r.Target.Table.Table.Name), errorCallback: _ => throw new NotSupportedException()));
-
+                Assert.Throws<NotSupportedException>(() => source.CopyTableSchemaTo(new[] { "no_key", "chain_a" },
+                        target,
+                        createdCallback: r => created.Add(r.Target.Table.Table.Name),
+                        errorCallback: _ => throw new NotSupportedException()));
                 // Assert
-                Assert.AreEqual(0, created.Count);
-                CollectionAssert.AreEqual(new[] { "public.no_key" }, Helper.GetTargetTables());
+                Assert.AreEqual(0,
+                    created.Count);
+                CollectionAssert.AreEqual(new[] { "public.no_key" },
+                    Helper.GetTargetTables());
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to if the error callback throws the captured exception.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToIfTheErrorCallbackThrowsTheCapturedException()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                source.CopyTableSchemaTo(new[] { "no_key" }, target);
+                source.CopyTableSchemaTo(new[] { "no_key" },
+                    target);
                 ExecutionError raised = null;
-
                 // Act
-                var exception = Assert.Throws<CockroachDbException>(() =>
-                    source.CopyTableSchemaTo(new[] { "no_key" }, target, errorCallback: e =>
-                    {
-                        raised = e;
-                        throw e.Exception;
-                    }));
-
+                var exception = Assert.Throws<CockroachDbException>(() => source.CopyTableSchemaTo(new[] { "no_key" },
+                        target,
+                        errorCallback: e =>
+                {
+                    raised = e;
+                    throw e.Exception;
+                }));
                 // Assert
-                Assert.AreSame(raised.Exception, exception);
+                Assert.AreSame(raised.Exception,
+                    exception);
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to with error callback if there is no mapped schema reader.
+        /// </summary>
         [TestMethod]
         public void ThrowExceptionOnCopyTableSchemasToWithErrorCallbackIfThereIsNoMappedSchemaReader()
         {
@@ -675,8 +868,11 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Act/Assert
                 var errors = new List<ExecutionError>();
-                Assert.Throws<MissingMappingException>(() => source.CopyTableSchemaTo(new[] { "country" }, target, errorCallback: errors.Add));
-                Assert.AreEqual(0, errors.Count);
+                Assert.Throws<MissingMappingException>(() => source.CopyTableSchemaTo(new[] { "country" },
+                        target,
+                        errorCallback: errors.Add));
+                Assert.AreEqual(0,
+                    errors.Count);
             }
         }
 
@@ -684,6 +880,9 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
 
         #region Async
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to async.
+        /// </summary>
         [TestMethod]
         public async Task TestCockroachDbCopyTableSchemasToAsync()
         {
@@ -692,15 +891,18 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "Person", "country" }, target);
-
+                await source.CopyTableSchemaToAsync(new[] { "Person", "country" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("country", "Person");
+                AssertTargetMatchesSource("country",
+                    "Person");
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to async of tables that reference each other.
+        /// </summary>
         [TestMethod]
         public async Task TestCockroachDbCopyTableSchemasToAsyncOfTablesThatReferenceEachOther()
         {
@@ -709,15 +911,21 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "node_b", "node_a", "ring_3", "ring_1", "ring_2" }, target);
-
+                await source.CopyTableSchemaToAsync(new[] { "node_b", "node_a", "ring_3", "ring_1", "ring_2" },
+                    target);
                 // Assert
-                AssertTargetMatchesSource("node_a", "node_b", "ring_1", "ring_2", "ring_3");
+                AssertTargetMatchesSource("node_a",
+                    "node_b",
+                    "ring_1",
+                    "ring_2",
+                    "ring_3");
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to async of the whole database.
+        /// </summary>
         [TestMethod]
         public async Task TestCockroachDbCopyTableSchemasToAsyncOfTheWholeDatabase()
         {
@@ -727,16 +935,19 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var tables = Helper.GetSourceTables();
-
                 // Act
-                await source.CopyTableSchemaToAsync(tables, target);
-
+                await source.CopyTableSchemaToAsync(tables,
+                    target);
                 // Assert
-                CollectionAssert.AreEquivalent(tables, Helper.GetTargetTables());
+                CollectionAssert.AreEquivalent(tables,
+                    Helper.GetTargetTables());
                 AssertTargetMatchesSource(tables.ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to async callback result.
+        /// </summary>
         [TestMethod]
         public async Task TestCockroachDbCopyTableSchemasToAsyncCallbackResult()
         {
@@ -746,16 +957,21 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
                 // Setup
                 MapSchemaReaderConnection(source);
                 var results = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "Person", "country" }, target, createdCallback: results.Add);
-
+                await source.CopyTableSchemaToAsync(new[] { "Person", "country" },
+                    target,
+                    createdCallback: results.Add);
                 // Assert
-                Assert.AreEqual(2, results.Count);
-                Assert.AreEqual(10, results.Single(r => r.Target.Table.Table.Name == "Person").ColumnCount);
+                Assert.AreEqual(2,
+                    results.Count);
+                Assert.AreEqual(10,
+                    results.Single(r => r.Target.Table.Table.Name == "Person").ColumnCount);
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to async without tables.
+        /// </summary>
         [TestMethod]
         public async Task TestCockroachDbCopyTableSchemasToAsyncWithoutTables()
         {
@@ -764,15 +980,18 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-
                 // Act
-                await source.CopyTableSchemaToAsync(Enumerable.Empty<string>(), target);
-
+                await source.CopyTableSchemaToAsync(Enumerable.Empty<string>(),
+                    target);
                 // Assert
-                Assert.AreEqual(0, Helper.GetTargetTables().Count);
+                Assert.AreEqual(0,
+                    Helper.GetTargetTables().Count);
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to async if atable already exists.
+        /// </summary>
         [TestMethod]
         public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfATableAlreadyExists()
         {
@@ -781,13 +1000,18 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopyTableSchemaToAsync(new[] { "country" }, target);
-
+                await source.CopyTableSchemaToAsync(new[] { "country" },
+                    target);
                 // Act/Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "country" }, target, tableExistenceBehavior: TableExistsBehavior.Throw));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => source.CopyTableSchemaToAsync(new[] { "country" },
+                        target,
+                        tableExistenceBehavior: TableExistsBehavior.Throw));
             }
         }
 
+        /// <summary>
+        /// Verifies throw exception on copy table schemas to async if there is no mapped schema reader.
+        /// </summary>
         [TestMethod]
         public async Task ThrowExceptionOnCopyTableSchemasToAsyncIfThereIsNoMappedSchemaReader()
         {
@@ -795,73 +1019,90 @@ namespace RepoDb.Schema.CockroachDb.IntegrationTests
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Act/Assert
-                await Assert.ThrowsAsync<MissingMappingException>(() => source.CopyTableSchemaToAsync(new[] { "country" }, target));
+                await Assert.ThrowsAsync<MissingMappingException>(() => source.CopyTableSchemaToAsync(new[] { "country" },
+                        target));
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to async calls the error callback with the details of the error.
+        /// </summary>
         [TestMethod]
         public async Task TestCockroachDbCopyTableSchemasToAsyncCallsTheErrorCallbackWithTheDetailsOfTheError()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopyTableSchemaToAsync(new[] { "country" }, target);
+                await source.CopyTableSchemaToAsync(new[] { "country" },
+                    target);
                 var errors = new List<ExecutionError>();
-
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "country" }, target, errorCallback: errors.Add);
-
+                await source.CopyTableSchemaToAsync(new[] { "country" },
+                    target,
+                    errorCallback: errors.Add);
                 // Assert
-                Assert.AreEqual("country", errors.Single().TableName);
+                Assert.AreEqual("country",
+                    errors.Single().TableName);
                 Assert.IsInstanceOfType<CockroachDbException>(errors.Single().Exception);
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to async with error callback continues with the other tables.
+        /// </summary>
         [TestMethod]
         public async Task TestCockroachDbCopyTableSchemasToAsyncWithErrorCallbackContinuesWithTheOtherTables()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopyTableSchemaToAsync(new[] { "no_key" }, target);
+                await source.CopyTableSchemaToAsync(new[] { "no_key" },
+                    target);
                 var created = new List<CopyTableSchemaResultItem>();
-
                 // Act
-                await source.CopyTableSchemaToAsync(new[] { "no_key", "chain_a", "chain_b" }, target, createdCallback: created.Add, errorCallback: _ => { });
-
+                await source.CopyTableSchemaToAsync(new[] { "no_key", "chain_a", "chain_b" },
+                    target,
+                    createdCallback: created.Add,
+                    errorCallback: _ =>
+                {
+                });
                 // Assert
-                Assert.AreEqual(1, created.Single(r => r.Target.Table.Table.Name == "no_key").Errors.Count);
-                AssertTargetMatchesSource("no_key", "chain_a", "chain_b");
+                Assert.AreEqual(1,
+                    created.Single(r => r.Target.Table.Table.Name == "no_key").Errors.Count);
+                AssertTargetMatchesSource("no_key",
+                    "chain_a",
+                    "chain_b");
             }
         }
 
+        /// <summary>
+        /// Verifies cockroach db copy table schemas to async stops if the error callback throws.
+        /// </summary>
         [TestMethod]
         public async Task TestCockroachDbCopyTableSchemasToAsyncStopsIfTheErrorCallbackThrows()
         {
             Helper.DisableExistenceChecks();
-
             using (var source = new CockroachDbConnection(Database.ConnectionStringForSource))
             using (var target = new CockroachDbConnection(Database.ConnectionStringForTarget))
             {
                 // Setup
                 MapSchemaReaderConnection(source);
-                await source.CopyTableSchemaToAsync(new[] { "no_key" }, target);
-
+                await source.CopyTableSchemaToAsync(new[] { "no_key" },
+                    target);
                 // Act/Assert
-                await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    source.CopyTableSchemaToAsync(new[] { "no_key", "chain_a" }, target, errorCallback: _ => throw new NotSupportedException()));
-                CollectionAssert.AreEqual(new[] { "public.no_key" }, Helper.GetTargetTables());
+                await Assert.ThrowsAsync<NotSupportedException>(() => source.CopyTableSchemaToAsync(new[] { "no_key", "chain_a" },
+                        target,
+                        errorCallback: _ => throw new NotSupportedException()));
+                CollectionAssert.AreEqual(new[] { "public.no_key" },
+                    Helper.GetTargetTables());
             }
         }
-
         #endregion
     }
 }

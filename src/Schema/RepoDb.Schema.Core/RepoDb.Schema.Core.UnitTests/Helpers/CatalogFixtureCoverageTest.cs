@@ -102,19 +102,19 @@ namespace RepoDb.Schema.Core.UnitTests.Helpers
         }
 
         /// <summary>
-        /// Rejects unsupported transaction creation.
+        /// Creates a transaction on the current connection.
         /// </summary>
         [TestMethod]
-        public void ConnectionRejectsTransactions()
+        public void ConnectionCreatesTransactions()
         {
             // Setup
             using var connection = new CatalogConnection();
 
             // Act
-            Action action = () => connection.BeginTransaction();
+            using var transaction = connection.BeginTransaction();
 
             // Assert
-            Assert.ThrowsExactly<NotSupportedException>(action);
+            Assert.AreSame(connection, transaction.Connection);
         }
 
         /// <summary>

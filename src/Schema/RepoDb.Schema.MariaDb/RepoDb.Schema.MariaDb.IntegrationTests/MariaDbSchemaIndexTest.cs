@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using System;
@@ -17,9 +16,15 @@ using RepoDb.Schema.MariaDb.IntegrationTests.Setup;
 
 namespace RepoDb.Schema.MariaDb.IntegrationTests
 {
+    /// <summary>
+    /// Contains the maria db schema index test behavior.
+    /// </summary>
     [TestClass]
     public class MariaDbSchemaIndexTest
     {
+        /// <summary>
+        /// Performs initialize.
+        /// </summary>
         [TestInitialize]
         public void Initialize()
         {
@@ -27,30 +32,52 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
             Cleanup();
         }
 
+        /// <summary>
+        /// Performs cleanup.
+        /// </summary>
         [TestCleanup]
         public void Cleanup()
         {
             Database.Cleanup();
         }
 
-        #region Helpers
+        #region Private Methods
 
-        private static IndexInfo GetIndex(string tableName, string indexName) =>
-            GetIndexes(tableName).Single(i => i.Name == indexName);
+        /// <summary>
+        /// Performs get index.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="indexName">The index name.</param>
+        private static IndexInfo GetIndex(string tableName,
+            string indexName) => GetIndexes(tableName).Single(i => i.Name == indexName);
 
+        /// <summary>
+        /// Performs get indexes.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
         private static List<IndexInfo> GetIndexes(string tableName)
         {
             using (var connection = new MariaDbConnection(Database.ConnectionStringForSource))
             {
-                return new MariaDbSchemaReader(connection).GetIndexes(tableName).ToList();
+                return new MariaDbSchemaReader().GetIndexes(connection,
+                    tableName,
+                    transaction: null).ToList();
             }
         }
 
-        private static UniqueConstraintInfo GetUniqueConstraint(string tableName, string name)
+        /// <summary>
+        /// Performs get unique constraint.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="name">The name.</param>
+        private static UniqueConstraintInfo GetUniqueConstraint(string tableName,
+            string name)
         {
             using (var connection = new MariaDbConnection(Database.ConnectionStringForSource))
             {
-                return new MariaDbSchemaReader(connection).GetUniqueConstraints(tableName).Single(c => c.Name == name);
+                return new MariaDbSchemaReader().GetUniqueConstraints(connection,
+                    tableName,
+                    transaction: null).Single(c => c.Name == name);
             }
         }
 
@@ -58,131 +85,170 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
 
         #region Reader
 
+        /// <summary>
+        /// Verifies maria db schema reader get indexes of table with multiple indexes.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaReaderGetIndexesOfTableWithMultipleIndexes()
         {
             using (var connection = new MariaDbConnection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new MariaDbSchemaReader(connection);
-
+                var reader = new MariaDbSchemaReader();
                 // Act
-                var actual = reader.GetIndexes("Product").Select(i => i.Name).OrderBy(n => n, StringComparer.Ordinal).ToArray();
-
+                var actual = reader.GetIndexes(connection,
+                    "Product",
+                    transaction: null).Select(i => i.Name).OrderBy(n => n,
+                    StringComparer.Ordinal).ToArray();
                 // Assert
-                CollectionAssert.AreEqual(
-                    new[] { "IX_Product_Active_Name", "IX_Product_Category_Price" },
+                CollectionAssert.AreEqual(new[] { "IX_Product_Active_Name", "IX_Product_Category_Price" },
                     actual);
             }
         }
 
+        /// <summary>
+        /// Verifies maria db schema reader get unique constraints of unique index.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaReaderGetUniqueConstraintsOfUniqueIndex()
         {
             // Act
-            var actual = GetUniqueConstraint("Product", "CIX_Product_Code");
-
+            var actual = GetUniqueConstraint("Product",
+                "CIX_Product_Code");
             // Assert
-            CollectionAssert.AreEqual(new[] { "Code" }, actual.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Code" },
+                actual.Columns.ToArray());
             Assert.IsFalse(GetIndexes("Product").Any(i => i.Name == "CIX_Product_Code"));
         }
 
+        /// <summary>
+        /// Verifies maria db schema reader get unique constraints of second unique index.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaReaderGetUniqueConstraintsOfSecondUniqueIndex()
         {
             // Act
-            var actual = GetUniqueConstraint("Product", "UX_Product_Sku");
-
+            var actual = GetUniqueConstraint("Product",
+                "UX_Product_Sku");
             // Assert
-            CollectionAssert.AreEqual(new[] { "Sku" }, actual.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Sku" },
+                actual.Columns.ToArray());
             Assert.IsFalse(GetIndexes("Product").Any(i => i.Name == "UX_Product_Sku"));
         }
 
+        /// <summary>
+        /// Verifies maria db schema reader get indexes of multi column index with descending key.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaReaderGetIndexesOfMultiColumnIndexWithDescendingKey()
         {
             // Act
-            var actual = GetIndex("Product", "IX_Product_Category_Price");
-
+            var actual = GetIndex("Product",
+                "IX_Product_Category_Price");
             // Assert
             Assert.IsFalse(actual.IsUnique);
             Assert.IsFalse(actual.IsClustered);
-            CollectionAssert.AreEqual(new[] { "Category", "Price" }, actual.Columns.ToArray());
-            CollectionAssert.AreEqual(new[] { "Price" }, actual.DescendingColumns.ToArray());
-            Assert.AreEqual(0, actual.IncludedColumns.Count);
+            CollectionAssert.AreEqual(new[] { "Category", "Price" },
+                actual.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Price" },
+                actual.DescendingColumns.ToArray());
+            Assert.AreEqual(0,
+                actual.IncludedColumns.Count);
         }
 
+        /// <summary>
+        /// Verifies maria db schema reader get indexes of single column index.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaReaderGetIndexesOfSingleColumnIndex()
         {
             // Act
-            var actual = GetIndex("Product", "IX_Product_Active_Name");
-
+            var actual = GetIndex("Product",
+                "IX_Product_Active_Name");
             // Assert
             Assert.IsNull(actual.Filter);
-            CollectionAssert.AreEqual(new[] { "Name" }, actual.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Name" },
+                actual.Columns.ToArray());
         }
 
+        /// <summary>
+        /// Verifies maria db schema reader get indexes of index without filter and with descending key.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaReaderGetIndexesOfIndexWithoutFilterAndWithDescendingKey()
         {
             // Act
-            var actual = GetIndex("Person", "IX_Person_Name");
-
+            var actual = GetIndex("Person",
+                "IX_Person_Name");
             // Assert
             Assert.IsNull(actual.Filter);
-            CollectionAssert.AreEqual(new[] { "Name" }, actual.DescendingColumns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Name" },
+                actual.DescendingColumns.ToArray());
             Assert.IsFalse(actual.IsClustered);
         }
 
+        /// <summary>
+        /// Verifies maria db schema reader get primary key of product.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaReaderGetPrimaryKeyOfProduct()
         {
             using (var connection = new MariaDbConnection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new MariaDbSchemaReader(connection);
-
+                var reader = new MariaDbSchemaReader();
                 // Act
-                var actual = reader.GetPrimaryKey("Product");
-
+                var actual = reader.GetPrimaryKey(connection,
+                    "Product",
+                    transaction: null);
                 // Assert
-                Assert.AreEqual("PRIMARY", actual.Name, StringComparer.Ordinal);
-                CollectionAssert.AreEqual(new[] { "Id" }, actual.Columns.ToArray());
+                Assert.AreEqual("PRIMARY",
+                    actual.Name,
+                    StringComparer.Ordinal);
+                CollectionAssert.AreEqual(new[] { "Id" },
+                    actual.Columns.ToArray());
             }
         }
 
+        /// <summary>
+        /// Verifies maria db schema reader get primary key of clustered primary key.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaReaderGetPrimaryKeyOfClusteredPrimaryKey()
         {
             using (var connection = new MariaDbConnection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new MariaDbSchemaReader(connection);
-
+                var reader = new MariaDbSchemaReader();
                 // Act
-                var actual = reader.GetPrimaryKey("Person");
-
+                var actual = reader.GetPrimaryKey(connection,
+                    "Person",
+                    transaction: null);
                 // Assert
                 Assert.IsTrue(actual.IsClustered);
             }
         }
 
+        /// <summary>
+        /// Verifies maria db schema reader get indexes async of table with multiple indexes.
+        /// </summary>
         [TestMethod]
         public async Task TestMariaDbSchemaReaderGetIndexesAsyncOfTableWithMultipleIndexes()
         {
             using (var connection = new MariaDbConnection(Database.ConnectionStringForSource))
             {
                 // Setup
-                var reader = new MariaDbSchemaReader(connection);
-
+                var reader = new MariaDbSchemaReader();
                 // Act
-                var actual = (await reader.GetIndexesAsync("Product")).ToList();
-
+                var actual = (await reader.GetIndexesAsync(connection,
+                    "Product",
+                    transaction: null)).ToList();
                 // Assert
-                Assert.AreEqual(2, actual.Count);
+                Assert.AreEqual(2,
+                    actual.Count);
                 Assert.IsNull(actual.Single(i => i.Name == "IX_Product_Active_Name").Filter);
-                CollectionAssert.AreEqual(new[] { "Price" }, actual.Single(i => i.Name == "IX_Product_Category_Price").DescendingColumns.ToArray());
+                CollectionAssert.AreEqual(new[] { "Price" },
+                    actual.Single(i => i.Name == "IX_Product_Category_Price").DescendingColumns.ToArray());
             }
         }
 
@@ -190,104 +256,122 @@ namespace RepoDb.Schema.MariaDb.IntegrationTests
 
         #region Composer
 
+        /// <summary>
+        /// Verifies maria db schema composer composed schema of table with multiple indexes.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaComposerComposedSchemaOfTableWithMultipleIndexes()
         {
             // Act
             Helper.CopyToTarget("Product");
-
             // Assert
             Helper.AssertTargetMatchesSource("Product");
         }
 
+        /// <summary>
+        /// Verifies maria db schema composer composed schema keeps the primary key and the unique indexes.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaComposerComposedSchemaKeepsThePrimaryKeyAndTheUniqueIndexes()
         {
             // Act
             Helper.CopyToTarget("Product");
-
             // Assert
             var target = Helper.GetTargetSchema("Product");
-            Assert.AreEqual("PRIMARY", target.PrimaryKey.Name, StringComparer.Ordinal);
-            CollectionAssert.AreEquivalent(new[] { "CIX_Product_Code", "UX_Product_Sku" }, target.UniqueConstraints.Select(c => c.Name).ToArray());
+            Assert.AreEqual("PRIMARY",
+                target.PrimaryKey.Name,
+                StringComparer.Ordinal);
+            CollectionAssert.AreEquivalent(new[] { "CIX_Product_Code", "UX_Product_Sku" },
+                target.UniqueConstraints.Select(c => c.Name).ToArray());
         }
 
+        /// <summary>
+        /// Verifies maria db schema composer composed schema keeps the single column index.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaComposerComposedSchemaKeepsTheSingleColumnIndex()
         {
             // Act
             Helper.CopyToTarget("Product");
-
             // Assert
             var actual = Helper.GetTargetSchema("Product").Indexes.Single(i => i.Name == "IX_Product_Active_Name");
-            CollectionAssert.AreEqual(new[] { "Name" }, actual.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Name" },
+                actual.Columns.ToArray());
         }
 
+        /// <summary>
+        /// Verifies maria db schema composer composed schema keeps the descending key.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaComposerComposedSchemaKeepsTheDescendingKey()
         {
             // Act
             Helper.CopyToTarget("Product");
-
             // Assert
             var actual = Helper.GetTargetSchema("Product").Indexes.Single(i => i.Name == "IX_Product_Category_Price");
-            CollectionAssert.AreEqual(new[] { "Category", "Price" }, actual.Columns.ToArray());
-            CollectionAssert.AreEqual(new[] { "Price" }, actual.DescendingColumns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Category", "Price" },
+                actual.Columns.ToArray());
+            CollectionAssert.AreEqual(new[] { "Price" },
+                actual.DescendingColumns.ToArray());
         }
 
+        /// <summary>
+        /// Verifies maria db schema composer composed unique index enforces the uniqueness.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaComposerComposedUniqueIndexEnforcesTheUniqueness()
         {
             // Setup
             Helper.CopyToTarget("Product");
-
             using (var connection = new MariaDbConnection(Database.ConnectionStringForTarget))
             {
                 connection.ExecuteNonQuery("INSERT INTO `Product` (`Id`, `Code`, `Sku`, `Name`, `Category`, `Price`) VALUES (1, 'C1', 'S1', 'First', 1, 1.00);");
-
                 // Act/Assert
-                Assert.Throws<MariaDbException>(() =>
-                    connection.ExecuteNonQuery("INSERT INTO `Product` (`Id`, `Code`, `Sku`, `Name`, `Category`, `Price`) VALUES (2, 'C2', 'S1', 'Second', 1, 1.00);"));
-
+                Assert.Throws<MariaDbException>(() => connection.ExecuteNonQuery("INSERT INTO `Product` (`Id`, `Code`, `Sku`, `Name`, `Category`, `Price`) VALUES (2, 'C2', 'S1', 'Second', 1, 1.00);"));
                 // Act/Assert
-                Assert.Throws<MariaDbException>(() =>
-                    connection.ExecuteNonQuery("INSERT INTO `Product` (`Id`, `Code`, `Sku`, `Name`, `Category`, `Price`) VALUES (3, 'C1', 'S3', 'Third', 1, 1.00);"));
+                Assert.Throws<MariaDbException>(() => connection.ExecuteNonQuery("INSERT INTO `Product` (`Id`, `Code`, `Sku`, `Name`, `Category`, `Price`) VALUES (3, 'C1', 'S3', 'Third', 1, 1.00);"));
             }
         }
 
+        /// <summary>
+        /// Verifies maria db schema composer composed each index on its own.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaComposerComposedEachIndexOnItsOwn()
         {
             // Setup
             var source = Helper.GetSourceSchema("Product");
             var composer = new MariaDbSchemaComposer();
-            var withoutIndexes = new TableSchema(source.Table.Name, source.Table.Schema)
+            var withoutIndexes = new TableSchema(source.Table.Name,
+                source.Table.Schema)
             {
                 PrimaryKey = source.PrimaryKey,
                 Columns = source.Columns,
                 UniqueConstraints = source.UniqueConstraints
             };
-
             // Act
             Helper.ExecuteOnTarget(new[] { composer.ComposeCreateTable(withoutIndexes) });
-            Helper.ExecuteOnTarget(source.Indexes.Select(i => composer.ComposeCreateIndex("Product", i)));
-
+            Helper.ExecuteOnTarget(source.Indexes.Select(i => composer.ComposeCreateIndex("Product",
+                        i)));
             // Assert
             Helper.AssertTargetMatchesSource("Product");
         }
 
+        /// <summary>
+        /// Verifies maria db schema composer composed schema of tables with indexes.
+        /// </summary>
         [TestMethod]
         public void TestMariaDbSchemaComposerComposedSchemaOfTablesWithIndexes()
         {
             // Act
-            Helper.CopyAllToTarget("Product", "Person", "Country");
-
+            Helper.CopyAllToTarget("Product",
+                "Person",
+                "Country");
             // Assert
             Helper.AssertTargetMatchesSource("Product");
             Helper.AssertTargetMatchesSource("Person");
             Helper.AssertTargetMatchesSource("Country");
         }
-
         #endregion
     }
 }

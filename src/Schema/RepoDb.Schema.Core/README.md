@@ -6,12 +6,33 @@
     <span style="font-size:16px;">The schema productivity core package of RepoDB library.</span>
 </div>
 
-## Saving table definitions
+## Schema readers
 
-Register a schema reader for the source connection, then export a definition:
+Provider setup registers a reusable reader and composer. Call `UseSqlServerSchema()`, `UseMySqlConnectorSchema()`, or the corresponding provider method once; no manual reader mapping is required for schema or data operations.
+
+Readers have parameterless constructors and hold no connection or transaction. Direct reader calls now take the operation connection first and an optional transaction before the cancellation token:
 
 ```csharp
-SchemaReaderMapper.Add<SqlConnection>(new SqlServerSchemaReader(connection), force: true);
+var reader = SchemaReaderMapper.Get(connection);
+var schema = reader.GetTableSchema(connection,
+    "sales.Invoice",
+    transaction);
+var asyncSchema = await reader.GetTableSchemaAsync(connection,
+    "sales.Invoice",
+    transaction,
+    cancellationToken);
+```
+
+This is a breaking change for direct callers and custom `ISchemaReader` implementations. Use the supplied connection for all catalog queries and metadata, and forward its transaction through nested calls. Readers do not dispose caller connections or transactions. Copy operations use their source connection for schema reads; their destination transaction remains on the destination connection.
+
+## Saving table definitions
+
+Provider setup also registers the dialect through its connection type, for example `SchemaDialectMapper.Add<SqlConnection>(SqlServerSchemaDialect.Instance)`. This resolves the provider name from the connection's registered database setting without creating a connection. Provider-name lookup remains available for metadata loaded from saved definitions. Custom registrations require a database setting with a nonblank provider name.
+
+Configure the source provider once, then export a definition:
+
+```csharp
+GlobalConfiguration.Setup().UseSqlServerSchema();
 
 connection.SaveDefinitionAsYaml("sales.Invoice", "invoice.yaml",
     relationshipBehavior: RelatedTableBehavior.Parents,

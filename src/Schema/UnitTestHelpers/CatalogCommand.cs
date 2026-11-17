@@ -103,9 +103,12 @@ namespace RepoDb.Schema.UnitTestHelpers
         /// Reads the configured catalog rows.
         /// </summary>
         /// <param name="behavior">The behavior value.</param>
-        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior) =>
-            (((CatalogConnection)DbConnection).Query?.Invoke(CommandText) ??
-                ((CatalogConnection)DbConnection).Data).CreateDataReader();
+        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
+        {
+            var connection = (CatalogConnection)DbConnection;
+            connection.LastTransaction = DbTransaction;
+            return (connection.Query?.Invoke(CommandText) ?? connection.Data).CreateDataReader();
+        }
 
         #endregion
     }

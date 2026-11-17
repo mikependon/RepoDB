@@ -3,7 +3,6 @@
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
 // See the LICENSE file in the project root for full license information.
-
 #endregion
 
 using Npgsql;
@@ -12,15 +11,14 @@ using RepoDb.Connector.AuroraDb.Npgsql;
 namespace RepoDb.Schema.AuroraDbPostgreSql
 {
     /// <summary>
-    /// A class that is being used to initialize the necessary settings of the PostgreSQL schema objects for the <see cref="AuroraDbConnection"/> object.
+    /// Configures the provider schema services.
     /// </summary>
     public static class AuroraDbPostgreSqlSchemaGlobalConfiguration
     {
-        #region Methods
+        #region Public Methods
 
         /// <summary>
-        /// Initializes the PostgreSQL settings first (see <c>UseAuroraDbPostgreSql</c>), then registers the <see cref="AuroraDbPostgreSqlSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="AuroraDbConnection"/> type.
-        /// A <see cref="AuroraDbPostgreSqlSchemaReader"/> owns the connection that it reads, so it is created with its connection instead of being registered here.
+        /// Initializes the PostgreSQL settings first (see <c>UseAuroraDbPostgreSql</c>), then registers the reader and <see cref="AuroraDbPostgreSqlSchemaComposer"/> to the <see cref="SchemaComposerMapper"/> for the <see cref="AuroraDbConnection"/> type.
         /// It is safe to call this method more than once.
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
@@ -28,12 +26,13 @@ namespace RepoDb.Schema.AuroraDbPostgreSql
         public static GlobalConfiguration UseAuroraDbPostgreSqlSchema(this GlobalConfiguration globalConfiguration)
         {
             globalConfiguration.UseAuroraDb();
-            SchemaComposerMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaComposer(), force: true);
-            SchemaDialectMapper.Add(DbSettingMapper.Get<AuroraDbConnection>().Provider,
-                AuroraDbPostgreSqlSchemaDialect.Instance);
+            SchemaComposerMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaComposer(),
+                force: true);
+            SchemaReaderMapper.Add<AuroraDbConnection>(new AuroraDbPostgreSqlSchemaReader(),
+                force: true);
+            SchemaDialectMapper.Add<AuroraDbConnection>(AuroraDbPostgreSqlSchemaDialect.Instance);
             return globalConfiguration;
         }
-
         #endregion
     }
 }

@@ -1,4 +1,4 @@
-#region Copyright Attributions
+﻿#region Copyright Attributions
 
 // Copyright (c) 2026 Michael Camara Pendon.
 // Licensed under the Apache License, Version 2.0.
@@ -72,11 +72,13 @@ namespace RepoDb.Schema
         /// <exception cref="InvalidOperationException">Two tables would have the same name in the destination database.</exception>
         public static IList<PlanTable> CreateTables(IEnumerable<TableSchema> schemas,
             string targetSchema,
-            ISchemaComposer composer)
+            ISchemaComposer composer,
+            string removedSchema = null)
         {
             var tables = schemas.Select(source => CreateTable(source,
                 MoveTo(source,
-                    targetSchema),
+                    targetSchema,
+                    removedSchema),
                 composer)).ToList();
             EnsureUniqueNames(tables);
             return tables;
@@ -147,17 +149,20 @@ namespace RepoDb.Schema
         /// <param name="targetSchema">The target schema.</param>
         /// <returns>The schema of the table in the target schema.</returns>
         private static TableSchema MoveTo(TableSchema source,
-            string targetSchema)
+            string targetSchema,
+            string removedSchema)
         {
-            if (string.IsNullOrWhiteSpace(targetSchema) || (IsIn(source.Table,
-                targetSchema) && source.ForeignKeys.All(foreignKey => IsIn(foreignKey.ReferencedTable,
-                    targetSchema))))
+            var schemaOf = GetSchemaSelector(targetSchema,
+                removedSchema);
+            if (schemaOf == null || (Equals(schemaOf(source.Table),
+                source.Table.Schema) && source.ForeignKeys.All(foreignKey => foreignKey.ReferencedTable == null || Equals(schemaOf(foreignKey.ReferencedTable),
+                    foreignKey.ReferencedTable.Schema))))
             {
                 return source;
             }
 
             return new TableSchema(new TableInfo(source.Table.Name,
-                targetSchema,
+                schemaOf(source.Table),
                 source.Table.Database,
                 source.Table.Provider))
             {
@@ -167,46 +172,49 @@ namespace RepoDb.Schema
                 PrimaryKey = source.PrimaryKey,
                 UniqueConstraints = source.UniqueConstraints,
                 ForeignKeys = source.ForeignKeys.Select(foreignKey => MoveTo(foreignKey,
-                    targetSchema)).ToList()
+                    schemaOf)).ToList()
             };
         }
 
         /// <summary>
-        /// Checks whether the table is in the schema.
+        /// Gets the function that returns the schema of a table in the destination.
         /// </summary>
-        /// <param name="table">The table.</param>
-        /// <param name="schema">The name of the schema.</param>
-        /// <returns><c>true</c> if the table is in the schema; otherwise, <c>false</c>.</returns>
-        private static bool IsIn(TableInfo table,
-            string schema) =>
-            string.Equals(table.Schema,
-                schema,
-                StringComparison.Ordinal);
+        /// <param name="targetSchema">The target schema, or blank when the tables keep their schema.</param>
+        /// <param name="removedSchema">The schema that is removed when there is no target schema.</param>
+        /// <returns>The function, or <c>null</c> when the schema of every table is kept.</returns>
+        private static Func<TableInfo, string> GetSchemaSelector(string targetSchema,
+            string removedSchema)
+        {
+            if (!string.IsNullOrWhiteSpace(targetSchema))
+            {
+                return table => targetSchema;
+            }
+
+            return string.IsNullOrWhiteSpace(removedSchema) ? null : table => string.Equals(table.Schema,
+                removedSchema,
+                StringComparison.OrdinalIgnoreCase) ? null : table.Schema;
+        }
 
         /// <summary>
-        /// Gets the foreign key that references the table in the target schema.
+        /// Gets the foreign key that references the table in its schema of the destination.
         /// </summary>
         /// <param name="foreignKey">The foreign key.</param>
-        /// <param name="targetSchema">The target schema.</param>
+        /// <param name="schemaOf">The function that returns the schema of a table in the destination.</param>
         /// <returns>The foreign key.</returns>
         private static ForeignKeyInfo MoveTo(ForeignKeyInfo foreignKey,
-            string targetSchema) =>
-            new ForeignKeyInfo(foreignKey.Name)
-        {
-            Columns = foreignKey.Columns,
-            ReferencedTable = new TableInfo(foreignKey.ReferencedTable.Name,
-                targetSchema,
-                foreignKey.ReferencedTable.Database,
-                foreignKey.ReferencedTable.Provider),
-            ReferencedColumns = foreignKey.ReferencedColumns,
-            UpdateRule = foreignKey.UpdateRule,
-            DeleteRule = foreignKey.DeleteRule
-        };
+            Func<TableInfo, string> schemaOf) =>
+            foreignKey.ReferencedTable == null ? foreignKey : new ForeignKeyInfo(foreignKey.Name)
+            {
+                Columns = foreignKey.Columns,
+                ReferencedTable = new TableInfo(foreignKey.ReferencedTable.Name,
+                    schemaOf(foreignKey.ReferencedTable),
+                    foreignKey.ReferencedTable.Database,
+                    foreignKey.ReferencedTable.Provider),
+                ReferencedColumns = foreignKey.ReferencedColumns,
+                UpdateRule = foreignKey.UpdateRule,
+                DeleteRule = foreignKey.DeleteRule
+            };
 
-        /// <summary>
-        /// Throws if two of the tables would have the same name in the destination database (i.e.: the tables of different schemas that are copied into one schema).
-        /// </summary>
-        /// <param name="tables">The state of the tables.</param>
         private static void EnsureUniqueNames(IEnumerable<PlanTable> tables)
         {
             var duplicate = tables.Where(table => table.Name != null).GroupBy(table => table.Name,
