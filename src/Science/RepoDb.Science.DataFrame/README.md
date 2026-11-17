@@ -1,12 +1,11 @@
 # RepoDb.Science.DataFrame
 
-`DataTable` inspection, transformation, aggregation, joining, and ML preparation in `RepoDb.Science`.
+`DataTable` inspection, transformation, statistics, windows, reshaping, and ML preparation in `RepoDb.Science`.
 Targets .NET 10 and .NET 11. The library has no database-provider or Studio dependencies.
 
 Extension methods are organized by capability under `RepoDb.Science.DataFrame/Extensions/DataTable`.
 Each operation has its own file in its capability folder, contributing to the partial
-`DataTableExtensions` class in `RepoDb.Science`. `Reshaping` and `Statistics` remain reserved
-for future operations.
+`DataTableExtensions` class in `RepoDb.Science`.
 
 ```csharp
 using RepoDb.Science;
@@ -37,6 +36,171 @@ var frequencies = sales.ValueCounts("Country",
 | Grouping | `GroupBy` returning `DataTableGroupBy` |
 | Combining | `Join`, explicit-key `Merge`, `Concat` |
 | ML preparation | `TrainTestSplit`, `ToFeatureMatrix` |
+
+## Additional analytical operations
+
+| Capability | Operations |
+| --- | --- |
+| Missing data | `IsNull`, `NotNull`, `Interpolate` |
+| Selection | `SelectDTypes`, `TopN`, `BottomN` |
+| Numeric transformation | `Clip`, `Round`, `Abs`, `Explode` |
+| Statistics | `Count`, `Median`, `Mode`, `Std`, `Variance`, `Quantile` |
+| Cumulative calculations | `CumSum`, `CumProduct`, `CumMin`, `CumMax` |
+| Row comparisons | `Shift`, `Diff`, `PctChange` |
+| Windows | `Rolling`, `Expanding`, `Ewm` |
+| Reshaping | `Pivot`, `PivotTable`, `Melt`, `Transpose` |
+| Relationships | `Corr`, `CorrMatrix`, `Cov` |
+| Grouping | `DataTableGroupBy.Transform`, `DataTableGroupBy.Having` |
+| Data quality | `Duplicated`, `IsIn`, `Between` |
+
+```csharp
+var interpolated = readings
+    .Interpolate("Temperature");
+var movingAverage = readings
+    .Rolling("Temperature",
+        window: 3,
+        minPeriods: 1)
+    .Mean("MovingAverage");
+var expandingDeviation = readings
+    .Expanding("Temperature")
+    .Std(outputColumn: "Deviation");
+var weighted = readings
+    .Ewm("Temperature",
+        alpha: 0.3)
+    .Mean("WeightedTemperature");
+
+var wide = sales
+    .PivotTable("Country",
+        "Year",
+        "Revenue",
+        AggregateFunction.Sum);
+var longForm = wide
+    .Melt(new[] { "Country" },
+        variableName: "Year",
+        valueName: "Revenue");
+
+var countryTotals = sales
+    .GroupBy("Country")
+    .Transform("Revenue",
+        AggregateFunction.Sum,
+        "CountryRevenue");
+var largeCountries = sales
+    .GroupBy("Country")
+    .Having(row => row.Field<decimal>("Total") > 1000m,
+        new AggregateDefinition("Revenue",
+            AggregateFunction.Sum,
+            "Total"));
+```
+
+### Masks and selection
+
+`IsNull(column)` and `NotNull(column)` return `bool[]` masks for current rows in source order.
+`Duplicated` marks subsequent occurrences after the first; its empty key list means all columns.
+`IsIn` uses CLR value equality and normalizes nulls, so boxed `1` and `1L` remain distinct while
+`null` and `DBNull.Value` match. `Between` excludes missing values and compares compatible
+CLR types with optional inclusion of both endpoints. Its string comparisons follow the CLR
+current-culture comparer. Masks are independent arrays, not table columns.
+
+`SelectDTypes` matches exact declared CLR types and retains source column order. Repeated
+type requests do not duplicate columns; an empty type list selects no columns. `TopN` and
+`BottomN` exclude missing values and stably sort comparable values before taking the requested
+nonnegative count. Counts beyond available rows are clamped. These operations return copies.
+
+### Numeric transformations and statistics
+
+`Clip`, `Round`, and `Abs` preserve the numeric CLR type and support `inPlace: true`.
+Integers and decimals use decimal arithmetic; floats and doubles use floating arithmetic.
+`Clip` accepts optional decimal bounds and rejects fractional bounds for integral columns;
+cast to a fractional type first when necessary. `Round` supports 0 through 15 decimal places
+and explicit `MidpointRounding`. Checked conversions can overflow, including the absolute
+value of the minimum signed integer. Missing values remain missing and non-finite inputs
+are rejected.
+
+`Count` counts non-missing values, including nonnumeric columns. `Median` and `Quantile` use
+double precision and linear interpolation; probabilities must be finite and between 0 and 1.
+`Variance` and `Std` use `degreesOfFreedom: 1` for sample statistics, or 0 for population
+statistics. They return null when there are too few observations. `Mode` returns a read-only
+list of all tied most-frequent CLR values in first-seen order, optionally including nulls.
+Empty input has no modes. Numeric statistics skip missing values and require finite inputs.
+
+`Interpolate` fills only gaps bounded by present numeric endpoints, with equal spacing by row
+position. It leaves leading and trailing gaps missing. It does not infer a date index or perform
+extrapolation. Interpolation produces a double-valued column. All floating calculations can lose
+decimal or large-integer precision; computed non-finite results throw `ArithmeticException`.
+
+### Cumulative and row-order calculations
+
+`CumSum`, `CumProduct`, `CumMin`, and `CumMax` preserve missing positions. With
+`skipNulls: true` they resume from the previous running value after a gap; false leaves all
+subsequent results missing. `Shift` accepts positive lag, negative lead, and zero offsets and
+preserves the stored CLR type. Out-of-range positions become missing, including extreme offsets.
+
+`Diff` subtracts the offset value from the current value. `PctChange` returns fractional changes
+(`0.1` means 10%) and returns missing for zero denominators rather than infinity. Neither method
+implicitly fills gaps. Interpolation, cumulative functions, `Diff`, and `PctChange` produce double
+columns. Their optional in-place mode requires an existing double column because changing the
+type of a populated source column is not supported. Sorting first determines chronological order;
+deleted rows do not occupy positions in these calculations.
+
+### Window definitions
+
+`Rolling(column, window, minPeriods)` uses a positive trailing row width. Its default minimum
+present observation count equals the width. `Expanding(column, minPeriods: 1)` starts at the
+first current row. Both return `DataTableWindow`, with `Sum`, `Mean`, `Min`, `Max`, `Count`,
+`Std`, `Variance`, and basic `Aggregate` operations. A zero minimum is supported: empty-observation
+sum and count are zero, while means, extrema, and sample statistics are missing.
+
+`Ewm(column, alpha, minPeriods: 1)` supports finite `0 < alpha <= 1` and positive minimum
+observations. It returns `DataTableEwm`, currently supporting `Mean`. The first present value
+seeds the recursion; subsequent present values use `(1 - alpha) * previous + alpha * current`.
+Missing observations are ignored and carry the previous mean once the minimum has been met.
+This corresponds to recursive, unadjusted weighting with gaps ignored, rather than every Pandas
+EWM option.
+
+Window builders read current source values at execution time. They operate on row counts,
+not calendar durations, and have no centered-window or implicit index behavior. Results use
+double columns; pass an output name to retain the original input column. `inPlace: true` can
+add that output column or update an existing compatible double column. Trailing summaries
+currently evaluate each window separately; exponential means use a single pass.
+
+### Reshaping and grouped results
+
+`Pivot(index, columns, values)` requires unique row-key/column-key pairs. `PivotTable` handles
+duplicates using an existing `AggregateFunction` (mean by default). Both retain an explicit
+index column and first-seen key order. Missing row keys form groups; missing column keys use
+the name `(null)`. Column keys become invariant string names. Blank names, collisions with the
+index, and distinct keys producing identical names are rejected. Unobserved cells are missing.
+
+`Melt(idColumns, valueColumns)` retains explicit identifiers and emits `Variable`/`Value` columns
+by default. A null value-column list means all non-identifiers; explicit empty lists are allowed.
+Identifiers and value selections must be disjoint. Variable names are strings, cells are objects,
+and rows follow value-column then source-row order. Output names must not collide.
+
+`Explode` expands non-string `IEnumerable` cells by one level. Strings and other scalar cells
+remain single rows. Empty collections produce one missing row, and null elements remain missing.
+The expanded column becomes `object`; other columns repeat their current values. `Transpose`
+uses an explicit `Column` label followed by `Row0`, `Row1`, and so on, with object-valued cells.
+Both transposition labels can be configured. All reshaping operations return new tables.
+
+`GroupBy(...).Transform(column, function, outputColumn)` broadcasts a basic group summary to each
+original row, retaining row order and missing-key groups. It supports optional in-place output
+under the existing type rules. `Having(predicate, aggregates)` evaluates named aggregate columns
+and returns matching summary rows. It filters summaries, not the original detail rows.
+
+### Correlation and covariance
+
+`Corr(left, right)` computes Pearson correlation; `Cov(left, right, degreesOfFreedom: 1)` computes
+sample covariance. Missing observations are excluded pairwise. Correlation requires two complete
+pairs and returns null for constant series. Covariance requires more complete pairs than its
+nonnegative denominator adjustment. Present values must be finite even if their counterpart is
+missing. These calculations use double precision and reject non-finite computed results.
+
+`CorrMatrix` selects all numeric columns by default or accepts an explicit ordered selection.
+It returns a labeled `DataTable` with a reserved `Column` row-label field and nullable double
+coefficients. A selected column named `Column` conflicts with that label and is rejected.
+Undefined correlations remain missing. No operation in this section mutates its source.
+
+## MVP workflow examples
 
 ```csharp
 var cleaned = sales

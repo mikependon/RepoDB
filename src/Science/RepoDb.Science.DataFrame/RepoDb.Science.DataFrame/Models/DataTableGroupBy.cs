@@ -35,6 +35,41 @@ public sealed class DataTableGroupBy
     #region Public Methods
 
     /// <summary>
+    /// Broadcasts one group summary to each original row.
+    /// </summary>
+    /// <param name="column">The summarized column.</param>
+    /// <param name="function">The summary function.</param>
+    /// <param name="outputColumn">The output name, or the input name.</param>
+    /// <param name="inPlace">Whether to modify the source.</param>
+    /// <returns>The transformed table in original row order.</returns>
+    public DataTable Transform(string column,
+        AggregateFunction function,
+        string? outputColumn = null,
+        bool inPlace = false)
+    {
+        return GroupTransformationHelper.Execute(_source,
+            _columns,
+            column,
+            function,
+            outputColumn ?? column,
+            inPlace);
+    }
+
+    /// <summary>
+    /// Filters grouped summaries using their named output columns.
+    /// </summary>
+    /// <param name="predicate">The summary-row predicate.</param>
+    /// <param name="aggregates">The named summary definitions.</param>
+    /// <returns>The matching summary rows.</returns>
+    public DataTable Having(Func<DataRow, bool> predicate,
+        params AggregateDefinition[] aggregates)
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+        return Aggregate(aggregates)
+            .Filter(predicate);
+    }
+
+    /// <summary>
     /// Executes named summaries for each group.
     /// </summary>
     /// <param name="aggregates">The output definitions.</param>

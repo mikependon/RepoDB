@@ -11,6 +11,39 @@ internal static class AggregationHelper
     #region Public Methods
 
     /// <summary>
+    /// Resolves the output type of a validated summary.
+    /// </summary>
+    /// <param name="column">The source column.</param>
+    /// <param name="function">The summary function.</param>
+    /// <returns>The output CLR type.</returns>
+    public static Type OutputType(DataColumn column,
+        AggregateFunction function)
+    {
+        ValidateFunction(column,
+            function);
+        return ResultType(column,
+            function);
+    }
+
+    /// <summary>
+    /// Summarizes a materialized group without copying its table.
+    /// </summary>
+    /// <param name="rows">The current group rows.</param>
+    /// <param name="column">The source column.</param>
+    /// <param name="function">The summary function.</param>
+    /// <returns>The summary or null for missing input.</returns>
+    public static object? Summarize(DataRow[] rows,
+        DataColumn column,
+        AggregateFunction function)
+    {
+        ValidateFunction(column,
+            function);
+        return Compute(rows,
+            column,
+            function);
+    }
+
+    /// <summary>
     /// Summarizes a current numeric column.
     /// </summary>
     /// <param name="table">The source table.</param>
