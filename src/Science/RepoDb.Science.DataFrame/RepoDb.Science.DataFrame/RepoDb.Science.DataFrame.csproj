@@ -10,7 +10,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
-    <InternalsVisibleTo Include="RepoDb.DataFrame.UnitTests" />
+    <InternalsVisibleTo Include="RepoDb.Science.DataFrame.UnitTests" />
   </ItemGroup>
   <ItemGroup>
     <None Include="../README.md" Pack="true" PackagePath="/" />

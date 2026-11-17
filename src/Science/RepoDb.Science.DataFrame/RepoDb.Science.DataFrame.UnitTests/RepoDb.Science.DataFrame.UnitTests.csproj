@@ -7,6 +7,6 @@
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../RepoDb.DataFrame/RepoDb.DataFrame.csproj" />
+    <ProjectReference Include="../RepoDb.Science.DataFrame/RepoDb.Science.DataFrame.csproj" />
   </ItemGroup>
 </Project>

@@ -1,9 +1,9 @@
-# RepoDb.DataFrame
+# RepoDb.Science.DataFrame
 
 `DataTable` inspection, transformation, aggregation, joining, and ML preparation in `RepoDb.Science`.
 Targets .NET 10 and .NET 11. The library has no database-provider or Studio dependencies.
 
-Extension methods are organized by capability under `RepoDb.DataFrame/Extensions/DataTable`.
+Extension methods are organized by capability under `RepoDb.Science.DataFrame/Extensions/DataTable`.
 Each operation has its own file in its capability folder, contributing to the partial
 `DataTableExtensions` class in `RepoDb.Science`. `Reshaping` and `Statistics` remain reserved
 for future operations.
@@ -216,8 +216,8 @@ Tests are explicitly invoked methods in an executable; no test-discovery or data
 attributes are used. An assertion failure exits with an error and stack trace. Run both TFMs:
 
 ```powershell
-dotnet run --project src/Science/RepoDb.DataFrame/RepoDb.DataFrame.UnitTests -f net10.0
-dotnet run --project src/Science/RepoDb.DataFrame/RepoDb.DataFrame.UnitTests -f net11.0
+dotnet run --project src/Science/RepoDb.Science.DataFrame/RepoDb.Science.DataFrame.UnitTests -f net10.0
+dotnet run --project src/Science/RepoDb.Science.DataFrame/RepoDb.Science.DataFrame.UnitTests -f net11.0
 ```
 
 The suite includes negative cases for invalid columns, extreme row limits, insufficient
@@ -229,7 +229,7 @@ storage cannot exercise because it normalizes nulls to `DBNull.Value`.
 To collect library-only coverage for both target frameworks:
 
 ```powershell
-./src/Science/RepoDb.DataFrame/RepoDb.DataFrame.UnitTests/Measure-Coverage.ps1
+./src/Science/RepoDb.Science.DataFrame/RepoDb.Science.DataFrame.UnitTests/Measure-Coverage.ps1
 ```
 
 The script installs `dotnet-coverage` 18.12.0 into `artifacts/Science/tools` if needed, runs
@@ -242,6 +242,6 @@ Both projects enable NativeAOT compatibility analysis. To compile and run all te
 install the platform NativeAOT prerequisites (including the C++ toolchain on Windows), then:
 
 ```powershell
-dotnet publish src/Science/RepoDb.DataFrame/RepoDb.DataFrame.UnitTests -f net11.0 -r win-x64 -c Release -p:PublishAot=true -o artifacts/Science/NativeAot/net11.0
-./artifacts/Science/NativeAot/net11.0/RepoDb.DataFrame.UnitTests.exe
+dotnet publish src/Science/RepoDb.Science.DataFrame/RepoDb.Science.DataFrame.UnitTests -f net11.0 -r win-x64 -c Release -p:PublishAot=true -o artifacts/Science/NativeAot/net11.0
+./artifacts/Science/NativeAot/net11.0/RepoDb.Science.DataFrame.UnitTests.exe
 ```

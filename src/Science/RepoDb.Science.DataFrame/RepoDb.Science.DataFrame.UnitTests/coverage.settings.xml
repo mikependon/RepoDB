@@ -3,7 +3,7 @@
   <CodeCoverage>
     <ModulePaths>
       <Include>
-        <ModulePath>.*[\\/]RepoDb\.DataFrame\.dll$</ModulePath>
+        <ModulePath>.*[\\/]RepoDb\.Science\.DataFrame\.dll$</ModulePath>
       </Include>
     </ModulePaths>
   </CodeCoverage>

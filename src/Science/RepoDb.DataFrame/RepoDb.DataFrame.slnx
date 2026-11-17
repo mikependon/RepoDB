@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="RepoDb.DataFrame/RepoDb.DataFrame.csproj" />
-  <Project Path="RepoDb.DataFrame.UnitTests/RepoDb.DataFrame.UnitTests.csproj" />
-</Solution>

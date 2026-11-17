@@ -8,7 +8,7 @@ $toolDirectory = Join-Path $repositoryRoot 'artifacts/Science/tools'
 $reportDirectory = Join-Path $repositoryRoot 'artifacts/Science/Coverage'
 $toolName = if ($env:OS -eq 'Windows_NT') { 'dotnet-coverage.exe' } else { 'dotnet-coverage' }
 $coverageTool = Join-Path $toolDirectory $toolName
-$project = Join-Path $PSScriptRoot 'RepoDb.DataFrame.UnitTests.csproj'
+$project = Join-Path $PSScriptRoot 'RepoDb.Science.DataFrame.UnitTests.csproj'
 $settings = Join-Path $PSScriptRoot 'coverage.settings.xml'
 
 if (-not (Test-Path -LiteralPath $coverageTool)) {
@@ -22,7 +22,7 @@ if ($NoRestore) { $buildArguments += '--no-restore' }
 if ($LASTEXITCODE -ne 0) { throw 'DataFrame test build failed.' }
 
 foreach ($framework in @('net10.0', 'net11.0')) {
-    $assembly = Join-Path $PSScriptRoot "bin/Debug/$framework/RepoDb.DataFrame.UnitTests.dll"
+    $assembly = Join-Path $PSScriptRoot "bin/Debug/$framework/RepoDb.Science.DataFrame.UnitTests.dll"
     $report = Join-Path $reportDirectory "$framework.cobertura.xml"
     & $coverageTool collect dotnet $assembly --settings $settings --output $report --output-format cobertura --nologo
     if ($LASTEXITCODE -ne 0) { throw "DataFrame tests or coverage collection failed for $framework." }

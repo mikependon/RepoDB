@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="RepoDb.Science.DataFrame/RepoDb.Science.DataFrame.csproj" />
+  <Project Path="RepoDb.Science.DataFrame.UnitTests/RepoDb.Science.DataFrame.UnitTests.csproj" />
+</Solution>
