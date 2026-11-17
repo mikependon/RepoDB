@@ -31,7 +31,7 @@ var frequencies = sales.ValueCounts("Country",
 | --- | --- |
 | Selection | `SelectColumns`, `DropColumns`, `Filter`, `RenameColumns` |
 | Sorting | `SortValues` with one or multiple keys and directions |
-| Missing data | `DropNulls`, `FillNulls` |
+| Missing data | `DropNulls`, `FillNulls`, `ForwardFill`, `BackwardFill` |
 | Transformation | `DropDuplicates`, `Replace`, `CastColumn<T>`, `Assign<T>`, `Apply`, `MapColumn<TSource, TResult>` |
 | Aggregation | `Sum`, `Mean`, `Min`, `Max`, `Aggregate` |
 | Grouping | `GroupBy` returning `DataTableGroupBy` |
@@ -76,7 +76,7 @@ var features = train
 
 ### Copies and in-place operations
 
-Operations copy by default. `Filter`, `RenameColumns`, `FillNulls`, `Replace`, `Assign`,
+Operations copy by default. `Filter`, `RenameColumns`, `FillNulls`, `ForwardFill`, `BackwardFill`, `Replace`, `Assign`,
 and `MapColumn` accept `inPlace: true` directly. `DropColumns`, `DropNulls`,
 `DropDuplicates`, and `Apply` have array overloads followed by the `inPlace` flag:
 
@@ -122,6 +122,24 @@ direction. Strings use ordinal ordering; other present values must be comparable
 `Replace` and duplicate keys use CLR equality. `CastColumn<T>` uses invariant .NET conversion,
 preserves missing values, and throws for bad formats, overflow, or unsupported conversions.
 `MapColumn` skips missing inputs and requires input values compatible with `TSource`.
+
+`ForwardFill(column, inPlace: false)` fills missing values from the preceding present value;
+`BackwardFill(column, inPlace: false)` uses the following present value. Both operate on a
+single column in current row order, skip deleted rows, and preserve unresolved leading or
+trailing gaps respectively. Empty and all-missing columns are supported. Missing means
+`null` or `DBNull.Value`; empty strings and NaN remain present values. Sort first when the
+intended order is chronological. In-place mode uses the same staging and ADO.NET constraint
+behavior as other value transformations; copy mode leaves the source unchanged.
+
+```csharp
+var forward = readings
+    .ForwardFill("Temperature");
+var backward = readings
+    .BackwardFill("Temperature");
+readings
+    .ForwardFill("Temperature",
+        inPlace: true);
+```
 
 ### Aggregation and joining rules
 

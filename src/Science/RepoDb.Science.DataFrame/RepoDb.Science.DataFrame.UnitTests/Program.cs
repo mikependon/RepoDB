@@ -7,6 +7,8 @@ InspectionHelperTests.Run();
 OperationHelperTests.Run();
 SelectionTests.Run();
 CleaningTests.Run();
+ForwardFillTests.Run();
+BackwardFillTests.Run();
 TransformationTests.Run();
 AggregationTests.Run();
 CombiningTests.Run();
