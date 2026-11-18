@@ -56,19 +56,27 @@ Read more about this through this [article](https://blogs.repodb.net/posts/2026/
 
 Improve your productivity with Desktop Studio. Plan, prioritize and manage your work in your home and organization. Move your schema and data from all supported databases, and work with various files like CSV, JSON, XML, Parquet and AVRO.
 
-### Databaase Module
+### Database Module
+
+Explore your databases, run RepoDB operations and SQL on tables, and import, export or copy data and schemas, with the results shown in tables.
 
 <img width="2559" height="1392" alt="image" src="https://github.com/user-attachments/assets/33f4600a-ac24-48c8-a164-2d5696d68d04" />
 
 ### Insights Module
 
+Browse and analyze the telemetry events that RepoDB records while it runs.
+
 <img width="2559" height="1392" alt="image" src="https://github.com/user-attachments/assets/50bdcb57-b650-4df7-9be9-1cf240099e3a" />
 
 ### Notebook Module
 
+Build a runnable document of SQL, C#, chart and header sections that you can save, rerun and turn into a standalone C# project.
+
 <img width="2559" height="1393" alt="image" src="https://github.com/user-attachments/assets/39007220-312a-4443-94a0-168398d30c23" />
 
 ### Definition Module
+
+Create and edit database definition files in JSON, XML or YAML.
 
 <img width="2559" height="1390" alt="image" src="https://github.com/user-attachments/assets/b4082c79-c101-461f-95d8-8ce9e9023bca" />
 
