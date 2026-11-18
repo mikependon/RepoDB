@@ -4,8 +4,7 @@
 Targets .NET 10 and .NET 11. The library has no database-provider or Studio dependencies.
 
 Extension methods are organized by capability under `RepoDb.Science.DataFrame/Extensions/DataTable`.
-Each operation has its own file in its capability folder, contributing to the partial
-`DataTableExtensions` class in `RepoDb.Science`.
+Each capability contributes methods to the partial `DataTableExtensions` class in `RepoDb.Science`.
 
 ```csharp
 using RepoDb.Science;
@@ -23,6 +22,49 @@ var countryCount = sales.NUnique("Country");
 var frequencies = sales.ValueCounts("Country",
     includeNulls: true);
 ```
+
+## Loading files
+
+`LoadCsv`, `LoadJson` and `LoadXml` accept a path or an open stream and return a new
+`DataTable`. Stream overloads read from the current position and leave the stream open.
+Pass a table with columns to select the output schema and types. Field names match column
+names exactly. Values for missing fields become `DBNull.Value`.
+
+```csharp
+using System.Data;
+using RepoDb.Science;
+
+var customers = new DataTable()
+    .LoadCsv("customers.csv",
+        inferTypes: true);
+var orders = new DataTable()
+    .LoadJson("customers.json",
+        collectionPath: "customers.orders",
+        columns: new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["Amount"] = "total",
+            ["City"] = "shippingAddress.city"
+        });
+var products = new DataTable()
+    .LoadXml("catalog.xml",
+        rowElement: "catalog/products/product");
+```
+
+- CSV uses the first record as a header and supports quoted multiline fields and a configurable
+  delimiter. Empty fields are text, and blank lines are skipped.
+- JSON reads a UTF-8 array of objects. A dot-separated collection path selects arrays inside
+  wrappers and traverses intermediate arrays, producing one row per selected object. By default,
+  direct scalars are loaded and their types are inferred from JSON values.
+- XML selects rows by local element name or a slash-separated path from the root. By default,
+  direct scalar child elements are loaded. A trusted `XmlSchemaSet` enables validation and
+  supplies supported scalar types. Select a repeating child path in a separate call to load a child
+  table. Mapped scalar paths are relative to the selected row in both JSON and XML.
+- CSV and plain XML default to string columns. Enable `inferTypes` to discover booleans and
+  numbers while preserving leading-zero identifiers. Mixed incompatible types fall back to text.
+
+A supplied schema loads the file in one pass. Full-file type inference uses two passes and
+temporarily copies a forward-only stream to disk so it can be replayed. The finished table holds
+all rows in memory.
 
 ## MVP operations
 

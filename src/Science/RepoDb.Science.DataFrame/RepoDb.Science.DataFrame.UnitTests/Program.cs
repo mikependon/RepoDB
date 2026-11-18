@@ -26,4 +26,5 @@ AdvancedReshapeTests.Run();
 AdvancedRelationshipTests.Run();
 AdvancedGroupTests.Run();
 AdvancedValidationTests.Run();
+LoadingTests.Run();
 Console.WriteLine("All DataFrame tests passed.");
