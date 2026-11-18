@@ -1,5 +1,6 @@
 using System.Data;
 using System.Globalization;
+using System.Xml;
 using RepoDb.Science.Models;
 
 namespace RepoDb.Science.Helpers;
@@ -59,13 +60,13 @@ internal static class TableLoadHelper
 
     #endregion
 
-    #region Private Methods
+    #region Internal Methods
 
     /// <summary>
     /// Opens temporary storage for a non-seekable input.
     /// </summary>
     /// <returns>A stream that deletes its file when closed.</returns>
-    private static FileStream CreateReplayStream() =>
+    internal static FileStream CreateReplayStream() =>
         new(Path.Combine(Path.GetTempPath(),
                 Path.GetRandomFileName()),
             FileMode.CreateNew,
@@ -73,6 +74,70 @@ internal static class TableLoadHelper
             FileShare.None,
             4096,
             FileOptions.DeleteOnClose | FileOptions.SequentialScan);
+
+    /// <summary>
+    /// Identifies the type of a field during inference.
+    /// </summary>
+    /// <param name="value">The source scalar.</param>
+    /// <param name="inferText">Whether to infer types from text.</param>
+    /// <returns>The inferred type or null for a missing value.</returns>
+    internal static Type? InferType(object? value,
+        bool inferText) =>
+        value switch
+        {
+            XmlLoadValue xml => xml.Type,
+            string text when inferText => TextType(text),
+            _ => value?.GetType()
+        };
+
+    /// <summary>
+    /// Finds a compatible type for two candidates.
+    /// </summary>
+    /// <param name="previous">The earlier type.</param>
+    /// <param name="current">The new type.</param>
+    /// <returns>The combined type.</returns>
+    internal static Type? CombineTypes(Type? previous,
+        Type? current)
+    {
+        if (previous is null || current is null || previous == current)
+        {
+            return previous ?? current;
+        }
+        if ((previous == typeof(long) && current == typeof(decimal)) ||
+            (previous == typeof(decimal) && current == typeof(long)))
+        {
+            return typeof(decimal);
+        }
+        return typeof(string);
+    }
+
+    /// <summary>
+    /// Assigns one field and reports conversion failures.
+    /// </summary>
+    /// <param name="row">The destination row.</param>
+    /// <param name="column">The destination column.</param>
+    /// <param name="value">The source value.</param>
+    /// <param name="number">The record number.</param>
+    internal static void SetValue(DataRow row,
+        DataColumn column,
+        object? value,
+        long number)
+    {
+        try
+        {
+            row[column] = ConvertValue(value,
+                column.DataType);
+        }
+        catch (Exception exception) when (exception is FormatException or InvalidCastException or OverflowException or ArgumentException)
+        {
+            throw new FormatException($"Cannot load row {number}, column '{column.ColumnName}' as {column.DataType.Name}.",
+                exception);
+        }
+    }
+
+    #endregion
+
+    #region Private Methods
 
     /// <summary>
     /// Scans the input, then reloads it with a fixed schema.
@@ -121,36 +186,10 @@ internal static class TableLoadHelper
         {
             types.TryGetValue(name,
                 out var previous);
-            var current = value switch
-            {
-                XmlLoadValue xml => xml.Type,
-                string text when inferText => TextType(text),
-                _ => value?.GetType()
-            };
             types[name] = CombineTypes(previous,
-                current);
+                InferType(value,
+                    inferText));
         }
-    }
-
-    /// <summary>
-    /// Finds a compatible type for two candidates.
-    /// </summary>
-    /// <param name="previous">The earlier type.</param>
-    /// <param name="current">The new type.</param>
-    /// <returns>The combined type.</returns>
-    private static Type? CombineTypes(Type? previous,
-        Type? current)
-    {
-        if (previous is null || current is null || previous == current)
-        {
-            return previous ?? current;
-        }
-        if ((previous == typeof(long) && current == typeof(decimal)) ||
-            (previous == typeof(decimal) && current == typeof(long)))
-        {
-            return typeof(decimal);
-        }
-        return typeof(string);
     }
 
     /// <summary>
@@ -294,30 +333,6 @@ internal static class TableLoadHelper
     }
 
     /// <summary>
-    /// Assigns one field and reports conversion failures.
-    /// </summary>
-    /// <param name="row">The destination row.</param>
-    /// <param name="column">The destination column.</param>
-    /// <param name="value">The source value.</param>
-    /// <param name="number">The record number.</param>
-    private static void SetValue(DataRow row,
-        DataColumn column,
-        object? value,
-        long number)
-    {
-        try
-        {
-            row[column] = ConvertValue(value,
-                column.DataType);
-        }
-        catch (Exception exception) when (exception is FormatException or InvalidCastException or OverflowException or ArgumentException)
-        {
-            throw new FormatException($"Cannot load row {number}, column '{column.ColumnName}' as {column.DataType.Name}.",
-                exception);
-        }
-    }
-
-    /// <summary>
     /// Converts a scalar using invariant culture.
     /// </summary>
     /// <param name="value">The source scalar.</param>
@@ -368,8 +383,10 @@ internal static class TableLoadHelper
         }
         if (type == typeof(TimeSpan))
         {
-            return TimeSpan.Parse(text,
-                CultureInfo.InvariantCulture);
+            return text.Length > 0 && (text[0] == 'P' || text.StartsWith("-P",
+                    StringComparison.Ordinal)) ?
+                XmlConvert.ToTimeSpan(text) : TimeSpan.Parse(text,
+                    CultureInfo.InvariantCulture);
         }
         if (type == typeof(DateTimeOffset))
         {

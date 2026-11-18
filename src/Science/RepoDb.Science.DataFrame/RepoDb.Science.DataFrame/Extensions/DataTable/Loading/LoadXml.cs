@@ -12,7 +12,7 @@ public static partial class DataTableExtensions
     #region Public Methods
 
     /// <summary>
-    /// Loads selected row elements from an XML file.
+    /// Loads selected row elements or a RepoDB projection from XML.
     /// </summary>
     /// <param name="table">The optional column schema.</param>
     /// <param name="path">The input file.</param>
@@ -23,7 +23,7 @@ public static partial class DataTableExtensions
     /// <returns>The loaded table.</returns>
     public static DataTable LoadXml(this DataTable table,
         string path,
-        string rowElement,
+        string rowElement = "row",
         IReadOnlyDictionary<string, string>? columns = null,
         bool inferTypes = false,
         XmlSchemaSet? schemas = null)
@@ -48,20 +48,30 @@ public static partial class DataTableExtensions
     /// <returns>The loaded table.</returns>
     public static DataTable LoadXml(this DataTable table,
         Stream stream,
-        string rowElement,
+        string rowElement = "row",
         IReadOnlyDictionary<string, string>? columns = null,
         bool inferTypes = false,
-        XmlSchemaSet? schemas = null) =>
-        TableLoadHelper.Load(table,
-            stream,
+        XmlSchemaSet? schemas = null)
+    {
+        DataTable LoadFlat(Stream input) => TableLoadHelper.Load(table,
+            input,
             inferTypes || schemas is not null,
-            (input, column, row) => XmlLoadHelper.Read(input,
+            (source, column, row) => XmlLoadHelper.Read(source,
                 rowElement,
                 columns,
                 schemas,
                 column,
                 row),
             inferText: inferTypes);
+
+        return columns is not null || schemas is not null ? LoadFlat(stream) :
+            ProjectionLoadHelper.Load(table,
+                stream,
+                XmlProjectionLoadHelper.Detect,
+                XmlProjectionLoadHelper.Read,
+                LoadFlat,
+                inferText: inferTypes);
+    }
 
     #endregion
 }

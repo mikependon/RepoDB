@@ -63,9 +63,25 @@ var products = new DataTable()
 - CSV and plain XML default to string columns. Enable `inferTypes` to discover booleans and
   numbers while preserving leading-zero identifiers. Mixed incompatible types fall back to text.
 
-A supplied schema loads the file in one pass. Full-file type inference uses two passes and
-temporarily copies a forward-only stream to disk so it can be replayed. The finished table holds
-all rows in memory.
+When the JSON or XML root identifies `RepoDB` as the producer, the loader reads the saved
+`orientation` and reconstructs any of the six layouts below. A missing or unknown orientation
+on a marked document is a format error. Unmarked JSON and XML use the flat loaders.
+
+```csharp
+var fromJson = new DataTable()
+    .LoadJson("customers-Columns.json");
+var fromXml = new DataTable()
+    .LoadXml("customers-Table.xml");
+```
+
+`Values` maps fields by position to a caller-supplied schema, or generates names such as
+`Column1` and `Column2`. `Table` uses the embedded field types unless you supply a schema.
+Saved row positions determine the order of indexed results and are consumed as metadata.
+For a flat read, JSON collection paths and field mappings still work. XML uses
+`rowElement: "row"` by default and accepts explicit field mappings or an XSD.
+
+A supplied schema avoids the type inference pass. Forward-only streams can be copied to a
+temporary file for watermark detection and replay. The finished table holds all rows in memory.
 
 ## Saving files
 
@@ -116,8 +132,8 @@ use zero-based positions among the current rows. If a column is already named `i
 Both formats identify `RepoDB` as the producer and record the selected orientation at the root.
 XML uses root attributes. JSON puts the projection in a root `data` property so the metadata
 works for both object and array layouts. When passing the output to pandas, read the `data`
-value with the matching orientation. The existing `LoadJson` can select `data` for `Records`
-or `data.data` for the records inside `Table`.
+value with the matching orientation. `LoadJson` reads the envelope directly. To project
+named records manually, select `data` for `Records` or `data.data` for `Table`.
 
 CSV requires at least one column and writes nulls as empty fields. JSON writes nulls as `null` and requires finite floating-point
 values. XML writes nulls with `xsi:nil`. XML layouts that use column names as element names

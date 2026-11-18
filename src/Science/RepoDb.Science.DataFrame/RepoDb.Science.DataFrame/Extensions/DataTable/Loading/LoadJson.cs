@@ -11,7 +11,7 @@ public static partial class DataTableExtensions
     #region Public Methods
 
     /// <summary>
-    /// Loads a JSON file containing an array of records.
+    /// Loads a JSON file containing records or a RepoDB projection.
     /// </summary>
     /// <param name="table">The optional column schema.</param>
     /// <param name="path">The input file.</param>
@@ -40,15 +40,24 @@ public static partial class DataTableExtensions
     public static DataTable LoadJson(this DataTable table,
         Stream stream,
         string? collectionPath = null,
-        IReadOnlyDictionary<string, string>? columns = null) =>
-        TableLoadHelper.Load(table,
-            stream,
+        IReadOnlyDictionary<string, string>? columns = null)
+    {
+        DataTable LoadFlat(Stream input) => TableLoadHelper.Load(table,
+            input,
             true,
-            (input, column, row) => JsonLoadHelper.Read(input,
+            (source, column, row) => JsonLoadHelper.Read(source,
                 collectionPath,
                 columns,
                 column,
                 row));
+
+        return collectionPath is not null || columns is not null ? LoadFlat(stream) :
+            ProjectionLoadHelper.Load(table,
+                stream,
+                JsonProjectionLoadHelper.Detect,
+                JsonProjectionLoadHelper.Read,
+                LoadFlat);
+    }
 
     #endregion
 }
