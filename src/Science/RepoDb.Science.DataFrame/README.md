@@ -332,7 +332,7 @@ A schema describes the fields and the generated row index. The data section cont
 | Aggregation | `Sum`, `Mean`, `Min`, `Max`, `Aggregate` |
 | Grouping | `GroupBy` returning `DataTableGroupBy` |
 | Combining | `Join`, explicit-key `Merge`, `Concat` |
-| ML preparation | `TrainTestSplit`, `ToFeatureMatrix` |
+| ML preparation | `TrainTestSplit`, `OneHotEncode`, `ToFeatureMatrix` |
 
 ## Additional analytical operations
 
@@ -635,8 +635,21 @@ to make the intended operation clear; neither join API performs a database upser
 `TrainTestSplit` requires at least two current rows and a finite fraction strictly between zero
 and one. It samples row positions without replacement, uses the ceiling of the requested test
 size, and clamps it to keep both partitions nonempty. Seeds reproduce the split for the same
-source order and runtime random implementation. No preprocessing parameters are learned here;
-fit future scalers and encoders on training data only.
+source order and runtime random implementation.
+
+`OneHotEncode("Country")` fits and transforms a single table. For train/test workflows,
+fit the encoder on the training partition and reuse it for every partition:
+
+```csharp
+var encoder = DataTableOneHotEncoder.Fit(train, "Country");
+var trainFeatures = encoder.Transform(train).ToFeatureMatrix();
+var testFeatures = encoder.Transform(test).ToFeatureMatrix();
+```
+
+Selected columns must be strings. The output keeps the fitted noncategorical columns in
+training order, then appends integer indicator columns in selection and ordinal category
+order. Null and unseen values produce all-zero indicators. Input columns added after fitting
+are ignored. A generated name that conflicts with another output column throws during fitting.
 
 `ToFeatureMatrix` returns a row-major `double[,]` in requested column order. With no column
 arguments it selects all declared numeric columns. Explicit nonnumeric columns, missing

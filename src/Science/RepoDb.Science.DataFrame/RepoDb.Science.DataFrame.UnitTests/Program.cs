@@ -13,6 +13,7 @@ TransformationTests.Run();
 AggregationTests.Run();
 CombiningTests.Run();
 MachineLearningTests.Run();
+OneHotEncodeTests.Run();
 ValidationTests.Run();
 WorkflowTests.Run();
 AdvancedHelperTests.Run();
