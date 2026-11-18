@@ -56,15 +56,23 @@ Read more about this through this [article](https://blogs.repodb.net/posts/2026/
 
 Improve your productivity with Desktop Studio. Plan, prioritize and manage your work in your home and organization. Move your schema and data from all supported databases, and work with various files like CSV, JSON, XML, Parquet and AVRO.
 
-<img width="1968" height="1231" alt="image" src="https://github.com/user-attachments/assets/678372fd-a1c9-4618-a20f-a9d2a5ab1134" />
+### Databaase Module
 
-<img width="1969" height="1229" alt="image" src="https://github.com/user-attachments/assets/d2bad2ed-d008-4118-b750-c6d64f83a486" />
+<img width="2559" height="1392" alt="image" src="https://github.com/user-attachments/assets/33f4600a-ac24-48c8-a164-2d5696d68d04" />
 
-<img width="1969" height="1232" alt="image" src="https://github.com/user-attachments/assets/2614a8c1-d626-4b7a-813c-d8883aadef09" />
+### Insights Module
 
-<img width="1969" height="1230" alt="image" src="https://github.com/user-attachments/assets/74bc0b89-74ce-4389-bfc2-ec3a68700684" />
+<img width="2559" height="1392" alt="image" src="https://github.com/user-attachments/assets/50bdcb57-b650-4df7-9be9-1cf240099e3a" />
 
-The Desktop Studio is still being developed, but it is available as per request. Please send us an email if you would like to try.
+### Notebook Module
+
+<img width="2559" height="1393" alt="image" src="https://github.com/user-attachments/assets/39007220-312a-4443-94a0-168398d30c23" />
+
+### Definition Module
+
+<img width="2559" height="1390" alt="image" src="https://github.com/user-attachments/assets/b4082c79-c101-461f-95d8-8ce9e9023bca" />
+
+The Desktop Studio is still being developed, but it is available as an early access. Please visit the page at the [official website](https://repodb.net) and follow the instruction on how to download it.
 
 ## Get Started
 
