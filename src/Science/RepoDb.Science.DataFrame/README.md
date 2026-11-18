@@ -4,7 +4,8 @@
 Targets .NET 10 and .NET 11. The library has no database-provider or Studio dependencies.
 
 Extension methods are organized by capability under `RepoDb.Science.DataFrame/Extensions/DataTable`.
-Each capability contributes methods to the partial `DataTableExtensions` class in `RepoDb.Science`.
+Each operation has its own file and contributes to the partial `DataTableExtensions` class in
+`RepoDb.Science`.
 
 ```csharp
 using RepoDb.Science;
@@ -65,6 +66,244 @@ var products = new DataTable()
 A supplied schema loads the file in one pass. Full-file type inference uses two passes and
 temporarily copies a forward-only stream to disk so it can be replayed. The finished table holds
 all rows in memory.
+
+## Saving files
+
+`SaveCsv`, `SaveJson`, and `SaveXml` write UTF-8 to a file path or an open stream.
+Path overloads replace the destination after a successful write. Stream overloads leave the
+stream open. The examples use the same three-row table.
+
+| Id (`int`) | Name (`string`) |
+| ---: | --- |
+| 101 | Ada |
+| 102 | Grace |
+| 103 | Linus |
+
+```csharp
+using System.Data;
+using RepoDb.Science;
+
+var customers = new DataTable("Customers");
+customers.Columns.Add("Id",
+    typeof(int)).AllowDBNull = false;
+customers.Columns.Add("Name",
+    typeof(string));
+customers.Rows.Add(101,
+    "Ada");
+customers.Rows.Add(102,
+    "Grace");
+customers.Rows.Add(103,
+    "Linus");
+
+customers.SaveCsv("customers.csv");
+
+foreach (var orientation in Enum.GetValues<DataOrientation>())
+{
+    customers.SaveJson($"customers-{orientation}.json",
+        orientation: orientation,
+        indented: true);
+    customers.SaveXml($"customers-{orientation}.xml",
+        rootElement: "customers",
+        rowElement: "customer",
+        orientation: orientation);
+}
+```
+
+JSON and XML share `DataOrientation` and default to `Records`. Layouts that include an index
+use zero-based positions among the current rows. If a column is already named `index`,
+`Table` adds underscores to the generated index name until it is unique.
+
+Both formats identify `RepoDB` as the producer and record the selected orientation at the root.
+XML uses root attributes. JSON puts the projection in a root `data` property so the metadata
+works for both object and array layouts. When passing the output to pandas, read the `data`
+value with the matching orientation. The existing `LoadJson` can select `data` for `Records`
+or `data.data` for the records inside `Table`.
+
+CSV requires at least one column and writes nulls as empty fields. JSON writes nulls as `null` and requires finite floating-point
+values. XML writes nulls with `xsi:nil`. XML layouts that use column names as element names
+require valid XML local names.
+
+### CSV
+
+```csv
+Id,Name
+101,Ada
+102,Grace
+103,Linus
+```
+
+### Records
+
+JSON writes one object per row. XML writes one element per row with named child fields.
+
+```json
+{
+  "producer": "RepoDB",
+  "orientation": "Records",
+  "data": [
+    { "Id": 101, "Name": "Ada" },
+    { "Id": 102, "Name": "Grace" },
+    { "Id": 103, "Name": "Linus" }
+  ]
+}
+```
+
+```xml
+<customers producer="RepoDB" orientation="Records">
+  <customer><Id>101</Id><Name>Ada</Name></customer>
+  <customer><Id>102</Id><Name>Grace</Name></customer>
+  <customer><Id>103</Id><Name>Linus</Name></customer>
+</customers>
+```
+
+### Split
+
+Column names, row positions, and positional values appear in separate sections.
+
+```json
+{
+  "producer": "RepoDB",
+  "orientation": "Split",
+  "data": {
+    "columns": ["Id", "Name"],
+    "index": [0, 1, 2],
+    "data": [[101, "Ada"], [102, "Grace"], [103, "Linus"]]
+  }
+}
+```
+
+```xml
+<customers producer="RepoDB" orientation="Split">
+  <columns><column>Id</column><column>Name</column></columns>
+  <index><value>0</value><value>1</value><value>2</value></index>
+  <data>
+    <customer><value>101</value><value>Ada</value></customer>
+    <customer><value>102</value><value>Grace</value></customer>
+    <customer><value>103</value><value>Linus</value></customer>
+  </data>
+</customers>
+```
+
+### Index
+
+Each record is identified by its row position. JSON uses object keys and XML uses attributes.
+
+```json
+{
+  "producer": "RepoDB",
+  "orientation": "Index",
+  "data": {
+    "0": { "Id": 101, "Name": "Ada" },
+    "1": { "Id": 102, "Name": "Grace" },
+    "2": { "Id": 103, "Name": "Linus" }
+  }
+}
+```
+
+```xml
+<customers producer="RepoDB" orientation="Index">
+  <customer index="0"><Id>101</Id><Name>Ada</Name></customer>
+  <customer index="1"><Id>102</Id><Name>Grace</Name></customer>
+  <customer index="2"><Id>103</Id><Name>Linus</Name></customer>
+</customers>
+```
+
+### Columns
+
+Each column contains its values keyed by row position.
+
+```json
+{
+  "producer": "RepoDB",
+  "orientation": "Columns",
+  "data": {
+    "Id": { "0": 101, "1": 102, "2": 103 },
+    "Name": { "0": "Ada", "1": "Grace", "2": "Linus" }
+  }
+}
+```
+
+```xml
+<customers producer="RepoDB" orientation="Columns">
+  <column name="Id">
+    <value index="0">101</value>
+    <value index="1">102</value>
+    <value index="2">103</value>
+  </column>
+  <column name="Name">
+    <value index="0">Ada</value>
+    <value index="1">Grace</value>
+    <value index="2">Linus</value>
+  </column>
+</customers>
+```
+
+### Values
+
+Each row contains values in column order. The layout omits column names and row positions.
+
+```json
+{
+  "producer": "RepoDB",
+  "orientation": "Values",
+  "data": [
+    [101, "Ada"],
+    [102, "Grace"],
+    [103, "Linus"]
+  ]
+}
+```
+
+```xml
+<customers producer="RepoDB" orientation="Values">
+  <customer><value>101</value><value>Ada</value></customer>
+  <customer><value>102</value><value>Grace</value></customer>
+  <customer><value>103</value><value>Linus</value></customer>
+</customers>
+```
+
+### Table
+
+A schema describes the fields and the generated row index. The data section contains named records.
+
+```json
+{
+  "producer": "RepoDB",
+  "orientation": "Table",
+  "data": {
+    "schema": {
+      "fields": [
+        { "name": "index", "type": "integer" },
+        { "name": "Id", "type": "integer" },
+        { "name": "Name", "type": "string" }
+      ],
+      "primaryKey": ["index"],
+      "pandas_version": "1.4.0"
+    },
+    "data": [
+      { "index": 0, "Id": 101, "Name": "Ada" },
+      { "index": 1, "Id": 102, "Name": "Grace" },
+      { "index": 2, "Id": 103, "Name": "Linus" }
+    ]
+  }
+}
+```
+
+```xml
+<customers producer="RepoDB" orientation="Table">
+  <schema>
+    <field name="index" type="integer" />
+    <field name="Id" type="integer" />
+    <field name="Name" type="string" />
+    <primaryKey>index</primaryKey>
+  </schema>
+  <data>
+    <customer index="0"><Id>101</Id><Name>Ada</Name></customer>
+    <customer index="1"><Id>102</Id><Name>Grace</Name></customer>
+    <customer index="2"><Id>103</Id><Name>Linus</Name></customer>
+  </data>
+</customers>
+```
 
 ## MVP operations
 
