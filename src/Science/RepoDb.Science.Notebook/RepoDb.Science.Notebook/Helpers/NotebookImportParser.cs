@@ -12,25 +12,29 @@ internal static class NotebookImportParser
     /// </summary>
     /// <param name="line">The line number.</param>
     /// <param name="statement">The trimmed directive.</param>
+    /// <param name="messages">The texts of the problems.</param>
     /// <param name="entry">The directive, when it is allowed.</param>
-    /// <param name="error">Why it is not allowed.</param>
+    /// <param name="error">Why it is not allowed, or null.</param>
     /// <returns>Whether it is allowed.</returns>
     public static bool TryParse(int line,
         string statement,
+        NotebookMessages messages,
         out NotebookImportEntry? entry,
-        out string error)
+        out string? error)
     {
         entry = null;
-        error = Problem(statement);
-        if (error.Length > 0)
+        error = Problem(statement,
+            messages);
+        if (error is not null)
         {
             return false;
         }
         var parsed = Read(line,
             statement["using".Length..].Trim());
-        error = TargetProblem(parsed);
-        entry = error.Length == 0 ? parsed : null;
-        return error.Length == 0;
+        error = TargetProblem(parsed,
+            messages);
+        entry = error is null ? parsed : null;
+        return error is null;
     }
 
     #endregion
@@ -54,15 +58,17 @@ internal static class NotebookImportParser
     /// Checks an alias.
     /// </summary>
     /// <param name="alias">The alias.</param>
-    /// <returns>The problem, or empty.</returns>
-    private static string AliasProblem(string alias)
+    /// <param name="messages">The texts of the problems.</param>
+    /// <returns>The problem, or null.</returns>
+    private static string? AliasProblem(string alias,
+        NotebookMessages messages)
     {
         var parts = alias.Split('=',
             2,
             StringSplitOptions.TrimEntries);
         return IsIdentifier(parts[0]) && IsName(parts[1])
-            ? string.Empty
-            : $"'{alias}' is not a valid alias (write it as: using Name = Namespace;).";
+            ? null
+            : messages.ImportAliasInvalid(alias);
     }
 
     /// <summary>
@@ -102,22 +108,24 @@ internal static class NotebookImportParser
     /// Checks that a statement is a using directive with content.
     /// </summary>
     /// <param name="statement">The statement.</param>
-    /// <returns>The problem, or empty.</returns>
-    private static string Problem(string statement)
+    /// <param name="messages">The texts of the problems.</param>
+    /// <returns>The problem, or null.</returns>
+    private static string? Problem(string statement,
+        NotebookMessages messages)
     {
         if (!IsUsing(statement))
         {
-            return "Only 'using' directives are allowed here, no other code.";
+            return messages.ImportCodeNotAllowed();
         }
         var rest = statement["using".Length..].Trim();
         if (rest.Length == 0)
         {
-            return "Write what to import after 'using' (for example: using System.Linq;).";
+            return messages.ImportTargetMissing();
         }
         return rest.StartsWith('(') || rest.StartsWith("var ",
             StringComparison.Ordinal)
-            ? "Only 'using' directives (using System.Linq;) are allowed, not 'using' statements."
-            : string.Empty;
+            ? messages.ImportStatementNotAllowed()
+            : null;
     }
 
     /// <summary>
@@ -149,14 +157,17 @@ internal static class NotebookImportParser
     /// Checks what a directive imports.
     /// </summary>
     /// <param name="entry">The directive.</param>
-    /// <returns>The problem, or empty.</returns>
-    private static string TargetProblem(NotebookImportEntry entry)
+    /// <param name="messages">The texts of the problems.</param>
+    /// <returns>The problem, or null.</returns>
+    private static string? TargetProblem(NotebookImportEntry entry,
+        NotebookMessages messages)
     {
         if (entry.Kind == NotebookImportKind.Alias)
         {
-            return AliasProblem(entry.Target);
+            return AliasProblem(entry.Target,
+                messages);
         }
-        return IsName(entry.Target) ? string.Empty : $"'{entry.Target}' is not a valid namespace or type name.";
+        return IsName(entry.Target) ? null : messages.ImportNameInvalid(entry.Target);
     }
 
     #endregion

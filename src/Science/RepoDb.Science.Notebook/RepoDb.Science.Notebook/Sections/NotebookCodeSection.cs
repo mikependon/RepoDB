@@ -118,5 +118,24 @@ public sealed class NotebookCodeSection : NotebookScriptSection
     /// <returns>The values.</returns>
     private protected override IEnumerable<string?> GetContent() => [Language.ToString(), Name, Script, ConnectionId?.ToString()];
 
+    /// <summary>
+    /// Remembers the tables of a SQL script, which a cancelled run brings back.
+    /// </summary>
+    /// <returns>The action that brings them back.</returns>
+    private protected override Action SnapshotOutput()
+    {
+        if (Language != NotebookCodeLanguage.Sql)
+        {
+            return base.SnapshotOutput();
+        }
+        var results = Results;
+        var status = ResultStatus;
+        return () =>
+        {
+            Results = results;
+            ResultStatus = status;
+        };
+    }
+
     #endregion
 }

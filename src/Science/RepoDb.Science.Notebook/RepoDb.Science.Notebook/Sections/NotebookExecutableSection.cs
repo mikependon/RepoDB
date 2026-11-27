@@ -126,15 +126,21 @@ public abstract class NotebookExecutableSection : NotebookSection
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
+        var restore = SnapshotOutput();
         ClearOutput();
         State = NotebookRunState.Running;
         var stopwatch = Stopwatch.StartNew();
-        var result = NotebookSectionResult.Failed("Stopped by the user.");
+        var result = NotebookSectionResult.Failed(string.Empty);
         try
         {
             result = await TryRunAsync(context,
                 cancellationToken)
                 .ConfigureAwait(true);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            result = Stop(restore);
+            throw;
         }
         finally
         {
@@ -171,9 +177,27 @@ public abstract class NotebookExecutableSection : NotebookSection
     /// <returns>The result.</returns>
     private protected NotebookSectionResult Fail(string message)
     {
-        Log.Add(NotebookLogLevel.Error,
+        Write(NotebookLogLevel.Error,
             message);
         return NotebookSectionResult.Failed(message);
+    }
+
+    /// <summary>
+    /// Fails a run whose executor may have logged the error already.
+    /// </summary>
+    /// <param name="line">The line written when no error is logged yet.</param>
+    /// <param name="status">Why it failed.</param>
+    /// <returns>The result.</returns>
+    private protected NotebookSectionResult FailExecution(string line,
+        string status)
+    {
+        if (!Log.Entries
+            .Any(entry => entry.Level is NotebookLogLevel.Error or NotebookLogLevel.Critical))
+        {
+            Write(NotebookLogLevel.Error,
+                line);
+        }
+        return NotebookSectionResult.Failed(status);
     }
 
     /// <summary>
@@ -197,9 +221,30 @@ public abstract class NotebookExecutableSection : NotebookSection
     /// <returns>The result.</returns>
     private protected NotebookSectionResult Skip(string message)
     {
-        Log.Add(NotebookLogLevel.Warning,
+        Write(NotebookLogLevel.Warning,
             message);
         return NotebookSectionResult.Skipped(message);
+    }
+
+    /// <summary>
+    /// Remembers the output that a cancelled run brings back.
+    /// </summary>
+    /// <returns>The action that brings it back.</returns>
+    private protected virtual Action SnapshotOutput() => static () => { };
+
+    /// <summary>
+    /// Adds a log line unless it is empty.
+    /// </summary>
+    /// <param name="level">The level.</param>
+    /// <param name="message">The message.</param>
+    private protected void Write(NotebookLogLevel level,
+        string message)
+    {
+        if (message.Length > 0)
+        {
+            Log.Add(level,
+                message);
+        }
     }
 
     /// <summary>
@@ -218,6 +263,17 @@ public abstract class NotebookExecutableSection : NotebookSection
     }
 
     /// <summary>
+    /// Records a cancelled run and brings back the kept output.
+    /// </summary>
+    /// <param name="restore">Brings back the kept output.</param>
+    /// <returns>The result.</returns>
+    private NotebookSectionResult Stop(Action restore)
+    {
+        restore();
+        return Fail(Messages.SectionStopped(this));
+    }
+
+    /// <summary>
     /// Rejects a change while the section runs.
     /// </summary>
     private void ThrowIfRunning()
@@ -229,7 +285,7 @@ public abstract class NotebookExecutableSection : NotebookSection
     }
 
     /// <summary>
-    /// Runs the section and turns errors into a failed result.
+    /// Runs the section. Errors fail the run, and any error after a cancellation counts as the cancellation.
     /// </summary>
     /// <param name="context">What the run needs.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
@@ -246,15 +302,15 @@ public abstract class NotebookExecutableSection : NotebookSection
                 cancellationToken)
                 .ConfigureAwait(true);
         }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-            Log.Add(NotebookLogLevel.Error,
-                "Stopped by the user.");
-            throw;
-        }
-        catch (Exception exception)
+        catch (Exception exception) when (!cancellationToken.IsCancellationRequested)
         {
             return Fail(exception.Message);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            throw new OperationCanceledException(exception.Message,
+                exception,
+                cancellationToken);
         }
     }
 

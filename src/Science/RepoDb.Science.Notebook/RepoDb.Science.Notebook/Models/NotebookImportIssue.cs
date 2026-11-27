@@ -5,6 +5,12 @@ namespace RepoDb.Science;
 /// </summary>
 public sealed class NotebookImportIssue
 {
+    #region Private Variables
+
+    private readonly NotebookMessages _messages;
+
+    #endregion
+
     #region Constructors
 
     /// <summary>
@@ -12,12 +18,15 @@ public sealed class NotebookImportIssue
     /// </summary>
     /// <param name="line">The line number.</param>
     /// <param name="message">What is wrong.</param>
+    /// <param name="messages">The wording of the line, or null for the default one.</param>
     public NotebookImportIssue(int line,
-        string message)
+        string message,
+        NotebookMessages? messages = null)
     {
         ArgumentNullException.ThrowIfNull(message);
         Line = line;
         Message = message;
+        _messages = messages ?? NotebookMessages.Default;
     }
 
     #endregion
@@ -37,7 +46,8 @@ public sealed class NotebookImportIssue
     /// <summary>
     /// Gets the issue as a line of text.
     /// </summary>
-    public string Text => $"Line {Line}: {Message}";
+    public string Text => _messages.ImportIssue(Line,
+        Message);
 
     #endregion
 }

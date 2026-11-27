@@ -86,7 +86,8 @@ internal static class NotebookChartHelperTests
     /// <param name="table">The table.</param>
     /// <returns>The outcome.</returns>
     private static NotebookChartCheck CheckOf(NotebookTable table) => NotebookChartValidator.Check(table,
-        false);
+            false,
+            NotebookMessages.Default);
 
     /// <summary>
     /// Tests ChartTypesHaveTheirNames.
@@ -436,7 +437,8 @@ internal static class NotebookChartHelperTests
     {
         // Act
         var check = NotebookChartValidator.Check(SampleTables.Mixed(),
-            true);
+            true,
+            NotebookMessages.Default);
 
         // Assert
         Check(check.Error?.StartsWith("The column 'Note' is not numeric",
@@ -450,7 +452,8 @@ internal static class NotebookChartHelperTests
     {
         // Act
         var check = NotebookChartValidator.Check(SampleTables.Timed(),
-            true);
+            true,
+            NotebookMessages.Default);
 
         // Assert
         Check(check.IsValid);

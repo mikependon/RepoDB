@@ -181,17 +181,23 @@ public sealed class NotebookChartSection : NotebookScriptSection
     /// Draws the table a C# script gave to the chart.
     /// </summary>
     /// <param name="chart">The table, already limited, or null.</param>
+    /// <param name="status">The result status of the host, or null.</param>
     /// <returns>The result.</returns>
-    private protected override NotebookSectionResult CompleteCSharp(NotebookTable? chart) => Draw(chart,
-        "The script did not give a table to the chart, so there is nothing to chart.");
+    private protected override NotebookSectionResult CompleteCSharp(NotebookTable? chart,
+        string? status) => Draw(chart,
+            Messages.CSharpChartTableMissing(),
+            status ?? Messages.RowCount(chart?.Rows.Count ?? 0));
 
     /// <summary>
     /// Draws the first table of a SQL script.
     /// </summary>
     /// <param name="tables">The tables.</param>
+    /// <param name="status">The result status.</param>
     /// <returns>The result.</returns>
-    private protected override NotebookSectionResult CompleteSql(IReadOnlyList<NotebookTable> tables) => Draw(tables.Count > 0 ? tables[0] : null,
-        "The script returned no result set to chart.");
+    private protected override NotebookSectionResult CompleteSql(IReadOnlyList<NotebookTable> tables,
+        string status) => Draw(tables.Count > 0 ? tables[0] : null,
+            Messages.SqlChartTableMissing(),
+            status);
 
     /// <summary>
     /// Gets the authored values.
@@ -218,9 +224,11 @@ public sealed class NotebookChartSection : NotebookScriptSection
     /// </summary>
     /// <param name="table">The table, or null.</param>
     /// <param name="missing">Why there is no table.</param>
+    /// <param name="status">The result status of a drawn chart.</param>
     /// <returns>The result.</returns>
     private NotebookSectionResult Draw(NotebookTable? table,
-        string missing)
+        string missing,
+        string status)
     {
         Results = [];
         ResultStatus = string.Empty;
@@ -229,16 +237,17 @@ public sealed class NotebookChartSection : NotebookScriptSection
             return Fail(missing);
         }
         var check = NotebookChartValidator.Check(table,
-            FailOnNonNumeric);
+            FailOnNonNumeric,
+            Messages);
         if (!check.IsValid)
         {
             return Fail(check.Error!);
         }
         Results = [table];
-        ResultStatus = $"{table.Rows.Count} row(s)";
+        ResultStatus = status;
         LogChart(table,
             check);
-        return NotebookSectionResult.Succeeded(ResultStatus);
+        return NotebookSectionResult.Succeeded(status);
     }
 
     /// <summary>
@@ -249,18 +258,18 @@ public sealed class NotebookChartSection : NotebookScriptSection
     private void LogChart(NotebookTable table,
         NotebookChartCheck check)
     {
-        Log.Add(NotebookLogLevel.Information,
-            $"Charted {table.Rows.Count} rows as {check.ValueColumns.Count} series.");
+        Write(NotebookLogLevel.Information,
+            Messages.Charted(table.Rows.Count,
+                check.ValueColumns.Count));
         if (!check.IsTimeBased)
         {
-            Log.Add(NotebookLogLevel.Information,
-                $"The first column '{table.Columns[0].Name}' is not a timestamp: each row is a point, labeled by it.");
+            Write(NotebookLogLevel.Information,
+                Messages.ChartLabelColumn(table.Columns[0].Name));
         }
         if (check.Skipped.Count > 0)
         {
-            Log.Add(NotebookLogLevel.Warning,
-                $"Skipped the columns that are not numeric: {string.Join(", ",
-                    check.Skipped)}.");
+            Write(NotebookLogLevel.Warning,
+                Messages.ChartColumnsSkipped(check.Skipped));
         }
     }
 
@@ -275,7 +284,8 @@ public sealed class NotebookChartSection : NotebookScriptSection
             return;
         }
         var check = NotebookChartValidator.Check(table,
-            FailOnNonNumeric);
+            FailOnNonNumeric,
+            Messages);
         Data = check.IsValid
             ? NotebookChartBuilder.Build(table,
                 check,

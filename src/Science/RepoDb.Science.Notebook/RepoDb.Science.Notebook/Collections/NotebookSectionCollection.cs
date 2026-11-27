@@ -21,8 +21,14 @@ public sealed class NotebookSectionCollection : ObservableCollection<NotebookSec
     /// <summary>
     /// Creates an empty collection.
     /// </summary>
+    /// <param name="messages">The messages of the notebook.</param>
     /// <param name="changed">Called when the sections or their saved state change.</param>
-    internal NotebookSectionCollection(Action changed) => _changed = changed;
+    internal NotebookSectionCollection(NotebookMessages messages,
+        Action changed)
+    {
+        Messages = messages;
+        _changed = changed;
+    }
 
     #endregion
 
@@ -58,6 +64,39 @@ public sealed class NotebookSectionCollection : ObservableCollection<NotebookSec
                 section.Log.Limit = _logLimit;
             }
         }
+    }
+
+    /// <summary>
+    /// Gets the messages of the notebook.
+    /// </summary>
+    internal NotebookMessages Messages { get; }
+
+    #endregion
+
+    #region Public Methods
+
+    /// <summary>
+    /// Exchanges the places of two sections.
+    /// </summary>
+    /// <param name="first">The first section.</param>
+    /// <param name="second">The second section.</param>
+    /// <returns>Whether two different sections of the collection were exchanged.</returns>
+    public bool Swap(NotebookSection first,
+        NotebookSection second)
+    {
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        var one = IndexOf(first);
+        var other = IndexOf(second);
+        if (one < 0 || other < 0 || one == other)
+        {
+            return false;
+        }
+        Exchange(Math.Min(one,
+                other),
+            Math.Max(one,
+                other));
+        return true;
     }
 
     #endregion
@@ -213,6 +252,7 @@ public sealed class NotebookSectionCollection : ObservableCollection<NotebookSec
         {
             executable.Log.Adopt(_logLimit);
         }
+        section.OnAttached();
     }
 
     /// <summary>
@@ -223,6 +263,23 @@ public sealed class NotebookSectionCollection : ObservableCollection<NotebookSec
     {
         section.Owner = null;
         section.PropertyChanged -= OnSectionChanged;
+    }
+
+    /// <summary>
+    /// Exchanges two positions with moves, so a section is never in two places.
+    /// </summary>
+    /// <param name="low">The earlier position.</param>
+    /// <param name="high">The later position.</param>
+    private void Exchange(int low,
+        int high)
+    {
+        Move(high,
+            low);
+        if (high > low + 1)
+        {
+            Move(low + 1,
+                high);
+        }
     }
 
     /// <summary>

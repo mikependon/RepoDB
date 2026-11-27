@@ -109,7 +109,8 @@ internal static class NotebookFileReaderTests
     /// <param name="json">The text.</param>
     /// <returns>The notebook.</returns>
     private static NotebookDocument Read(string json) => NotebookFileReader.Read(JsonSerializer.Deserialize(json,
-        NotebookFileJsonContext.Default.NotebookFileModel)!);
+        NotebookFileJsonContext.Default.NotebookFileModel)!,
+        NotebookMessages.Default);
 
     /// <summary>
     /// Reads a section of the Studio file.

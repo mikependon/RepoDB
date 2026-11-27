@@ -5,6 +5,12 @@ namespace RepoDb.Science;
 /// </summary>
 public sealed class NotebookImportCheck
 {
+    #region Private Variables
+
+    private readonly NotebookMessages _messages;
+
+    #endregion
+
     #region Constructors
 
     /// <summary>
@@ -13,9 +19,11 @@ public sealed class NotebookImportCheck
     /// <param name="entries">The accepted directives.</param>
     /// <param name="errors">The rejected lines.</param>
     /// <param name="warnings">The suspicious lines.</param>
+    /// <param name="messages">The texts of the summary, or null for the default ones.</param>
     public NotebookImportCheck(IReadOnlyList<NotebookImportEntry> entries,
         IReadOnlyList<NotebookImportIssue> errors,
-        IReadOnlyList<NotebookImportIssue> warnings)
+        IReadOnlyList<NotebookImportIssue> warnings,
+        NotebookMessages? messages = null)
     {
         ArgumentNullException.ThrowIfNull(entries);
         ArgumentNullException.ThrowIfNull(errors);
@@ -23,6 +31,7 @@ public sealed class NotebookImportCheck
         Entries = entries;
         Errors = errors;
         Warnings = warnings;
+        _messages = messages ?? NotebookMessages.Default;
     }
 
     #endregion
@@ -47,7 +56,7 @@ public sealed class NotebookImportCheck
     /// <summary>
     /// Gets the outcome in words.
     /// </summary>
-    public string Summary => IsValid ? ValidSummary() : $"{Errors.Count} {(Errors.Count == 1 ? "problem" : "problems")} found.";
+    public string Summary => IsValid ? ValidSummary() : _messages.ImportProblems(Errors.Count);
 
     /// <summary>
     /// Gets the suspicious lines.
@@ -63,8 +72,8 @@ public sealed class NotebookImportCheck
     /// </summary>
     /// <returns>The description.</returns>
     private string ValidSummary() => Entries.Count == 0
-        ? "No imports yet."
-        : $"{Entries.Count} {(Entries.Count == 1 ? "import is" : "imports are")} valid.";
+        ? _messages.NoImports()
+        : _messages.ImportsValid(Entries.Count);
 
     #endregion
 }

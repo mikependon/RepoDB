@@ -11,15 +11,18 @@ public sealed class NotebookRunResult
     /// Creates a run result.
     /// </summary>
     /// <param name="items">The sections of the run.</param>
+    /// <param name="succeeded">Whether the run reached its end.</param>
     /// <param name="failureMessage">Why the run stopped.</param>
     /// <param name="elapsed">How long it ran.</param>
     public NotebookRunResult(IReadOnlyList<NotebookRunItem> items,
+        bool succeeded,
         string failureMessage,
         TimeSpan elapsed)
     {
         ArgumentNullException.ThrowIfNull(items);
         ArgumentNullException.ThrowIfNull(failureMessage);
         Items = items;
+        Succeeded = succeeded;
         FailureMessage = failureMessage;
         Elapsed = elapsed;
     }
@@ -46,7 +49,7 @@ public sealed class NotebookRunResult
     /// <summary>
     /// Gets whether the run reached its end.
     /// </summary>
-    public bool Succeeded => FailureMessage.Length == 0;
+    public bool Succeeded { get; }
 
     #endregion
 }

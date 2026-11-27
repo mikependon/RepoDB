@@ -1,9 +1,12 @@
-namespace RepoDb.Science.Helpers;
+using RepoDb.Science.Helpers;
+
+namespace RepoDb.Science;
 
 /// <summary>
 /// Decides, on the safe side, whether a SQL script only reads.
+/// It cannot see side effects of functions and is not a security boundary.
 /// </summary>
-internal static class NotebookSqlReadOnlyCheck
+public static class NotebookSqlReadOnlyCheck
 {
     #region Private Variables
 
@@ -28,6 +31,7 @@ internal static class NotebookSqlReadOnlyCheck
     /// <returns>Whether every statement is a plain SELECT or WITH query.</returns>
     public static bool IsReadOnly(string sql)
     {
+        ArgumentNullException.ThrowIfNull(sql);
         var statements = NotebookSqlScanner.Scan(sql);
         return statements is { Count: > 0 } && statements
             .All(IsQuery);

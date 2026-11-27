@@ -72,7 +72,8 @@ internal static class NotebookChartDataTests
     private static NotebookChartData Build(NotebookTable table,
         NotebookChartType type = NotebookChartType.StackedLines) => NotebookChartBuilder.Build(table,
         NotebookChartValidator.Check(table,
-            false),
+            false,
+            NotebookMessages.Default),
         NotebookChartBucket.OneMinute,
         type,
         NotebookChartColors.Normalize(null));
@@ -369,7 +370,8 @@ internal static class NotebookChartDataTests
         // Act
         var data = NotebookChartBuilder.Build(table,
             NotebookChartValidator.Check(table,
-                false),
+                false,
+                NotebookMessages.Default),
             NotebookChartBucket.OneMinute,
             NotebookChartType.Bars,
             colors);

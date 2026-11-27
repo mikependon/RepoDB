@@ -12,8 +12,8 @@ public interface INotebookSqlExecutor
     /// </summary>
     /// <param name="request">The script to run.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>The result tables.</returns>
-    Task<IReadOnlyList<NotebookTable>> ExecuteAsync(NotebookSqlRequest request,
+    /// <returns>The outcome of the script.</returns>
+    Task<NotebookSqlResult> ExecuteAsync(NotebookSqlRequest request,
         CancellationToken cancellationToken = default);
 
     #endregion

@@ -62,6 +62,11 @@ public abstract class NotebookSection : INotifyPropertyChanged
     internal NotebookSectionCollection? Owner { get; set; }
 
     /// <summary>
+    /// Gets the messages of the notebook that holds the section.
+    /// </summary>
+    internal NotebookMessages Messages => Owner?.Messages ?? NotebookMessages.Default;
+
+    /// <summary>
     /// Gets the text the preview comes from.
     /// </summary>
     private protected abstract string PreviewSource { get; }
@@ -93,6 +98,13 @@ public abstract class NotebookSection : INotifyPropertyChanged
     /// </summary>
     /// <returns>The content.</returns>
     internal string ComposeContent() => NotebookText.Compose(GetContent());
+
+    /// <summary>
+    /// Reacts to being added to a notebook.
+    /// </summary>
+    internal virtual void OnAttached()
+    {
+    }
 
     /// <summary>
     /// Accepts a content as saved.

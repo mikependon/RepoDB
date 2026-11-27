@@ -229,6 +229,7 @@ internal static class NotebookRunModelTests
 
         // Act
         var result = new NotebookRunResult(items,
+            false,
             "why",
             TimeSpan.FromSeconds(2));
 
@@ -244,6 +245,7 @@ internal static class NotebookRunModelTests
     {
         // Act
         var result = new NotebookRunResult([],
+            true,
             "",
             TimeSpan.Zero);
 
@@ -258,6 +260,7 @@ internal static class NotebookRunModelTests
     {
         // Act
         var result = new NotebookRunResult([],
+            false,
             "why",
             TimeSpan.Zero);
 
@@ -272,6 +275,7 @@ internal static class NotebookRunModelTests
     {
         // Act
         Action operation = () => _ = new NotebookRunResult(null!,
+            true,
             "",
             TimeSpan.Zero);
 
@@ -286,6 +290,7 @@ internal static class NotebookRunModelTests
     {
         // Act
         Action operation = () => _ = new NotebookRunResult([],
+            true,
             null!,
             TimeSpan.Zero);
 

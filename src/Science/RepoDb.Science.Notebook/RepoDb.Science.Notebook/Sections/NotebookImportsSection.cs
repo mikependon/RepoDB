@@ -1,5 +1,3 @@
-using RepoDb.Science.Helpers;
-
 namespace RepoDb.Science;
 
 /// <summary>
@@ -48,7 +46,7 @@ public sealed class NotebookImportsSection : NotebookExecutableSection
             if (SetContent(ref _script,
                     value ?? string.Empty) && Check is not null)
             {
-                Check = NotebookImportValidator.Check(Script);
+                Check = Validate();
             }
         }
     }
@@ -68,9 +66,20 @@ public sealed class NotebookImportsSection : NotebookExecutableSection
     #region Internal Methods
 
     /// <summary>
+    /// Words an existing check with the messages of the notebook that now holds the section.
+    /// </summary>
+    internal override void OnAttached()
+    {
+        if (Check is not null)
+        {
+            Check = Validate();
+        }
+    }
+
+    /// <summary>
     /// Checks the directives of a loaded section.
     /// </summary>
-    internal void RestoreCheck() => Check = string.IsNullOrWhiteSpace(Script) ? null : NotebookImportValidator.Check(Script);
+    internal void RestoreCheck() => Check = string.IsNullOrWhiteSpace(Script) ? null : Validate();
 
     #endregion
 
@@ -100,7 +109,7 @@ public sealed class NotebookImportsSection : NotebookExecutableSection
     private protected override Task<NotebookSectionResult> RunAsync(NotebookExecutionContext context,
         CancellationToken cancellationToken)
     {
-        var check = NotebookImportValidator.Check(Script);
+        var check = Validate();
         Check = check;
         LogIssues(check);
         return Task.FromResult(Conclude(check));
@@ -113,7 +122,7 @@ public sealed class NotebookImportsSection : NotebookExecutableSection
     /// <returns>The result.</returns>
     private NotebookSectionResult Conclude(NotebookImportCheck check)
     {
-        Log.Add(check.IsValid ? NotebookLogLevel.Information : NotebookLogLevel.Error,
+        Write(check.IsValid ? NotebookLogLevel.Information : NotebookLogLevel.Error,
             check.Summary);
         return check.IsValid
             ? NotebookSectionResult.Succeeded(check.Summary)
@@ -128,15 +137,22 @@ public sealed class NotebookImportsSection : NotebookExecutableSection
     {
         foreach (var error in check.Errors)
         {
-            Log.Add(NotebookLogLevel.Error,
+            Write(NotebookLogLevel.Error,
                 error.Text);
         }
         foreach (var warning in check.Warnings)
         {
-            Log.Add(NotebookLogLevel.Warning,
+            Write(NotebookLogLevel.Warning,
                 warning.Text);
         }
     }
+
+    /// <summary>
+    /// Checks the current text.
+    /// </summary>
+    /// <returns>The outcome.</returns>
+    private NotebookImportCheck Validate() => NotebookImportValidator.Check(Script,
+        Messages);
 
     #endregion
 }

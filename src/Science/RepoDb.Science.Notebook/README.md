@@ -35,6 +35,13 @@ A connection is stored as its identifier only.
 Each runnable section keeps the log and results of its last run only. `HasChanges` tracks authored content,
 not runs or layout. A notebook holds one imports section at most, and SQL section names are unique.
 
+| Member | Use |
+|---|---|
+| `Sections.Swap(first, second)` | Exchanges two sections. Assigning the sections to each other's index throws |
+| `section.SetResultStatus(status)` | Replaces the saved result status, for example when another table is shown |
+| `section.ApplyOutputLimit(lines)` | Cuts the saved output to its last lines |
+| `notebook.GetRunPlan()` | The sections a run of the notebook runs, in order and with their names |
+
 ## Running
 
 The host supplies the executors. Without a C# executor, C# scripts are skipped.
@@ -58,16 +65,59 @@ var result = await notebook.ExecuteAsync(context);
   a script, for example after asking the user to confirm it.
 - `notebook.ExecuteAsync` runs the imports first and then the other sections, and stops at the first failure.
 - Property change events are raised on the synchronization context that started the run.
+- A cancelled run throws `OperationCanceledException`. Any error raised after the token is cancelled counts as the
+  cancellation. A cancelled SQL code section keeps the tables and status it had before.
 
-`NotebookSqlExecutor` runs only scripts that look like plain `SELECT` or `WITH` queries, unless
-`allowWrites` is `true`. The check errs on the side of refusing: for example, it rejects backslashes in
-quoted text, `#`, `$` and `--` without a following space. It cannot see side effects of functions, so it is a
-safeguard and **not a security boundary**. Use a read-only database user to enforce read access.
+### Writing a SQL executor
+
+An executor returns a `NotebookSqlResult`:
+
+| Property | Meaning |
+|---|---|
+| `Tables` | The result tables |
+| `RowsAffected` | The affected rows, or `null` when the script only read |
+| `Status` | The result status of the host, or `null` for the default one |
+| `Error` | Why the script failed without throwing, or `null` |
+
+`NotebookSqlRequest.Log` is the log of the section. Lines added there appear while the script runs, so add them
+on the context that called the executor. The package adds its own error line only when the log has none.
+A C# executor returns its lines in `NotebookScriptResult.Logs` and may set `Status`.
+
+`NotebookSqlExecutor`, the built-in implementation, runs only scripts that look like plain `SELECT` or `WITH`
+queries, unless `allowWrites` is `true`. The check, also public as `NotebookSqlReadOnlyCheck.IsReadOnly`, errs on
+the side of refusing: for example, it rejects backslashes in quoted text, `#`, `$` and `--` without a following
+space. It cannot see side effects of functions, so it is a safeguard and **not a security boundary**. Use a
+read-only database user to enforce read access.
+
+## Messages
+
+Every text the package writes in logs, statuses, import problems, chart problems and run step names comes from
+`NotebookMessages`. A host overrides what differs and passes it to the notebook:
+
+```csharp
+public sealed class MyMessages : NotebookMessages
+{
+    public override string SqlFailed(NotebookScriptSection section, string error) => $"The query failed: {error}";
+
+    // An empty text removes a log line.
+    public override string SqlStarted(NotebookScriptSection section) => string.Empty;
+}
+
+var notebook = NotebookDocument.Open("Sales.rdbnb", new MyMessages());
+```
+
+`Create` accepts messages too. A section that belongs to no notebook uses the default ones. Two things are not
+replaceable: the "earlier lines not shown" note, which is read back to keep its count, and the exceptions for
+programming errors and unreadable files.
 
 ## Charts
 
 `NotebookChartSection.Data` holds the labels and series to draw. It follows the table, `ChartType`, `Bucket`,
 colors and `FailOnNonNumeric` without running the script again. Drawing and saving images belong to the host.
+
+## Imports
+
+`NotebookImportValidator.Check(text)` checks that a text holds only using directives, comments and blank lines.
 
 ## Tests
 

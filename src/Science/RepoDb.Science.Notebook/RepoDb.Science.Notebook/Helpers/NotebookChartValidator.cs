@@ -12,27 +12,30 @@ internal static class NotebookChartValidator
     /// </summary>
     /// <param name="table">The table.</param>
     /// <param name="failOnNonNumeric">Whether a column that is not numeric fails the check.</param>
+    /// <param name="messages">The texts of the problems.</param>
     /// <returns>The outcome.</returns>
     public static NotebookChartCheck Check(NotebookTable table,
-        bool failOnNonNumeric)
+        bool failOnNonNumeric,
+        NotebookMessages messages)
     {
         if (table.Rows.Count == 0)
         {
-            return NotebookChartCheck.Failure("The result has no rows to chart.");
+            return NotebookChartCheck.Failure(messages.ChartHasNoRows());
         }
         if (table.Columns.Count < 2)
         {
-            return NotebookChartCheck.Failure("A chart needs a first column that labels its points and at least one numeric column after it.");
+            return NotebookChartCheck.Failure(messages.ChartHasTooFewColumns());
         }
         var timeBased = IsTimeBased(table);
         if (timeBased && !table.Rows
             .Any(HasTime))
         {
-            return NotebookChartCheck.Failure("No row has a valid timestamp in its first column.");
+            return NotebookChartCheck.Failure(messages.ChartHasNoTimestamp());
         }
         return CheckColumns(table,
             failOnNonNumeric,
-            timeBased);
+            timeBased,
+            messages);
     }
 
     #endregion
@@ -45,10 +48,12 @@ internal static class NotebookChartValidator
     /// <param name="table">The table.</param>
     /// <param name="failOnNonNumeric">Whether a column that is not numeric fails the check.</param>
     /// <param name="timeBased">Whether the first column is a time.</param>
+    /// <param name="messages">The texts of the problems.</param>
     /// <returns>The outcome.</returns>
     private static NotebookChartCheck CheckColumns(NotebookTable table,
         bool failOnNonNumeric,
-        bool timeBased)
+        bool timeBased,
+        NotebookMessages messages)
     {
         var positions = Enumerable
             .Range(1,
@@ -59,7 +64,8 @@ internal static class NotebookChartValidator
             .ToList();
         if (failOnNonNumeric && skipped.Count > 0)
         {
-            return NotebookChartCheck.Failure($"The column '{skipped[0].Name}' is not numeric ({skipped[0].TypeName}): every column after the first one must be numeric.");
+            return NotebookChartCheck.Failure(messages.ChartColumnNotNumeric(skipped[0].Name,
+                skipped[0].TypeName));
         }
         return positions[true]
             .Any()
@@ -70,7 +76,7 @@ internal static class NotebookChartValidator
                     .Select(column => column.Name)
                     .ToList(),
                 timeBased)
-            : NotebookChartCheck.Failure("The result has no numeric column after the first one.");
+            : NotebookChartCheck.Failure(messages.ChartHasNoNumericColumn());
     }
 
     /// <summary>

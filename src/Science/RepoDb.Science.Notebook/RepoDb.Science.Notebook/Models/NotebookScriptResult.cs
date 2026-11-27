@@ -38,6 +38,11 @@ public sealed class NotebookScriptResult
     public string? ReturnValue { get; init; }
 
     /// <summary>
+    /// Gets the result status of the host, or null for the default one.
+    /// </summary>
+    public string? Status { get; init; }
+
+    /// <summary>
     /// Gets whether the script ran to its end.
     /// </summary>
     public bool Succeeded { get; init; }

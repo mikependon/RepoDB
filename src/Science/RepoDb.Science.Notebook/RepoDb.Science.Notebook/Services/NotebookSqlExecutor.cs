@@ -1,7 +1,6 @@
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
-using RepoDb.Science.Helpers;
 using RepoDb.Science.Services;
 
 namespace RepoDb.Science;
@@ -43,12 +42,12 @@ public sealed class NotebookSqlExecutor : INotebookSqlExecutor
     /// </summary>
     /// <param name="request">The script to run.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>The result tables.</returns>
-    public async Task<IReadOnlyList<NotebookTable>> ExecuteAsync(NotebookSqlRequest request,
+    /// <returns>The outcome of the script.</returns>
+    public async Task<NotebookSqlResult> ExecuteAsync(NotebookSqlRequest request,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
-        EnsureAllowed(request.Script);
+        EnsureAllowed(request);
         var connection = await _connectionFactory(request.ConnectionId,
             cancellationToken)
             .ConfigureAwait(false);
@@ -71,26 +70,26 @@ public sealed class NotebookSqlExecutor : INotebookSqlExecutor
     /// <summary>
     /// Rejects a script that may write when writes are not allowed.
     /// </summary>
-    /// <param name="script">The script.</param>
-    private void EnsureAllowed(string script)
+    /// <param name="request">The script to run.</param>
+    private void EnsureAllowed(NotebookSqlRequest request)
     {
-        if (!_allowWrites && !NotebookSqlReadOnlyCheck.IsReadOnly(script))
+        if (!_allowWrites && !NotebookSqlReadOnlyCheck.IsReadOnly(request.Script))
         {
-            throw new InvalidOperationException("Only SELECT statements can run because writes are not allowed.");
+            throw new InvalidOperationException(request.Messages.WritesNotAllowed());
         }
     }
 
     /// <summary>
-    /// Runs the script and reads every result set.
+    /// Runs the script and reads its outcome.
     /// </summary>
     /// <param name="connection">The open connection.</param>
     /// <param name="request">The script to run.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>The result tables.</returns>
+    /// <returns>The outcome of the script.</returns>
     [SuppressMessage("Security",
         "CA2100:Review SQL queries for security vulnerabilities",
         Justification = "Running the script the user wrote is the purpose of a notebook.")]
-    private static async Task<IReadOnlyList<NotebookTable>> ReadAsync(DbConnection connection,
+    private static async Task<NotebookSqlResult> ReadAsync(DbConnection connection,
         NotebookSqlRequest request,
         CancellationToken cancellationToken)
     {
@@ -100,13 +99,35 @@ public sealed class NotebookSqlExecutor : INotebookSqlExecutor
         var reader = await command.ExecuteReaderAsync(cancellationToken)
             .ConfigureAwait(false);
         await using var readerScope = reader.ConfigureAwait(false);
+        var tables = await ReadTablesAsync(reader,
+            request.RowLimit,
+            cancellationToken)
+            .ConfigureAwait(false);
+        return new NotebookSqlResult
+        {
+            Tables = tables,
+            RowsAffected = reader.RecordsAffected < 0 ? null : reader.RecordsAffected
+        };
+    }
+
+    /// <summary>
+    /// Reads every result set that has columns.
+    /// </summary>
+    /// <param name="reader">The data reader.</param>
+    /// <param name="rowLimit">The most rows kept for each table.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The tables.</returns>
+    private static async Task<List<NotebookTable>> ReadTablesAsync(DbDataReader reader,
+        int rowLimit,
+        CancellationToken cancellationToken)
+    {
         var tables = new List<NotebookTable>();
         do
         {
             if (reader.FieldCount > 0)
             {
                 tables.Add(await NotebookTableReader.ReadAsync(reader,
-                    request.RowLimit,
+                    rowLimit,
                     cancellationToken)
                     .ConfigureAwait(false));
             }

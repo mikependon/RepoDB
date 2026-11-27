@@ -44,9 +44,23 @@ public sealed class NotebookDocument : INotifyPropertyChanged
     #region Constructors
 
     /// <summary>
+    /// Creates a notebook without sections that uses the default messages.
+    /// </summary>
+    public NotebookDocument()
+        : this(NotebookMessages.Default)
+    {
+    }
+
+    /// <summary>
     /// Creates a notebook without sections.
     /// </summary>
-    public NotebookDocument() => Sections = new NotebookSectionCollection(() => OnPropertyChanged(nameof(HasChanges)));
+    /// <param name="messages">The texts the notebook writes.</param>
+    public NotebookDocument(NotebookMessages messages)
+    {
+        ArgumentNullException.ThrowIfNull(messages);
+        Sections = new NotebookSectionCollection(messages,
+            () => OnPropertyChanged(nameof(HasChanges)));
+    }
 
     #endregion
 
@@ -89,6 +103,11 @@ public sealed class NotebookDocument : INotifyPropertyChanged
     }
 
     /// <summary>
+    /// Gets the texts the notebook writes.
+    /// </summary>
+    public NotebookMessages Messages => Sections.Messages;
+
+    /// <summary>
     /// Gets the name of the notebook, taken from its file name.
     /// </summary>
     public string Name => Path.GetFileNameWithoutExtension(FileName) ?? string.Empty;
@@ -116,12 +135,14 @@ public sealed class NotebookDocument : INotifyPropertyChanged
     /// </summary>
     /// <param name="title">The title of the header.</param>
     /// <param name="imports">The using directives.</param>
+    /// <param name="messages">The texts the notebook writes, or null for the default ones.</param>
     /// <returns>The notebook.</returns>
     public static NotebookDocument Create(string title = "",
-        string imports = DefaultImports)
+        string imports = DefaultImports,
+        NotebookMessages? messages = null)
     {
-        var document = new NotebookDocument();
-        document.Sections.Add(new NotebookHeaderSection { Title = title, Description = DefaultDescription });
+        var document = new NotebookDocument(messages ?? NotebookMessages.Default);
+        document.Sections.Add(new NotebookHeaderSection { Title = title, Description = document.Messages.NewNotebookDescription() });
         document.Sections.Add(new NotebookImportsSection { Script = imports });
         document.Sections.Add(new NotebookCodeSection());
         document.Sections.Add(new NotebookCodeSection { Language = NotebookCodeLanguage.CSharp });
@@ -129,32 +150,59 @@ public sealed class NotebookDocument : INotifyPropertyChanged
     }
 
     /// <summary>
-    /// Opens a notebook file. Nothing is run.
+    /// Opens a notebook file with the default messages. Nothing is run.
     /// </summary>
     /// <param name="fileName">The file.</param>
     /// <returns>The notebook.</returns>
-    public static NotebookDocument Open(string fileName)
-    {
-        var path = FullPathOf(fileName);
-        return Loaded(NotebookFileStore.Read(path),
-            path);
-    }
+    public static NotebookDocument Open(string fileName) => Open(fileName,
+        NotebookMessages.Default);
 
     /// <summary>
     /// Opens a notebook file. Nothing is run.
     /// </summary>
     /// <param name="fileName">The file.</param>
+    /// <param name="messages">The texts the notebook writes.</param>
+    /// <returns>The notebook.</returns>
+    public static NotebookDocument Open(string fileName,
+        NotebookMessages messages)
+    {
+        ArgumentNullException.ThrowIfNull(messages);
+        var path = FullPathOf(fileName);
+        return Loaded(NotebookFileStore.Read(path),
+            path,
+            messages);
+    }
+
+    /// <summary>
+    /// Opens a notebook file with the default messages. Nothing is run.
+    /// </summary>
+    /// <param name="fileName">The file.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The notebook.</returns>
+    public static Task<NotebookDocument> OpenAsync(string fileName,
+        CancellationToken cancellationToken = default) => OpenAsync(fileName,
+            NotebookMessages.Default,
+            cancellationToken);
+
+    /// <summary>
+    /// Opens a notebook file. Nothing is run.
+    /// </summary>
+    /// <param name="fileName">The file.</param>
+    /// <param name="messages">The texts the notebook writes.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The notebook.</returns>
     public static async Task<NotebookDocument> OpenAsync(string fileName,
+        NotebookMessages messages,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(messages);
         var path = FullPathOf(fileName);
         var model = await NotebookFileStore.ReadAsync(path,
             cancellationToken)
             .ConfigureAwait(true);
         return Loaded(model,
-            path);
+            path,
+            messages);
     }
 
     /// <summary>
@@ -178,10 +226,18 @@ public sealed class NotebookDocument : INotifyPropertyChanged
     /// <returns>The outcome.</returns>
     public Task<NotebookRunResult> ExecuteAsync(NotebookExecutionContext context,
         IProgress<NotebookRunProgress>? progress = null,
-        CancellationToken cancellationToken = default) => NotebookRunner.RunAsync(Sections,
+        CancellationToken cancellationToken = default) => NotebookRunner.RunAsync(GetRunPlan(),
             context,
+            Messages,
             progress,
             cancellationToken);
+
+    /// <summary>
+    /// Gets the sections that a run of the notebook runs, in order and with their names.
+    /// </summary>
+    /// <returns>The steps.</returns>
+    public IReadOnlyList<NotebookRunStep> GetRunPlan() => NotebookRunner.Plan(Sections,
+        Messages);
 
     /// <summary>
     /// Saves the notebook to its file.
@@ -264,11 +320,14 @@ public sealed class NotebookDocument : INotifyPropertyChanged
     /// </summary>
     /// <param name="model">The content of the file.</param>
     /// <param name="path">The file.</param>
+    /// <param name="messages">The texts the notebook writes.</param>
     /// <returns>The notebook.</returns>
     private static NotebookDocument Loaded(NotebookFileModel model,
-        string path)
+        string path,
+        NotebookMessages messages)
     {
-        var document = NotebookFileReader.Read(model);
+        var document = NotebookFileReader.Read(model,
+            messages);
         document.MarkSaved(path,
             document.Capture());
         return document;

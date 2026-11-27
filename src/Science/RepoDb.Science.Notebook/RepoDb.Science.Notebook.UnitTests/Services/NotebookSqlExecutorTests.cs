@@ -30,6 +30,9 @@ internal static class NotebookSqlExecutorTests
         await PassesTheConnectionId();
         await DisposesTheConnection();
         await AcceptsAnOpenConnection();
+        await ReportsTheAffectedRows();
+        await ReportsNoAffectedRowsForAQuery();
+        await RefusesWithTheRequestMessages();
         await ReaderMarksNothingBelowTheLimit();
     }
 
@@ -52,11 +55,23 @@ internal static class NotebookSqlExecutorTests
     /// <param name="script">The script.</param>
     /// <param name="rowLimit">The row limit.</param>
     /// <returns>The tables.</returns>
-    private static Task<IReadOnlyList<NotebookTable>> Run(string script,
-        int rowLimit = 10) => Executor()
+    private static async Task<IReadOnlyList<NotebookTable>> Run(string script,
+        int rowLimit = 10)
+    {
+        var result = await Executor()
             .ExecuteAsync(new NotebookSqlRequest(script,
-        null,
-        rowLimit));
+                null,
+                rowLimit));
+        return result.Tables;
+    }
+
+    /// <summary>
+    /// Runs a script with writes allowed.
+    /// </summary>
+    /// <param name="script">The script.</param>
+    /// <returns>The outcome.</returns>
+    private static Task<NotebookSqlResult> RunWriting(string script) => Executor(true)
+        .ExecuteAsync(new NotebookSqlRequest(script));
 
     /// <summary>
     /// Tests ConstructorRejectsNullFactory.
@@ -189,15 +204,11 @@ internal static class NotebookSqlExecutorTests
     /// </summary>
     private static async Task AllowsWritesWhenAsked()
     {
-        // Setup
-        var request = new NotebookSqlRequest("CREATE TABLE t (a); INSERT INTO t VALUES (7); SELECT a FROM t");
-
         // Act
-        var tables = await Executor(true)
-            .ExecuteAsync(request);
+        var result = await RunWriting("CREATE TABLE t (a); INSERT INTO t VALUES (7); SELECT a FROM t");
 
         // Assert
-        Check(tables
+        Check(result.Tables
             .Single().Rows
             .Single()[0] == "7");
     }
@@ -208,11 +219,51 @@ internal static class NotebookSqlExecutorTests
     private static async Task ReturnsNoTableForStatementsWithoutResults()
     {
         // Act
-        var tables = await Executor(true)
-            .ExecuteAsync(new NotebookSqlRequest("CREATE TABLE t (a)"));
+        var result = await RunWriting("CREATE TABLE t (a)");
 
         // Assert
-        Check(tables.Count == 0);
+        Check(result.Tables.Count == 0 && result.Succeeded);
+    }
+
+    /// <summary>
+    /// Tests ReportsTheAffectedRows.
+    /// </summary>
+    private static async Task ReportsTheAffectedRows()
+    {
+        // Act
+        var result = await RunWriting("CREATE TABLE t (a); INSERT INTO t VALUES (1), (2)");
+
+        // Assert
+        Check(result.RowsAffected == 2);
+    }
+
+    /// <summary>
+    /// Tests ReportsNoAffectedRowsForAQuery.
+    /// </summary>
+    private static async Task ReportsNoAffectedRowsForAQuery()
+    {
+        // Act
+        var result = await Executor()
+            .ExecuteAsync(new NotebookSqlRequest("SELECT 1"));
+
+        // Assert
+        Check(result.RowsAffected is null && result.Status is null);
+    }
+
+    /// <summary>
+    /// Tests RefusesWithTheRequestMessages.
+    /// </summary>
+    private static async Task RefusesWithTheRequestMessages()
+    {
+        // Setup
+        var request = new NotebookSqlRequest("DELETE FROM t") { Messages = new TagMessages() };
+
+        // Act
+        var error = await ThrowsAsync<InvalidOperationException>(() => Executor()
+            .ExecuteAsync(request));
+
+        // Assert
+        Check(error.Message == "writes-not-allowed");
     }
 
     /// <summary>
@@ -267,10 +318,10 @@ internal static class NotebookSqlExecutorTests
             _) => ValueTask.FromResult<DbConnection>(connection));
 
         // Act
-        var tables = await executor.ExecuteAsync(new NotebookSqlRequest("SELECT 1"));
+        var result = await executor.ExecuteAsync(new NotebookSqlRequest("SELECT 1"));
 
         // Assert
-        Check(tables.Count == 1);
+        Check(result.Tables.Count == 1);
     }
 
     /// <summary>

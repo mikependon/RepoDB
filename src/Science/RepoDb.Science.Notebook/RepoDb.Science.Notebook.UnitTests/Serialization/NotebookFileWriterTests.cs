@@ -273,7 +273,8 @@ internal static class NotebookFileWriterTests
 
         // Act
         var loaded = NotebookFileReader.Read(JsonSerializer.Deserialize(json,
-            NotebookFileJsonContext.Default.NotebookFileModel)!);
+            NotebookFileJsonContext.Default.NotebookFileModel)!,
+            NotebookMessages.Default);
 
         // Assert
         Check(Json(loaded) == json);

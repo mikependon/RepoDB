@@ -34,6 +34,16 @@ public sealed class NotebookSqlRequest
     public Guid? ConnectionId { get; }
 
     /// <summary>
+    /// Gets the log of the section. An executor adds its own lines on the context that called it.
+    /// </summary>
+    public NotebookLog Log { get; init; } = new();
+
+    /// <summary>
+    /// Gets the messages of the notebook.
+    /// </summary>
+    public NotebookMessages Messages { get; init; } = NotebookMessages.Default;
+
+    /// <summary>
     /// Gets the rows kept for each table.
     /// </summary>
     public int RowLimit { get; }

@@ -1,19 +1,25 @@
-namespace RepoDb.Science.Helpers;
+using RepoDb.Science.Helpers;
+
+namespace RepoDb.Science;
 
 /// <summary>
 /// Checks that imports hold only using directives.
 /// </summary>
-internal static class NotebookImportValidator
+public static class NotebookImportValidator
 {
     #region Public Methods
 
     /// <summary>
-    /// Checks the text of the imports.
+    /// Checks the text of the imports. It checks the syntax only, not whether a namespace exists.
     /// </summary>
     /// <param name="text">The text.</param>
+    /// <param name="messages">The texts of the problems, or null for the default ones.</param>
     /// <returns>The outcome.</returns>
-    public static NotebookImportCheck Check(string text)
+    public static NotebookImportCheck Check(string text,
+        NotebookMessages? messages = null)
     {
+        ArgumentNullException.ThrowIfNull(text);
+        var texts = messages ?? NotebookMessages.Default;
         var entries = new List<NotebookImportEntry>();
         var errors = new List<NotebookImportIssue>();
         var inBlock = false;
@@ -25,12 +31,15 @@ internal static class NotebookImportValidator
                 ref inBlock);
             CheckLine(index + 1,
                 code,
+                texts,
                 entries,
                 errors);
         }
         return new NotebookImportCheck(entries,
             errors,
-            WarningsOf(entries));
+            WarningsOf(entries,
+                texts),
+            texts);
     }
 
     #endregion
@@ -42,10 +51,12 @@ internal static class NotebookImportValidator
     /// </summary>
     /// <param name="line">The line number.</param>
     /// <param name="code">The code of the line.</param>
+    /// <param name="messages">The texts of the problems.</param>
     /// <param name="entries">Receives the allowed directives.</param>
     /// <param name="errors">Receives the problems.</param>
     private static void CheckLine(int line,
         string code,
+        NotebookMessages messages,
         List<NotebookImportEntry> entries,
         List<NotebookImportIssue> errors)
     {
@@ -55,6 +66,7 @@ internal static class NotebookImportValidator
             CheckStatement(line,
                 statements[index].Trim(),
                 index < statements.Length - 1,
+                messages,
                 entries,
                 errors);
         }
@@ -66,11 +78,13 @@ internal static class NotebookImportValidator
     /// <param name="line">The line number.</param>
     /// <param name="statement">The directive without its semicolon.</param>
     /// <param name="hasSemicolon">Whether a semicolon follows it.</param>
+    /// <param name="messages">The texts of the problems.</param>
     /// <param name="entries">Receives the allowed directives.</param>
     /// <param name="errors">Receives the problems.</param>
     private static void CheckStatement(int line,
         string statement,
         bool hasSemicolon,
+        NotebookMessages messages,
         List<NotebookImportEntry> entries,
         List<NotebookImportIssue> errors)
     {
@@ -80,16 +94,19 @@ internal static class NotebookImportValidator
         }
         if (!NotebookImportParser.TryParse(line,
             statement,
+            messages,
             out var entry,
             out var error))
         {
             errors.Add(new NotebookImportIssue(line,
-                error));
+                error!,
+                messages));
         }
         else if (!hasSemicolon)
         {
             errors.Add(new NotebookImportIssue(line,
-                $"Missing ';' at the end of '{statement}'."));
+                messages.ImportSemicolonMissing(statement),
+                messages));
         }
         else
         {
@@ -101,14 +118,17 @@ internal static class NotebookImportValidator
     /// Warns about directives written more than once.
     /// </summary>
     /// <param name="entries">The allowed directives.</param>
+    /// <param name="messages">The texts of the problems.</param>
     /// <returns>The warnings.</returns>
-    private static List<NotebookImportIssue> WarningsOf(IReadOnlyList<NotebookImportEntry> entries)
+    private static List<NotebookImportIssue> WarningsOf(IReadOnlyList<NotebookImportEntry> entries,
+        NotebookMessages messages)
     {
         var seen = new HashSet<string>(StringComparer.Ordinal);
         return entries
             .Where(entry => !seen.Add(entry.Text))
             .Select(entry => new NotebookImportIssue(entry.Line,
-                $"'{entry.Text}' is already imported."))
+                messages.ImportDuplicate(entry.Text),
+                messages))
             .ToList();
     }
 

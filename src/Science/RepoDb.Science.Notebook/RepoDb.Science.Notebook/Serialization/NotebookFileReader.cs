@@ -14,14 +14,16 @@ internal static class NotebookFileReader
     /// Builds the notebook.
     /// </summary>
     /// <param name="model">The content of the file.</param>
+    /// <param name="messages">The texts the notebook writes.</param>
     /// <returns>The notebook.</returns>
-    public static NotebookDocument Read(NotebookFileModel model)
+    public static NotebookDocument Read(NotebookFileModel model,
+        NotebookMessages messages)
     {
         if (model.FormatVersion > NotebookDocument.FormatVersion)
         {
             throw new InvalidDataException($"The notebook has format version {model.FormatVersion}, which is newer than this version reads.");
         }
-        var document = new NotebookDocument();
+        var document = new NotebookDocument(messages);
         document.Sections.Load((model.Sections ?? [])
             .OfType<NotebookSectionFileModel>()
             .Select(ReadSection)

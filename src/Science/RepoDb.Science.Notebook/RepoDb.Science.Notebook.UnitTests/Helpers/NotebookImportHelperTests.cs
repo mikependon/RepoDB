@@ -73,10 +73,11 @@ internal static class NotebookImportHelperTests
     /// </summary>
     /// <param name="statement">The statement.</param>
     /// <returns>The problem.</returns>
-    private static string ProblemOf(string statement)
+    private static string? ProblemOf(string statement)
     {
         _ = NotebookImportParser.TryParse(1,
             statement,
+            NotebookMessages.Default,
             out _,
             out var error);
         return error;
@@ -91,6 +92,7 @@ internal static class NotebookImportHelperTests
     {
         _ = NotebookImportParser.TryParse(1,
             statement,
+            NotebookMessages.Default,
             out var entry,
             out _);
         return entry;
@@ -233,7 +235,7 @@ internal static class NotebookImportHelperTests
         var error = ProblemOf("var x = 1");
 
         // Assert
-        Check(error.StartsWith("Only 'using' directives are allowed",
+        Check(error!.StartsWith("Only 'using' directives are allowed",
             StringComparison.Ordinal));
     }
 
@@ -246,7 +248,7 @@ internal static class NotebookImportHelperTests
         var error = ProblemOf("usingSystem");
 
         // Assert
-        Check(error.StartsWith("Only 'using' directives are allowed",
+        Check(error!.StartsWith("Only 'using' directives are allowed",
             StringComparison.Ordinal));
     }
 
@@ -259,7 +261,7 @@ internal static class NotebookImportHelperTests
         var error = ProblemOf("using");
 
         // Assert
-        Check(error.StartsWith("Write what to import",
+        Check(error!.StartsWith("Write what to import",
             StringComparison.Ordinal));
     }
 
@@ -272,7 +274,7 @@ internal static class NotebookImportHelperTests
         var error = ProblemOf("using (var x = y)");
 
         // Assert
-        Check(error.Contains("not 'using' statements",
+        Check(error!.Contains("not 'using' statements",
             StringComparison.Ordinal));
     }
 
@@ -285,7 +287,7 @@ internal static class NotebookImportHelperTests
         var error = ProblemOf("using var x = y");
 
         // Assert
-        Check(error.Contains("not 'using' statements",
+        Check(error!.Contains("not 'using' statements",
             StringComparison.Ordinal));
     }
 
@@ -298,7 +300,7 @@ internal static class NotebookImportHelperTests
         var error = ProblemOf("using System-Linq");
 
         // Assert
-        Check(error.Contains("is not a valid namespace",
+        Check(error!.Contains("is not a valid namespace",
             StringComparison.Ordinal));
     }
 
@@ -311,7 +313,7 @@ internal static class NotebookImportHelperTests
         var error = ProblemOf("using System..Linq");
 
         // Assert
-        Check(error.Contains("is not a valid namespace",
+        Check(error!.Contains("is not a valid namespace",
             StringComparison.Ordinal));
     }
 
@@ -324,7 +326,7 @@ internal static class NotebookImportHelperTests
         var error = ProblemOf("using 1J = System");
 
         // Assert
-        Check(error.Contains("is not a valid alias",
+        Check(error!.Contains("is not a valid alias",
             StringComparison.Ordinal));
     }
 
@@ -337,7 +339,7 @@ internal static class NotebookImportHelperTests
         var error = ProblemOf("using J =");
 
         // Assert
-        Check(error.Contains("is not a valid alias",
+        Check(error!.Contains("is not a valid alias",
             StringComparison.Ordinal));
     }
 

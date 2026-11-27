@@ -103,6 +103,31 @@ public abstract class NotebookScriptSection : NotebookExecutableSection
 
     #endregion
 
+    #region Public Methods
+
+    /// <summary>
+    /// Cuts the output to its last lines.
+    /// </summary>
+    /// <param name="limit">The lines to keep.</param>
+    public void ApplyOutputLimit(int limit)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(limit);
+        Output = NotebookOutputTrimmer.LastLines(Output,
+            limit);
+    }
+
+    /// <summary>
+    /// Replaces the result status, for example when the host shows another table. It is not a content change.
+    /// </summary>
+    /// <param name="status">The status.</param>
+    public void SetResultStatus(string status)
+    {
+        ArgumentNullException.ThrowIfNull(status);
+        ResultStatus = status;
+    }
+
+    #endregion
+
     #region Internal Methods
 
     /// <summary>
@@ -128,34 +153,23 @@ public abstract class NotebookScriptSection : NotebookExecutableSection
     /// Uses the outcome of a successful C# script.
     /// </summary>
     /// <param name="chart">The table given to the chart, already limited, or null.</param>
+    /// <param name="status">The result status of the host, or null.</param>
     /// <returns>The result.</returns>
-    private protected virtual NotebookSectionResult CompleteCSharp(NotebookTable? chart)
-    {
-        Log.Add(NotebookLogLevel.Information,
-            "The script ran well.");
-        return NotebookSectionResult.Succeeded();
-    }
+    private protected virtual NotebookSectionResult CompleteCSharp(NotebookTable? chart,
+        string? status) => NotebookSectionResult.Succeeded();
 
     /// <summary>
     /// Uses the tables of a successful SQL script.
     /// </summary>
     /// <param name="tables">The tables, already limited.</param>
+    /// <param name="status">The result status.</param>
     /// <returns>The result.</returns>
-    private protected virtual NotebookSectionResult CompleteSql(IReadOnlyList<NotebookTable> tables)
+    private protected virtual NotebookSectionResult CompleteSql(IReadOnlyList<NotebookTable> tables,
+        string status)
     {
-        Show(tables);
-        if (tables
-            .Any(table => table.IsTruncated))
-        {
-            Log.Add(NotebookLogLevel.Warning,
-                "The rows were limited to the row limit.");
-        }
-        else
-        {
-            Log.Add(NotebookLogLevel.Information,
-                $"Done: {ResultStatus}");
-        }
-        return NotebookSectionResult.Succeeded(ResultStatus);
+        Results = tables;
+        ResultStatus = status;
+        return NotebookSectionResult.Succeeded(status);
     }
 
     /// <summary>
@@ -208,31 +222,109 @@ public abstract class NotebookScriptSection : NotebookExecutableSection
     private NotebookSectionResult ApplyCSharp(NotebookScriptResult result,
         NotebookExecutionContext context)
     {
-        foreach (var entry in result.Logs)
-        {
-            Log.Add(entry.Level,
-                entry.Message);
-        }
+        WriteEntries(result.Logs);
         if (result.IsUnavailable)
         {
-            return Skip(result.Error ?? "The C# executor is not available.");
+            return Skip(result.Error ?? Messages.CSharpUnavailable());
         }
-        Output = OutputOf(result,
-            context.OutputLimit);
-        if (result.Tables.Count > 0)
-        {
-            Show(NotebookTableLimiter.Limit(result.Tables,
-                context.RowLimit));
-        }
+        ShowCSharp(result,
+            context);
         if (!result.Succeeded)
         {
-            return Fail(result.Error ?? "The script failed.");
+            var error = result.Error ?? Messages.CSharpFailed();
+            return FailExecution(error,
+                error);
         }
-        return CompleteCSharp(result.Chart is { } chart
-            ? NotebookTableLimiter.Limit([chart],
-                context.RowLimit)[0]
-            : null);
+        Write(NotebookLogLevel.Information,
+            Messages.CSharpSucceeded());
+        return CompleteCSharp(LimitChart(result.Chart,
+                context.RowLimit),
+            result.Status);
     }
+
+    /// <summary>
+    /// Applies the outcome of a SQL script.
+    /// </summary>
+    /// <param name="result">The outcome.</param>
+    /// <param name="rowLimit">The most rows kept for each table.</param>
+    /// <returns>The result.</returns>
+    private NotebookSectionResult ApplySql(NotebookSqlResult result,
+        int rowLimit)
+    {
+        if (result.Error is { } error)
+        {
+            return FailExecution(Messages.SqlFailed(this,
+                    error),
+                error);
+        }
+        var tables = NotebookTableLimiter.Limit(result.Tables,
+            rowLimit);
+        var status = result.Status ?? DefaultStatus(tables,
+            result.RowsAffected);
+        WriteSqlEnd(tables,
+            rowLimit,
+            status);
+        return CompleteSql(tables,
+            status);
+    }
+
+    /// <summary>
+    /// Builds the default status of a SQL result.
+    /// </summary>
+    /// <param name="tables">The tables.</param>
+    /// <param name="rowsAffected">The affected rows, or null.</param>
+    /// <returns>The status.</returns>
+    private string DefaultStatus(IReadOnlyList<NotebookTable> tables,
+        int? rowsAffected)
+    {
+        if (tables.Count == 0 && rowsAffected is { } affected)
+        {
+            return Messages.RowsAffected(affected);
+        }
+        return Messages.RowCount(tables.Count > 0 ? tables[0].Rows.Count : 0);
+    }
+
+    /// <summary>
+    /// Runs the SQL executor, turning its errors into a failed outcome.
+    /// </summary>
+    /// <param name="executor">The executor.</param>
+    /// <param name="rowLimit">The most rows kept for each table.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The outcome.</returns>
+    private async Task<NotebookSqlResult> ExecuteSqlAsync(INotebookSqlExecutor executor,
+        int rowLimit,
+        CancellationToken cancellationToken)
+    {
+        var request = new NotebookSqlRequest(ScriptToRun,
+            ConnectionId,
+            rowLimit)
+        {
+            Log = Log,
+            Messages = Messages
+        };
+        try
+        {
+            return await executor.ExecuteAsync(request,
+                cancellationToken)
+                .ConfigureAwait(true);
+        }
+        catch (Exception exception) when (!cancellationToken.IsCancellationRequested)
+        {
+            return new NotebookSqlResult { Error = exception.Message };
+        }
+    }
+
+    /// <summary>
+    /// Limits the table given to a chart.
+    /// </summary>
+    /// <param name="chart">The table, or null.</param>
+    /// <param name="rowLimit">The most rows kept.</param>
+    /// <returns>The limited table, or null.</returns>
+    private static NotebookTable? LimitChart(NotebookTable? chart,
+        int rowLimit) => chart is null
+        ? null
+        : NotebookTableLimiter.Limit([chart],
+            rowLimit)[0];
 
     /// <summary>
     /// Writes the output and the returned value of a script.
@@ -240,14 +332,14 @@ public abstract class NotebookScriptSection : NotebookExecutableSection
     /// <param name="result">The outcome.</param>
     /// <param name="limit">The output lines kept.</param>
     /// <returns>The text.</returns>
-    private static string OutputOf(NotebookScriptResult result,
+    private string OutputOf(NotebookScriptResult result,
         int limit)
     {
         var parts = new[]
         {
             NotebookOutputTrimmer.LastLines(result.Output.TrimEnd(),
                 limit),
-            result.ReturnValue is { } value ? $"Returned: {value}" : string.Empty
+            result.ReturnValue is { } value ? Messages.ReturnedValue(value) : string.Empty
         };
         return string.Join(Environment.NewLine,
             parts
@@ -265,14 +357,9 @@ public abstract class NotebookScriptSection : NotebookExecutableSection
     {
         if (context.CSharpExecutor is not { } executor)
         {
-            return Skip("C# scripts cannot be run yet.");
+            return Skip(Messages.CSharpExecutorMissing());
         }
-        var sqlResults = Owner?.GetSqlResults() ?? new Dictionary<string, IReadOnlyList<NotebookTable>>(StringComparer.OrdinalIgnoreCase);
-        var request = new NotebookScriptRequest(ScriptToRun,
-            Owner?.ImportsScript ?? string.Empty,
-            sqlResults,
-            context.RowLimit);
-        var result = await executor.ExecuteAsync(request,
+        var result = await executor.ExecuteAsync(ScriptRequest(context.RowLimit),
             cancellationToken)
             .ConfigureAwait(true);
         return ApplyCSharp(result,
@@ -290,34 +377,84 @@ public abstract class NotebookScriptSection : NotebookExecutableSection
     {
         if (context.SqlExecutor is not { } executor)
         {
-            return Fail("No SQL executor is configured.");
+            return Fail(Messages.SqlExecutorMissing());
         }
         if (string.IsNullOrWhiteSpace(ScriptToRun))
         {
-            return Fail("Type the SQL script to run.");
+            return Fail(Messages.SqlScriptMissing());
         }
-        Log.Add(NotebookLogLevel.Information,
-            "Running the script.");
-        var request = new NotebookSqlRequest(ScriptToRun,
-            ConnectionId,
-            context.RowLimit);
-        var tables = await executor.ExecuteAsync(request,
+        Write(NotebookLogLevel.Information,
+            Messages.SqlStarted(this));
+        var result = await ExecuteSqlAsync(executor,
+            context.RowLimit,
             cancellationToken)
             .ConfigureAwait(true);
-        return CompleteSql(NotebookTableLimiter.Limit(tables,
-            context.RowLimit));
+        return ApplySql(result,
+            context.RowLimit);
     }
 
     /// <summary>
-    /// Shows tables as the results.
+    /// Builds the request of the C# script.
+    /// </summary>
+    /// <param name="rowLimit">The most rows kept for each table.</param>
+    /// <returns>The request.</returns>
+    private NotebookScriptRequest ScriptRequest(int rowLimit) => new(ScriptToRun,
+        Owner?.ImportsScript ?? string.Empty,
+        Owner?.GetSqlResults() ?? new Dictionary<string, IReadOnlyList<NotebookTable>>(StringComparer.OrdinalIgnoreCase),
+        rowLimit);
+
+    /// <summary>
+    /// Shows the output, tables and status of a C# script.
+    /// </summary>
+    /// <param name="result">The outcome.</param>
+    /// <param name="context">What the run needs.</param>
+    private void ShowCSharp(NotebookScriptResult result,
+        NotebookExecutionContext context)
+    {
+        Output = OutputOf(result,
+            context.OutputLimit);
+        var tables = NotebookTableLimiter.Limit(result.Tables,
+            context.RowLimit);
+        Results = tables;
+        ResultStatus = result.Status ?? (tables.Count > 0 ? Messages.RowCount(tables[0].Rows.Count) : string.Empty);
+    }
+
+    /// <summary>
+    /// Adds the log lines of a script.
+    /// </summary>
+    /// <param name="entries">The lines.</param>
+    private void WriteEntries(IReadOnlyList<NotebookLogEntry> entries)
+    {
+        foreach (var entry in entries)
+        {
+            Write(entry.Level,
+                entry.Message);
+        }
+    }
+
+    /// <summary>
+    /// Logs how a successful SQL script ended.
     /// </summary>
     /// <param name="tables">The tables.</param>
-    private void Show(IReadOnlyList<NotebookTable> tables)
+    /// <param name="rowLimit">The row limit.</param>
+    /// <param name="status">The result status.</param>
+    private void WriteSqlEnd(IReadOnlyList<NotebookTable> tables,
+        int rowLimit,
+        string status)
     {
-        var rowCount = tables
-            .Sum(table => table.Rows.Count);
-        ResultStatus = $"{rowCount} row(s)";
-        Results = tables;
+        if (tables
+            .Any(table => table.IsTruncated))
+        {
+            Write(NotebookLogLevel.Warning,
+                Messages.SqlRowsLimited(this,
+                    rowLimit));
+        }
+        else
+        {
+            Write(NotebookLogLevel.Information,
+                Messages.SqlCompleted(this,
+                    status));
+        }
     }
 
     #endregion
