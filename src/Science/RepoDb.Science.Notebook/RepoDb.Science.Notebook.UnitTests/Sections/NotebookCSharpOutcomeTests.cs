@@ -22,11 +22,155 @@ internal static class NotebookCSharpOutcomeTests
         await ErrorWithoutALogLineIsAdded();
         await OutputLimitCanBeApplied();
         OutputLimitRejectsZero();
+        await RunFailureTests();
     }
 
     #endregion
 
     #region Private Methods
+
+    /// <summary>
+    /// Runs the scenarios of scripts that fail after giving tables.
+    /// </summary>
+    private static async Task RunFailureTests()
+    {
+        await FailedChartDrawsNothing();
+        await FailedChartKeepsNoTableForSaving();
+        await FailedChartIgnoresTheHostStatus();
+        await FailedChartNeverDrawsWhileRunning();
+        await SuccessfulChartNeverDrawsAScriptTable();
+        await FailedChartKeepsItsOutput();
+        await FailedCodeSectionKeepsItsTables();
+    }
+
+    /// <summary>
+    /// Creates an outcome of a script that gave tables and then failed.
+    /// </summary>
+    /// <returns>The outcome.</returns>
+    private static NotebookScriptResult FailedAfterTables() => new()
+    {
+        Error = "boom",
+        Output = "before",
+        Status = "mine",
+        Chart = SampleTables.Timed(),
+        Tables = [SampleTables.Categories()]
+    };
+
+    /// <summary>
+    /// Runs a chart and records what it drew along the way.
+    /// </summary>
+    /// <param name="result">The outcome.</param>
+    /// <returns>The drawn data, in order.</returns>
+    private static async Task<List<NotebookChartData>> DrawnBy(NotebookScriptResult result)
+    {
+        var chart = Chart();
+        var drawn = new List<NotebookChartData>();
+        chart.PropertyChanged += (_,
+            e) =>
+        {
+            if (e.PropertyName == nameof(NotebookChartSection.Data) && chart.Data is { } data)
+            {
+                drawn.Add(data);
+            }
+        };
+        await Ran(chart,
+            result);
+        return drawn;
+    }
+
+    /// <summary>
+    /// Tests FailedChartDrawsNothing.
+    /// </summary>
+    private static async Task FailedChartDrawsNothing()
+    {
+        // Act
+        var chart = await Ran(Chart(),
+            FailedAfterTables());
+
+        // Assert
+        Check(chart.State == NotebookRunState.Failed && chart.Data is null);
+    }
+
+    /// <summary>
+    /// Tests FailedChartKeepsNoTableForSaving.
+    /// </summary>
+    private static async Task FailedChartKeepsNoTableForSaving()
+    {
+        // Act
+        var chart = await Ran(Chart(),
+            FailedAfterTables());
+
+        // Assert
+        Check(chart.Table is null && chart.Results.Count == 0);
+    }
+
+    /// <summary>
+    /// Tests FailedChartIgnoresTheHostStatus.
+    /// </summary>
+    private static async Task FailedChartIgnoresTheHostStatus()
+    {
+        // Act
+        var chart = await Ran(Chart(),
+            FailedAfterTables());
+
+        // Assert
+        Check(chart.ResultStatus.Length == 0 && chart.StatusMessage == "boom");
+    }
+
+    /// <summary>
+    /// Tests FailedChartNeverDrawsWhileRunning.
+    /// </summary>
+    private static async Task FailedChartNeverDrawsWhileRunning()
+    {
+        // Act
+        var drawn = await DrawnBy(FailedAfterTables());
+
+        // Assert
+        Check(drawn.Count == 0);
+    }
+
+    /// <summary>
+    /// Tests SuccessfulChartNeverDrawsAScriptTable.
+    /// </summary>
+    private static async Task SuccessfulChartNeverDrawsAScriptTable()
+    {
+        // Act
+        var drawn = await DrawnBy(new NotebookScriptResult
+        {
+            Succeeded = true,
+            Chart = SampleTables.Timed(),
+            Tables = [SampleTables.Categories()]
+        });
+
+        // Assert
+        Check(drawn.Count == 1 && drawn[0].IsTimeBased);
+    }
+
+    /// <summary>
+    /// Tests FailedChartKeepsItsOutput.
+    /// </summary>
+    private static async Task FailedChartKeepsItsOutput()
+    {
+        // Act
+        var chart = await Ran(Chart(),
+            FailedAfterTables());
+
+        // Assert
+        Check(chart.Output == "before");
+    }
+
+    /// <summary>
+    /// Tests FailedCodeSectionKeepsItsTables.
+    /// </summary>
+    private static async Task FailedCodeSectionKeepsItsTables()
+    {
+        // Act
+        var section = await Ran(Code(),
+            FailedAfterTables());
+
+        // Assert
+        Check(section.Results.Count == 1 && section.ResultStatus == "mine");
+    }
 
     /// <summary>
     /// Runs a C# section with an outcome.

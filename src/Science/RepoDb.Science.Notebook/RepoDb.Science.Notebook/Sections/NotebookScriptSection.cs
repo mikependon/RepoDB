@@ -180,6 +180,18 @@ public abstract class NotebookScriptSection : NotebookExecutableSection
     }
 
     /// <summary>
+    /// Shows the tables a C# script gave, even when it failed afterwards.
+    /// </summary>
+    /// <param name="tables">The tables, already limited.</param>
+    /// <param name="status">The result status of the host, or null.</param>
+    private protected virtual void ShowCSharpTables(IReadOnlyList<NotebookTable> tables,
+        string? status)
+    {
+        Results = tables;
+        ResultStatus = status ?? (tables.Count > 0 ? Messages.RowCount(tables[0].Rows.Count) : string.Empty);
+    }
+
+    /// <summary>
     /// Removes the output of a run.
     /// </summary>
     private protected override void ResetOutput()
@@ -404,7 +416,7 @@ public abstract class NotebookScriptSection : NotebookExecutableSection
         rowLimit);
 
     /// <summary>
-    /// Shows the output, tables and status of a C# script.
+    /// Shows the output and tables of a C# script.
     /// </summary>
     /// <param name="result">The outcome.</param>
     /// <param name="context">What the run needs.</param>
@@ -413,10 +425,9 @@ public abstract class NotebookScriptSection : NotebookExecutableSection
     {
         Output = OutputOf(result,
             context.OutputLimit);
-        var tables = NotebookTableLimiter.Limit(result.Tables,
-            context.RowLimit);
-        Results = tables;
-        ResultStatus = result.Status ?? (tables.Count > 0 ? Messages.RowCount(tables[0].Rows.Count) : string.Empty);
+        ShowCSharpTables(NotebookTableLimiter.Limit(result.Tables,
+                context.RowLimit),
+            result.Status);
     }
 
     /// <summary>

@@ -50,6 +50,7 @@ internal static class NotebookSqlCheckTests
         AllowsBlockComments();
         AllowsWindowsLineEndings();
         AllowsTheLetterQAsAName();
+        AllowsAStatementWordWhenQuoted();
     }
 
     /// <summary>
@@ -65,6 +66,7 @@ internal static class NotebookSqlCheckTests
         RejectsAWriteWithoutASemicolon();
         RejectsAWriteInACommonTableExpression();
         RejectsAStatementThatStartsWithText();
+        RejectsAColumnNamedLikeAStatement();
     }
 
     /// <summary>
@@ -201,6 +203,20 @@ internal static class NotebookSqlCheckTests
     /// Tests AllowsTheLetterQAsAName.
     /// </summary>
     private static void AllowsTheLetterQAsAName() => Check(ReadOnly("SELECT q, nq FROM t"));
+
+    /// <summary>
+    /// Tests AllowsAStatementWordWhenQuoted.
+    /// </summary>
+    private static void AllowsAStatementWordWhenQuoted() => Check(ReadOnly("SELECT [Copy], \"Load\", `Move` FROM t"));
+
+    /// <summary>
+    /// Tests RejectsAColumnNamedLikeAStatement.
+    /// </summary>
+    private static void RejectsAColumnNamedLikeAStatement()
+    {
+        // Assert
+        Check(!ReadOnly("SELECT Copy FROM t") && !ReadOnly("SELECT Load, Move FROM t"));
+    }
 
     /// <summary>
     /// Tests RejectsEmptyText.

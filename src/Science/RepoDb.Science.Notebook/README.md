@@ -89,6 +89,10 @@ the side of refusing: for example, it rejects backslashes in quoted text, `#`, `
 space. It cannot see side effects of functions, so it is a safeguard and **not a security boundary**. Use a
 read-only database user to enforce read access.
 
+It also refuses a query that uses a statement word, such as `Copy`, `Load`, `Move`, `Set` or `Use`, as a bare name.
+Quote such a name (`[Copy]`, `"Copy"` or `` `Copy` ``, as the database allows). The words are listed in
+[`NotebookSqlReadOnlyCheck`](RepoDb.Science.Notebook/Helpers/NotebookSqlReadOnlyCheck.cs).
+
 ## Messages
 
 Every text the package writes in logs, statuses, import problems, chart problems and run step names comes from
@@ -114,6 +118,7 @@ programming errors and unreadable files.
 
 `NotebookChartSection.Data` holds the labels and series to draw. It follows the table, `ChartType`, `Bucket`,
 colors and `FailOnNonNumeric` without running the script again. Drawing and saving images belong to the host.
+A chart takes a table only from a successful run: a script that fails, even after giving a table, draws nothing.
 
 ## Imports
 

@@ -220,6 +220,16 @@ public sealed class NotebookChartSection : NotebookScriptSection
     private protected override void OnResultsChanged() => Redraw();
 
     /// <summary>
+    /// A chart shows no script table: it takes its own table only after a successful run.
+    /// </summary>
+    /// <param name="tables">The tables of the script.</param>
+    /// <param name="status">The result status of the host, or null.</param>
+    private protected override void ShowCSharpTables(IReadOnlyList<NotebookTable> tables,
+        string? status)
+    {
+    }
+
+    /// <summary>
     /// Keeps and draws a table when it can be charted.
     /// </summary>
     /// <param name="table">The table, or null.</param>
