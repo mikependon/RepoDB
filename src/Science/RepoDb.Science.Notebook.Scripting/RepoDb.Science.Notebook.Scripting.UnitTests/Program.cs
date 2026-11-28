@@ -1,0 +1,26 @@
+using RepoDb.Science.UnitTests;
+
+NotebookScriptTypeNamesTests.Run();
+NotebookScriptPrinterTests.Run();
+NotebookScriptValueFormatterTests.Run();
+NotebookDataTableConverterTests.Run();
+NotebookDataTablesTests.Run();
+await NotebookConsoleCaptureTests.RunAsync();
+NotebookScriptReferencesTests.Run();
+NotebookScriptRestrictionsTests.Run();
+NotebookScriptGuardTests.Run();
+NotebookScriptDiagnosticsTests.Run();
+NotebookScriptingMessagesTests.Run();
+NotebookScriptFactoryTests.Run();
+NotebookScriptContextTests.Run();
+NotebookScriptChartTests.Run();
+NotebookScriptTablesTests.Run();
+await NotebookScriptHostTests.RunAsync();
+await NotebookScriptGlobalsTests.RunAsync();
+await NotebookScriptRunTests.RunAsync();
+await NotebookCSharpExecutorTests.RunAsync();
+await NotebookCSharpExecutorOutputTests.RunAsync();
+await NotebookCSharpExecutorFailureTests.RunAsync();
+await NotebookCSharpExecutorGuardTests.RunAsync();
+await NotebookCSharpExecutorNotebookTests.RunAsync();
+Console.WriteLine("All Notebook scripting tests passed.");

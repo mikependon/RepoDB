@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>RepoDb.Science.UnitTests</RootNamespace>
+    <!-- No Native AOT analysis: these tests compile scripts while they run. -->
+    <!-- A console test runner has no synchronization context (MA0004). String equality in assertions is ordinal already (MA0002, MA0006). -->
+    <NoWarn>$(NoWarn);MA0002;MA0004;MA0006</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.13" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../RepoDb.Science.Notebook.Scripting/RepoDb.Science.Notebook.Scripting.csproj" />
+  </ItemGroup>
+</Project>
