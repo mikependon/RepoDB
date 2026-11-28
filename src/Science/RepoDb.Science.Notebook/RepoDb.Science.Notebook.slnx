@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="RepoDb.Science.Notebook/RepoDb.Science.Notebook.csproj" />
+  <Project Path="RepoDb.Science.Notebook.UnitTests/RepoDb.Science.Notebook.UnitTests.csproj" />
+</Solution>
